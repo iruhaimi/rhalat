@@ -1,5 +1,5 @@
 // Application types based on database schema
-export type AppRole = 'customer' | 'agent' | 'admin';
+export type AppRole = 'customer' | 'agent' | 'admin' | 'tour_operator';
 
 export type StaffPermission = 
   | 'manage_applications'
@@ -23,7 +23,8 @@ export type ApplicationStatus =
   | 'processing'
   | 'approved'
   | 'rejected'
-  | 'cancelled';
+  | 'cancelled'
+  | 'whatsapp_pending';
 
 export type DocumentStatus = 'pending' | 'verified' | 'rejected';
 
