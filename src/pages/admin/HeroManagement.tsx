@@ -174,7 +174,7 @@ function DestinationsManagement({ isRTL }: { isRTL: boolean }) {
       display_order: destination.display_order,
       is_active: destination.is_active,
     });
-    setImagePreview(destination.flag_url);
+    setImagePreview(destination.image_url);
     setIsOpen(true);
   };
 
@@ -372,8 +372,8 @@ function DestinationsManagement({ isRTL }: { isRTL: boolean }) {
                 <div className="space-y-2">
                   <Label>رمز الدولة (ISO)</Label>
                   <Input
-                    value={formData.code}
-                    onChange={(e) => setFormData({ ...formData, code: e.target.value.toUpperCase() })}
+                    value={formData.country}
+                    onChange={(e) => setFormData({ ...formData, country: e.target.value.toUpperCase() })}
                     placeholder="مثال: US"
                     dir="ltr"
                     maxLength={3}
@@ -381,27 +381,27 @@ function DestinationsManagement({ isRTL }: { isRTL: boolean }) {
                 </div>
               </div>
 
-              {/* Flag URL */}
+              {/* Image URL */}
               <div className="space-y-2">
                 <Label>رابط صورة العلم</Label>
                 <Input
-                  value={formData.flag_url}
+                  value={formData.image_url}
                   onChange={(e) => {
-                    setFormData({ ...formData, flag_url: e.target.value });
+                    setFormData({ ...formData, image_url: e.target.value });
                     setImagePreview(e.target.value);
                     setImageFile(null);
                   }}
                   placeholder="https://flagcdn.com/w80/us.png"
                   dir="ltr"
                 />
-                {formData.code && !formData.flag_url && (
+                {formData.country && !formData.image_url && (
                   <Button
                     type="button"
                     variant="outline"
                     size="sm"
                     onClick={() => {
-                      const url = `https://flagcdn.com/w80/${formData.code.toLowerCase()}.png`;
-                      setFormData({ ...formData, flag_url: url });
+                      const url = `https://flagcdn.com/w80/${formData.country.toLowerCase()}.png`;
+                      setFormData({ ...formData, image_url: url });
                       setImagePreview(url);
                     }}
                   >
@@ -432,7 +432,7 @@ function DestinationsManagement({ isRTL }: { isRTL: boolean }) {
               <Button
                 className="w-full"
                 onClick={() => saveMutation.mutate()}
-                disabled={saveMutation.isPending || isUploading || !formData.name || !formData.code || !formData.flag_url}
+                disabled={saveMutation.isPending || isUploading || !formData.name || !formData.country || !formData.image_url}
               >
                 {(saveMutation.isPending || isUploading) ? (
                   <>

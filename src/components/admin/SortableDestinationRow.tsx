@@ -9,11 +9,15 @@ import { Pencil, Trash2, Eye, EyeOff, GripVertical } from 'lucide-react';
 interface HeroDestination {
   id: string;
   name: string;
-  code: string;
-  flag_url: string;
+  name_en: string | null;
+  country: string;
+  country_en: string | null;
+  image_url: string;
+  link_url: string | null;
   display_order: number;
   is_active: boolean;
   created_at: string;
+  updated_at: string;
 }
 
 interface SortableDestinationRowProps {
@@ -62,7 +66,7 @@ export function SortableDestinationRow({
       </TableCell>
       <TableCell>
         <img
-          src={destination.flag_url}
+          src={destination.image_url}
           alt={destination.name}
           className="h-8 w-12 object-cover rounded border"
           onError={(e) => {
@@ -72,7 +76,7 @@ export function SortableDestinationRow({
       </TableCell>
       <TableCell className="font-medium">{destination.name}</TableCell>
       <TableCell>
-        <Badge variant="outline" className="font-mono">{destination.code}</Badge>
+        <Badge variant="outline" className="font-mono">{destination.country}</Badge>
       </TableCell>
       <TableCell>
         <div className="flex items-center gap-2">
