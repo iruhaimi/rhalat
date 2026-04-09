@@ -42,6 +42,13 @@ const handler = async (req: Request): Promise<Response> => {
     const code = providedCode || generateCode();
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
+    // Hash the code before storing (SHA-256) - matches verify_staff_2fa RPC
+    const encoder = new TextEncoder();
+    const data = encoder.encode(code);
+    const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const codeHash = hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+
     console.log(`Processing 2FA for: ${email}`);
 
     // Initialize Supabase client with service role
