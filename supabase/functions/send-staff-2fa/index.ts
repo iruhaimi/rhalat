@@ -74,7 +74,7 @@ const handler = async (req: Request): Promise<Response> => {
     const { error: insertError } = await supabase.from("staff_2fa_codes").insert({
       user_id: userId,
       email: email,
-      code: code,
+      code: codeHash, // Store hashed code, not plaintext
       expires_at: expiresAt.toISOString(),
     });
 
