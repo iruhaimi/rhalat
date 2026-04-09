@@ -22,10 +22,15 @@ const countryNamesEn: Record<string, string> = {
 interface HeroDestination {
   id: string;
   name: string;
-  code: string;
-  flag_url: string;
+  name_en: string | null;
+  country: string;
+  country_en: string | null;
+  image_url: string;
+  link_url: string | null;
   display_order: number;
   is_active: boolean;
+  created_at: string;
+  updated_at: string;
 }
 
 interface HeroSetting {
@@ -36,12 +41,12 @@ interface HeroSetting {
 
 // Fallback destinations
 const fallbackDestinations: HeroDestination[] = [
-  { id: '1', name: 'الولايات المتحدة', code: 'US', flag_url: 'https://flagcdn.com/w160/us.png', display_order: 1, is_active: true },
-  { id: '2', name: 'أستراليا', code: 'AU', flag_url: 'https://flagcdn.com/w160/au.png', display_order: 2, is_active: true },
-  { id: '3', name: 'ألمانيا', code: 'DE', flag_url: 'https://flagcdn.com/w160/de.png', display_order: 3, is_active: true },
-  { id: '4', name: 'الإمارات', code: 'AE', flag_url: 'https://flagcdn.com/w160/ae.png', display_order: 4, is_active: true },
-  { id: '5', name: 'المملكة المتحدة', code: 'GB', flag_url: 'https://flagcdn.com/w160/gb.png', display_order: 5, is_active: true },
-  { id: '6', name: 'اليابان', code: 'JP', flag_url: 'https://flagcdn.com/w160/jp.png', display_order: 6, is_active: true },
+  { id: '1', name: 'الولايات المتحدة', name_en: 'United States', country: 'US', country_en: 'United States', image_url: 'https://flagcdn.com/w160/us.png', link_url: null, display_order: 1, is_active: true, created_at: '', updated_at: '' },
+  { id: '2', name: 'أستراليا', name_en: 'Australia', country: 'AU', country_en: 'Australia', image_url: 'https://flagcdn.com/w160/au.png', link_url: null, display_order: 2, is_active: true, created_at: '', updated_at: '' },
+  { id: '3', name: 'ألمانيا', name_en: 'Germany', country: 'DE', country_en: 'Germany', image_url: 'https://flagcdn.com/w160/de.png', link_url: null, display_order: 3, is_active: true, created_at: '', updated_at: '' },
+  { id: '4', name: 'الإمارات', name_en: 'UAE', country: 'AE', country_en: 'UAE', image_url: 'https://flagcdn.com/w160/ae.png', link_url: null, display_order: 4, is_active: true, created_at: '', updated_at: '' },
+  { id: '5', name: 'المملكة المتحدة', name_en: 'United Kingdom', country: 'GB', country_en: 'United Kingdom', image_url: 'https://flagcdn.com/w160/gb.png', link_url: null, display_order: 5, is_active: true, created_at: '', updated_at: '' },
+  { id: '6', name: 'اليابان', name_en: 'Japan', country: 'JP', country_en: 'Japan', image_url: 'https://flagcdn.com/w160/jp.png', link_url: null, display_order: 6, is_active: true, created_at: '', updated_at: '' },
 ];
 
 export default function HeroSection() {
@@ -110,7 +115,7 @@ export default function HeroSection() {
     : visibleDestinations;
 
   const getDisplayName = (dest: HeroDestination) =>
-    isRTL ? dest.name : (countryNamesEn[dest.code] || dest.code);
+    isRTL ? dest.name : (dest.name_en || dest.country_en || countryNamesEn[dest.country] || dest.country);
 
   const getLargeFlagUrl = (flagUrl: string) => flagUrl.replace('/w80/', '/w160/');
 
@@ -238,7 +243,7 @@ export default function HeroSection() {
                         >
                           <div className="overflow-hidden rounded-lg mb-2 mx-auto w-full aspect-[3/2]">
                             <img
-                              src={getLargeFlagUrl(dest.flag_url)}
+                              src={getLargeFlagUrl(dest.image_url)}
                               alt={getDisplayName(dest)}
                               className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                               onError={(e) => { (e.target as HTMLImageElement).src = '/placeholder.svg'; }}
@@ -247,7 +252,7 @@ export default function HeroSection() {
                           <p className="text-xs font-medium text-foreground truncate">
                             {getDisplayName(dest)}
                           </p>
-                          <p className="text-xs text-muted-foreground">{dest.code}</p>
+                          <p className="text-xs text-muted-foreground">{dest.country}</p>
                         </Link>
                       </motion.div>
                     ))}

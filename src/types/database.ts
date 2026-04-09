@@ -1,5 +1,5 @@
 // Application types based on database schema
-export type AppRole = 'customer' | 'agent' | 'admin';
+export type AppRole = 'customer' | 'agent' | 'admin' | 'tour_operator';
 
 export type StaffPermission = 
   | 'manage_applications'
@@ -23,7 +23,8 @@ export type ApplicationStatus =
   | 'processing'
   | 'approved'
   | 'rejected'
-  | 'cancelled';
+  | 'cancelled'
+  | 'whatsapp_pending';
 
 export type DocumentStatus = 'pending' | 'verified' | 'rejected';
 
@@ -195,6 +196,7 @@ export const STATUS_LABELS: Record<ApplicationStatus, string> = {
   approved: 'Approved',
   rejected: 'Rejected',
   cancelled: 'Cancelled',
+  whatsapp_pending: 'WhatsApp Pending',
 };
 
 export const STATUS_COLORS: Record<ApplicationStatus, string> = {
@@ -207,6 +209,7 @@ export const STATUS_COLORS: Record<ApplicationStatus, string> = {
   approved: 'bg-success/10 text-success',
   rejected: 'bg-destructive/10 text-destructive',
   cancelled: 'bg-muted text-muted-foreground',
+  whatsapp_pending: 'bg-warning/10 text-warning',
 };
 
 // Permission labels in Arabic

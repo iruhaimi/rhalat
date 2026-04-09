@@ -106,6 +106,7 @@ export function StaffUsersTable({
       customer: { label: 'عميل', variant: 'secondary' },
       agent: { label: 'وكيل', variant: 'default' },
       admin: { label: 'مشرف', variant: 'destructive' },
+      tour_operator: { label: 'منظم رحلات', variant: 'outline' },
     };
     
     return (

@@ -48,24 +48,28 @@ import { SortableDestinationRow } from '@/components/admin/SortableDestinationRo
 interface HeroDestination {
   id: string;
   name: string;
-  code: string;
-  flag_url: string;
+  name_en: string | null;
+  country: string;
+  country_en: string | null;
+  image_url: string;
+  link_url: string | null;
   display_order: number;
   is_active: boolean;
   created_at: string;
+  updated_at: string;
 }
 
 interface HeroSetting {
   id: string;
   key: string;
-  label: string;
   value: string;
   value_en: string | null;
-  icon: string | null;
-  url: string | null;
   category: string;
+  type: string;
   display_order: number | null;
   is_active: boolean | null;
+  created_at: string;
+  updated_at: string;
 }
 
 export default function HeroManagement() {
@@ -130,8 +134,8 @@ function DestinationsManagement({ isRTL }: { isRTL: boolean }) {
 
   const [formData, setFormData] = useState({
     name: '',
-    code: '',
-    flag_url: '',
+    country: '',
+    image_url: '',
     display_order: 0,
     is_active: true,
   });
@@ -151,8 +155,8 @@ function DestinationsManagement({ isRTL }: { isRTL: boolean }) {
   const resetForm = () => {
     setFormData({
       name: '',
-      code: '',
-      flag_url: '',
+      country: '',
+      image_url: '',
       display_order: destinations?.length || 0,
       is_active: true,
     });
@@ -165,12 +169,12 @@ function DestinationsManagement({ isRTL }: { isRTL: boolean }) {
     setEditingDestination(destination);
     setFormData({
       name: destination.name,
-      code: destination.code,
-      flag_url: destination.flag_url,
+      country: destination.country,
+      image_url: destination.image_url,
       display_order: destination.display_order,
       is_active: destination.is_active,
     });
-    setImagePreview(destination.flag_url);
+    setImagePreview(destination.image_url);
     setIsOpen(true);
   };
 
@@ -211,16 +215,16 @@ function DestinationsManagement({ isRTL }: { isRTL: boolean }) {
   const saveMutation = useMutation({
     mutationFn: async () => {
       setIsUploading(true);
-      let finalFlagUrl = formData.flag_url;
+      let finalImageUrl = formData.image_url;
 
       if (imageFile) {
-        finalFlagUrl = await uploadImage(imageFile);
+        finalImageUrl = await uploadImage(imageFile);
       }
 
       const payload = {
         name: formData.name,
-        code: formData.code.toUpperCase(),
-        flag_url: finalFlagUrl,
+        country: formData.country.toUpperCase(),
+        image_url: finalImageUrl,
         display_order: formData.display_order,
         is_active: formData.is_active,
       };
@@ -368,8 +372,8 @@ function DestinationsManagement({ isRTL }: { isRTL: boolean }) {
                 <div className="space-y-2">
                   <Label>رمز الدولة (ISO)</Label>
                   <Input
-                    value={formData.code}
-                    onChange={(e) => setFormData({ ...formData, code: e.target.value.toUpperCase() })}
+                    value={formData.country}
+                    onChange={(e) => setFormData({ ...formData, country: e.target.value.toUpperCase() })}
                     placeholder="مثال: US"
                     dir="ltr"
                     maxLength={3}
@@ -377,27 +381,27 @@ function DestinationsManagement({ isRTL }: { isRTL: boolean }) {
                 </div>
               </div>
 
-              {/* Flag URL */}
+              {/* Image URL */}
               <div className="space-y-2">
                 <Label>رابط صورة العلم</Label>
                 <Input
-                  value={formData.flag_url}
+                  value={formData.image_url}
                   onChange={(e) => {
-                    setFormData({ ...formData, flag_url: e.target.value });
+                    setFormData({ ...formData, image_url: e.target.value });
                     setImagePreview(e.target.value);
                     setImageFile(null);
                   }}
                   placeholder="https://flagcdn.com/w80/us.png"
                   dir="ltr"
                 />
-                {formData.code && !formData.flag_url && (
+                {formData.country && !formData.image_url && (
                   <Button
                     type="button"
                     variant="outline"
                     size="sm"
                     onClick={() => {
-                      const url = `https://flagcdn.com/w80/${formData.code.toLowerCase()}.png`;
-                      setFormData({ ...formData, flag_url: url });
+                      const url = `https://flagcdn.com/w80/${formData.country.toLowerCase()}.png`;
+                      setFormData({ ...formData, image_url: url });
                       setImagePreview(url);
                     }}
                   >
@@ -428,7 +432,7 @@ function DestinationsManagement({ isRTL }: { isRTL: boolean }) {
               <Button
                 className="w-full"
                 onClick={() => saveMutation.mutate()}
-                disabled={saveMutation.isPending || isUploading || !formData.name || !formData.code || !formData.flag_url}
+                disabled={saveMutation.isPending || isUploading || !formData.name || !formData.country || !formData.image_url}
               >
                 {(saveMutation.isPending || isUploading) ? (
                   <>

@@ -126,6 +126,13 @@ const STATUS_CONFIG: Record<ApplicationStatus, {
     labelAr: 'ملغي',
     labelEn: 'Cancelled'
   },
+  whatsapp_pending: { 
+    icon: Clock, 
+    color: 'text-amber-600', 
+    bgColor: 'bg-amber-100 dark:bg-amber-900/30',
+    labelAr: 'بانتظار واتساب',
+    labelEn: 'WhatsApp Pending'
+  },
 };
 
 // Timeline step order for progress visualization

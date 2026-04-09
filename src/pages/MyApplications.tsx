@@ -56,6 +56,7 @@ const STATUS_PROGRESS: Record<ApplicationStatus, number> = {
   approved: 100,
   rejected: 100,
   cancelled: 0,
+  whatsapp_pending: 15,
 };
 
 const MyApplications = () => {
@@ -93,6 +94,7 @@ const MyApplications = () => {
     approved: { ar: 'تمت الموافقة', en: 'Approved' },
     rejected: { ar: 'مرفوض', en: 'Rejected' },
     cancelled: { ar: 'ملغى', en: 'Cancelled' },
+    whatsapp_pending: { ar: 'بانتظار واتساب', en: 'WhatsApp Pending' },
   };
 
   const getStatusVariant = (status: ApplicationStatus): 'default' | 'secondary' | 'destructive' | 'outline' => {
