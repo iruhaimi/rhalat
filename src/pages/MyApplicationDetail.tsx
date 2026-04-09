@@ -43,6 +43,7 @@ const STATUS_CONFIG: Record<ApplicationStatus, {
   approved: { icon: CheckCircle2, labelAr: 'تمت الموافقة', labelEn: 'Approved', className: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' },
   rejected: { icon: XCircle, labelAr: 'مرفوض', labelEn: 'Rejected', className: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' },
   cancelled: { icon: Ban, labelAr: 'ملغي', labelEn: 'Cancelled', className: 'bg-gray-100 text-gray-700 dark:bg-gray-900/30 dark:text-gray-400' },
+  whatsapp_pending: { icon: Clock, labelAr: 'بانتظار واتساب', labelEn: 'WhatsApp Pending', className: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400' },
 };
 
 interface ApplicationData {

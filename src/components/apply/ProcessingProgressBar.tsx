@@ -25,6 +25,7 @@ const STATUS_PROGRESS: Record<ApplicationStatus, number> = {
   approved: 100,
   rejected: 100,
   cancelled: 0,
+  whatsapp_pending: 15,
 };
 
 export default function ProcessingProgressBar({ 

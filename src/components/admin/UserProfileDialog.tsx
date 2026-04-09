@@ -52,6 +52,7 @@ const ROLE_LABELS: Record<AppRole, { label: string; variant: 'default' | 'second
   customer: { label: 'عميل', variant: 'secondary' },
   agent: { label: 'وكيل', variant: 'default' },
   admin: { label: 'مشرف', variant: 'destructive' },
+  tour_operator: { label: 'منظم رحلات', variant: 'default' },
 };
 
 export function UserProfileDialog({ 

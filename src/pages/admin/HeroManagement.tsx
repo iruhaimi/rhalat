@@ -48,24 +48,28 @@ import { SortableDestinationRow } from '@/components/admin/SortableDestinationRo
 interface HeroDestination {
   id: string;
   name: string;
-  code: string;
-  flag_url: string;
+  name_en: string | null;
+  country: string;
+  country_en: string | null;
+  image_url: string;
+  link_url: string | null;
   display_order: number;
   is_active: boolean;
   created_at: string;
+  updated_at: string;
 }
 
 interface HeroSetting {
   id: string;
   key: string;
-  label: string;
   value: string;
   value_en: string | null;
-  icon: string | null;
-  url: string | null;
   category: string;
+  type: string;
   display_order: number | null;
   is_active: boolean | null;
+  created_at: string;
+  updated_at: string;
 }
 
 export default function HeroManagement() {
@@ -130,8 +134,8 @@ function DestinationsManagement({ isRTL }: { isRTL: boolean }) {
 
   const [formData, setFormData] = useState({
     name: '',
-    code: '',
-    flag_url: '',
+    country: '',
+    image_url: '',
     display_order: 0,
     is_active: true,
   });
@@ -151,8 +155,8 @@ function DestinationsManagement({ isRTL }: { isRTL: boolean }) {
   const resetForm = () => {
     setFormData({
       name: '',
-      code: '',
-      flag_url: '',
+      country: '',
+      image_url: '',
       display_order: destinations?.length || 0,
       is_active: true,
     });
@@ -165,8 +169,8 @@ function DestinationsManagement({ isRTL }: { isRTL: boolean }) {
     setEditingDestination(destination);
     setFormData({
       name: destination.name,
-      code: destination.code,
-      flag_url: destination.flag_url,
+      country: destination.country,
+      image_url: destination.image_url,
       display_order: destination.display_order,
       is_active: destination.is_active,
     });
@@ -211,16 +215,16 @@ function DestinationsManagement({ isRTL }: { isRTL: boolean }) {
   const saveMutation = useMutation({
     mutationFn: async () => {
       setIsUploading(true);
-      let finalFlagUrl = formData.flag_url;
+      let finalImageUrl = formData.image_url;
 
       if (imageFile) {
-        finalFlagUrl = await uploadImage(imageFile);
+        finalImageUrl = await uploadImage(imageFile);
       }
 
       const payload = {
         name: formData.name,
-        code: formData.code.toUpperCase(),
-        flag_url: finalFlagUrl,
+        country: formData.country.toUpperCase(),
+        image_url: finalImageUrl,
         display_order: formData.display_order,
         is_active: formData.is_active,
       };
