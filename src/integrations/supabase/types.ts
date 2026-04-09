@@ -453,6 +453,8 @@ export type Database = {
           approved_at: string | null
           assigned_agent_id: string | null
           created_at: string
+          display_number: string | null
+          draft_data: Json | null
           emergency_contact_name: string | null
           emergency_contact_phone: string | null
           id: string
@@ -473,6 +475,8 @@ export type Database = {
           approved_at?: string | null
           assigned_agent_id?: string | null
           created_at?: string
+          display_number?: string | null
+          draft_data?: Json | null
           emergency_contact_name?: string | null
           emergency_contact_phone?: string | null
           id?: string
@@ -493,6 +497,8 @@ export type Database = {
           approved_at?: string | null
           assigned_agent_id?: string | null
           created_at?: string
+          display_number?: string | null
+          draft_data?: Json | null
           emergency_contact_name?: string | null
           emergency_contact_phone?: string | null
           id?: string
@@ -549,9 +555,14 @@ export type Database = {
           code: string
           created_at: string
           display_order: number | null
+          expected_appointment_date: string | null
+          expected_appointment_note: string | null
+          expected_appointment_updated_at: string | null
+          expected_appointment_updated_by: string | null
           flag_url: string | null
           id: string
           is_active: boolean | null
+          is_schengen: boolean
           name: string
           updated_at: string
         }
@@ -559,9 +570,14 @@ export type Database = {
           code: string
           created_at?: string
           display_order?: number | null
+          expected_appointment_date?: string | null
+          expected_appointment_note?: string | null
+          expected_appointment_updated_at?: string | null
+          expected_appointment_updated_by?: string | null
           flag_url?: string | null
           id?: string
           is_active?: boolean | null
+          is_schengen?: boolean
           name: string
           updated_at?: string
         }
@@ -569,9 +585,14 @@ export type Database = {
           code?: string
           created_at?: string
           display_order?: number | null
+          expected_appointment_date?: string | null
+          expected_appointment_note?: string | null
+          expected_appointment_updated_at?: string | null
+          expected_appointment_updated_by?: string | null
           flag_url?: string | null
           id?: string
           is_active?: boolean | null
+          is_schengen?: boolean
           name?: string
           updated_at?: string
         }
@@ -638,6 +659,69 @@ export type Database = {
           },
         ]
       }
+      email_send_log: {
+        Row: {
+          created_at: string
+          error_message: string | null
+          id: string
+          message_id: string | null
+          metadata: Json | null
+          recipient_email: string
+          status: string
+          template_name: string
+        }
+        Insert: {
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          message_id?: string | null
+          metadata?: Json | null
+          recipient_email: string
+          status: string
+          template_name: string
+        }
+        Update: {
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          message_id?: string | null
+          metadata?: Json | null
+          recipient_email?: string
+          status?: string
+          template_name?: string
+        }
+        Relationships: []
+      }
+      email_send_state: {
+        Row: {
+          auth_email_ttl_minutes: number
+          batch_size: number
+          id: number
+          retry_after_until: string | null
+          send_delay_ms: number
+          transactional_email_ttl_minutes: number
+          updated_at: string
+        }
+        Insert: {
+          auth_email_ttl_minutes?: number
+          batch_size?: number
+          id?: number
+          retry_after_until?: string | null
+          send_delay_ms?: number
+          transactional_email_ttl_minutes?: number
+          updated_at?: string
+        }
+        Update: {
+          auth_email_ttl_minutes?: number
+          batch_size?: number
+          id?: number
+          retry_after_until?: string | null
+          send_delay_ms?: number
+          transactional_email_ttl_minutes?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       email_subscribers: {
         Row: {
           created_at: string
@@ -671,6 +755,30 @@ export type Database = {
           subscribed_at?: string
           unsubscribed_at?: string | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      email_unsubscribe_tokens: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          token: string
+          used_at: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          token: string
+          used_at?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          token?: string
+          used_at?: string | null
         }
         Relationships: []
       }
@@ -721,33 +829,42 @@ export type Database = {
       }
       hero_destinations: {
         Row: {
-          code: string
+          country: string
+          country_en: string | null
           created_at: string
           display_order: number
-          flag_url: string
           id: string
+          image_url: string
           is_active: boolean
+          link_url: string | null
           name: string
+          name_en: string | null
           updated_at: string
         }
         Insert: {
-          code: string
+          country: string
+          country_en?: string | null
           created_at?: string
           display_order?: number
-          flag_url: string
           id?: string
+          image_url: string
           is_active?: boolean
+          link_url?: string | null
           name: string
+          name_en?: string | null
           updated_at?: string
         }
         Update: {
-          code?: string
+          country?: string
+          country_en?: string | null
           created_at?: string
           display_order?: number
-          flag_url?: string
           id?: string
+          image_url?: string
           is_active?: boolean
+          link_url?: string | null
           name?: string
+          name_en?: string | null
           updated_at?: string
         }
         Relationships: []
@@ -756,42 +873,36 @@ export type Database = {
         Row: {
           category: string
           created_at: string
-          display_order: number | null
-          icon: string | null
+          display_order: number
           id: string
-          is_active: boolean | null
+          is_active: boolean
           key: string
-          label: string
+          type: string
           updated_at: string
-          url: string | null
           value: string
           value_en: string | null
         }
         Insert: {
-          category: string
+          category?: string
           created_at?: string
-          display_order?: number | null
-          icon?: string | null
+          display_order?: number
           id?: string
-          is_active?: boolean | null
+          is_active?: boolean
           key: string
-          label: string
+          type?: string
           updated_at?: string
-          url?: string | null
           value: string
           value_en?: string | null
         }
         Update: {
           category?: string
           created_at?: string
-          display_order?: number | null
-          icon?: string | null
+          display_order?: number
           id?: string
-          is_active?: boolean | null
+          is_active?: boolean
           key?: string
-          label?: string
+          type?: string
           updated_at?: string
-          url?: string | null
           value?: string
           value_en?: string | null
         }
@@ -1120,6 +1231,39 @@ export type Database = {
         }
         Relationships: []
       }
+      site_content: {
+        Row: {
+          content: Json
+          created_at: string
+          display_order: number | null
+          id: string
+          is_active: boolean | null
+          page: string
+          section: string
+          updated_at: string
+        }
+        Insert: {
+          content?: Json
+          created_at?: string
+          display_order?: number | null
+          id?: string
+          is_active?: boolean | null
+          page: string
+          section: string
+          updated_at?: string
+        }
+        Update: {
+          content?: Json
+          created_at?: string
+          display_order?: number | null
+          id?: string
+          is_active?: boolean | null
+          page?: string
+          section?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       special_offers: {
         Row: {
           badge: string | null
@@ -1302,6 +1446,30 @@ export type Database = {
         }
         Relationships: []
       }
+      suppressed_emails: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          metadata: Json | null
+          reason: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          metadata?: Json | null
+          reason: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          metadata?: Json | null
+          reason?: string
+        }
+        Relationships: []
+      }
       system_backups: {
         Row: {
           backup_type: string
@@ -1341,6 +1509,307 @@ export type Database = {
         }
         Relationships: []
       }
+      tour_bookings: {
+        Row: {
+          created_at: string
+          customer_email: string | null
+          customer_name: string
+          customer_phone: string
+          id: string
+          notes: string | null
+          operator_id: string
+          operator_notes: string | null
+          preferred_date: string | null
+          program_id: string
+          status: string
+          travelers_count: number
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          customer_email?: string | null
+          customer_name: string
+          customer_phone: string
+          id?: string
+          notes?: string | null
+          operator_id: string
+          operator_notes?: string | null
+          preferred_date?: string | null
+          program_id: string
+          status?: string
+          travelers_count?: number
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          customer_email?: string | null
+          customer_name?: string
+          customer_phone?: string
+          id?: string
+          notes?: string | null
+          operator_id?: string
+          operator_notes?: string | null
+          preferred_date?: string | null
+          program_id?: string
+          status?: string
+          travelers_count?: number
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tour_bookings_operator_id_fkey"
+            columns: ["operator_id"]
+            isOneToOne: false
+            referencedRelation: "tour_operators"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tour_bookings_program_id_fkey"
+            columns: ["program_id"]
+            isOneToOne: false
+            referencedRelation: "tour_programs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tour_operators: {
+        Row: {
+          address: string | null
+          admin_notes: string | null
+          city: string | null
+          company_name: string
+          company_name_en: string | null
+          country: string | null
+          cover_image_url: string | null
+          created_at: string
+          description: string | null
+          description_en: string | null
+          email: string | null
+          id: string
+          is_active: boolean
+          is_verified: boolean
+          logo_url: string | null
+          phone: string | null
+          updated_at: string
+          user_id: string
+          verified_at: string | null
+          verified_by: string | null
+          website: string | null
+          whatsapp_number: string | null
+        }
+        Insert: {
+          address?: string | null
+          admin_notes?: string | null
+          city?: string | null
+          company_name: string
+          company_name_en?: string | null
+          country?: string | null
+          cover_image_url?: string | null
+          created_at?: string
+          description?: string | null
+          description_en?: string | null
+          email?: string | null
+          id?: string
+          is_active?: boolean
+          is_verified?: boolean
+          logo_url?: string | null
+          phone?: string | null
+          updated_at?: string
+          user_id: string
+          verified_at?: string | null
+          verified_by?: string | null
+          website?: string | null
+          whatsapp_number?: string | null
+        }
+        Update: {
+          address?: string | null
+          admin_notes?: string | null
+          city?: string | null
+          company_name?: string
+          company_name_en?: string | null
+          country?: string | null
+          cover_image_url?: string | null
+          created_at?: string
+          description?: string | null
+          description_en?: string | null
+          email?: string | null
+          id?: string
+          is_active?: boolean
+          is_verified?: boolean
+          logo_url?: string | null
+          phone?: string | null
+          updated_at?: string
+          user_id?: string
+          verified_at?: string | null
+          verified_by?: string | null
+          website?: string | null
+          whatsapp_number?: string | null
+        }
+        Relationships: []
+      }
+      tour_program_reviews: {
+        Row: {
+          comment: string | null
+          created_at: string
+          id: string
+          is_approved: boolean
+          program_id: string
+          rating: number
+          user_id: string
+        }
+        Insert: {
+          comment?: string | null
+          created_at?: string
+          id?: string
+          is_approved?: boolean
+          program_id: string
+          rating: number
+          user_id: string
+        }
+        Update: {
+          comment?: string | null
+          created_at?: string
+          id?: string
+          is_approved?: boolean
+          program_id?: string
+          rating?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tour_program_reviews_program_id_fkey"
+            columns: ["program_id"]
+            isOneToOne: false
+            referencedRelation: "tour_programs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tour_programs: {
+        Row: {
+          available_dates: Json | null
+          cancellation_policy: string | null
+          cancellation_policy_en: string | null
+          cover_image_url: string | null
+          created_at: string
+          currency: string
+          daily_itinerary: Json | null
+          description: string | null
+          description_en: string | null
+          destination: string
+          destination_en: string | null
+          discount_percentage: number | null
+          discounted_price: number | null
+          display_order: number | null
+          duration_days: number
+          duration_nights: number
+          end_date: string | null
+          exclusions: Json | null
+          gallery_images: Json | null
+          hotels: Json | null
+          id: string
+          inclusions: Json | null
+          is_recurring: boolean
+          max_seats: number | null
+          operator_id: string
+          price: number
+          rejection_reason: string | null
+          seats_booked: number
+          start_date: string | null
+          status: string
+          tags: Json | null
+          title: string
+          title_en: string | null
+          updated_at: string
+          views_count: number
+        }
+        Insert: {
+          available_dates?: Json | null
+          cancellation_policy?: string | null
+          cancellation_policy_en?: string | null
+          cover_image_url?: string | null
+          created_at?: string
+          currency?: string
+          daily_itinerary?: Json | null
+          description?: string | null
+          description_en?: string | null
+          destination: string
+          destination_en?: string | null
+          discount_percentage?: number | null
+          discounted_price?: number | null
+          display_order?: number | null
+          duration_days?: number
+          duration_nights?: number
+          end_date?: string | null
+          exclusions?: Json | null
+          gallery_images?: Json | null
+          hotels?: Json | null
+          id?: string
+          inclusions?: Json | null
+          is_recurring?: boolean
+          max_seats?: number | null
+          operator_id: string
+          price?: number
+          rejection_reason?: string | null
+          seats_booked?: number
+          start_date?: string | null
+          status?: string
+          tags?: Json | null
+          title: string
+          title_en?: string | null
+          updated_at?: string
+          views_count?: number
+        }
+        Update: {
+          available_dates?: Json | null
+          cancellation_policy?: string | null
+          cancellation_policy_en?: string | null
+          cover_image_url?: string | null
+          created_at?: string
+          currency?: string
+          daily_itinerary?: Json | null
+          description?: string | null
+          description_en?: string | null
+          destination?: string
+          destination_en?: string | null
+          discount_percentage?: number | null
+          discounted_price?: number | null
+          display_order?: number | null
+          duration_days?: number
+          duration_nights?: number
+          end_date?: string | null
+          exclusions?: Json | null
+          gallery_images?: Json | null
+          hotels?: Json | null
+          id?: string
+          inclusions?: Json | null
+          is_recurring?: boolean
+          max_seats?: number | null
+          operator_id?: string
+          price?: number
+          rejection_reason?: string | null
+          seats_booked?: number
+          start_date?: string | null
+          status?: string
+          tags?: Json | null
+          title?: string
+          title_en?: string | null
+          updated_at?: string
+          views_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tour_programs_operator_id_fkey"
+            columns: ["operator_id"]
+            isOneToOne: false
+            referencedRelation: "tour_operators"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -1371,6 +1840,9 @@ export type Database = {
           display_order: number | null
           entry_type: string | null
           fee_type: string | null
+          gov_fee_adult: number | null
+          gov_fee_child: number | null
+          gov_fee_infant: number | null
           government_fees: number | null
           id: string
           infant_price: number | null
@@ -1393,6 +1865,9 @@ export type Database = {
           display_order?: number | null
           entry_type?: string | null
           fee_type?: string | null
+          gov_fee_adult?: number | null
+          gov_fee_child?: number | null
+          gov_fee_infant?: number | null
           government_fees?: number | null
           id?: string
           infant_price?: number | null
@@ -1415,6 +1890,9 @@ export type Database = {
           display_order?: number | null
           entry_type?: string | null
           fee_type?: string | null
+          gov_fee_adult?: number | null
+          gov_fee_child?: number | null
+          gov_fee_infant?: number | null
           government_fees?: number | null
           id?: string
           infant_price?: number | null
@@ -1579,9 +2057,29 @@ export type Database = {
         Args: { check_user_id: string }
         Returns: boolean
       }
+      check_recovery_rate_limit: {
+        Args: { check_user_id: string }
+        Returns: boolean
+      }
       clear_failed_login_attempts: {
         Args: { target_email: string }
         Returns: undefined
+      }
+      create_application_draft: {
+        Args: {
+          p_draft_data?: Json
+          p_travel_date?: string
+          p_visa_type_id: string
+        }
+        Returns: string
+      }
+      delete_email: {
+        Args: { message_id: number; queue_name: string }
+        Returns: boolean
+      }
+      enqueue_email: {
+        Args: { payload: Json; queue_name: string }
+        Returns: number
       }
       get_agents_for_transfer: {
         Args: { exclude_profile_id?: string }
@@ -1632,14 +2130,50 @@ export type Database = {
       }
       is_customer: { Args: { _user_id: string }; Returns: boolean }
       is_email_locked_out: { Args: { check_email: string }; Returns: boolean }
+      is_profile_owner: {
+        Args: { _auth_user_id: string; _profile_id: string }
+        Returns: boolean
+      }
       is_super_admin: { Args: { _user_id: string }; Returns: boolean }
+      is_tour_operator: { Args: { _user_id: string }; Returns: boolean }
+      move_to_dlq: {
+        Args: {
+          dlq_name: string
+          message_id: number
+          payload: Json
+          source_queue: string
+        }
+        Returns: number
+      }
+      read_email_batch: {
+        Args: { batch_size: number; queue_name: string; vt: number }
+        Returns: {
+          message: Json
+          msg_id: number
+          read_ct: number
+        }[]
+      }
+      record_login_attempt: {
+        Args: {
+          p_email: string
+          p_failure_reason?: string
+          p_success: boolean
+          p_user_agent?: string
+        }
+        Returns: undefined
+      }
+      verify_staff_2fa: {
+        Args: { p_code: string; p_user_id: string }
+        Returns: boolean
+      }
     }
     Enums: {
-      app_role: "customer" | "agent" | "admin"
+      app_role: "customer" | "agent" | "admin" | "tour_operator"
       application_status:
         | "draft"
         | "pending_payment"
         | "submitted"
+        | "whatsapp_pending"
         | "under_review"
         | "documents_required"
         | "processing"
@@ -1667,6 +2201,7 @@ export type Database = {
         | "process_refunds"
         | "manage_unlock_requests"
         | "view_revenue"
+        | "manage_appointments"
       wallet_transaction_type:
         | "deposit"
         | "withdrawal"
@@ -1800,11 +2335,12 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["customer", "agent", "admin"],
+      app_role: ["customer", "agent", "admin", "tour_operator"],
       application_status: [
         "draft",
         "pending_payment",
         "submitted",
+        "whatsapp_pending",
         "under_review",
         "documents_required",
         "processing",
@@ -1834,6 +2370,7 @@ export const Constants = {
         "process_refunds",
         "manage_unlock_requests",
         "view_revenue",
+        "manage_appointments",
       ],
       wallet_transaction_type: [
         "deposit",
