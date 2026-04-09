@@ -196,6 +196,7 @@ export const STATUS_LABELS: Record<ApplicationStatus, string> = {
   approved: 'Approved',
   rejected: 'Rejected',
   cancelled: 'Cancelled',
+  whatsapp_pending: 'WhatsApp Pending',
 };
 
 export const STATUS_COLORS: Record<ApplicationStatus, string> = {
@@ -208,6 +209,7 @@ export const STATUS_COLORS: Record<ApplicationStatus, string> = {
   approved: 'bg-success/10 text-success',
   rejected: 'bg-destructive/10 text-destructive',
   cancelled: 'bg-muted text-muted-foreground',
+  whatsapp_pending: 'bg-warning/10 text-warning',
 };
 
 // Permission labels in Arabic
