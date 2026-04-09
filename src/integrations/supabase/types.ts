@@ -1567,6 +1567,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "tour_bookings_operator_id_fkey"
+            columns: ["operator_id"]
+            isOneToOne: false
+            referencedRelation: "tour_operators_public"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "tour_bookings_program_id_fkey"
             columns: ["program_id"]
             isOneToOne: false
@@ -1808,6 +1815,13 @@ export type Database = {
             referencedRelation: "tour_operators"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "tour_programs_operator_id_fkey"
+            columns: ["operator_id"]
+            isOneToOne: false
+            referencedRelation: "tour_operators_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
       user_roles: {
@@ -2044,6 +2058,57 @@ export type Database = {
           id?: string | null
           phone?: string | null
           user_id?: string | null
+        }
+        Relationships: []
+      }
+      tour_operators_public: {
+        Row: {
+          city: string | null
+          company_name: string | null
+          company_name_en: string | null
+          country: string | null
+          cover_image_url: string | null
+          created_at: string | null
+          description: string | null
+          description_en: string | null
+          id: string | null
+          is_active: boolean | null
+          is_verified: boolean | null
+          logo_url: string | null
+          updated_at: string | null
+          website: string | null
+        }
+        Insert: {
+          city?: string | null
+          company_name?: string | null
+          company_name_en?: string | null
+          country?: string | null
+          cover_image_url?: string | null
+          created_at?: string | null
+          description?: string | null
+          description_en?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          is_verified?: boolean | null
+          logo_url?: string | null
+          updated_at?: string | null
+          website?: string | null
+        }
+        Update: {
+          city?: string | null
+          company_name?: string | null
+          company_name_en?: string | null
+          country?: string | null
+          cover_image_url?: string | null
+          created_at?: string | null
+          description?: string | null
+          description_en?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          is_verified?: boolean | null
+          logo_url?: string | null
+          updated_at?: string | null
+          website?: string | null
         }
         Relationships: []
       }
