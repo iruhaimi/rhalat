@@ -6,7 +6,7 @@ import CookieConsent from './CookieConsent';
 
 export default function MainLayout() {
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col" style={{ paddingLeft: 'var(--safe-area-left, 0px)', paddingRight: 'var(--safe-area-right, 0px)' }}>
       <HeaderArabic />
       <main className="flex-1">
         <Outlet />

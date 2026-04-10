@@ -41,7 +41,7 @@ export default function FooterArabic() {
   const legalNotice = generalSettings.find(s => s.key === 'legal_notice')?.value;
 
   return (
-    <footer className="border-t border-border bg-card">
+    <footer className="border-t border-border bg-card" style={{ paddingBottom: 'var(--safe-area-bottom, 0px)' }}>
       <div className="container-section py-12 md:py-16">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
           {/* Brand */}
