@@ -1,7 +1,7 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'app.lovable.616b2e7f7e454cdc90ea1c048e4da3b0',
+  appId: 'com.visafaster.app',
   appName: 'رحلات - خدمات التأشيرات',
   webDir: 'dist',
   server: {
