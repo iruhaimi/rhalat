@@ -67,7 +67,7 @@ export default function HeaderArabic() {
 
   return (
     <>
-      <header className="sticky top-0 z-40 w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 border-b border-border/40">
+      <header className="sticky top-0 z-40 w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 border-b border-border/40" style={{ paddingTop: 'var(--safe-area-top, 0px)' }}>
         {/* Main Navigation */}
         <nav className="container-section flex h-16 lg:h-20 items-center justify-between">
           {/* Logo */}
