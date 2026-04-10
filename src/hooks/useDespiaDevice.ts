@@ -26,7 +26,7 @@ export function useDespiaDevice(userId: string | undefined) {
       if (!uuid || !playerId) return;
 
       try {
-        await supabase
+        await (supabase as any)
           .from('user_push_devices')
           .upsert(
             {
