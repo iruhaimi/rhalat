@@ -54,6 +54,9 @@ import SensitiveOperations from "@/pages/admin/SensitiveOperations";
 import OwnerSettings from "@/pages/admin/OwnerSettings";
 import DocumentAccessLogs from "@/pages/admin/DocumentAccessLogs";
 import FooterManagement from "@/pages/admin/FooterManagement";
+import StaffAuditLog from "@/pages/admin/StaffAuditLog";
+import PortalSecurity from "@/pages/admin/PortalSecurity";
+import DynamicPortalRoute from "@/components/DynamicPortalRoute";
 // Agent Pages
 import AgentDashboard from "@/pages/agent/AgentDashboard";
 import AgentApplicationsList from "@/pages/agent/AgentApplicationsList";
