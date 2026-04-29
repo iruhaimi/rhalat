@@ -126,6 +126,18 @@ export default function AdminLayout() {
       show: isAdmin && isSuperAdmin,
     },
     {
+      title: 'سجل التدقيق',
+      icon: ScrollText,
+      href: '/admin/audit-log',
+      show: isAdmin && isSuperAdmin,
+    },
+    {
+      title: 'أمان البوابة',
+      icon: KeyRound,
+      href: '/admin/portal-security',
+      show: isAdmin && isSuperAdmin,
+    },
+    {
       title: 'الإعدادات',
       icon: Settings,
       href: '/admin/settings',
