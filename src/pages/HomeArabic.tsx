@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { useAuth } from '@/contexts/AuthContext';
 import type { Country, VisaType } from '@/types/database';
 
 // Import sections
@@ -18,25 +16,9 @@ import CTASection from '@/components/home/CTASection';
 
 export default function HomeArabic() {
   const { t } = useLanguage();
-  const { user, isAdmin, isAgent, isLoading: authLoading } = useAuth();
-  const navigate = useNavigate();
   const [countries, setCountries] = useState<Country[]>([]);
   const [visaTypes, setVisaTypes] = useState<VisaType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-
-  // Redirect staff (admin/agent) to their dashboard
-  useEffect(() => {
-    if (!authLoading && user) {
-      if (isAdmin) {
-        navigate('/admin', { replace: true });
-        return;
-      }
-      if (isAgent) {
-        navigate('/agent', { replace: true });
-        return;
-      }
-    }
-  }, [user, isAdmin, isAgent, authLoading, navigate]);
 
   useEffect(() => {
     async function fetchData() {
