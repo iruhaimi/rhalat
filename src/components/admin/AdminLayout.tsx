@@ -267,6 +267,11 @@ export default function AdminLayout() {
           </div>
         </main>
       </div>
+      <IdleWarningDialog
+        open={idle.showWarning}
+        onExtend={idle.extendSession}
+        onLogout={() => idle.performLogout('تم تسجيل الخروج.')}
+      />
     </TooltipProvider>
   );
 }
