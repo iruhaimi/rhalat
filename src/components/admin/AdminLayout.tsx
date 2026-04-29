@@ -3,6 +3,8 @@ import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { usePermissions } from '@/hooks/usePermissions';
+import { useIdleTimeout } from '@/hooks/useIdleTimeout';
+import IdleWarningDialog from '@/components/admin/security/IdleWarningDialog';
 import { 
   LayoutDashboard, 
   FileText, 
@@ -40,6 +42,7 @@ export default function AdminLayout() {
   const location = useLocation();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const idle = useIdleTimeout();
 
   const menuItems = [
     {
