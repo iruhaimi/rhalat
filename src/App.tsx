@@ -54,6 +54,9 @@ import SensitiveOperations from "@/pages/admin/SensitiveOperations";
 import OwnerSettings from "@/pages/admin/OwnerSettings";
 import DocumentAccessLogs from "@/pages/admin/DocumentAccessLogs";
 import FooterManagement from "@/pages/admin/FooterManagement";
+import StaffAuditLog from "@/pages/admin/StaffAuditLog";
+import PortalSecurity from "@/pages/admin/PortalSecurity";
+import DynamicPortalRoute from "@/components/DynamicPortalRoute";
 // Agent Pages
 import AgentDashboard from "@/pages/agent/AgentDashboard";
 import AgentApplicationsList from "@/pages/agent/AgentApplicationsList";
@@ -124,6 +127,8 @@ const App = () => (
                 <Route path="owner-settings" element={<OwnerSettings />} />
                 <Route path="document-logs" element={<DocumentAccessLogs />} />
                 <Route path="footer" element={<FooterManagement />} />
+                <Route path="audit-log" element={<StaffAuditLog />} />
+                <Route path="portal-security" element={<PortalSecurity />} />
               </Route>
 
               {/* Agent Routes */}
@@ -141,7 +146,7 @@ const App = () => (
               </Route>
 
               {/* Catch-all */}
-              <Route path="*" element={<NotFound />} />
+              <Route path="*" element={<DynamicPortalRoute fallback={<NotFound />} />} />
             </Routes>
           </BrowserRouter>
         </TooltipProvider>

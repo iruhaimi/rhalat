@@ -12,6 +12,8 @@ import {
 import { useState } from 'react';
 import { NotificationBell } from '@/components/notifications/NotificationBell';
 import { cn } from '@/lib/utils';
+import { useIdleTimeout } from '@/hooks/useIdleTimeout';
+import IdleWarningDialog from '@/components/admin/security/IdleWarningDialog';
 
 const agentNavItems = [
   { path: '/agent', label: 'لوحة التحكم', icon: LayoutDashboard },
@@ -22,6 +24,7 @@ export default function AgentLayout() {
   const { user, signOut } = useAuth();
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const idle = useIdleTimeout();
 
   const handleSignOut = async () => {
     await signOut(true); // Pass true to indicate staff logout
@@ -117,6 +120,11 @@ export default function AgentLayout() {
           <Outlet />
         </main>
       </div>
+      <IdleWarningDialog
+        open={idle.showWarning}
+        onExtend={idle.extendSession}
+        onLogout={() => idle.performLogout('تم تسجيل الخروج.')}
+      />
     </div>
   );
 }

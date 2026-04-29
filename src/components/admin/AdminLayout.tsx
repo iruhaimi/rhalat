@@ -3,6 +3,8 @@ import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { usePermissions } from '@/hooks/usePermissions';
+import { useIdleTimeout } from '@/hooks/useIdleTimeout';
+import IdleWarningDialog from '@/components/admin/security/IdleWarningDialog';
 import { 
   LayoutDashboard, 
   FileText, 
@@ -20,7 +22,9 @@ import {
    Crown,
    Shield,
    FileSearch,
-   PanelBottom
+   PanelBottom,
+   ScrollText,
+   KeyRound
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -40,6 +44,7 @@ export default function AdminLayout() {
   const location = useLocation();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const idle = useIdleTimeout();
 
   const menuItems = [
     {
@@ -118,6 +123,18 @@ export default function AdminLayout() {
       title: 'إعدادات المالك',
       icon: Crown,
       href: '/admin/owner-settings',
+      show: isAdmin && isSuperAdmin,
+    },
+    {
+      title: 'سجل التدقيق',
+      icon: ScrollText,
+      href: '/admin/audit-log',
+      show: isAdmin && isSuperAdmin,
+    },
+    {
+      title: 'أمان البوابة',
+      icon: KeyRound,
+      href: '/admin/portal-security',
       show: isAdmin && isSuperAdmin,
     },
     {
@@ -264,6 +281,11 @@ export default function AdminLayout() {
           </div>
         </main>
       </div>
+      <IdleWarningDialog
+        open={idle.showWarning}
+        onExtend={idle.extendSession}
+        onLogout={() => idle.performLogout('تم تسجيل الخروج.')}
+      />
     </TooltipProvider>
   );
 }

@@ -134,9 +134,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signOut = async (isStaff: boolean = false) => {
     await supabase.auth.signOut();
-    // Staff members should be redirected to staff portal, not customer auth page
     if (isStaff) {
-      window.location.href = '/portal-x7k9m2';
+      // Fetch current secret path (in case it has been rotated)
+      try {
+        const { data } = await supabase
+          .from('staff_portal_settings')
+          .select('secret_path')
+          .eq('id', 1)
+          .maybeSingle();
+        const path = data?.secret_path || 'portal-x7k9m2';
+        window.location.href = `/${path}`;
+      } catch {
+        window.location.href = '/portal-x7k9m2';
+      }
     }
   };
 

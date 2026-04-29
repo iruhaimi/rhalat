@@ -1065,6 +1065,7 @@ export type Database = {
           country: string | null
           created_at: string
           date_of_birth: string | null
+          force_logout_after: string | null
           full_name: string | null
           id: string
           nationality: string | null
@@ -1082,6 +1083,7 @@ export type Database = {
           country?: string | null
           created_at?: string
           date_of_birth?: string | null
+          force_logout_after?: string | null
           full_name?: string | null
           id?: string
           nationality?: string | null
@@ -1099,6 +1101,7 @@ export type Database = {
           country?: string | null
           created_at?: string
           date_of_birth?: string | null
+          force_logout_after?: string | null
           full_name?: string | null
           id?: string
           nationality?: string | null
@@ -1359,6 +1362,54 @@ export type Database = {
         }
         Relationships: []
       }
+      staff_audit_log: {
+        Row: {
+          actor_email: string | null
+          actor_name: string | null
+          created_at: string
+          description: string
+          event_category: string
+          event_type: string
+          id: string
+          ip_address: string | null
+          metadata: Json | null
+          target_id: string | null
+          target_type: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          actor_email?: string | null
+          actor_name?: string | null
+          created_at?: string
+          description: string
+          event_category?: string
+          event_type: string
+          id?: string
+          ip_address?: string | null
+          metadata?: Json | null
+          target_id?: string | null
+          target_type?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          actor_email?: string | null
+          actor_name?: string | null
+          created_at?: string
+          description?: string
+          event_category?: string
+          event_type?: string
+          id?: string
+          ip_address?: string | null
+          metadata?: Json | null
+          target_id?: string | null
+          target_type?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       staff_login_attempts: {
         Row: {
           created_at: string
@@ -1413,6 +1464,27 @@ export type Database = {
           id?: string
           permission?: Database["public"]["Enums"]["staff_permission"]
           user_id?: string
+        }
+        Relationships: []
+      }
+      staff_portal_settings: {
+        Row: {
+          id: number
+          rotated_at: string
+          rotated_by: string | null
+          secret_path: string
+        }
+        Insert: {
+          id?: number
+          rotated_at?: string
+          rotated_by?: string | null
+          secret_path?: string
+        }
+        Update: {
+          id?: number
+          rotated_at?: string
+          rotated_by?: string | null
+          secret_path?: string
         }
         Relationships: []
       }
@@ -2186,6 +2258,14 @@ export type Database = {
           id: string
         }[]
       }
+      get_audit_event_types: {
+        Args: never
+        Returns: {
+          count: number
+          event_category: string
+          event_type: string
+        }[]
+      }
       get_failed_attempts_count: {
         Args: { check_email: string }
         Returns: number
@@ -2234,6 +2314,17 @@ export type Database = {
       }
       is_super_admin: { Args: { _user_id: string }; Returns: boolean }
       is_tour_operator: { Args: { _user_id: string }; Returns: boolean }
+      log_staff_action: {
+        Args: {
+          p_description: string
+          p_event_category?: string
+          p_event_type: string
+          p_metadata?: Json
+          p_target_id?: string
+          p_target_type?: string
+        }
+        Returns: string
+      }
       move_to_dlq: {
         Args: {
           dlq_name: string
@@ -2260,6 +2351,7 @@ export type Database = {
         }
         Returns: undefined
       }
+      rotate_staff_portal_path: { Args: { p_new_path: string }; Returns: Json }
       verify_staff_2fa: {
         Args: { p_code: string; p_user_id: string }
         Returns: boolean
