@@ -127,6 +127,8 @@ const App = () => (
                 <Route path="owner-settings" element={<OwnerSettings />} />
                 <Route path="document-logs" element={<DocumentAccessLogs />} />
                 <Route path="footer" element={<FooterManagement />} />
+                <Route path="audit-log" element={<StaffAuditLog />} />
+                <Route path="portal-security" element={<PortalSecurity />} />
               </Route>
 
               {/* Agent Routes */}
