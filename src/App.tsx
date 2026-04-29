@@ -146,7 +146,7 @@ const App = () => (
               </Route>
 
               {/* Catch-all */}
-              <Route path="*" element={<NotFound />} />
+              <Route path="*" element={<DynamicPortalRoute fallback={<NotFound />} />} />
             </Routes>
           </BrowserRouter>
         </TooltipProvider>
