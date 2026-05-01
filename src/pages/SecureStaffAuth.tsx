@@ -14,7 +14,7 @@ import TwoFactorVerification from '@/components/auth/TwoFactorVerification';
 import RecoveryCodesDisplay from '@/components/auth/RecoveryCodesDisplay';
 import RecoveryCodeVerification from '@/components/auth/RecoveryCodeVerification';
 import UnlockRequestForm from '@/components/auth/UnlockRequestForm';
-import { generateRecoveryCodes, hashRecoveryCode, verifyRecoveryCode } from '@/lib/recoveryCodeUtils';
+import { verifyRecoveryCode } from '@/lib/recoveryCodeUtils';
 
 export default function SecureStaffAuth() {
   const navigate = useNavigate();
