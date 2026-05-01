@@ -305,16 +305,15 @@ export default function SecureStaffAuth() {
     });
     
     if (data.user) {
-      const { code, emailSent } = await generate2FACode(data.user.id, data.user.email!);
-      await supabase.auth.signOut();
-      
-      if (emailSent) {
-        toast.success('تم إعادة إرسال رمز التحقق');
-      } else {
-        toast.info(`وضع التطوير - رمز التحقق: ${code}`, {
-          duration: 30000,
-          description: 'لم يتم إعداد البريد الإلكتروني بعد'
-        });
+      try {
+        const { emailSent } = await generate2FACode(data.user.id, data.user.email!);
+        if (emailSent) {
+          toast.success('تم إعادة إرسال رمز التحقق');
+        } else {
+          toast.warning('تعذر إرسال رمز التحقق عبر البريد. تواصل مع المسؤول.');
+        }
+      } finally {
+        await supabase.auth.signOut();
       }
     }
   };
