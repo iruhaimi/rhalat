@@ -38,8 +38,8 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
-    // Generate or use provided code
-    const code = providedCode || generateCode();
+    // SECURITY: Always generate the code server-side. Ignore any client-supplied code.
+    const code = generateCode();
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
     // Hash the code before storing (SHA-256) - matches verify_staff_2fa RPC
@@ -54,8 +54,9 @@ const handler = async (req: Request): Promise<Response> => {
     // Initialize Supabase client with service role
     const supabaseUrl = Deno.env.get("SUPABASE_URL");
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY");
 
-    if (!supabaseUrl || !supabaseServiceKey) {
+    if (!supabaseUrl || !supabaseServiceKey || !supabaseAnonKey) {
       console.error("Missing Supabase configuration");
       return new Response(
         JSON.stringify({ error: "Server configuration error" }),
@@ -67,6 +68,44 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+    // ============================================================
+    // AUTH CHECK: caller must be authenticated and must match userId
+    // ============================================================
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader) {
+      return new Response(
+        JSON.stringify({ error: "Unauthorized" }),
+        { status: 401, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
+    const userClient = createClient(supabaseUrl, supabaseAnonKey, {
+      global: { headers: { Authorization: authHeader } },
+    });
+    const { data: { user: callingUser }, error: userErr } = await userClient.auth.getUser();
+    if (userErr || !callingUser) {
+      return new Response(
+        JSON.stringify({ error: "Unauthorized" }),
+        { status: 401, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
+    if (callingUser.id !== userId) {
+      return new Response(
+        JSON.stringify({ error: "Forbidden" }),
+        { status: 403, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
+
+    // Rate limit (max 5 codes per user per 5 minutes)
+    const { data: rateOk } = await supabase.rpc("check_2fa_rate_limit", {
+      check_user_id: userId,
+    });
+    if (rateOk === false) {
+      return new Response(
+        JSON.stringify({ error: "Too many requests. Please wait before requesting another code." }),
+        { status: 429, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
 
     // ============================================================
     // INSERT 2FA CODE INTO DATABASE (using service_role)
@@ -267,7 +306,7 @@ const handler = async (req: Request): Promise<Response> => {
           success: true,
           message: "Test mode - no providers configured",
           testMode: true,
-          code: code, // Return code in test mode for display
+          // SECURITY: never return the plaintext code to the client.
         }),
         {
           status: 200,
@@ -284,8 +323,7 @@ const handler = async (req: Request): Promise<Response> => {
           emailSent: false,
           smsSent: false,
           testMode: true,
-          code: code, // Return code for fallback display
-          error: "Resend test-mode restriction: domain not verified",
+          error: "Email delivery restricted by provider configuration",
           details: results.errors,
         }),
         {
@@ -296,13 +334,12 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     if (!emailSent && !smsSent) {
-      // Code was still created in DB, return it for fallback
+      // Code was still created in DB; do NOT return it to the client.
       return new Response(
         JSON.stringify({
           success: true,
           emailSent: false,
           smsSent: false,
-          code: code, // Return code for fallback display
           error: "Failed to send 2FA code via any channel",
           details: results.errors,
         }),
