@@ -140,13 +140,28 @@ Deno.serve(async (req) => {
         role: role
       })
 
-    // Send welcome email with credentials
+    // Send welcome email with a one-time password setup link (no plaintext password)
     let emailSent = false
     if (sendEmail && resend) {
       try {
         const roleLabel = role === 'admin' ? 'مشرف' : 'وكيل'
-        const loginUrl = `${supabaseUrl.replace('.supabase.co', '')}/portal-x7k9m2`
-        
+
+        // Generate a secure password recovery link so the staff member sets their own password
+        let setupLink = ''
+        try {
+          const { data: linkData, error: linkError } = await adminClient.auth.admin.generateLink({
+            type: 'recovery',
+            email,
+          })
+          if (linkError) {
+            console.error('Error generating recovery link:', linkError)
+          } else {
+            setupLink = linkData?.properties?.action_link || ''
+          }
+        } catch (linkErr) {
+          console.error('Failed to generate recovery link:', linkErr)
+        }
+
         const { error: emailError } = await resend.emails.send({
           from: 'رحلات للتأشيرات <onboarding@resend.dev>',
           to: [email],
@@ -174,10 +189,9 @@ Deno.serve(async (req) => {
                   </p>
                   
                   <p style="color: #374151; font-size: 16px; line-height: 1.8; margin-bottom: 20px;">
-                    تم إنشاء حسابك بنجاح كـ <strong style="color: #0ea5e9;">${roleLabel}</strong> في نظام رحلات للتأشيرات. يمكنك الآن تسجيل الدخول باستخدام البيانات التالية:
+                    تم إنشاء حسابك بنجاح كـ <strong style="color: #0ea5e9;">${roleLabel}</strong> في نظام رحلات للتأشيرات. لأمانك، يرجى تعيين كلمة المرور الخاصة بك من خلال الرابط أدناه:
                   </p>
-                  
-                  <!-- Credentials Box -->
+
                   <div style="background-color: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; padding: 20px; margin: 25px 0;">
                     <table style="width: 100%; border-collapse: collapse;">
                       <tr>
@@ -185,20 +199,23 @@ Deno.serve(async (req) => {
                         <td style="padding: 8px 0; color: #1f2937; font-size: 14px; font-weight: bold;" dir="ltr">${email}</td>
                       </tr>
                       <tr>
-                        <td style="padding: 8px 0; color: #6b7280; font-size: 14px;">كلمة المرور:</td>
-                        <td style="padding: 8px 0; color: #1f2937; font-size: 14px; font-weight: bold;" dir="ltr">${password}</td>
-                      </tr>
-                      <tr>
                         <td style="padding: 8px 0; color: #6b7280; font-size: 14px;">الصلاحية:</td>
                         <td style="padding: 8px 0; color: #1f2937; font-size: 14px; font-weight: bold;">${roleLabel}</td>
                       </tr>
                     </table>
                   </div>
-                  
-                  <!-- Warning -->
+
+                  ${setupLink ? `
+                  <div style="text-align: center; margin: 30px 0;">
+                    <a href="${setupLink}" style="display: inline-block; background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%); color: #ffffff; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 16px;">
+                      تعيين كلمة المرور
+                    </a>
+                  </div>
+                  ` : ''}
+
                   <div style="background-color: #fef3c7; border: 1px solid #fcd34d; border-radius: 8px; padding: 15px; margin: 20px 0;">
                     <p style="color: #92400e; font-size: 14px; margin: 0; line-height: 1.6;">
-                      ⚠️ <strong>هام:</strong> يرجى تغيير كلمة المرور فور تسجيل الدخول للمرة الأولى. احتفظ ببيانات الدخول في مكان آمن ولا تشاركها مع أي شخص.
+                      ⚠️ <strong>هام:</strong> هذا الرابط صالح لفترة محدودة. اختر كلمة مرور قوية ولا تشاركها مع أي شخص. إذا لم تطلب هذا الحساب، يرجى تجاهل هذه الرسالة.
                     </p>
                   </div>
                   
