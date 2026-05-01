@@ -2231,6 +2231,10 @@ export type Database = {
         Args: { check_user_id: string }
         Returns: boolean
       }
+      check_staff_portal_path: {
+        Args: { p_candidate: string }
+        Returns: boolean
+      }
       clear_failed_login_attempts: {
         Args: { target_email: string }
         Returns: undefined
