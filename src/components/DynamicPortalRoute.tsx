@@ -17,13 +17,10 @@ export default function DynamicPortalRoute({ fallback }: { fallback: JSX.Element
     const path = location.pathname.replace(/^\/+/, '').replace(/\/+$/, '');
     if (!path) { setStatus('no-match'); return; }
     supabase
-      .from('staff_portal_settings')
-      .select('secret_path')
-      .eq('id', 1)
-      .maybeSingle()
+      .rpc('check_staff_portal_path', { p_candidate: path })
       .then(({ data }) => {
         if (!active) return;
-        setStatus(data?.secret_path === path ? 'match' : 'no-match');
+        setStatus(data === true ? 'match' : 'no-match');
       });
     return () => { active = false; };
   }, [location.pathname]);
