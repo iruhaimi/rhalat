@@ -323,21 +323,20 @@ export default function SecureStaffAuth() {
     setPendingSession(null);
   };
 
-  // Generate and save recovery codes for user
-  const generateAndSaveRecoveryCodes = async (userId: string) => {
-    const codes = generateRecoveryCodes(8);
-    
-    // Hash and save codes
-    for (let i = 0; i < codes.length; i++) {
-      const hash = await hashRecoveryCode(codes[i]);
-      await supabase.from('staff_recovery_codes').insert({
-        user_id: userId,
-        code_hash: hash,
-        code_index: i,
-      });
+  // Generate and save recovery codes via secure Edge Function (service-role insert).
+  // Direct client inserts are blocked by RLS to prevent privilege escalation.
+  const generateAndSaveRecoveryCodes = async (_userId: string): Promise<string[]> => {
+    const { data, error } = await supabase.functions.invoke('generate-staff-recovery-codes', {
+      body: {},
+    });
+    if (error) {
+      console.error('Failed to generate recovery codes:', error);
+      throw new Error('Failed to generate recovery codes');
     }
-    
-    return codes;
+    if (data?.error) {
+      throw new Error(data.error);
+    }
+    return (data?.codes as string[]) ?? [];
   };
 
   // Check if user has recovery codes
