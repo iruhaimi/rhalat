@@ -199,29 +199,28 @@ export default function SecureStaffAuth() {
         // Initiate 2FA
         setPendingUserId(data.user.id);
         setPendingSession({ user: data.user, roles: userRoles, isAdmin, isAgent, needsRecoveryCodes: !hasRecoveryCodes });
-        
-        // Sign out temporarily until 2FA is verified
-        await supabase.auth.signOut();
-        
-        // Generate and send 2FA code
+
+        // Generate and send 2FA code BEFORE signing out (edge function requires auth)
         try {
-          const { code, emailSent } = await generate2FACode(data.user.id, data.user.email!);
-          
+          const { emailSent } = await generate2FACode(data.user.id, data.user.email!);
+
           if (emailSent) {
             toast.success('تم إرسال رمز التحقق إلى بريدك الإلكتروني');
           } else {
-            // DEV MODE: Show code in toast when email is not configured
-            toast.info(`وضع التطوير - رمز التحقق: ${code}`, {
-              duration: 30000,
-              description: 'لم يتم إعداد البريد الإلكتروني بعد'
+            toast.warning('تعذر إرسال رمز التحقق عبر البريد. تواصل مع المسؤول.', {
+              duration: 10000,
             });
           }
         } catch (sendError) {
           console.error('Failed to generate 2FA code:', sendError);
+          await supabase.auth.signOut();
           setError('حدث خطأ في إنشاء رمز التحقق. يرجى المحاولة مرة أخرى.');
           return;
         }
-        
+
+        // Sign out temporarily until 2FA is verified
+        await supabase.auth.signOut();
+
         setShow2FA(true);
       }
     } catch (err) {
