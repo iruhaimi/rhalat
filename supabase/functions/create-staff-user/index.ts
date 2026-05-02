@@ -115,6 +115,25 @@ Deno.serve(async (req) => {
 
     // Grant super admin permission if requested and role is admin
     if (grantSuperAdmin && role === 'admin') {
+      // SECURITY: Only existing super admins (manage_staff permission) may grant super admin.
+      const { data: canGrant, error: permCheckError } = await adminClient.rpc('has_permission', {
+        _user_id: callingUser.id,
+        _permission: 'manage_staff',
+      })
+
+      if (permCheckError || !canGrant) {
+        // Roll back the created user to avoid orphaned accounts on privilege-escalation attempts.
+        try {
+          await adminClient.auth.admin.deleteUser(newUser.user!.id)
+        } catch (rollbackErr) {
+          console.error('Rollback after privilege escalation attempt failed:', rollbackErr)
+        }
+        return new Response(
+          JSON.stringify({ success: false, error: 'Only super admins can grant super admin rights' }),
+          { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        )
+      }
+
       const { error: permError } = await adminClient
         .from('staff_permissions')
         .insert({

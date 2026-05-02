@@ -235,27 +235,16 @@ export default function SecureStaffAuth() {
     if (!pendingUserId || !pendingSession) return false;
 
     try {
-      // Verify code
-      const { data: codeData, error: codeError } = await supabase
-        .from('staff_2fa_codes')
-        .select('*')
-        .eq('user_id', pendingUserId)
-        .eq('code', code)
-        .eq('used', false)
-        .gt('expires_at', new Date().toISOString())
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .maybeSingle();
+      // Verify code via SECURITY DEFINER RPC (server-side hashing, anon-safe).
+      // The RPC handles hash comparison and marks the code as used atomically.
+      const { data: ok, error: rpcError } = await supabase.rpc('verify_staff_2fa', {
+        p_user_id: pendingUserId,
+        p_code: code,
+      });
 
-      if (codeError || !codeData) {
+      if (rpcError || !ok) {
         return false;
       }
-
-      // Mark code as used
-      await supabase
-        .from('staff_2fa_codes')
-        .update({ used: true })
-        .eq('id', codeData.id);
 
       // Re-authenticate
       const { error: signInError } = await supabase.auth.signInWithPassword({
