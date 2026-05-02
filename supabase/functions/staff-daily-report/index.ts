@@ -11,11 +11,23 @@ Deno.serve(async (req) => {
     const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
     const SERVICE = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 
-    // SECURITY: this endpoint is invoked by pg_cron via a shared secret.
-    // Reject any caller that does not provide a matching `x-cron-secret` header.
-    const cronSecret = Deno.env.get('CRON_SHARED_SECRET');
-    const providedSecret = req.headers.get('x-cron-secret');
-    if (!cronSecret || providedSecret !== cronSecret) {
+    // SECURITY: this function is invoked by pg_cron with the service_role JWT
+    // in the Authorization header. Reject anything else so anonymous callers
+    // cannot spam super admins with bogus reports (notification fatigue).
+    const authHeader = req.headers.get('Authorization') || '';
+    const token = authHeader.replace(/^Bearer\s+/i, '');
+    let isServiceRole = false;
+    try {
+      const payloadB64 = token.split('.')[1];
+      if (payloadB64) {
+        const padded = payloadB64.replace(/-/g, '+').replace(/_/g, '/');
+        const json = atob(padded + '='.repeat((4 - padded.length % 4) % 4));
+        isServiceRole = JSON.parse(json)?.role === 'service_role';
+      }
+    } catch (_e) {
+      isServiceRole = false;
+    }
+    if (!isServiceRole) {
       return new Response(JSON.stringify({ error: 'Unauthorized' }), {
         status: 401,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
