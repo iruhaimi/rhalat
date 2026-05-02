@@ -18,6 +18,48 @@ Deno.serve(async (req) => {
       throw new Error('OneSignal credentials not configured')
     }
 
+    // Authenticate caller. Two accepted modes:
+    //   1. Internal service-to-service: header `x-internal-secret` matches PUSH_INTERNAL_SECRET env var.
+    //   2. Authenticated staff user (admin or agent) with a valid Supabase JWT.
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')!
+    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')!
+    const internalSecret = Deno.env.get('PUSH_INTERNAL_SECRET')
+
+    const providedSecret = req.headers.get('x-internal-secret')
+    const isInternalCall = !!internalSecret && providedSecret === internalSecret
+
+    if (!isInternalCall) {
+      const authHeader = req.headers.get('Authorization')
+      if (!authHeader?.startsWith('Bearer ')) {
+        return new Response(
+          JSON.stringify({ error: 'Unauthorized' }),
+          { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        )
+      }
+      const userClient = createClient(supabaseUrl, supabaseAnonKey, {
+        global: { headers: { Authorization: authHeader } },
+      })
+      const { data: userData, error: userErr } = await userClient.auth.getUser()
+      if (userErr || !userData?.user) {
+        return new Response(
+          JSON.stringify({ error: 'Unauthorized' }),
+          { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        )
+      }
+      const adminCheck = createClient(supabaseUrl, supabaseServiceKey)
+      const [{ data: isAdmin }, { data: isAgent }] = await Promise.all([
+        adminCheck.rpc('is_admin', { _user_id: userData.user.id }),
+        adminCheck.rpc('is_agent', { _user_id: userData.user.id }),
+      ])
+      if (!isAdmin && !isAgent) {
+        return new Response(
+          JSON.stringify({ error: 'Forbidden: staff only' }),
+          { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        )
+      }
+    }
+
     const { user_id, title, message, url, data } = await req.json()
 
     if (!user_id || !title || !message) {
@@ -28,9 +70,7 @@ Deno.serve(async (req) => {
     }
 
     // Get user's OneSignal player IDs from profiles
-    const supabaseUrl = Deno.env.get('SUPABASE_URL')!
-    const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
-    const supabase = createClient(supabaseUrl, supabaseKey)
+    const supabase = createClient(supabaseUrl, supabaseServiceKey)
 
     const { data: devices } = await supabase
       .from('user_push_devices')
