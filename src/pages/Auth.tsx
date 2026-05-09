@@ -150,9 +150,9 @@ export default function Auth() {
   const handleSignIn = async (data: SignInFormData) => {
     setIsLoading(true);
     const { error } = await signIn(data.email, data.password);
-    setIsLoading(false);
 
     if (error) {
+      setIsLoading(false);
       toast({
         variant: 'destructive',
         title: 'فشل تسجيل الدخول',
@@ -166,6 +166,7 @@ export default function Auth() {
     // Block staff from authenticating via the public page
     const { data: { user: currentUser } } = await supabase.auth.getUser();
     if (currentUser && (await blockStaffOnPublicAuth(currentUser.id))) {
+      setIsLoading(false);
       return;
     }
 
@@ -190,6 +191,7 @@ export default function Auth() {
       }
 
       navigate('/profile');
+      setIsLoading(false);
   };
 
   const handleSignUp = async (data: SignUpFormData) => {
