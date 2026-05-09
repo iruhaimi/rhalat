@@ -72,6 +72,30 @@ export default function Auth() {
   const { direction } = useLanguage();
   const isRTL = direction === 'rtl';
 
+  // Security: staff (admin/agent) MUST authenticate via the secret staff portal,
+  // never via the public /auth page. If they try, we reject and force sign-out.
+  const isStaffUser = async (userId: string): Promise<boolean> => {
+    const { data } = await supabase
+      .from('user_roles')
+      .select('role')
+      .eq('user_id', userId)
+      .in('role', ['admin', 'agent']);
+    return Array.isArray(data) && data.length > 0;
+  };
+
+  const blockStaffOnPublicAuth = async (userId: string): Promise<boolean> => {
+    if (!(await isStaffUser(userId))) return false;
+    await supabase.auth.signOut();
+    toast({
+      variant: 'destructive',
+      title: isRTL ? 'الدخول من هنا غير مسموح للموظفين' : 'Staff sign-in not allowed here',
+      description: isRTL
+        ? 'حسابات فريق العمل تُسجل الدخول فقط عبر بوابة الموظفين السرية. يرجى التواصل مع الإدارة للحصول على الرابط.'
+        : 'Staff accounts may only sign in through the secure staff portal. Contact your administrator for the link.',
+    });
+    return true;
+  };
+
   // Filter to remove Arabic characters from email and password fields
   const filterArabicChars = (e: React.FormEvent<HTMLInputElement>) => {
     const input = e.currentTarget;
@@ -84,7 +108,10 @@ export default function Auth() {
 
   useEffect(() => {
     if (user) {
-      navigate('/profile');
+      (async () => {
+        const blocked = await blockStaffOnPublicAuth(user.id);
+        if (!blocked) navigate('/profile');
+      })();
     }
   }, [user, navigate]);
 
@@ -133,14 +160,21 @@ export default function Auth() {
           ? 'البريد الإلكتروني أو كلمة المرور غير صحيحة'
           : error.message,
       });
-    } else {
-      toast({
+      return;
+    }
+
+    // Block staff from authenticating via the public page
+    const { data: { user: currentUser } } = await supabase.auth.getUser();
+    if (currentUser && (await blockStaffOnPublicAuth(currentUser.id))) {
+      return;
+    }
+
+    toast({
         title: 'مرحباً بعودتك!',
         description: 'تم تسجيل الدخول بنجاح',
       });
 
       // Check profile completeness and show reminder toast
-      const { data: { user: currentUser } } = await supabase.auth.getUser();
       if (currentUser) {
         const missingFields = await checkProfileCompleteness(currentUser.id);
         if (missingFields.length > 0) {
@@ -156,7 +190,6 @@ export default function Auth() {
       }
 
       navigate('/profile');
-    }
   };
 
   const handleSignUp = async (data: SignUpFormData) => {

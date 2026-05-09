@@ -161,7 +161,7 @@ export default function ResetPassword() {
   const handleSubmit = async (data: ResetPasswordFormData) => {
     setIsLoading(true);
     
-    const { error } = await supabase.auth.updateUser({
+    const { data: updated, error } = await supabase.auth.updateUser({
       password: data.password,
     });
     
@@ -173,7 +173,31 @@ export default function ResetPassword() {
         title: isRTL ? 'فشل تحديث كلمة المرور' : 'Failed to update password',
         description: error.message,
       });
-    } else {
+      return;
+    }
+
+    // Security: if the recovered user is staff, force sign-out so they can't
+    // bypass the secret staff portal + 2FA via the password-reset session.
+    const recoveredUserId = updated?.user?.id;
+    if (recoveredUserId) {
+      const { data: roleRows } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', recoveredUserId)
+        .in('role', ['admin', 'agent']);
+      if (Array.isArray(roleRows) && roleRows.length > 0) {
+        await supabase.auth.signOut();
+        toast({
+          title: isRTL ? 'تم تحديث كلمة المرور' : 'Password updated',
+          description: isRTL
+            ? 'لأسباب أمنية، يجب على فريق العمل تسجيل الدخول من بوابة الموظفين السرية وإكمال خطوة التحقق الثنائي.'
+            : 'For security, staff must sign in via the secure staff portal and complete two-factor verification.',
+        });
+        setTimeout(() => navigate('/'), 1500);
+        return;
+      }
+    }
+
       setIsSuccess(true);
       toast({
         title: isRTL ? 'تم تحديث كلمة المرور!' : 'Password updated!',
@@ -181,7 +205,6 @@ export default function ResetPassword() {
           ? 'تم تغيير كلمة المرور بنجاح. يمكنك الآن تسجيل الدخول.'
           : 'Your password has been changed successfully. You can now sign in.',
       });
-    }
   };
 
   // Show loading state while checking session
