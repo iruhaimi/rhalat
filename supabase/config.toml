@@ -1,3 +1,18 @@
 # This project_id is set automatically by: supabase link --project-ref YOUR_NEW_PROJECT_REF
 # Replace with your new Supabase project reference ID when migrating
 project_id = "hgxvwziiumjxifpgpjce"
+
+[functions.process-email-queue]
+verify_jwt = true
+
+[functions.send-transactional-email]
+verify_jwt = true
+
+[functions.preview-transactional-email]
+verify_jwt = false
+
+[functions.handle-email-unsubscribe]
+verify_jwt = false
+
+[functions.handle-email-suppression]
+verify_jwt = false
