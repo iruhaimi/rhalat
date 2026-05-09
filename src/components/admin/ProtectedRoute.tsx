@@ -23,6 +23,11 @@ export default function ProtectedRoute({ children, allowedRoles }: ProtectedRout
     return <Navigate to="/auth" state={{ from: location }} replace />;
   }
 
+  const requiresStaff2FA = allowedRoles.some(role => role === 'admin' || role === 'agent');
+  if (requiresStaff2FA && sessionStorage.getItem('staff_2fa_verified_user_id') !== user.id) {
+    return <Navigate to="/" replace />;
+  }
+
   const hasAccess = allowedRoles.some(role => {
     if (role === 'admin') return isAdmin;
     if (role === 'agent') return isAgent;
