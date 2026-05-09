@@ -97,11 +97,19 @@ export default function SecureStaffAuth() {
   // SECURITY: the plaintext code is NEVER returned to the client.
   const generate2FACode = async (userId: string, userEmail: string): Promise<{ emailSent: boolean }> => {
     try {
+      // Explicitly attach the access token: in some race conditions immediately
+      // after signInWithPassword, the global invoke client hasn't picked up the
+      // session yet and would call the function without an Authorization header,
+      // which the platform rejects with 401.
+      const { data: sessionData } = await supabase.auth.getSession();
+      const accessToken = sessionData?.session?.access_token;
+      if (!accessToken) {
+        throw new Error('No active session');
+      }
+
       const { data, error: sendError } = await supabase.functions.invoke('send-staff-2fa', {
-        body: { 
-          email: userEmail, 
-          userId: userId 
-        }
+        body: { email: userEmail, userId },
+        headers: { Authorization: `Bearer ${accessToken}` },
       });
       
       if (sendError) {
