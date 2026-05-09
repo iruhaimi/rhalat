@@ -75,16 +75,14 @@ const handler = async (req: Request): Promise<Response> => {
     // AUTH CHECK: caller must be authenticated and must match userId
     // ============================================================
     const authHeader = req.headers.get("Authorization");
-    if (!authHeader) {
+    const accessToken = authHeader?.replace(/^Bearer\s+/i, "").trim();
+    if (!accessToken) {
       return new Response(
         JSON.stringify({ error: "Unauthorized" }),
         { status: 401, headers: { "Content-Type": "application/json", ...corsHeaders } }
       );
     }
-    const userClient = createClient(supabaseUrl, supabaseAnonKey, {
-      global: { headers: { Authorization: authHeader } },
-    });
-    const { data: { user: callingUser }, error: userErr } = await userClient.auth.getUser();
+    const { data: { user: callingUser }, error: userErr } = await supabase.auth.getUser(accessToken);
     if (userErr || !callingUser) {
       return new Response(
         JSON.stringify({ error: "Unauthorized" }),
