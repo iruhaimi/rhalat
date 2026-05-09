@@ -1,0 +1,1 @@
+UPDATE public.staff_portal_settings SET secret_path = 'portal-x7k9m2', rotated_at = now() WHERE id = 1;
