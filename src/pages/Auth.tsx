@@ -12,6 +12,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
+import { createClient } from '@supabase/supabase-js';
 
 const REQUIRED_PROFILE_FIELDS = [
   'full_name', 'phone', 'date_of_birth', 'nationality',
@@ -57,6 +58,30 @@ const signUpSchema = z.object({
 type SignInFormData = z.infer<typeof signInSchema>;
 type SignUpFormData = z.infer<typeof signUpSchema>;
 
+
+const createEphemeralAuthClient = () => {
+  const memoryStore = new Map<string, string>();
+
+  return createClient(
+    import.meta.env.VITE_SUPABASE_URL,
+    import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+    {
+      auth: {
+        storage: {
+          getItem: (key: string) => memoryStore.get(key) ?? null,
+          setItem: (key: string, value: string) => { memoryStore.set(key, value); },
+          removeItem: (key: string) => { memoryStore.delete(key); },
+        },
+        persistSession: true,
+        autoRefreshToken: false,
+        detectSessionInUrl: false,
+      },
+    }
+  );
+};
+
+type EphemeralAuthClient = ReturnType<typeof createEphemeralAuthClient>;
+
 export default function Auth() {
   const [searchParams] = useSearchParams();
   const mode = searchParams.get('mode');
@@ -68,14 +93,14 @@ export default function Auth() {
   const [resetEmailSent, setResetEmailSent] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { user, signIn, signUp } = useAuth();
+  const { user, signUp } = useAuth();
   const { direction } = useLanguage();
   const isRTL = direction === 'rtl';
 
   // Security: staff (admin/agent) MUST authenticate via the secret staff portal,
   // never via the public /auth page. If they try, we reject and force sign-out.
-  const isStaffUser = async (userId: string): Promise<boolean> => {
-    const { data } = await supabase
+  const isStaffUser = async (userId: string, client: EphemeralAuthClient | typeof supabase = supabase): Promise<boolean> => {
+    const { data } = await client
       .from('user_roles')
       .select('role')
       .eq('user_id', userId)
@@ -149,49 +174,72 @@ export default function Auth() {
 
   const handleSignIn = async (data: SignInFormData) => {
     setIsLoading(true);
-    const { error } = await signIn(data.email, data.password);
+    const authClient = createEphemeralAuthClient();
+    const { data: loginData, error } = await authClient.auth.signInWithPassword({
+      email: data.email,
+      password: data.password,
+    });
 
-    if (error) {
+    if (error || !loginData.user || !loginData.session) {
       setIsLoading(false);
       toast({
         variant: 'destructive',
         title: 'فشل تسجيل الدخول',
-        description: error.message === 'Invalid login credentials'
+        description: error?.message === 'Invalid login credentials'
           ? 'البريد الإلكتروني أو كلمة المرور غير صحيحة'
-          : error.message,
+          : error?.message || 'تعذر تسجيل الدخول',
       });
       return;
     }
 
-    // Block staff from authenticating via the public page
-    const { data: { user: currentUser } } = await supabase.auth.getUser();
-    if (currentUser && (await blockStaffOnPublicAuth(currentUser.id))) {
+    // Block staff before the session is ever activated in the public app client.
+    if (await isStaffUser(loginData.user.id, authClient)) {
+      await authClient.auth.signOut({ scope: 'local' });
       setIsLoading(false);
+      toast({
+        variant: 'destructive',
+        title: isRTL ? 'الدخول من هنا غير مسموح للموظفين' : 'Staff sign-in not allowed here',
+        description: isRTL
+          ? 'حسابات فريق العمل تُسجل الدخول فقط عبر بوابة الموظفين السرية. يرجى التواصل مع الإدارة للحصول على الرابط.'
+          : 'Staff accounts may only sign in through the secure staff portal. Contact your administrator for the link.',
+      });
+      return;
+    }
+
+    const { error: activateError } = await supabase.auth.setSession({
+      access_token: loginData.session.access_token,
+      refresh_token: loginData.session.refresh_token,
+    });
+
+    if (activateError) {
+      setIsLoading(false);
+      toast({
+        variant: 'destructive',
+        title: 'فشل تسجيل الدخول',
+        description: activateError.message,
+      });
       return;
     }
 
     toast({
-        title: 'مرحباً بعودتك!',
-        description: 'تم تسجيل الدخول بنجاح',
-      });
+      title: 'مرحباً بعودتك!',
+      description: 'تم تسجيل الدخول بنجاح',
+    });
 
-      // Check profile completeness and show reminder toast
-      if (currentUser) {
-        const missingFields = await checkProfileCompleteness(currentUser.id);
-        if (missingFields.length > 0) {
-          setTimeout(() => {
-            toast({
-              title: isRTL ? 'أكمل ملفك الشخصي' : 'Complete Your Profile',
-              description: isRTL 
-                ? `لديك ${missingFields.length} حقول ناقصة. يرجى استكمال بياناتك لتسهيل عملية التقديم.`
-                : `You have ${missingFields.length} incomplete fields. Please complete your profile.`,
-            });
-          }, 1000);
-        }
-      }
+    const missingFields = await checkProfileCompleteness(loginData.user.id);
+    if (missingFields.length > 0) {
+      setTimeout(() => {
+        toast({
+          title: isRTL ? 'أكمل ملفك الشخصي' : 'Complete Your Profile',
+          description: isRTL 
+            ? `لديك ${missingFields.length} حقول ناقصة. يرجى استكمال بياناتك لتسهيل عملية التقديم.`
+            : `You have ${missingFields.length} incomplete fields. Please complete your profile.`,
+        });
+      }, 1000);
+    }
 
-      navigate('/profile');
-      setIsLoading(false);
+    navigate('/profile');
+    setIsLoading(false);
   };
 
   const handleSignUp = async (data: SignUpFormData) => {
