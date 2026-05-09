@@ -130,7 +130,7 @@ export default function Step4Documents() {
   };
 
   const uploadedCount = applicationData.uploadedDocuments.filter(d => d.uploaded).length;
-  const canProceed = uploadedCount >= 2; // At least passport and photo
+  const canProceed = true; // Documents are optional - user may continue via WhatsApp
 
   return (
     <div className="space-y-4 sm:space-y-6">
@@ -138,8 +138,8 @@ export default function Step4Documents() {
         <h2 className="text-xl sm:text-2xl font-bold">{t('wizard.step4')}</h2>
         <p className="text-sm sm:text-base text-muted-foreground mt-2">
           {direction === 'rtl' 
-            ? 'ارفع المستندات المطلوبة لإتمام طلبك' 
-            : 'Upload required documents to complete your application'}
+            ? 'رفع المستندات اختياري - يمكنك إكمال الطلب وإرسالها لاحقاً عبر واتساب' 
+            : 'Document upload is optional - you can continue and send them later via WhatsApp'}
         </p>
       </div>
 
@@ -151,11 +151,8 @@ export default function Step4Documents() {
             : `${uploadedCount} document${uploadedCount !== 1 ? 's' : ''} uploaded`
           }
         </span>
-        <Badge variant={uploadedCount >= 2 ? 'default' : 'secondary'} className="w-fit">
-          {uploadedCount >= 2 
-            ? (direction === 'rtl' ? 'الحد الأدنى مكتمل' : 'Minimum met')
-            : (direction === 'rtl' ? 'مستندان على الأقل' : 'At least 2 required')
-          }
+        <Badge variant="secondary" className="w-fit">
+          {direction === 'rtl' ? 'اختياري' : 'Optional'}
         </Badge>
       </div>
 
