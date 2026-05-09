@@ -267,7 +267,15 @@ export default function SecureStaffAuth() {
 
         if (restoreError) {
           console.error('Failed to restore pending staff session before 2FA:', restoreError);
-          throw new Error('تعذر إكمال تسجيل الدخول. يرجى طلب رمز جديد والمحاولة مرة أخرى.');
+          const { error: signInError } = await supabase.auth.signInWithPassword({
+            email: email.trim(),
+            password,
+          });
+
+          if (signInError) {
+            console.error('Failed to re-authenticate before 2FA after restore failure:', signInError);
+            throw new Error('تم التحقق من كلمة المرور، لكن تعذر إكمال الجلسة. يرجى تسجيل الدخول وطلب رمز جديد.');
+          }
         }
       } else {
         const { error: signInError } = await supabase.auth.signInWithPassword({
