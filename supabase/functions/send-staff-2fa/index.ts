@@ -141,7 +141,6 @@ const handler = async (req: Request): Promise<Response> => {
 
     let emailSent = false;
     let smsSent = false;
-    let resendRecipientRestricted = false;
     const results: { email?: boolean; sms?: boolean; errors?: string[] } = {
       errors: [],
     };
@@ -243,43 +242,6 @@ const handler = async (req: Request): Promise<Response> => {
       }
     } catch (notifyError) {
       console.error("Failed to notify admins:", notifyError);
-    }
-
-    // Check if at least one method worked or if none are configured (for testing)
-    const noProviderConfigured = !RESEND_API_KEY && !TWILIO_ACCOUNT_SID;
-    
-    if (noProviderConfigured) {
-      console.log(`[TEST MODE] 2FA code for ${email}: ${code}`);
-      return new Response(
-        JSON.stringify({
-          success: true,
-          message: "Test mode - no providers configured",
-          testMode: true,
-          // SECURITY: never return the plaintext code to the client.
-        }),
-        {
-          status: 200,
-          headers: { "Content-Type": "application/json", ...corsHeaders },
-        }
-      );
-    }
-
-    if (resendRecipientRestricted) {
-      console.log(`[TEST MODE] Resend blocked recipient. Code for ${email}: ${code}`);
-      return new Response(
-        JSON.stringify({
-          success: true,
-          emailSent: false,
-          smsSent: false,
-          testMode: true,
-          error: "Email delivery restricted by provider configuration",
-          details: results.errors,
-        }),
-        {
-          status: 200,
-          headers: { "Content-Type": "application/json", ...corsHeaders },
-        }
-      );
     }
 
     if (!emailSent && !smsSent) {
