@@ -175,11 +175,12 @@ const handler = async (req: Request): Promise<Response> => {
     };
 
     try {
+      const functionInvokeKey = isJwtLike(supabaseAnonKey) ? supabaseAnonKey : PUBLIC_ANON_JWT;
       const emailResponse = await fetch(`${supabaseUrl}/functions/v1/send-transactional-email`, {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${supabaseAnonKey}`,
-          apikey: supabaseAnonKey,
+          Authorization: `Bearer ${functionInvokeKey}`,
+          apikey: functionInvokeKey,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
