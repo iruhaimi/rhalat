@@ -99,8 +99,8 @@ export default function Auth() {
 
   // Security: staff (admin/agent) MUST authenticate via the secret staff portal,
   // never via the public /auth page. If they try, we reject and force sign-out.
-  const isStaffUser = async (userId: string, client: EphemeralAuthClient | typeof supabase = supabase): Promise<boolean> => {
-    const { data } = await client
+  const isStaffUser = async (userId: string, _client?: EphemeralAuthClient | typeof supabase): Promise<boolean> => {
+    const { data } = await supabase
       .from('user_roles')
       .select('role')
       .eq('user_id', userId)
