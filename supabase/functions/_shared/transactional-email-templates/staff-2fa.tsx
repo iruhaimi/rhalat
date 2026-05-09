@@ -30,7 +30,7 @@ const Staff2FAEmail = ({ code }: Staff2FAProps) => (
           رمز التحقق للدخول إلى بوابة الموظفين الخاصة بـ {SITE_NAME}:
         </Text>
         <Section style={codeBox}>
-          <Text style={codeText}>{code ?? '------'}</Text>
+          <Text style={codeText} dir="ltr">{code ?? '------'}</Text>
         </Section>
         <Text style={meta}>⏱️ هذا الرمز صالح لمدة 10 دقائق فقط.</Text>
         <Text style={warning}>
