@@ -356,6 +356,8 @@ export default function SecureStaffAuth() {
   };
 
   const cancel2FA = () => {
+    sessionStorage.removeItem('staff_2fa_pending_user_id');
+    sessionStorage.removeItem('staff_2fa_verified_user_id');
     setShow2FA(false);
     setPendingUserId(null);
     setPendingSession(null);
