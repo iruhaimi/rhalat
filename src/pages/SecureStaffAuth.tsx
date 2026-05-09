@@ -206,7 +206,15 @@ export default function SecureStaffAuth() {
 
         // Initiate 2FA
         setPendingUserId(data.user.id);
-        setPendingSession({ user: data.user, roles: userRoles, isAdmin, isAgent, needsRecoveryCodes: !hasRecoveryCodes });
+        setPendingSession({
+          user: data.user,
+          roles: userRoles,
+          isAdmin,
+          isAgent,
+          needsRecoveryCodes: !hasRecoveryCodes,
+          accessToken: data.session?.access_token,
+          refreshToken: data.session?.refresh_token,
+        });
 
         // Generate and send 2FA code BEFORE signing out (edge function requires auth)
         try {
@@ -230,8 +238,9 @@ export default function SecureStaffAuth() {
           return;
         }
 
-        // Sign out temporarily until 2FA is verified
-        await supabase.auth.signOut();
+        // Clear the browser session until 2FA is verified, without invalidating
+        // the refresh token we need to restore the same login after success.
+        await supabase.auth.signOut({ scope: 'local' });
 
         setShow2FA(true);
       }
@@ -259,14 +268,29 @@ export default function SecureStaffAuth() {
         return false;
       }
 
-      // Re-authenticate
-      const { error: signInError } = await supabase.auth.signInWithPassword({
-        email: email.trim(),
-        password,
-      });
+      // Restore the exact session created before 2FA. This prevents a valid code
+      // from being consumed and then falsely reported as invalid if a second
+      // password-login request is blocked or delayed.
+      if (pendingSession.accessToken && pendingSession.refreshToken) {
+        const { error: restoreError } = await supabase.auth.setSession({
+          access_token: pendingSession.accessToken,
+          refresh_token: pendingSession.refreshToken,
+        });
 
-      if (signInError) {
-        return false;
+        if (restoreError) {
+          console.error('Failed to restore verified staff session:', restoreError);
+          throw new Error('تم التحقق من الرمز، لكن تعذر إكمال تسجيل الدخول. يرجى طلب رمز جديد والمحاولة مرة أخرى.');
+        }
+      } else {
+        const { error: signInError } = await supabase.auth.signInWithPassword({
+          email: email.trim(),
+          password,
+        });
+
+        if (signInError) {
+          console.error('Failed to re-authenticate after 2FA:', signInError);
+          throw new Error('تم التحقق من الرمز، لكن تعذر إكمال تسجيل الدخول. يرجى طلب رمز جديد والمحاولة مرة أخرى.');
+        }
       }
 
       // Log successful attempt
