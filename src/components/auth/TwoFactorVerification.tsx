@@ -33,6 +33,13 @@ const maskEmail = (email: string): string => {
   return `${maskedLocal}@${maskedDomain}.${extension || '***'}`;
 };
 
+const normalizeDigits = (value: string): string => {
+  return value
+    .replace(/[٠-٩]/g, (digit) => String('٠١٢٣٤٥٦٧٨٩'.indexOf(digit)))
+    .replace(/[۰-۹]/g, (digit) => String('۰۱۲۳۴۵۶۷۸۹'.indexOf(digit)))
+    .replace(/\D/g, '');
+};
+
 export default function TwoFactorVerification({
   email,
   onVerify,
@@ -60,18 +67,25 @@ export default function TwoFactorVerification({
   }, [countdown]);
 
   const handleChange = (index: number, value: string) => {
-    // Only allow numbers
-    const numValue = value.replace(/\D/g, '').slice(-1);
-    
+    const digits = normalizeDigits(value).slice(0, 6 - index);
     const newCode = [...code];
-    newCode[index] = numValue;
+
+    if (!digits) {
+      newCode[index] = '';
+      setCode(newCode);
+      setError('');
+      return;
+    }
+
+    digits.split('').forEach((digit, offset) => {
+      newCode[index + offset] = digit;
+    });
+
     setCode(newCode);
     setError('');
 
-    // Auto-focus next input
-    if (numValue && index < 5) {
-      inputRefs.current[index + 1]?.focus();
-    }
+    const nextIndex = Math.min(index + digits.length, 5);
+    inputRefs.current[nextIndex]?.focus();
   };
 
   const handleKeyDown = (index: number, e: React.KeyboardEvent) => {
@@ -82,7 +96,7 @@ export default function TwoFactorVerification({
 
   const handlePaste = (e: React.ClipboardEvent) => {
     e.preventDefault();
-    const pastedData = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
+    const pastedData = normalizeDigits(e.clipboardData.getData('text')).slice(0, 6);
     const newCode = [...code];
     pastedData.split('').forEach((char, i) => {
       if (i < 6) newCode[i] = char;
