@@ -1,13 +1,15 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.49.1'
 import { corsHeaders } from '../_shared/cors.ts'
 
-// Generate a single recovery code (mirrors src/lib/recoveryCodeUtils.ts)
+// Generate a single recovery code using a CSPRNG (Web Crypto API)
 function generateRecoveryCode(): string {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
+  const arr = new Uint8Array(8)
+  crypto.getRandomValues(arr)
   let code = ''
   for (let i = 0; i < 8; i++) {
     if (i === 4) code += '-'
-    code += chars[Math.floor(Math.random() * chars.length)]
+    code += chars[arr[i] % chars.length]
   }
   return code
 }
