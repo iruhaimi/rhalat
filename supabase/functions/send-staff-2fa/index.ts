@@ -165,25 +165,27 @@ const handler = async (req: Request): Promise<Response> => {
     };
 
     try {
-      const emailClient = createClient(supabaseUrl, supabaseAnonKey, {
-        global: { headers: { Authorization: `Bearer ${supabaseAnonKey}` } },
+      const emailResponse = await fetch(`${supabaseUrl}/functions/v1/send-transactional-email`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${supabaseAnonKey}`,
+          apikey: supabaseAnonKey,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          templateName: "staff-2fa",
+          recipientEmail: targetEmail,
+          idempotencyKey: `staff-2fa-${userId}-${Date.now()}`,
+          templateData: { code },
+        }),
       });
-      const { data: invokeData, error: invokeError } = await emailClient.functions.invoke(
-        "send-transactional-email",
-        {
-          body: {
-            templateName: "staff-2fa",
-            recipientEmail: targetEmail,
-            idempotencyKey: `staff-2fa-${userId}-${Date.now()}`,
-            templateData: { code },
-          },
-        }
-      );
 
-      if (invokeError) {
-        console.error("Lovable email invoke error:", invokeError);
-        results.errors?.push(`Email error: ${invokeError.message}`);
+      if (!emailResponse.ok) {
+        const errorText = await emailResponse.text();
+        console.error("Lovable email invoke error:", emailResponse.status, errorText);
+        results.errors?.push(`Email error: ${emailResponse.status} ${errorText}`);
       } else {
+        const invokeData = await emailResponse.json().catch(() => null);
         emailSent = true;
         results.email = true;
         console.log("2FA email enqueued successfully via Lovable Cloud", invokeData);
