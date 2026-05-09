@@ -213,10 +213,25 @@ export default function Refund() {
     setIsSubmitting(true);
     
     try {
+      // Bind the refund request to the authenticated user. RLS requires
+      // user_id = auth.uid() so we can't trust the email field alone.
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        toast({
+          title: isRTL ? 'يجب تسجيل الدخول' : 'Login required',
+          description: isRTL
+            ? 'يرجى تسجيل الدخول قبل تقديم طلب الاسترداد.'
+            : 'Please sign in before submitting a refund request.',
+          variant: 'destructive',
+        });
+        return;
+      }
+
       // Insert refund request into database
       const { error } = await supabase
         .from('refund_requests')
         .insert({
+          user_id: user.id,
           application_number: formData.applicationNumber.trim(),
           email: formData.email.trim().toLowerCase(),
           phone: formData.phone?.trim() || null,

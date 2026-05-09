@@ -50,6 +50,16 @@ Deno.serve(async (req) => {
 
     const since = new Date(Date.now() - 12 * 60 * 60 * 1000); // last 12h
 
+    // HTML-escape helper — login attempts contain attacker-controlled fields
+    // (email, IP, failure_reason) that get embedded into the HTML report.
+    const esc = (s: unknown) =>
+      String(s ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+
     // Login attempts
     const { data: attempts } = await admin
       .from('staff_login_attempts')
@@ -88,11 +98,11 @@ Deno.serve(async (req) => {
 
     const fmtRow = (a: any) => `
       <tr>
-        <td style="padding:6px;border:1px solid #e5e7eb;">${new Date(a.created_at).toLocaleString('ar-SA')}</td>
-        <td style="padding:6px;border:1px solid #e5e7eb;">${a.email}</td>
-        <td style="padding:6px;border:1px solid #e5e7eb;">${a.ip_address || '—'}</td>
+        <td style="padding:6px;border:1px solid #e5e7eb;">${esc(new Date(a.created_at).toLocaleString('ar-SA'))}</td>
+        <td style="padding:6px;border:1px solid #e5e7eb;">${esc(a.email)}</td>
+        <td style="padding:6px;border:1px solid #e5e7eb;">${esc(a.ip_address || '—')}</td>
         <td style="padding:6px;border:1px solid #e5e7eb;">${a.success ? '✅' : '❌'}</td>
-        <td style="padding:6px;border:1px solid #e5e7eb;">${a.failure_reason || ''}</td>
+        <td style="padding:6px;border:1px solid #e5e7eb;">${esc(a.failure_reason || '')}</td>
       </tr>`;
 
     const html = `
@@ -116,7 +126,7 @@ Deno.serve(async (req) => {
 
         ${topFailures.length ? `
           <h3>أعلى الحسابات بمحاولات فاشلة</h3>
-          <ul>${topFailures.map(([e, c]) => `<li>${e}: <strong>${c}</strong> محاولة</li>`).join('')}</ul>
+          <ul>${topFailures.map(([e, c]) => `<li>${esc(e)}: <strong>${esc(c)}</strong> محاولة</li>`).join('')}</ul>
         ` : ''}
 
         <h3>تفاصيل المحاولات</h3>
@@ -136,7 +146,7 @@ Deno.serve(async (req) => {
         ${securityEvents?.length ? `
           <h3 style="margin-top:24px;">أحداث أمنية</h3>
           <ul>${securityEvents.map((e: any) =>
-            `<li><strong>${e.event_type}</strong> — ${e.description} <em>(${e.actor_email || '—'})</em></li>`
+            `<li><strong>${esc(e.event_type)}</strong> — ${esc(e.description)} <em>(${esc(e.actor_email || '—')})</em></li>`
           ).join('')}</ul>
         ` : ''}
 

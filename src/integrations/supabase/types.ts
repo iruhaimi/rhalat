@@ -1128,6 +1128,7 @@ export type Database = {
           reason: string
           status: string
           updated_at: string
+          user_id: string | null
         }
         Insert: {
           additional_details?: string | null
@@ -1142,6 +1143,7 @@ export type Database = {
           reason: string
           status?: string
           updated_at?: string
+          user_id?: string | null
         }
         Update: {
           additional_details?: string | null
@@ -1156,6 +1158,7 @@ export type Database = {
           reason?: string
           status?: string
           updated_at?: string
+          user_id?: string | null
         }
         Relationships: [
           {

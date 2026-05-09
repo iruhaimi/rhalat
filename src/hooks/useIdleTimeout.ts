@@ -21,7 +21,11 @@ export function useIdleTimeout() {
     setShowWarning(false);
     try { await signOut(true); } catch {}
     toast.warning(reason);
-    navigate('/portal-x7k9m2', { replace: true });
+    // Do NOT redirect to a hardcoded portal path — that would leak the
+    // rotated secret URL in the JS bundle. signOut(true) already clears
+    // session; send staff to the public home page. Re-entry to the portal
+    // happens via the out-of-band rotated link.
+    navigate('/', { replace: true });
   }, [signOut, navigate]);
 
   const resetTimers = useCallback(() => {
