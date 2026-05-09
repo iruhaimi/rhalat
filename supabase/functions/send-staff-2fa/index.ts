@@ -13,9 +13,11 @@ interface Send2FARequest {
   userId: string; // Required - the user ID for the 2FA code
 }
 
-// Generate a 6-digit code
+// Generate a 6-digit code using a CSPRNG
 function generateCode(): string {
-  return Math.floor(100000 + Math.random() * 900000).toString();
+  const arr = new Uint32Array(1);
+  crypto.getRandomValues(arr);
+  return String(100000 + (arr[0] % 900000));
 }
 
 const handler = async (req: Request): Promise<Response> => {
