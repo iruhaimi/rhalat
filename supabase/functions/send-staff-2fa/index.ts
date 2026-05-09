@@ -165,7 +165,9 @@ const handler = async (req: Request): Promise<Response> => {
     };
 
     try {
-      const emailClient = createClient(supabaseUrl, supabaseAnonKey);
+      const emailClient = createClient(supabaseUrl, supabaseAnonKey, {
+        global: { headers: { Authorization: `Bearer ${supabaseAnonKey}` } },
+      });
       const { data: invokeData, error: invokeError } = await emailClient.functions.invoke(
         "send-transactional-email",
         {
