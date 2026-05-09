@@ -114,7 +114,8 @@ export default function TwoFactorVerification({
         inputRefs.current[0]?.focus();
       }
     } catch (err) {
-      setError('حدث خطأ في التحقق');
+      const message = err instanceof Error ? err.message : 'حدث خطأ في التحقق';
+      setError(message || 'حدث خطأ في التحقق');
     } finally {
       setVerifying(false);
     }
