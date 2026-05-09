@@ -133,9 +133,8 @@ const handler = async (req: Request): Promise<Response> => {
     console.log(`2FA code created for user: ${userId}`);
 
     // ============================================================
-    // EMAIL SENDING (using Resend when configured)
+    // EMAIL SENDING (via Lovable Cloud built-in email queue)
     // ============================================================
-    const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
     const TWILIO_ACCOUNT_SID = Deno.env.get("TWILIO_ACCOUNT_SID");
     const TWILIO_AUTH_TOKEN = Deno.env.get("TWILIO_AUTH_TOKEN");
     const TWILIO_PHONE_NUMBER = Deno.env.get("TWILIO_PHONE_NUMBER");
@@ -147,83 +146,31 @@ const handler = async (req: Request): Promise<Response> => {
       errors: [],
     };
 
-    if (RESEND_API_KEY) {
-      try {
-        const emailResponse = await fetch("https://api.resend.com/emails", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${RESEND_API_KEY}`,
+    try {
+      const { data: invokeData, error: invokeError } = await supabase.functions.invoke(
+        "send-transactional-email",
+        {
+          body: {
+            templateName: "staff-2fa",
+            recipientEmail: email,
+            idempotencyKey: `staff-2fa-${userId}-${Date.now()}`,
+            templateData: { code },
           },
-          body: JSON.stringify({
-            from: "عطلات رحلاتكم <onboarding@resend.dev>",
-            to: [email],
-            subject: "رمز التحقق للدخول - عطلات رحلاتكم",
-            html: `
-              <!DOCTYPE html>
-              <html dir="rtl" lang="ar">
-              <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-              </head>
-              <body style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #1e293b; color: #e2e8f0; margin: 0; padding: 20px;">
-                <div style="max-width: 500px; margin: 0 auto; background-color: #334155; border-radius: 12px; padding: 30px; text-align: center;">
-                  <div style="margin-bottom: 20px;">
-                    <div style="background-color: #3b82f6; width: 60px; height: 60px; border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
-                      <span style="font-size: 30px;">🔐</span>
-                    </div>
-                  </div>
-                  <h1 style="color: #f8fafc; font-size: 24px; margin-bottom: 10px;">التحقق بخطوتين</h1>
-                  <p style="color: #94a3b8; font-size: 14px; margin-bottom: 25px;">
-                    رمز التحقق للدخول إلى بوابة الموظفين
-                  </p>
-                  <div style="background-color: #1e293b; border-radius: 8px; padding: 20px; margin: 20px 0;">
-                    <span style="font-size: 36px; font-weight: bold; letter-spacing: 8px; color: #3b82f6;">${code}</span>
-                  </div>
-                  <p style="color: #94a3b8; font-size: 12px; margin-top: 20px;">
-                    ⏱️ هذا الرمز صالح لمدة 10 دقائق فقط
-                  </p>
-                  <p style="color: #64748b; font-size: 11px; margin-top: 15px;">
-                    إذا لم تطلب هذا الرمز، يرجى تجاهل هذه الرسالة.
-                  </p>
-                  <hr style="border: none; border-top: 1px solid #475569; margin: 25px 0;">
-                  <p style="color: #64748b; font-size: 11px;">
-                    عطلات رحلاتكم - بوابة الموظفين
-                  </p>
-                </div>
-              </body>
-              </html>
-            `,
-          }),
-        });
-
-        if (emailResponse.ok) {
-          emailSent = true;
-          results.email = true;
-          console.log("2FA email sent successfully");
-        } else {
-          const errorData = await emailResponse.json();
-          console.error("Resend email error:", errorData);
-          results.errors?.push(`Email error: ${JSON.stringify(errorData)}`);
-
-          if (
-            errorData &&
-            (errorData.statusCode === 403 || emailResponse.status === 403) &&
-            errorData.name === "validation_error" &&
-            typeof errorData.message === "string" &&
-            errorData.message.includes("You can only send testing emails")
-          ) {
-            resendRecipientRestricted = true;
-          }
         }
-      } catch (emailError: unknown) {
-        console.error("Email sending failed:", emailError);
-        const errorMessage = emailError instanceof Error ? emailError.message : "Unknown error";
-        results.errors?.push(`Email error: ${errorMessage}`);
+      );
+
+      if (invokeError) {
+        console.error("Lovable email invoke error:", invokeError);
+        results.errors?.push(`Email error: ${invokeError.message}`);
+      } else {
+        emailSent = true;
+        results.email = true;
+        console.log("2FA email enqueued successfully via Lovable Cloud", invokeData);
       }
-    } else {
-      console.log("RESEND_API_KEY not configured - skipping email");
-      results.errors?.push("Email provider not configured");
+    } catch (emailError: unknown) {
+      console.error("Email sending failed:", emailError);
+      const errorMessage = emailError instanceof Error ? emailError.message : "Unknown error";
+      results.errors?.push(`Email error: ${errorMessage}`);
     }
 
     // ============================================================
