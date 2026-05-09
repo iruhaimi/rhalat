@@ -53,7 +53,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // SECURITY: Always generate the code server-side. Ignore any client-supplied code.
     const code = generateCode();
-    const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+    const expiresAt = new Date(Date.now() + 30 * 60 * 1000); // 30 minutes
 
     // Hash the code before storing (SHA-256) - matches verify_staff_2fa RPC
     const encoder = new TextEncoder();
@@ -223,7 +223,7 @@ const handler = async (req: Request): Promise<Response> => {
           body: new URLSearchParams({
             To: phone,
             From: TWILIO_PHONE_NUMBER,
-            Body: `رمز التحقق للدخول إلى بوابة الموظفين: ${code}\n\nصالح لمدة 10 دقائق.\n\nعطلات رحلاتكم`,
+            Body: `رمز التحقق للدخول إلى بوابة الموظفين: ${code}\n\nصالح لمدة 30 دقيقة.\n\nعطلات رحلاتكم`,
           }),
         });
 

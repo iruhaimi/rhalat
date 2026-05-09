@@ -32,7 +32,7 @@ const Staff2FAEmail = ({ code }: Staff2FAProps) => (
         <Section style={codeBox}>
           <Text style={codeText} dir="ltr">{code ?? '------'}</Text>
         </Section>
-        <Text style={meta}>⏱️ هذا الرمز صالح لمدة 10 دقائق فقط.</Text>
+        <Text style={meta}>⏱️ هذا الرمز صالح لمدة 30 دقيقة فقط.</Text>
         <Text style={warning}>
           إذا لم تطلب هذا الرمز، يرجى تجاهل هذه الرسالة وعدم مشاركتها مع أي شخص.
         </Text>
