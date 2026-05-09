@@ -107,7 +107,7 @@ export default function SecureStaffAuth() {
       }
 
       const { data, error: sendError } = await supabase.functions.invoke('send-staff-2fa', {
-        body: { email: userEmail, userId },
+        body: { email: userEmail, userId, accessToken: token },
         headers: { Authorization: `Bearer ${token}` },
       });
       
