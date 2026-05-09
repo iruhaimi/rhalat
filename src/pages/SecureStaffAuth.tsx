@@ -257,20 +257,8 @@ export default function SecureStaffAuth() {
     if (!pendingUserId || !pendingSession) return false;
 
     try {
-      // Verify code via SECURITY DEFINER RPC (server-side hashing, anon-safe).
-      // The RPC handles hash comparison and marks the code as used atomically.
-      const { data: ok, error: rpcError } = await supabase.rpc('verify_staff_2fa', {
-        p_user_id: pendingUserId,
-        p_code: code,
-      });
-
-      if (rpcError || !ok) {
-        return false;
-      }
-
-      // Restore the exact session created before 2FA. This prevents a valid code
-      // from being consumed and then falsely reported as invalid if a second
-      // password-login request is blocked or delayed.
+      // Restore/refresh the staff session BEFORE consuming the one-time code.
+      // If session restoration fails, the code remains unused and the user can retry.
       if (pendingSession.accessToken && pendingSession.refreshToken) {
         const { error: restoreError } = await supabase.auth.setSession({
           access_token: pendingSession.accessToken,
@@ -278,8 +266,8 @@ export default function SecureStaffAuth() {
         });
 
         if (restoreError) {
-          console.error('Failed to restore verified staff session:', restoreError);
-          throw new Error('تم التحقق من الرمز، لكن تعذر إكمال تسجيل الدخول. يرجى طلب رمز جديد والمحاولة مرة أخرى.');
+          console.error('Failed to restore pending staff session before 2FA:', restoreError);
+          throw new Error('تعذر إكمال تسجيل الدخول. يرجى طلب رمز جديد والمحاولة مرة أخرى.');
         }
       } else {
         const { error: signInError } = await supabase.auth.signInWithPassword({
@@ -288,9 +276,21 @@ export default function SecureStaffAuth() {
         });
 
         if (signInError) {
-          console.error('Failed to re-authenticate after 2FA:', signInError);
-          throw new Error('تم التحقق من الرمز، لكن تعذر إكمال تسجيل الدخول. يرجى طلب رمز جديد والمحاولة مرة أخرى.');
+          console.error('Failed to re-authenticate before 2FA:', signInError);
+          throw new Error('تعذر إكمال تسجيل الدخول. يرجى طلب رمز جديد والمحاولة مرة أخرى.');
         }
+      }
+
+      // Verify code via SECURITY DEFINER RPC (server-side hashing, anon-safe).
+      // The RPC handles hash comparison and marks the code as used atomically.
+      const { data: ok, error: rpcError } = await supabase.rpc('verify_staff_2fa', {
+        p_user_id: pendingUserId,
+        p_code: code,
+      });
+
+      if (rpcError || !ok) {
+        await supabase.auth.signOut({ scope: 'local' });
+        return false;
       }
 
       // Log successful attempt
@@ -316,7 +316,7 @@ export default function SecureStaffAuth() {
       return true;
     } catch (err) {
       console.error('2FA verification error:', err);
-      return false;
+      throw err instanceof Error ? err : new Error('حدث خطأ في التحقق');
     }
   };
 
