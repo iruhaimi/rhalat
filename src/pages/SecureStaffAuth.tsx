@@ -95,21 +95,20 @@ export default function SecureStaffAuth() {
 
   // Generate 2FA code via Edge Function (uses service_role for DB insert).
   // SECURITY: the plaintext code is NEVER returned to the client.
-  const generate2FACode = async (userId: string, userEmail: string): Promise<{ emailSent: boolean }> => {
+  const generate2FACode = async (userId: string, userEmail: string, accessToken?: string): Promise<{ emailSent: boolean }> => {
     try {
       // Explicitly attach the access token: in some race conditions immediately
       // after signInWithPassword, the global invoke client hasn't picked up the
       // session yet and would call the function without an Authorization header,
       // which the platform rejects with 401.
-      const { data: sessionData } = await supabase.auth.getSession();
-      const accessToken = sessionData?.session?.access_token;
-      if (!accessToken) {
+      const token = accessToken || (await supabase.auth.getSession()).data.session?.access_token;
+      if (!token) {
         throw new Error('No active session');
       }
 
       const { data, error: sendError } = await supabase.functions.invoke('send-staff-2fa', {
-        body: { email: userEmail, userId },
-        headers: { Authorization: `Bearer ${accessToken}` },
+        body: { email: userEmail, userId, accessToken: token },
+        headers: { Authorization: `Bearer ${token}` },
       });
       
       if (sendError) {
@@ -211,7 +210,11 @@ export default function SecureStaffAuth() {
 
         // Generate and send 2FA code BEFORE signing out (edge function requires auth)
         try {
-          const { emailSent } = await generate2FACode(data.user.id, data.user.email!);
+          const { emailSent } = await generate2FACode(
+            data.user.id,
+            data.user.email!,
+            data.session?.access_token
+          );
 
           if (emailSent) {
             toast.success('تم إرسال رمز التحقق إلى بريدك الإلكتروني');
