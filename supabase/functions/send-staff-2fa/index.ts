@@ -73,28 +73,48 @@ const handler = async (req: Request): Promise<Response> => {
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     // ============================================================
-    // AUTH CHECK: caller must be authenticated and must match userId
+    // AUTH CHECK: prefer a valid caller token, but keep a secure fallback for
+    // already-published clients that may not forward the freshly-created token.
+    // The fallback still validates that the target user exists, the email
+    // matches the auth account, and the account has a staff role.
     // ============================================================
     const authHeader = req.headers.get("Authorization");
     const accessToken = bodyAccessToken || authHeader?.replace(/^Bearer\s+/i, "").trim();
-    if (!accessToken) {
-      return new Response(
-        JSON.stringify({ error: "Unauthorized" }),
-        { status: 401, headers: { "Content-Type": "application/json", ...corsHeaders } }
-      );
+    let verifiedBySession = false;
+    if (accessToken && accessToken !== supabaseAnonKey) {
+      const { data: { user: callingUser }, error: userErr } = await supabase.auth.getUser(accessToken);
+      if (!userErr && callingUser?.id === userId) {
+        verifiedBySession = true;
+      }
     }
-    const { data: { user: callingUser }, error: userErr } = await supabase.auth.getUser(accessToken);
-    if (userErr || !callingUser) {
-      return new Response(
-        JSON.stringify({ error: "Unauthorized" }),
-        { status: 401, headers: { "Content-Type": "application/json", ...corsHeaders } }
-      );
-    }
-    if (callingUser.id !== userId) {
+
+    const { data: targetUser, error: targetUserError } = await supabase.auth.admin.getUserById(userId);
+    const normalizedEmail = email.trim().toLowerCase();
+    const targetEmail = targetUser?.user?.email?.trim().toLowerCase();
+    if (targetUserError || !targetUser?.user || targetEmail !== normalizedEmail) {
+      console.error("2FA auth validation failed", { userId, targetUserError: targetUserError?.message });
       return new Response(
         JSON.stringify({ error: "Forbidden" }),
         { status: 403, headers: { "Content-Type": "application/json", ...corsHeaders } }
       );
+    }
+
+    const { data: staffRoles, error: staffRoleError } = await supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", userId)
+      .in("role", ["admin", "agent"]);
+
+    if (staffRoleError || !staffRoles || staffRoles.length === 0) {
+      console.error("2FA staff role validation failed", { userId, staffRoleError: staffRoleError?.message });
+      return new Response(
+        JSON.stringify({ error: "Forbidden" }),
+        { status: 403, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
+
+    if (!verifiedBySession) {
+      console.warn("2FA proceeding via staff-account fallback validation", { userId });
     }
 
     // Rate limit (max 5 codes per user per 5 minutes)
@@ -113,7 +133,7 @@ const handler = async (req: Request): Promise<Response> => {
     // ============================================================
     const { error: insertError } = await supabase.from("staff_2fa_codes").insert({
       user_id: userId,
-      email: email,
+      email: targetEmail,
       code: codeHash, // Store hashed code, not plaintext
       expires_at: expiresAt.toISOString(),
     });
@@ -150,7 +170,7 @@ const handler = async (req: Request): Promise<Response> => {
         {
           body: {
             templateName: "staff-2fa",
-            recipientEmail: email,
+            recipientEmail: targetEmail,
             idempotencyKey: `staff-2fa-${userId}-${Date.now()}`,
             templateData: { code },
           },
@@ -232,7 +252,7 @@ const handler = async (req: Request): Promise<Response> => {
             await supabase.from("notifications").insert({
               user_id: profile.id,
               title: "🔐 محاولة دخول جديدة",
-              message: `تم إرسال رمز تحقق للموظف: ${email}`,
+              message: `تم إرسال رمز تحقق للموظف: ${targetEmail}`,
               type: "security",
               action_url: "/admin/users",
             });
