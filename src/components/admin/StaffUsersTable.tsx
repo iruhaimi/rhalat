@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { format } from 'date-fns';
+import { format, formatDistanceToNow } from 'date-fns';
 import { ar } from 'date-fns/locale';
 import { User as UserIcon, Shield, MoreHorizontal, UserCog, Trash2, UserX, Mail, Copy, Settings2, Crown } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
@@ -85,23 +85,39 @@ export function StaffUsersTable({
     toast.success('تم نسخ البريد الإلكتروني');
   };
 
-  // Get role badge with owner detection
-  const getRoleBadge = (role: AppRole, userId: string, clickable = false, onClick?: () => void) => {
-    const isOwner = ownerUserIds.has(userId);
-    
-    // If user is an owner (has manage_staff permission), show "مالك" instead of "مشرف"
-    if (role === 'admin' && isOwner) {
-      return (
-        <Badge 
-          className={`text-xs px-2 py-0.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white border-0 ${clickable ? 'cursor-pointer hover:opacity-80 transition-all hover:scale-105' : ''}`}
-          onClick={onClick}
-        >
-          <Crown className="h-3 w-3 ml-1" />
-          مالك
-        </Badge>
-      );
-    }
+  // Initials + color hash for avatar
+  const getInitials = (name: string | null) => {
+    if (!name) return '؟';
+    const parts = name.trim().split(/\s+/).filter(Boolean);
+    const first = parts[0]?.[0] ?? '';
+    const second = parts[1]?.[0] ?? '';
+    return (first + second).toUpperCase() || '؟';
+  };
 
+  const avatarPalette = [
+    'from-sky-500/30 to-sky-500/10 text-sky-700 dark:text-sky-300',
+    'from-emerald-500/30 to-emerald-500/10 text-emerald-700 dark:text-emerald-300',
+    'from-violet-500/30 to-violet-500/10 text-violet-700 dark:text-violet-300',
+    'from-rose-500/30 to-rose-500/10 text-rose-700 dark:text-rose-300',
+    'from-amber-500/30 to-amber-500/10 text-amber-700 dark:text-amber-300',
+    'from-cyan-500/30 to-cyan-500/10 text-cyan-700 dark:text-cyan-300',
+  ];
+  const getAvatarTone = (key: string) => {
+    let h = 0;
+    for (let i = 0; i < key.length; i++) h = (h * 31 + key.charCodeAt(i)) >>> 0;
+    return avatarPalette[h % avatarPalette.length];
+  };
+
+  // Owner badge (separate from role badges so it appears regardless of role)
+  const OwnerBadge = () => (
+    <Badge className="text-xs px-2 py-0.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white border-0 shadow-sm">
+      <Crown className="h-3 w-3 ml-1" />
+      مالك
+    </Badge>
+  );
+
+  // Standard role badge (no longer overrides admin → مالك; that's handled by OwnerBadge)
+  const getRoleBadge = (role: AppRole, _userId: string, clickable = false, onClick?: () => void) => {
     const config: Record<AppRole, { label: string; variant: 'default' | 'secondary' | 'destructive' | 'outline' }> = {
       customer: { label: 'عميل', variant: 'secondary' },
       agent: { label: 'وكيل', variant: 'default' },
@@ -123,7 +139,7 @@ export function StaffUsersTable({
   // Get role indicator dot color and title
   const getRoleIndicator = (role: AppRole, userId: string) => {
     const isOwner = ownerUserIds.has(userId);
-    if (role === 'admin' && isOwner) {
+    if (isOwner) {
       return {
         color: 'bg-gradient-to-r from-amber-500 to-orange-500',
         title: 'مالك'
@@ -163,15 +179,20 @@ export function StaffUsersTable({
           </TableHeader>
           <TableBody>
             {users.map((userItem) => (
-              <TableRow key={userItem.id} className="group hover:bg-muted/30 transition-colors">
+              <TableRow key={userItem.id} className="group hover:bg-muted/30 transition-colors h-16">
                 <TableCell>
                   <div className="flex items-center gap-3">
-                    <button 
+                    <button
                       onClick={() => onViewProfile(userItem)}
-                      className="h-10 w-10 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center hover:from-primary/30 hover:to-primary/15 transition-all duration-200 cursor-pointer shadow-sm"
+                      className={`relative h-10 w-10 rounded-full bg-gradient-to-br ${getAvatarTone(userItem.user_id)} flex items-center justify-center font-semibold text-sm hover:scale-105 transition-all duration-200 cursor-pointer shadow-sm`}
                       title="عرض الملف الشخصي"
                     >
-                      <UserIcon className="h-5 w-5 text-primary" />
+                      {getInitials(userItem.full_name)}
+                      {ownerUserIds.has(userItem.user_id) && (
+                        <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 flex items-center justify-center shadow ring-2 ring-background" title="مالك">
+                          <Crown className="h-2.5 w-2.5 text-white" />
+                        </span>
+                      )}
                     </button>
                     <div className="min-w-0">
                       <button 
@@ -226,12 +247,32 @@ export function StaffUsersTable({
                   <span dir="ltr" className="text-sm">{userItem.phone || '-'}</span>
                 </TableCell>
                 <TableCell>
-                  <span className="text-sm text-muted-foreground">
-                    {format(new Date(userItem.created_at), 'dd MMM yyyy', { locale: ar })}
-                  </span>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="flex flex-col leading-tight">
+                        <span className="text-sm">
+                          {format(new Date(userItem.created_at), 'dd MMM yyyy', { locale: ar })}
+                        </span>
+                        <span className="text-[11px] text-muted-foreground">
+                          {formatDistanceToNow(new Date(userItem.created_at), { locale: ar, addSuffix: true })}
+                        </span>
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      {format(new Date(userItem.created_at), 'EEEE dd MMMM yyyy - HH:mm', { locale: ar })}
+                    </TooltipContent>
+                  </Tooltip>
                 </TableCell>
                 <TableCell>
-                  <div className="flex flex-wrap gap-1">
+                  <div className="flex flex-wrap items-center gap-1">
+                    {ownerUserIds.has(userItem.user_id) && (
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <span><OwnerBadge /></span>
+                        </TooltipTrigger>
+                        <TooltipContent>صلاحية مدير عام (manage_staff)</TooltipContent>
+                      </Tooltip>
+                    )}
                     {userItem.roles.length > 0 ? (
                       userItem.roles.map((role) => (
                         isAdmin ? (
@@ -247,9 +288,9 @@ export function StaffUsersTable({
                           <span key={role}>{getRoleBadge(role, userItem.user_id)}</span>
                         )
                       ))
-                    ) : (
+                    ) : !ownerUserIds.has(userItem.user_id) ? (
                       <span className="text-xs text-muted-foreground">لا يوجد</span>
-                    )}
+                    ) : null}
                   </div>
                 </TableCell>
                 <TableCell>
