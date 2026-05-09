@@ -28,7 +28,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [roles, setRoles] = useState<AppRole[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const fetchProfile = async (userId: string) => {
+  const fetchProfile = async (userId: string): Promise<AppRole[]> => {
     try {
       const { data: profileData, error: profileError } = await supabase
         .from('profiles')
@@ -38,7 +38,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       if (profileError) {
         console.error('Error fetching profile:', profileError);
-        return;
+        setProfile(null);
+        setRoles([]);
+        return [];
       }
 
       setProfile(profileData as Profile);
@@ -50,12 +52,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       if (rolesError) {
         console.error('Error fetching roles:', rolesError);
-        return;
+        setRoles([]);
+        return [];
       }
 
-      setRoles((rolesData as UserRole[]).map(r => r.role));
+      const nextRoles = (rolesData as UserRole[]).map(r => r.role);
+      setRoles(nextRoles);
+      return nextRoles;
     } catch (error) {
       console.error('Error in fetchProfile:', error);
+      setProfile(null);
+      setRoles([]);
+      return [];
     }
   };
 
@@ -74,15 +82,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         // Defer profile fetch to avoid deadlock
         if (currentSession?.user) {
+          setIsLoading(true);
           setTimeout(() => {
-            fetchProfile(currentSession.user.id);
+            fetchProfile(currentSession.user.id).finally(() => setIsLoading(false));
           }, 0);
         } else {
           setProfile(null);
           setRoles([]);
+          setIsLoading(false);
         }
 
         if (event === 'SIGNED_OUT') {
+          sessionStorage.removeItem('staff_2fa_verified_user_id');
+          sessionStorage.removeItem('staff_2fa_pending_user_id');
           setProfile(null);
           setRoles([]);
         }
@@ -133,6 +145,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signOut = async (isStaff: boolean = false) => {
+    sessionStorage.removeItem('staff_2fa_verified_user_id');
+    sessionStorage.removeItem('staff_2fa_pending_user_id');
     await supabase.auth.signOut();
     if (isStaff) {
       // Do NOT embed the staff portal path in client code.
