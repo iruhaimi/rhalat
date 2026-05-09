@@ -6,6 +6,16 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
+// Public anon JWT fallback for calling JWT-protected functions from Edge code.
+// Some managed runtimes expose SUPABASE_ANON_KEY as a publishable key string,
+// which works for client APIs but is rejected by the Edge gateway's JWT check.
+const PUBLIC_ANON_JWT =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhneHZ3emlpdW1qeGlmcGdwamNlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjkzNzAxMDMsImV4cCI6MjA4NDk0NjEwM30.5RxkiSiAeAy6Q7VOFlVeXQHrm6CSNvIqV3yQZXh9Lng";
+
+function isJwtLike(value: string | undefined): value is string {
+  return typeof value === "string" && value.split(".").length === 3;
+}
+
 interface Send2FARequest {
   email: string;
   code?: string; // Optional - will be generated if not provided
