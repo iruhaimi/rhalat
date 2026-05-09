@@ -2,17 +2,16 @@
  * Utility functions for generating and managing recovery codes
  */
 
-// Generate a single recovery code (8 chars: uppercase + numbers)
+// Generate a single recovery code (8 chars: uppercase + numbers) using a CSPRNG
 export function generateRecoveryCode(): string {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // Excluded I, O, 0, 1 for clarity
+  const arr = new Uint8Array(8);
+  crypto.getRandomValues(arr);
   let code = '';
-  
   for (let i = 0; i < 8; i++) {
-    if (i === 4) code += '-'; // Add dash in the middle
-    const randomIndex = Math.floor(Math.random() * chars.length);
-    code += chars[randomIndex];
+    if (i === 4) code += '-';
+    code += chars[arr[i] % chars.length];
   }
-  
   return code;
 }
 
