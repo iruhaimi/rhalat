@@ -11,6 +11,7 @@ interface Send2FARequest {
   code?: string; // Optional - will be generated if not provided
   phone?: string; // Optional for SMS
   userId: string; // Required - the user ID for the 2FA code
+  accessToken?: string; // Optional fallback when platform headers are overwritten
 }
 
 // Generate a 6-digit code using a CSPRNG
@@ -27,7 +28,7 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const { email, code: providedCode, phone, userId }: Send2FARequest = await req.json();
+    const { email, code: providedCode, phone, userId, accessToken: bodyAccessToken }: Send2FARequest = await req.json();
 
     // Validate required fields
     if (!email || !userId) {
@@ -75,7 +76,7 @@ const handler = async (req: Request): Promise<Response> => {
     // AUTH CHECK: caller must be authenticated and must match userId
     // ============================================================
     const authHeader = req.headers.get("Authorization");
-    const accessToken = authHeader?.replace(/^Bearer\s+/i, "").trim();
+    const accessToken = bodyAccessToken || authHeader?.replace(/^Bearer\s+/i, "").trim();
     if (!accessToken) {
       return new Response(
         JSON.stringify({ error: "Unauthorized" }),
