@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
+import { createClient } from '@supabase/supabase-js';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -15,6 +16,30 @@ import RecoveryCodesDisplay from '@/components/auth/RecoveryCodesDisplay';
 import RecoveryCodeVerification from '@/components/auth/RecoveryCodeVerification';
 import UnlockRequestForm from '@/components/auth/UnlockRequestForm';
 import { verifyRecoveryCode } from '@/lib/recoveryCodeUtils';
+
+
+const createEphemeralAuthClient = () => {
+  const memoryStore = new Map<string, string>();
+
+  return createClient(
+    import.meta.env.VITE_SUPABASE_URL,
+    import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+    {
+      auth: {
+        storage: {
+          getItem: (key: string) => memoryStore.get(key) ?? null,
+          setItem: (key: string, value: string) => { memoryStore.set(key, value); },
+          removeItem: (key: string) => { memoryStore.delete(key); },
+        },
+        persistSession: true,
+        autoRefreshToken: false,
+        detectSessionInUrl: false,
+      },
+    }
+  );
+};
+
+type EphemeralAuthClient = ReturnType<typeof createEphemeralAuthClient>;
 
 export default function SecureStaffAuth() {
   const navigate = useNavigate();
@@ -35,6 +60,19 @@ export default function SecureStaffAuth() {
   const [show2FA, setShow2FA] = useState(false);
   const [pendingUserId, setPendingUserId] = useState<string | null>(null);
   const [pendingSession, setPendingSession] = useState<any>(null);
+  const tempAuthClientRef = useRef<EphemeralAuthClient | null>(null);
+
+  const resetTempAuthClient = () => {
+    tempAuthClientRef.current = createEphemeralAuthClient();
+    return tempAuthClientRef.current;
+  };
+
+  const getTempAuthClient = () => {
+    if (!tempAuthClientRef.current) {
+      tempAuthClientRef.current = createEphemeralAuthClient();
+    }
+    return tempAuthClientRef.current;
+  };
   
   // Recovery codes states
   const [showRecoveryCodes, setShowRecoveryCodes] = useState(false);
@@ -148,7 +186,11 @@ export default function SecureStaffAuth() {
     setLoading(true);
 
     try {
-      const { data, error: signInError } = await supabase.auth.signInWithPassword({
+      // Use an isolated auth client for the pre-2FA password check so staff
+      // accounts never become a public-site session before the second factor passes.
+      await supabase.auth.signOut({ scope: 'local' }).catch(() => undefined);
+      const authClient = resetTempAuthClient();
+      const { data, error: signInError } = await authClient.auth.signInWithPassword({
         email: email.trim(),
         password,
       });
@@ -178,7 +220,7 @@ export default function SecureStaffAuth() {
 
       if (data.user) {
         // Check if user has admin or agent role
-        const { data: roles, error: rolesError } = await supabase
+        const { data: roles, error: rolesError } = await authClient
           .from('user_roles')
           .select('role')
           .eq('user_id', data.user.id);
@@ -202,7 +244,7 @@ export default function SecureStaffAuth() {
         }
 
         // Check if user has recovery codes (first time login check)
-        const hasRecoveryCodes = await checkRecoveryCodes(data.user.id);
+        const hasRecoveryCodes = await checkRecoveryCodes(data.user.id, authClient);
 
         // Initiate 2FA
         sessionStorage.setItem('staff_2fa_pending_user_id', data.user.id);
@@ -240,10 +282,7 @@ export default function SecureStaffAuth() {
           return;
         }
 
-        // Clear the browser session until 2FA is verified, without invalidating
-        // the refresh token we need to restore the same login after success.
-        await supabase.auth.signOut({ scope: 'local' });
-
+        // Keep the verified password session only in the isolated client until 2FA passes.
         setShow2FA(true);
       }
     } catch (err) {
@@ -259,56 +298,64 @@ export default function SecureStaffAuth() {
     if (!pendingUserId || !pendingSession) return false;
 
     try {
-      // Restore/refresh the staff session BEFORE consuming the one-time code.
-      // If session restoration fails, the code remains unused and the user can retry.
+      const authClient = getTempAuthClient();
+
       if (pendingSession.accessToken && pendingSession.refreshToken) {
-        const { error: restoreError } = await supabase.auth.setSession({
+        const { error: restoreError } = await authClient.auth.setSession({
           access_token: pendingSession.accessToken,
           refresh_token: pendingSession.refreshToken,
         });
 
         if (restoreError) {
-          console.error('Failed to restore pending staff session before 2FA:', restoreError);
-          const { error: signInError } = await supabase.auth.signInWithPassword({
+          console.error('Failed to restore isolated staff session before 2FA:', restoreError);
+          const { data: freshLogin, error: signInError } = await authClient.auth.signInWithPassword({
             email: email.trim(),
             password,
           });
 
-          if (signInError) {
-            console.error('Failed to re-authenticate before 2FA after restore failure:', signInError);
+          if (signInError || !freshLogin.session) {
+            console.error('Failed to re-authenticate isolated staff session before 2FA:', signInError);
             throw new Error('تم التحقق من كلمة المرور، لكن تعذر إكمال الجلسة. يرجى تسجيل الدخول وطلب رمز جديد.');
           }
+
+          pendingSession.accessToken = freshLogin.session.access_token;
+          pendingSession.refreshToken = freshLogin.session.refresh_token;
         }
-      } else {
+      }
+
+      // Verify code with the isolated authenticated session, then activate the real app session only after success.
+      const { data: ok, error: rpcError } = await authClient.rpc('verify_staff_2fa', {
+        p_user_id: pendingUserId,
+        p_code: code,
+      });
+
+      if (rpcError || !ok) {
+        console.error('2FA RPC rejected code:', rpcError);
+        return false;
+      }
+
+      const { error: activateError } = await supabase.auth.setSession({
+        access_token: pendingSession.accessToken,
+        refresh_token: pendingSession.refreshToken,
+      });
+
+      if (activateError) {
+        console.error('Failed to activate staff session after 2FA:', activateError);
         const { error: signInError } = await supabase.auth.signInWithPassword({
           email: email.trim(),
           password,
         });
 
         if (signInError) {
-          console.error('Failed to re-authenticate before 2FA:', signInError);
-          throw new Error('تعذر إكمال تسجيل الدخول. يرجى طلب رمز جديد والمحاولة مرة أخرى.');
+          console.error('Failed to re-authenticate real staff session after 2FA:', signInError);
+          throw new Error('تم قبول الرمز، لكن تعذر فتح جلسة الدخول. يرجى المحاولة مرة أخرى.');
         }
       }
 
-      // Verify code via SECURITY DEFINER RPC (server-side hashing, anon-safe).
-      // The RPC handles hash comparison and marks the code as used atomically.
-      const { data: ok, error: rpcError } = await supabase.rpc('verify_staff_2fa', {
-        p_user_id: pendingUserId,
-        p_code: code,
-      });
-
-      if (rpcError || !ok) {
-        await supabase.auth.signOut({ scope: 'local' });
-        return false;
-      }
-
-      // Log successful attempt
       await logLoginAttempt(true);
       sessionStorage.setItem('staff_2fa_verified_user_id', pendingUserId);
       sessionStorage.removeItem('staff_2fa_pending_user_id');
 
-      // Check if this is first login (needs recovery codes)
       if (pendingSession.needsRecoveryCodes) {
         const codes = await generateAndSaveRecoveryCodes(pendingUserId);
         setGeneratedCodes(codes);
@@ -334,24 +381,32 @@ export default function SecureStaffAuth() {
 
   const resend2FA = async () => {
     if (!pendingUserId) return;
-    
-    // Sign in temporarily to get user email
-    const { data } = await supabase.auth.signInWithPassword({
-      email: email.trim(),
-      password,
-    });
-    
-    if (data.user) {
-      try {
-        const { emailSent } = await generate2FACode(data.user.id, data.user.email!);
-        if (emailSent) {
-          toast.success('تم إعادة إرسال رمز التحقق');
-        } else {
-          toast.warning('تعذر إرسال رمز التحقق عبر البريد. تواصل مع المسؤول.');
-        }
-      } finally {
-        await supabase.auth.signOut();
+
+    const authClient = getTempAuthClient();
+    let { data: { session } } = await authClient.auth.getSession();
+
+    if (!session) {
+      const { data, error } = await authClient.auth.signInWithPassword({
+        email: email.trim(),
+        password,
+      });
+      if (error || !data.session || !data.user) {
+        setError('تعذر إعادة إنشاء جلسة آمنة. يرجى تسجيل الدخول من جديد.');
+        return;
       }
+      session = data.session;
+      setPendingSession((current: any) => current ? {
+        ...current,
+        accessToken: data.session.access_token,
+        refreshToken: data.session.refresh_token,
+      } : current);
+    }
+
+    const { emailSent } = await generate2FACode(pendingUserId, email.trim(), session.access_token);
+    if (emailSent) {
+      toast.success('تم إعادة إرسال رمز التحقق');
+    } else {
+      toast.warning('تعذر إرسال رمز التحقق عبر البريد. تواصل مع المسؤول.');
     }
   };
 
@@ -361,6 +416,7 @@ export default function SecureStaffAuth() {
     setShow2FA(false);
     setPendingUserId(null);
     setPendingSession(null);
+    tempAuthClientRef.current = null;
   };
 
   // Generate and save recovery codes via secure Edge Function (service-role insert).
@@ -380,8 +436,8 @@ export default function SecureStaffAuth() {
   };
 
   // Check if user has recovery codes
-  const checkRecoveryCodes = async (userId: string): Promise<boolean> => {
-    const { data } = await supabase
+  const checkRecoveryCodes = async (userId: string, client: any = supabase): Promise<boolean> => {
+    const { data } = await client
       .from('staff_recovery_codes')
       .select('id')
       .eq('user_id', userId)
@@ -396,8 +452,16 @@ export default function SecureStaffAuth() {
     if (!pendingUserId || !pendingSession) return false;
 
     try {
+      const authClient = getTempAuthClient();
+      if (pendingSession.accessToken && pendingSession.refreshToken) {
+        await authClient.auth.setSession({
+          access_token: pendingSession.accessToken,
+          refresh_token: pendingSession.refreshToken,
+        });
+      }
+
       // Get all unused codes for user
-      const { data: codes } = await supabase
+      const { data: codes } = await authClient
         .from('staff_recovery_codes')
         .select('*')
         .eq('user_id', pendingUserId)
@@ -410,7 +474,7 @@ export default function SecureStaffAuth() {
         const isValid = await verifyRecoveryCode(code, codeRecord.code_hash);
         if (isValid) {
           // Mark as used
-          await supabase
+          await authClient
             .from('staff_recovery_codes')
             .update({ used: true, used_at: new Date().toISOString() })
             .eq('id', codeRecord.id);
@@ -418,15 +482,23 @@ export default function SecureStaffAuth() {
           // Clear failed login attempts
           await supabase.rpc('clear_failed_login_attempts', { target_email: email.trim().toLowerCase() });
 
-          // Re-authenticate
-          const { error: signInError } = await supabase.auth.signInWithPassword({
-            email: email.trim(),
-            password,
+          const { error: activateError } = await supabase.auth.setSession({
+            access_token: pendingSession.accessToken,
+            refresh_token: pendingSession.refreshToken,
           });
 
-          if (signInError) return false;
+          if (activateError) {
+            const { error: signInError } = await supabase.auth.signInWithPassword({
+              email: email.trim(),
+              password,
+            });
+
+            if (signInError) return false;
+          }
 
           await logLoginAttempt(true);
+          sessionStorage.setItem('staff_2fa_verified_user_id', pendingUserId);
+          sessionStorage.removeItem('staff_2fa_pending_user_id');
           toast.success('تم تسجيل الدخول بنجاح');
 
           if (pendingSession.isAdmin) {
