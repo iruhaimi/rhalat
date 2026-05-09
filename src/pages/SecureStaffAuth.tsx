@@ -205,6 +205,8 @@ export default function SecureStaffAuth() {
         const hasRecoveryCodes = await checkRecoveryCodes(data.user.id);
 
         // Initiate 2FA
+        sessionStorage.setItem('staff_2fa_pending_user_id', data.user.id);
+        sessionStorage.removeItem('staff_2fa_verified_user_id');
         setPendingUserId(data.user.id);
         setPendingSession({
           user: data.user,
@@ -303,6 +305,8 @@ export default function SecureStaffAuth() {
 
       // Log successful attempt
       await logLoginAttempt(true);
+      sessionStorage.setItem('staff_2fa_verified_user_id', pendingUserId);
+      sessionStorage.removeItem('staff_2fa_pending_user_id');
 
       // Check if this is first login (needs recovery codes)
       if (pendingSession.needsRecoveryCodes) {
