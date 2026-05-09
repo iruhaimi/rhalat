@@ -165,7 +165,8 @@ const handler = async (req: Request): Promise<Response> => {
     };
 
     try {
-      const { data: invokeData, error: invokeError } = await supabase.functions.invoke(
+      const emailClient = createClient(supabaseUrl, supabaseAnonKey);
+      const { data: invokeData, error: invokeError } = await emailClient.functions.invoke(
         "send-transactional-email",
         {
           body: {
