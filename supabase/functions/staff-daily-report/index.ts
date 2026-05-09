@@ -10,24 +10,36 @@ Deno.serve(async (req) => {
   try {
     const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
     const SERVICE = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+    const ANON = Deno.env.get('SUPABASE_ANON_KEY')!;
 
-    // SECURITY: this function is invoked by pg_cron with the service_role JWT
-    // in the Authorization header. Reject anything else so anonymous callers
-    // cannot spam super admins with bogus reports (notification fatigue).
+    // SECURITY: only allow callers that present either
+    //   (a) a verified service-role JWT (validated by supabase-js, NOT a manual
+    //       base64 decode of an unsigned payload), or
+    //   (b) a pre-shared internal secret header (used by pg_cron via http_post).
     const authHeader = req.headers.get('Authorization') || '';
-    const token = authHeader.replace(/^Bearer\s+/i, '');
-    let isServiceRole = false;
-    try {
-      const payloadB64 = token.split('.')[1];
-      if (payloadB64) {
-        const padded = payloadB64.replace(/-/g, '+').replace(/_/g, '/');
-        const json = atob(padded + '='.repeat((4 - padded.length % 4) % 4));
-        isServiceRole = JSON.parse(json)?.role === 'service_role';
+    const internalSecret = req.headers.get('x-internal-secret') || '';
+    const expectedSecret = Deno.env.get('CRON_INTERNAL_SECRET') || '';
+
+    let authorized = false;
+    if (expectedSecret && internalSecret && internalSecret === expectedSecret) {
+      authorized = true;
+    } else if (authHeader.toLowerCase().startsWith('bearer ')) {
+      // Verify the JWT signature via supabase-js (getClaims actually validates).
+      try {
+        const verifier = createClient(SUPABASE_URL, ANON, {
+          global: { headers: { Authorization: authHeader } },
+        });
+        const token = authHeader.replace(/^Bearer\s+/i, '');
+        const { data, error } = await (verifier.auth as any).getClaims(token);
+        if (!error && data?.claims?.role === 'service_role') {
+          authorized = true;
+        }
+      } catch (_e) {
+        authorized = false;
       }
-    } catch (_e) {
-      isServiceRole = false;
     }
-    if (!isServiceRole) {
+
+    if (!authorized) {
       return new Response(JSON.stringify({ error: 'Unauthorized' }), {
         status: 401,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },

@@ -135,18 +135,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signOut = async (isStaff: boolean = false) => {
     await supabase.auth.signOut();
     if (isStaff) {
-      // Fetch current secret path (in case it has been rotated)
-      try {
-        const { data } = await supabase
-          .from('staff_portal_settings')
-          .select('secret_path')
-          .eq('id', 1)
-          .maybeSingle();
-        const path = data?.secret_path || 'portal-x7k9m2';
-        window.location.href = `/${path}`;
-      } catch {
-        window.location.href = '/portal-x7k9m2';
-      }
+      // Do NOT embed the staff portal path in client code.
+      // Staff are sent to the public home; they reach the portal via the
+      // out-of-band secret URL they already know.
+      window.location.href = '/';
     }
   };
 
