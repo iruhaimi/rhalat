@@ -12,6 +12,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
+import { lovable } from '@/integrations/lovable';
 import { createClient } from '@supabase/supabase-js';
 
 const REQUIRED_PROFILE_FIELDS = [
@@ -274,6 +275,31 @@ export default function Auth() {
       }, 1500);
 
       navigate('/profile');
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    setIsLoading(true);
+    try {
+      const result = await lovable.auth.signInWithOAuth('google', {
+        redirect_uri: window.location.origin + '/profile',
+      });
+      if (result?.error) {
+        toast({
+          variant: 'destructive',
+          title: isRTL ? 'فشل تسجيل الدخول عبر جوجل' : 'Google sign-in failed',
+          description: result.error.message,
+        });
+        setIsLoading(false);
+      }
+      // On success, browser is redirected by lovable.auth
+    } catch (e: any) {
+      toast({
+        variant: 'destructive',
+        title: isRTL ? 'خطأ' : 'Error',
+        description: e?.message ?? 'Unexpected error',
+      });
+      setIsLoading(false);
     }
   };
 
