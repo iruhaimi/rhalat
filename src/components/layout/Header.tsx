@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/contexts/AuthContext';
+import GoogleSignInButton from '@/components/auth/GoogleSignInButton';
 
 const navigation = [
   { name: 'Home', href: '/' },
@@ -125,6 +126,7 @@ export default function Header() {
             </DropdownMenu>
           ) : (
             <>
+              <GoogleSignInButton iconOnly />
               <Button variant="ghost" asChild>
                 <Link to="/auth">Sign in</Link>
               </Button>
@@ -188,6 +190,7 @@ export default function Header() {
                 </>
               ) : (
                 <>
+                  <GoogleSignInButton className="w-full" onStart={() => setMobileMenuOpen(false)} />
                   <Button variant="outline" asChild className="w-full">
                     <Link to="/auth" onClick={() => setMobileMenuOpen(false)}>
                       Sign in
