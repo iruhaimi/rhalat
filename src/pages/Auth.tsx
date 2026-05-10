@@ -12,7 +12,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
-import { lovable } from '@/integrations/lovable';
+import GoogleSignInButton from '@/components/auth/GoogleSignInButton';
 import { createClient } from '@supabase/supabase-js';
 
 const REQUIRED_PROFILE_FIELDS = [
