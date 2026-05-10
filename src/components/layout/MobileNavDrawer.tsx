@@ -20,6 +20,7 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
+import GoogleSignInButton from '@/components/auth/GoogleSignInButton';
 
 interface MobileNavDrawerProps {
   isOpen: boolean;
@@ -244,6 +245,14 @@ export default function MobileNavDrawer({ isOpen, onClose }: MobileNavDrawerProp
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.3 }}
                     >
+                      <GoogleSignInButton className="w-full h-12 rounded-xl text-base" onStart={onClose} />
+                    </motion.div>
+
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.35 }}
+                    >
                       <Button variant="outline" asChild className="w-full h-12 rounded-xl text-base">
                         <Link to="/auth">{t('nav.signIn')}</Link>
                       </Button>
@@ -252,7 +261,7 @@ export default function MobileNavDrawer({ isOpen, onClose }: MobileNavDrawerProp
                     <motion.div
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.35 }}
+                      transition={{ delay: 0.4 }}
                     >
                       <Button asChild className="w-full h-12 rounded-xl text-base shadow-lg">
                         <Link to="/apply">{t('nav.startApplication')}</Link>
