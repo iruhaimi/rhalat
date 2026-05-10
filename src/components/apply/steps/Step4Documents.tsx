@@ -258,27 +258,43 @@ export default function Step4Documents() {
         })}
       </div>
 
-      {/* Tips */}
-      <div className="p-4 bg-amber-50 dark:bg-amber-950/30 rounded-lg border border-amber-200 dark:border-amber-800">
-        <h4 className="font-semibold text-amber-900 dark:text-amber-100 mb-2">
-          {direction === 'rtl' ? 'ملاحظات هامة' : 'Important Notes'}
+      {/* Required Documents Guide */}
+      <div className="p-4 bg-blue-50 dark:bg-blue-950/30 rounded-lg border border-blue-200 dark:border-blue-800">
+        <h4 className="font-semibold text-blue-900 dark:text-blue-100 mb-2 flex items-center gap-2">
+          <FileText className="w-4 h-4" />
+          {direction === 'rtl' ? 'المستندات المطلوبة' : 'Required Documents'}
         </h4>
-        <ul className="text-sm text-amber-800 dark:text-amber-200 space-y-1 list-disc list-inside">
-          <li>
-            {direction === 'rtl' 
-              ? 'الملفات المقبولة: PDF, JPG, PNG'
-              : 'Accepted files: PDF, JPG, PNG'}
-          </li>
-          <li>
-            {direction === 'rtl' 
-              ? 'الحد الأقصى لحجم الملف: 10 ميجابايت'
-              : 'Maximum file size: 10MB'}
-          </li>
-          <li>
-            {direction === 'rtl' 
-              ? 'تأكد من وضوح المستندات وأن تكون مقروءة'
-              : 'Make sure documents are clear and readable'}
-          </li>
+        <ul className="text-sm text-blue-900 dark:text-blue-100 space-y-1 list-disc list-inside">
+          <li>{direction === 'rtl' ? 'صورة واضحة من جواز السفر (سارٍ لمدة 6 أشهر على الأقل)' : 'Clear copy of passport (valid for at least 6 months)'}</li>
+          <li>{direction === 'rtl' ? 'صورة شخصية بخلفية بيضاء' : 'Personal photo with white background'}</li>
+          <li>{direction === 'rtl' ? 'كشف حساب بنكي لآخر 3 أشهر (مختوم وباللغة الإنجليزية)' : 'Bank statement for last 3 months (stamped, in English)'}</li>
+          <li>{direction === 'rtl' ? 'حجز فندق وحجز طيران (اختياري حسب الدولة)' : 'Hotel & flight booking (optional, depends on country)'}</li>
+          <li>{direction === 'rtl' ? 'تأمين سفر (مطلوب لدول الشنغن)' : 'Travel insurance (required for Schengen)'}</li>
+        </ul>
+      </div>
+
+      {/* WhatsApp Guide */}
+      <div className="p-4 bg-green-50 dark:bg-green-950/30 rounded-lg border border-green-200 dark:border-green-800">
+        <h4 className="font-semibold text-green-900 dark:text-green-100 mb-2">
+          {direction === 'rtl' ? '📱 الإرسال عبر واتساب' : '📱 Send via WhatsApp'}
+        </h4>
+        <p className="text-sm text-green-900 dark:text-green-100 mb-2">
+          {direction === 'rtl'
+            ? 'يمكنك إكمال الطلب الآن وإرسال المستندات لاحقًا عبر واتساب على الرقم:'
+            : 'You can continue now and send your documents later via WhatsApp:'}
+        </p>
+        <a
+          href="https://wa.me/966920034158"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 font-bold text-green-700 dark:text-green-300 hover:underline"
+        >
+          +966 920 034 158
+        </a>
+        <ul className="text-sm text-green-900 dark:text-green-100 space-y-1 list-disc list-inside mt-2">
+          <li>{direction === 'rtl' ? 'اذكر رقم طلبك عند إرسال المستندات' : 'Mention your application number when sending documents'}</li>
+          <li>{direction === 'rtl' ? 'تأكد من وضوح الصور وأن تكون مقروءة' : 'Make sure images are clear and readable'}</li>
+          <li>{direction === 'rtl' ? 'الصيغ المقبولة: PDF, JPG, PNG (بحد أقصى 10 ميجابايت)' : 'Accepted: PDF, JPG, PNG (max 10MB)'}</li>
         </ul>
       </div>
 
