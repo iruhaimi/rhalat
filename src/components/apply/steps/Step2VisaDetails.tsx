@@ -297,35 +297,6 @@ export default function Step2VisaDetails() {
             </div>
           )}
 
-          {/* Schengen Country Selection - Shows when Schengen is selected or user came from Schengen URL */}
-          {selectedRegion === 'schengen' && (
-            <div className="space-y-2">
-              <Label>{direction === 'rtl' ? 'اختر الدولة من شنغن' : 'Select Schengen country'}</Label>
-              <Select
-                value={applicationData.countryId}
-                onValueChange={handleCountryChange}
-              >
-                <SelectTrigger className="h-12">
-                  <SelectValue placeholder={direction === 'rtl' ? 'اختر الدولة' : 'Select country'} />
-                </SelectTrigger>
-                <SelectContent>
-                  {schengenCountries.map((country) => (
-                    <SelectItem key={country.id} value={country.id}>
-                      <div className="flex items-center gap-2">
-                        <img 
-                          src={country.flag_url || `https://flagcdn.com/w40/${country.code.toLowerCase()}.png`}
-                          alt={country.name}
-                          className="w-5 h-4 object-cover rounded"
-                        />
-                        <span>{country.name}</span>
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          )}
-
           {/* Visa Type Selection */}
           <div className="space-y-2">
             <Label className="text-sm sm:text-base">{t('form.visaType')}</Label>
