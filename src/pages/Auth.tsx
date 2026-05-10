@@ -278,31 +278,6 @@ export default function Auth() {
     }
   };
 
-  const handleGoogleSignIn = async () => {
-    setIsLoading(true);
-    try {
-      const result = await lovable.auth.signInWithOAuth('google', {
-        redirect_uri: window.location.origin + '/profile',
-      });
-      if (result?.error) {
-        toast({
-          variant: 'destructive',
-          title: isRTL ? 'فشل تسجيل الدخول عبر جوجل' : 'Google sign-in failed',
-          description: result.error.message,
-        });
-        setIsLoading(false);
-      }
-      // On success, browser is redirected by lovable.auth
-    } catch (e: any) {
-      toast({
-        variant: 'destructive',
-        title: isRTL ? 'خطأ' : 'Error',
-        description: e?.message ?? 'Unexpected error',
-      });
-      setIsLoading(false);
-    }
-  };
-
   const handleForgotPassword = async (data: ForgotPasswordFormData) => {
     setIsLoading(true);
     
