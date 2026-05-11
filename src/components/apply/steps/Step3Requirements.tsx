@@ -132,7 +132,7 @@ export default function Step3Requirements() {
     }
   };
 
-  const canProceed = checkedCount > 0;
+  const canProceed = true;
 
   return (
     <div className="space-y-6">
