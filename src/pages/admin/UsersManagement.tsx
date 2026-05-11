@@ -74,6 +74,8 @@ import { DeleteStaffDialog } from '@/components/admin/DeleteStaffDialog';
 import { AddRoleDialog } from '@/components/admin/AddRoleDialog';
 import { useDebounce } from '@/hooks/useDebounce';
 import type { AppRole } from '@/types/database';
+import { PageHeader } from '@/components/admin/PageHeader';
+import { StatCard } from '@/components/admin/StatCard';
 
 interface UserWithRole {
   id: string;
