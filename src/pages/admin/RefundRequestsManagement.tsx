@@ -232,7 +232,7 @@ export default function RefundRequestsManagement() {
         }
       />
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div data-admin-stats="true" className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <StatCard label="إجمالي الطلبات" value={stats.total} icon={FileText} tone="muted" index={0} />
         <StatCard label="قيد الانتظار" value={stats.pending} icon={Clock} tone="gold" index={1} />
         <StatCard label="مقبولة" value={stats.approved} icon={CheckCircle2} tone="success" index={2} />

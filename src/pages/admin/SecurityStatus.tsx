@@ -101,7 +101,7 @@ export default function SecurityStatus() {
       />
 
       {/* Health checks */}
-      <div className="grid gap-4 md:grid-cols-3">
+      <div data-admin-stats="true" className="grid gap-4 md:grid-cols-3">
         <StatCard
           label="إجمالي الرسائل في النظام"
           value={messages.data ?? '—'}

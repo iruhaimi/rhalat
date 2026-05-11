@@ -493,7 +493,9 @@ export default function AdminDashboard() {
         </TabsContent>
 
         <TabsContent value="urgent" className="space-y-4">
-          <UrgentTasksDashboard />
+          <div data-urgent-banner="true">
+            <UrgentTasksDashboard />
+          </div>
         </TabsContent>
 
         <TabsContent value="analytics" className="space-y-4">

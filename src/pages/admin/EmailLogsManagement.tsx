@@ -143,7 +143,7 @@ export default function EmailLogsManagement() {
         }
       />
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div data-admin-stats="true" className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <StatCard label="الإجمالي" value={stats.total} icon={Mail} tone="muted" index={0} />
         <StatCard label="مُرسل بنجاح" value={stats.sent} icon={CheckCircle2} tone="success" index={1} />
         <StatCard label="فشل" value={stats.failed} icon={XCircle} tone="danger" index={2} />

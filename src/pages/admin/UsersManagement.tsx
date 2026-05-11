@@ -661,7 +661,7 @@ export default function UsersManagement() {
       />
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4">
+      <div data-admin-stats="true" className="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4">
         <StatCard label="إجمالي المستخدمين" value={stats.total} icon={Users} tone="primary" index={0} />
         <StatCard label="المالكين" value={stats.owners} icon={Crown} tone="gold" index={1} />
         <StatCard label="المشرفين" value={stats.admins} icon={Shield} tone="danger" index={2} />
