@@ -51,8 +51,8 @@ export function SortableDestinationRow({
   };
 
   return (
-    <TableRow ref={setNodeRef} style={style} className={isDragging ? 'bg-muted' : ''}>
-      <TableCell>
+    <TableRow ref={setNodeRef} style={style} className={`h-16 ${isDragging ? 'bg-muted' : ''}`}>
+      <TableCell className="align-middle">
         <div className="flex items-center gap-2">
           <button
             {...attributes}
@@ -64,7 +64,7 @@ export function SortableDestinationRow({
           <span className="w-6 text-center font-medium">{index + 1}</span>
         </div>
       </TableCell>
-      <TableCell>
+      <TableCell className="align-middle">
         <img
           src={destination.image_url}
           alt={destination.name}
@@ -74,11 +74,11 @@ export function SortableDestinationRow({
           }}
         />
       </TableCell>
-      <TableCell className="font-medium">{destination.name}</TableCell>
-      <TableCell>
+      <TableCell className="align-middle font-medium">{destination.name}</TableCell>
+      <TableCell className="align-middle">
         <Badge variant="outline" className="font-mono">{destination.country}</Badge>
       </TableCell>
-      <TableCell>
+      <TableCell className="align-middle">
         <div className="flex items-center gap-2">
           <Switch
             checked={destination.is_active}
@@ -91,7 +91,7 @@ export function SortableDestinationRow({
           )}
         </div>
       </TableCell>
-      <TableCell>
+      <TableCell className="align-middle">
         <div className="flex items-center gap-2">
           <Button variant="ghost" size="icon" onClick={() => onEdit(destination)}>
             <Pencil className="h-4 w-4" />
