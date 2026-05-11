@@ -295,3 +295,26 @@ html[dir="rtl"] .timeline-item::before {
 .timeline-item:last-child::before {
   display: none;
 }
+
+/* ===== Admin UI Preference toggles (driven by useAdminUIPrefs) ===== */
+/* Compact density: tighten paddings/gaps inside admin shell */
+html.admin-compact main .p-6 { padding: 1rem; }
+html.admin-compact main .space-y-6 > * + * { margin-top: 1rem; }
+html.admin-compact main .gap-6 { gap: 1rem; }
+html.admin-compact main .py-12 { padding-top: 2rem; padding-bottom: 2rem; }
+
+/* Reduce motion: kill non-essential transitions/animations */
+html.admin-no-motion *, html.admin-no-motion *::before, html.admin-no-motion *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+}
+
+/* Hide top stat-card grids (StatCard wrappers + legacy summary cards) */
+html.admin-hide-stats main [data-admin-stats="true"] { display: none !important; }
+
+/* Hide role badges in lists/tables */
+html.admin-hide-role-badges main [data-role-badge="true"] { display: none !important; }
+
+/* Hide urgent tasks dashboard banner on /admin */
+html.admin-hide-urgent main [data-urgent-banner="true"] { display: none !important; }
