@@ -4,6 +4,8 @@ import { ar, enUS } from 'date-fns/locale';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useApplication } from '@/contexts/ApplicationContext';
+import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
@@ -28,7 +30,9 @@ import {
   Calendar,
   Users,
   FileText,
-  MessageCircle
+  MessageCircle,
+  AlertCircle,
+  Upload
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
@@ -56,8 +60,10 @@ const paymentMethods = [
 
 export default function Step6Payment() {
   const { t, direction, language } = useLanguage();
-  const { applicationData, updateApplicationData, calculateTotal, goToPreviousStep, resetApplication } = useApplication();
+  const { applicationData, updateApplicationData, calculateTotal, goToPreviousStep, resetApplication, setCurrentStep, draftId } = useApplication();
+  const { profile } = useAuth();
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isSubmittingWhatsApp, setIsSubmittingWhatsApp] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
   
@@ -65,7 +71,147 @@ export default function Step6Payment() {
   
   const ArrowPrevIcon = direction === 'rtl' ? ArrowRight : ArrowLeft;
 
+  // Required documents for online payment
+  const REQUIRED_DOC_TYPES = ['passport', 'photo'];
+  const uploadedTypes = applicationData.uploadedDocuments.filter(d => d.uploaded).map(d => d.type);
+  const missingDocs = REQUIRED_DOC_TYPES.filter(t => !uploadedTypes.includes(t));
+  const docsComplete = missingDocs.length === 0;
+
+  const submissionMethod = applicationData.submissionMethod;
+
+  const buildWhatsAppMessage = (appNumber: string) => {
+    const travelersStr = [
+      `${applicationData.travelers.adults} بالغ`,
+      applicationData.travelers.children > 0 ? `${applicationData.travelers.children} طفل` : null,
+      applicationData.travelers.infants > 0 ? `${applicationData.travelers.infants} رضيع` : null,
+    ].filter(Boolean).join('، ');
+
+    const travelDateStr = applicationData.travelDate
+      ? format(applicationData.travelDate, 'PPP', { locale: ar })
+      : 'غير محدد';
+
+    return `مرحباً، أرغب بإكمال طلب التأشيرة عبر واتساب
+
+📋 رقم الطلب: ${appNumber}
+👤 الاسم: ${applicationData.fullName}
+📧 البريد: ${applicationData.email}
+📱 الجوال: ${applicationData.countryCode} ${applicationData.phone}
+
+🌍 الدولة: ${applicationData.countryName}
+📄 نوع التأشيرة: ${applicationData.visaTypeName}
+📅 تاريخ السفر: ${travelDateStr}
+👥 المسافرون: ${travelersStr}
+
+💰 المبلغ الإجمالي: ${grandTotal.toLocaleString()} ر.س
+✅ موافق على الشروط والأحكام
+
+جاهز لإرسال المستندات وإكمال الدفع.`;
+  };
+
+  const handleSubmitViaWhatsApp = async () => {
+    if (!profile) {
+      toast({
+        title: 'خطأ',
+        description: 'يجب تسجيل الدخول أولاً',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    setIsSubmittingWhatsApp(true);
+
+    try {
+      const draftPayload = {
+        user_id: profile.id,
+        visa_type_id: applicationData.visaTypeId,
+        travel_date: applicationData.travelDate ? applicationData.travelDate.toISOString().split('T')[0] : null,
+        status: 'whatsapp_pending' as const,
+        submission_method: 'whatsapp',
+        purpose_of_travel: JSON.stringify({
+          fullName: applicationData.fullName,
+          email: applicationData.email,
+          phone: applicationData.phone,
+          countryCode: applicationData.countryCode,
+          travelers: applicationData.travelers,
+          checkedRequirements: applicationData.checkedRequirements,
+          totalAmount: grandTotal,
+          termsAccepted: applicationData.termsAccepted,
+        }),
+      };
+
+      let appId = draftId;
+      let displayNumber: string | null = null;
+
+      if (draftId) {
+        const { data, error } = await supabase
+          .from('applications')
+          .update({
+            status: 'whatsapp_pending',
+            submission_method: 'whatsapp',
+            purpose_of_travel: draftPayload.purpose_of_travel,
+            updated_at: new Date().toISOString(),
+          })
+          .eq('id', draftId)
+          .select('id, display_number')
+          .single();
+        if (error) throw error;
+        displayNumber = data.display_number;
+      } else {
+        const { data, error } = await supabase
+          .from('applications')
+          .insert(draftPayload)
+          .select('id, display_number')
+          .single();
+        if (error) throw error;
+        appId = data.id;
+        displayNumber = data.display_number;
+      }
+
+      const appNumber = displayNumber || `VF-${Date.now().toString(36).toUpperCase()}`;
+      const message = buildWhatsAppMessage(appNumber);
+      const whatsappUrl = `https://wa.me/966562525665?text=${encodeURIComponent(message)}`;
+
+      // Open WhatsApp in top-level window (bypass iframe in preview)
+      try {
+        if (window.top && window.top !== window.self) {
+          window.top.location.href = whatsappUrl;
+        } else {
+          window.open(whatsappUrl, '_blank');
+        }
+      } catch {
+        window.open(whatsappUrl, '_blank');
+      }
+
+      toast({
+        title: '✅ تم تسجيل طلبك',
+        description: `رقم طلبك: ${appNumber}. سيتواصل معك موظفنا عبر واتساب`,
+      });
+
+      setTimeout(() => {
+        resetApplication();
+        navigate(`/payment-success?app=${appNumber}&via=whatsapp`);
+      }, 1500);
+    } catch (error: any) {
+      console.error('WhatsApp submission error:', error);
+      toast({
+        title: 'خطأ',
+        description: error.message || 'فشل إرسال الطلب، حاول مرة أخرى',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsSubmittingWhatsApp(false);
+    }
+  };
+
   const handlePayment = async () => {
+    if (!docsComplete) {
+      toast({
+        title: 'مستندات ناقصة',
+        description: 'يجب رفع جواز السفر والصورة الشخصية قبل الدفع',
+        variant: 'destructive',
+      });
+      return;
+    }
     if (!applicationData.paymentMethod) {
       toast({
         title: direction === 'rtl' ? 'خطأ' : 'Error',
