@@ -62,9 +62,9 @@ Deno.serve(async (req) => {
     }
 
     // Validate role
-    if (!['admin', 'agent'].includes(role)) {
+    if (!['admin', 'agent', 'tour_operator'].includes(role)) {
       return new Response(
-        JSON.stringify({ success: false, error: 'Invalid role. Must be admin or agent' }),
+        JSON.stringify({ success: false, error: 'Invalid role. Must be admin, agent or tour_operator' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
@@ -163,7 +163,7 @@ Deno.serve(async (req) => {
     let emailSent = false
     if (sendEmail && resend) {
       try {
-        const roleLabel = role === 'admin' ? 'مشرف' : 'وكيل'
+        const roleLabel = role === 'admin' ? 'مشرف' : role === 'agent' ? 'وكيل تأشيرات' : 'وكيل سياحي'
 
         // Generate a secure password recovery link so the staff member sets their own password
         let setupLink = ''
