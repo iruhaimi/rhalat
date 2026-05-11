@@ -13,6 +13,7 @@ interface AuthContextType {
   isAdmin: boolean;
   isAgent: boolean;
   isCustomer: boolean;
+  isTourOperator: boolean;
   signUp: (email: string, password: string, fullName: string) => Promise<{ error: Error | null }>;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
   signOut: (isStaff?: boolean) => Promise<void>;
@@ -159,6 +160,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const isAdmin = roles.includes('admin');
   const isAgent = roles.includes('agent');
   const isCustomer = roles.includes('customer');
+  const isTourOperator = roles.includes('tour_operator' as AppRole);
 
   return (
     <AuthContext.Provider
@@ -171,6 +173,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         isAdmin,
         isAgent,
         isCustomer,
+        isTourOperator,
         signUp,
         signIn,
         signOut,
@@ -195,6 +198,7 @@ export function useAuth() {
       isAdmin: false,
       isAgent: false,
       isCustomer: false,
+      isTourOperator: false,
       signUp: async () => ({ error: new Error('Auth not initialized') }),
       signIn: async () => ({ error: new Error('Auth not initialized') }),
       signOut: async () => {},
