@@ -54,6 +54,7 @@ import OwnerSettings from "@/pages/admin/OwnerSettings";
 import DocumentAccessLogs from "@/pages/admin/DocumentAccessLogs";
 import FooterManagement from "@/pages/admin/FooterManagement";
 import StaffAuditLog from "@/pages/admin/StaffAuditLog";
+import EmailLogsManagement from "@/pages/admin/EmailLogsManagement";
 import PortalSecurity from "@/pages/admin/PortalSecurity";
 import DynamicPortalRoute from "@/components/DynamicPortalRoute";
 // Agent Pages
@@ -127,6 +128,7 @@ const App = () => (
                 <Route path="footer" element={<FooterManagement />} />
                 <Route path="audit-log" element={<StaffAuditLog />} />
                 <Route path="portal-security" element={<PortalSecurity />} />
+                <Route path="email-logs" element={<EmailLogsManagement />} />
               </Route>
 
               {/* Agent Routes */}

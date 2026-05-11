@@ -31,7 +31,7 @@ export default function PaymentSuccess() {
     nextSteps: 'الخطوات التالية',
     step1: isWhatsApp
       ? 'سيتواصل معك أحد موظفينا عبر واتساب لإكمال الطلب'
-      : 'سيتم مراجعة طلبك خلال 1-2 يوم عمل',
+      : 'سيتم مراجعة طلبك خلال 1-2 ساعة عمل',
     step2: isWhatsApp
       ? 'سيتم تأكيد المبلغ وطريقة الدفع معك مباشرة'
       : 'يمكنك متابعة تحديثات طلبك من صفحة "تتبع الطلب"',
@@ -41,7 +41,7 @@ export default function PaymentSuccess() {
     whatsappBtn: 'فتح محادثة واتساب',
     homeBtn: 'العودة للرئيسية',
     processingTime: 'الوقت المتوقع للمعالجة',
-    days: 'يوم عمل',
+    days: 'ساعة عمل',
     noPaymentNotice: 'لم يتم خصم أي مبلغ. سيتم تأكيد المبلغ والدفع مع موظف خدمة العملاء عبر واتساب.',
   } : {
     title: isWhatsApp ? 'Application Submitted!' : 'Payment Successful!',
@@ -53,7 +53,7 @@ export default function PaymentSuccess() {
     nextSteps: 'Next Steps',
     step1: isWhatsApp
       ? 'Our staff will contact you on WhatsApp to complete the request'
-      : 'Your application will be reviewed within 1-2 business days',
+      : 'Your application will be reviewed within 1-2 business hours',
     step2: isWhatsApp
       ? 'The amount and payment method will be confirmed with you directly'
       : 'You can follow your application status anytime from the Track page',
@@ -63,7 +63,7 @@ export default function PaymentSuccess() {
     whatsappBtn: 'Open WhatsApp Chat',
     homeBtn: 'Back to Home',
     processingTime: 'Expected processing time',
-    days: 'business days',
+    days: 'business hours',
     noPaymentNotice: 'No amount has been charged. Payment details will be confirmed with our staff on WhatsApp.',
   };
 
@@ -120,7 +120,7 @@ export default function PaymentSuccess() {
               <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg">
                 <Clock className="w-5 h-5 text-primary" />
                 <div className="text-sm">
-                  <div className="font-medium">5-7 {content.days}</div>
+                  <div className="font-medium">1-2 {content.days}</div>
                   <div className="text-muted-foreground text-xs">{content.processingTime}</div>
                 </div>
               </div>

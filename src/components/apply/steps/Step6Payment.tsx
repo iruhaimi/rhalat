@@ -79,6 +79,47 @@ export default function Step6Payment() {
 
   const submissionMethod = applicationData.submissionMethod;
 
+  const sendConfirmationEmail = async (
+    appNumber: string,
+    method: 'online' | 'whatsapp',
+    paymentMethodLabel?: string,
+  ) => {
+    if (!applicationData.email) return;
+    try {
+      const travelDateStr = applicationData.travelDate
+        ? format(applicationData.travelDate, 'PPP', { locale: ar })
+        : '';
+      await supabase.functions.invoke('send-transactional-email', {
+        body: {
+          templateName: 'application-confirmation',
+          recipientEmail: applicationData.email,
+          idempotencyKey: `app-confirm-${appNumber}-${method}`,
+          templateData: {
+            applicationNumber: appNumber,
+            fullName: applicationData.fullName,
+            email: applicationData.email,
+            phone: `${applicationData.countryCode || ''} ${applicationData.phone || ''}`.trim(),
+            countryName: applicationData.countryName,
+            visaTypeName: applicationData.visaTypeName,
+            travelDate: travelDateStr,
+            travelers: applicationData.travelers,
+            breakdown,
+            serviceTotal,
+            governmentTotal,
+            grandTotal,
+            visaFeesIncluded: applicationData.visaFeesIncluded,
+            submissionMethod: method,
+            paymentMethod: paymentMethodLabel || '',
+            checkedRequirements: applicationData.checkedRequirements || [],
+            termsAcceptedAt: new Date().toISOString().slice(0, 16).replace('T', ' '),
+          },
+        },
+      });
+    } catch (e) {
+      console.error('Failed to send confirmation email:', e);
+    }
+  };
+
   const buildWhatsAppMessage = (appNumber: string) => {
     const travelersStr = [
       `${applicationData.travelers.adults} بالغ`,
@@ -168,6 +209,10 @@ export default function Step6Payment() {
       displayNumber = data.display_number;
 
       const appNumber = displayNumber || `VF-${Date.now().toString(36).toUpperCase()}`;
+
+      // Send confirmation email (non-blocking)
+      await sendConfirmationEmail(appNumber, 'whatsapp');
+
       const message = buildWhatsAppMessage(appNumber);
       const whatsappUrl = `https://wa.me/966562525665?text=${encodeURIComponent(message)}`;
 
@@ -222,20 +267,68 @@ export default function Step6Payment() {
     }
 
     setIsProcessing(true);
-    
-    // Simulate payment processing
-    await new Promise(resolve => setTimeout(resolve, 2500));
-    
-    // Generate application number
-    const appNumber = `VISA-${Date.now().toString(36).toUpperCase()}`;
-    
-    setIsProcessing(false);
-    
-    // Navigate to success page
-    navigate(`/payment-success?app=${appNumber}`);
-    
-    // Reset application
-    setTimeout(() => resetApplication(), 1000);
+
+    try {
+      // Simulate payment gateway processing
+      await new Promise(resolve => setTimeout(resolve, 2500));
+
+      // Persist the application so it appears in admin & customer dashboards
+      let appId = draftId;
+      if (!appId && profile) {
+        const { data: newId, error: rpcError } = await supabase.rpc('create_application_draft', {
+          p_visa_type_id: applicationData.visaTypeId,
+          p_travel_date: applicationData.travelDate ? applicationData.travelDate.toISOString().split('T')[0] : null,
+          p_draft_data: {},
+        });
+        if (rpcError) throw rpcError;
+        appId = newId as string;
+      }
+
+      let appNumber = `VF-${Date.now().toString(36).toUpperCase()}`;
+      if (appId) {
+        const { data, error } = await supabase
+          .from('applications')
+          .update({
+            status: 'submitted',
+            submission_method: 'online',
+            submitted_at: new Date().toISOString(),
+            purpose_of_travel: JSON.stringify({
+              fullName: applicationData.fullName,
+              email: applicationData.email,
+              phone: applicationData.phone,
+              countryCode: applicationData.countryCode,
+              travelers: applicationData.travelers,
+              checkedRequirements: applicationData.checkedRequirements,
+              totalAmount: grandTotal,
+              paymentMethod: applicationData.paymentMethod,
+              termsAccepted: applicationData.termsAccepted,
+            }),
+            updated_at: new Date().toISOString(),
+          })
+          .eq('id', appId)
+          .select('id, display_number')
+          .single();
+        if (!error && data?.display_number) appNumber = data.display_number;
+      }
+
+      const methodLabel =
+        paymentMethods.find(m => m.id === applicationData.paymentMethod)?.label[language] || '';
+
+      // Send confirmation email (non-blocking)
+      await sendConfirmationEmail(appNumber, 'online', methodLabel);
+
+      navigate(`/payment-success?app=${appNumber}`);
+      setTimeout(() => resetApplication(), 1000);
+    } catch (error: any) {
+      console.error('Payment error:', error);
+      toast({
+        title: 'خطأ',
+        description: error.message || 'فشلت عملية الدفع، حاول مرة أخرى',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   return (
