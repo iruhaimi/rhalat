@@ -138,8 +138,8 @@ export default function Step4Documents() {
         <h2 className="text-xl sm:text-2xl font-bold">{t('wizard.step4')}</h2>
         <p className="text-sm sm:text-base text-muted-foreground mt-2">
           {direction === 'rtl' 
-            ? 'ارفع المستندات المطلوبة (إجبارية للدفع عبر الموقع، اختيارية إذا اخترت الإرسال عبر واتساب)' 
-            : 'Upload required documents (mandatory for online payment, optional if you choose WhatsApp)'}
+            ? 'ارفع المستندات المطلوبة لإكمال طلبك' 
+            : 'Upload the required documents to complete your application'}
         </p>
       </div>
 
