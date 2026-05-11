@@ -64,6 +64,16 @@ import AgentDashboard from "@/pages/agent/AgentDashboard";
 import AgentApplicationsList from "@/pages/agent/AgentApplicationsList";
 import AgentApplicationDetail from "@/pages/agent/AgentApplicationDetail";
 
+// Tourism
+import Tourism from "@/pages/Tourism";
+import TourismDetail from "@/pages/TourismDetail";
+import TourProgramsManagement from "@/pages/admin/TourProgramsManagement";
+import TourOperatorLayout from "@/components/tourism/TourOperatorLayout";
+import TourOperatorDashboard from "@/pages/tourism-portal/Dashboard";
+import TourOperatorCompanyProfile from "@/pages/tourism-portal/CompanyProfile";
+import TourOperatorMyPrograms from "@/pages/tourism-portal/MyPrograms";
+import TourOperatorMyBookings from "@/pages/tourism-portal/MyBookings";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -97,6 +107,8 @@ const App = () => (
                 <Route path="/my-applications" element={<MyApplications />} />
                 <Route path="/application" element={<MyApplicationDetail />} />
                 <Route path="/offers" element={<SpecialOffers />} />
+                <Route path="/tourism" element={<Tourism />} />
+                <Route path="/tourism/:id" element={<TourismDetail />} />
               </Route>
 
               {/* Auth Routes */}
@@ -133,6 +145,7 @@ const App = () => (
                 <Route path="email-logs" element={<EmailLogsManagement />} />
                 <Route path="security-status" element={<SecurityStatus />} />
                 <Route path="quick-settings" element={<QuickSettings />} />
+                <Route path="tour-programs" element={<TourProgramsManagement />} />
               </Route>
 
               {/* Agent Routes */}
@@ -147,6 +160,21 @@ const App = () => (
                 <Route index element={<AgentDashboard />} />
                 <Route path="applications" element={<AgentApplicationsList />} />
                 <Route path="applications/:id" element={<AgentApplicationDetail />} />
+              </Route>
+
+              {/* Tour Operator Portal */}
+              <Route
+                path="/tourism-portal"
+                element={
+                  <ProtectedRoute allowedRoles={['tour_operator']}>
+                    <TourOperatorLayout />
+                  </ProtectedRoute>
+                }
+              >
+                <Route index element={<TourOperatorDashboard />} />
+                <Route path="company" element={<TourOperatorCompanyProfile />} />
+                <Route path="programs" element={<TourOperatorMyPrograms />} />
+                <Route path="bookings" element={<TourOperatorMyBookings />} />
               </Route>
 
               {/* Catch-all */}
