@@ -34,7 +34,12 @@ import {
   Save,
   UserCog,
   FileDown,
-  FileCheck
+  FileCheck,
+  Users,
+  Wallet,
+  ShieldCheck,
+  Mail,
+  Phone
 } from 'lucide-react';
 import { WorkSubmissionsSection } from '@/components/admin/WorkSubmissionsSection';
 import { generateApplicationPDF } from '@/lib/generateApplicationPDF';
@@ -58,6 +63,7 @@ const STATUS_OPTIONS: { value: ApplicationStatus; label: string }[] = [
 
 interface ApplicationData {
   id: string;
+  display_number: string | null;
   status: ApplicationStatus;
   created_at: string;
   travel_date: string | null;
@@ -91,6 +97,31 @@ interface ApplicationData {
     id: string;
     full_name: string;
   } | null;
+}
+
+// Safely parse the wizard JSON blob stored in `purpose_of_travel`
+interface ParsedDraftBlob {
+  fullName?: string;
+  email?: string;
+  phone?: string;
+  countryCode?: string;
+  travelers?: { adults?: number; children?: number; infants?: number };
+  checkedRequirements?: string[];
+  totalAmount?: number;
+  paymentMethod?: string;
+  termsAccepted?: boolean;
+}
+function parseDraftBlob(raw: string | null | undefined): ParsedDraftBlob | null {
+  if (!raw) return null;
+  // Heuristic: only attempt JSON parse if it looks like a JSON object
+  const trimmed = raw.trim();
+  if (!trimmed.startsWith('{')) return null;
+  try {
+    const obj = JSON.parse(trimmed);
+    return typeof obj === 'object' && obj ? obj : null;
+  } catch {
+    return null;
+  }
 }
 
 interface Document {
