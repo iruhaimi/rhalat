@@ -57,6 +57,7 @@ import StaffAuditLog from "@/pages/admin/StaffAuditLog";
 import EmailLogsManagement from "@/pages/admin/EmailLogsManagement";
 import PortalSecurity from "@/pages/admin/PortalSecurity";
 import SecurityStatus from "@/pages/admin/SecurityStatus";
+import QuickSettings from "@/pages/admin/QuickSettings";
 import DynamicPortalRoute from "@/components/DynamicPortalRoute";
 // Agent Pages
 import AgentDashboard from "@/pages/agent/AgentDashboard";
@@ -131,6 +132,7 @@ const App = () => (
                 <Route path="portal-security" element={<PortalSecurity />} />
                 <Route path="email-logs" element={<EmailLogsManagement />} />
                 <Route path="security-status" element={<SecurityStatus />} />
+                <Route path="quick-settings" element={<QuickSettings />} />
               </Route>
 
               {/* Agent Routes */}
