@@ -113,7 +113,7 @@ const handler = async (req: Request): Promise<Response> => {
       .from("user_roles")
       .select("role")
       .eq("user_id", userId)
-      .in("role", ["admin", "agent"]);
+      .in("role", ["admin", "agent", "tour_operator"]);
 
     if (staffRoleError || !staffRoles || staffRoles.length === 0) {
       console.error("2FA staff role validation failed", { userId, staffRoleError: staffRoleError?.message });
