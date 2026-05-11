@@ -5,6 +5,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { usePermissions } from '@/hooks/usePermissions';
 import { useIdleTimeout } from '@/hooks/useIdleTimeout';
 import IdleWarningDialog from '@/components/admin/security/IdleWarningDialog';
+import { useAdminUIPrefs } from '@/hooks/useAdminUIPrefs';
 import { 
   LayoutDashboard, 
   FileText, 
@@ -26,7 +27,8 @@ import {
    ScrollText,
     KeyRound,
      Mail,
-     ShieldCheck
+     ShieldCheck,
+     SlidersHorizontal
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -45,7 +47,8 @@ export default function AdminLayout() {
   const { hasPermission, isSuperAdmin } = usePermissions();
   const location = useLocation();
   const navigate = useNavigate();
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const { prefs } = useAdminUIPrefs();
+  const [sidebarOpen, setSidebarOpen] = useState(!prefs.sidebarCollapsedDefault);
   const idle = useIdleTimeout();
 
   const menuItems = [
@@ -150,6 +153,12 @@ export default function AdminLayout() {
       icon: ShieldCheck,
       href: '/admin/security-status',
       show: isAdmin && isSuperAdmin,
+    },
+    {
+      title: 'إعدادات سريعة',
+      icon: SlidersHorizontal,
+      href: '/admin/quick-settings',
+      show: isAdmin,
     },
     {
       title: 'الإعدادات',
