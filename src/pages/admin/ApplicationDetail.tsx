@@ -454,7 +454,19 @@ export default function ApplicationDetail() {
           </Button>
           <div>
             <h2 className="text-xl sm:text-2xl font-bold">تفاصيل الطلب</h2>
-            <p className="text-muted-foreground font-mono text-xs sm:text-sm">{application.id}</p>
+            <div className="flex flex-wrap items-center gap-2 mt-1">
+              {application.display_number && (
+                <span
+                  dir="ltr"
+                  className="inline-flex items-center rounded-md bg-primary/10 px-2.5 py-1 font-mono text-sm font-bold text-primary tracking-wider"
+                >
+                  {application.display_number}
+                </span>
+              )}
+              <span className="text-muted-foreground font-mono text-[10px] sm:text-xs select-all" dir="ltr">
+                {application.id}
+              </span>
+            </div>
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-2 sm:gap-3 mr-12 sm:mr-0">
