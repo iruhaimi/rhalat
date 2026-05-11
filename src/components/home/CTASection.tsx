@@ -76,9 +76,9 @@ export default function CTASection({ t }: CTASectionProps) {
                 className="rounded-full px-8 h-14 text-lg border-white/30 text-white hover:bg-white/10 hover:text-white"
                 asChild
               >
-                <a href="tel:920034158">
+                <a href="tel:562525665">
                   <Phone className="h-5 w-5 ml-2" />
-                  اتصل بنا: 920034158
+                  اتصل بنا: 562525665
                 </a>
               </Button>
             </div>

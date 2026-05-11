@@ -400,7 +400,7 @@ export default function FAQ() {
                       </Link>
                     </Button>
                     <Button variant="outline" className="rounded-xl gap-2" asChild>
-                      <a href="https://wa.me/966920034158" target="_blank" rel="noopener">
+                      <a href="https://wa.me/966562525665" target="_blank" rel="noopener">
                         <MessageCircle className="w-4 h-4" />
                         {isRTL ? 'واتساب' : 'WhatsApp'}
                       </a>
@@ -415,7 +415,7 @@ export default function FAQ() {
                     </div>
                     <div>
                       <p className="text-sm text-muted-foreground">{isRTL ? 'اتصل بنا' : 'Call Us'}</p>
-                      <p className="font-semibold" dir="ltr">920034158</p>
+                      <p className="font-semibold" dir="ltr">562525665</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-4 bg-background rounded-xl p-4">

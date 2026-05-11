@@ -178,12 +178,12 @@ Last updated: January 2025`
       contentAr: `إذا كان لديك أي أسئلة حول هذه الشروط والأحكام، يرجى الاتصال بنا:
 
 البريد الإلكتروني: info@rhalat.com
-الهاتف: 920034158
+الهاتف: 562525665
 العنوان: الرياض - حي الربيع - شارع أبي بن معاذ الأنصاري`,
       contentEn: `If you have any questions about these terms and conditions, please contact us:
 
 Email: info@rhalat.com
-Phone: 920034158
+Phone: 562525665
 Address: Riyadh - Al-Rabi' neighborhood - Ubay Bin Moaath Alansari Rd`
     },
   ];

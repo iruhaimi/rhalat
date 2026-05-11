@@ -50,9 +50,9 @@ export default function Contact() {
       icon: Phone,
       titleAr: 'الهاتف',
       titleEn: 'Phone',
-      valueAr: '920034158',
-      valueEn: '920034158',
-      link: 'tel:920034158'
+      valueAr: '562525665',
+      valueEn: '562525665',
+      link: 'tel:562525665'
     },
     {
       icon: Mail,
@@ -246,7 +246,7 @@ export default function Contact() {
                       {isRTL ? 'تحدث معنا مباشرة وسنرد فوراً' : 'Chat with us directly'}
                     </p>
                     <Button className="bg-green-500 hover:bg-green-600 rounded-xl w-full" asChild>
-                      <a href="https://wa.me/966920034158?text=السلام%20عليكم،%20أريد%20الاستفسار%20عن%20خدمات%20التأشيرات" target="_blank" rel="noopener noreferrer">
+                      <a href="https://wa.me/966562525665?text=السلام%20عليكم،%20أريد%20الاستفسار%20عن%20خدمات%20التأشيرات" target="_blank" rel="noopener noreferrer">
                         <MessageCircle className="w-4 h-4 ml-2" />
                         {isRTL ? 'ابدأ المحادثة' : 'Start Chat'}
                       </a>
@@ -274,9 +274,9 @@ export default function Contact() {
                       {isRTL ? 'متاحون من ١٠ ص - ١٠ م' : 'Available 10 AM - 10 PM'}
                     </p>
                     <Button variant="outline" className="rounded-xl w-full" asChild>
-                      <a href="tel:920034158">
+                      <a href="tel:562525665">
                         <Phone className="w-4 h-4 ml-2" />
-                        920034158
+                        562525665
                       </a>
                     </Button>
                   </div>

@@ -395,7 +395,7 @@ If we make material changes, we will:
 
 **عن طريق البريد الإلكتروني:** info@rhalat.com
 
-**عن طريق الهاتف:** 920034158
+**عن طريق الهاتف:** 562525665
 
 **العنوان:** الرياض - حي الربيع - شارع أبي بن معاذ الأنصاري
 
@@ -406,7 +406,7 @@ If we make material changes, we will:
 
 **By Email:** info@rhalat.com
 
-**By Phone:** 920034158
+**By Phone:** 562525665
 
 **Address:** Riyadh - Al-Rabi' neighborhood - Ubay Bin Moaath Alansari Rd
 
