@@ -640,94 +640,31 @@ export default function UsersManagement() {
 
   return (
     <div className="space-y-6" dir="rtl">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-bold flex items-center gap-2">
-            <Users className="h-6 w-6" />
-            إدارة المستخدمين
-          </h2>
-          <p className="text-muted-foreground">إدارة شاملة للمستخدمين وصلاحياتهم</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <Button onClick={() => exportUsersToExcel('all')} variant="outline" size="sm">
-            <Download className="h-4 w-4 ml-2" />
-            تصدير الكل
-          </Button>
-          <Button onClick={() => { fetchUsers(); fetchActivityLog(); }} variant="outline" size="sm">
-            <RefreshCw className="h-4 w-4 ml-2" />
-            تحديث
-          </Button>
-        </div>
-      </div>
+      <PageHeader
+        icon={Users}
+        title="إدارة المستخدمين"
+        description="إدارة شاملة للمستخدمين وصلاحياتهم"
+        actions={
+          <>
+            <Button onClick={() => exportUsersToExcel('all')} variant="outline" size="sm" className="gap-2">
+              <Download className="h-4 w-4" />
+              تصدير الكل
+            </Button>
+            <Button onClick={() => { fetchUsers(); fetchActivityLog(); }} variant="outline" size="sm" className="gap-2">
+              <RefreshCw className="h-4 w-4" />
+              تحديث
+            </Button>
+          </>
+        }
+      />
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-        <Card>
-          <CardContent className="pt-4">
-            <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
-                <Users className="h-5 w-5 text-primary" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold">{stats.total}</p>
-                <p className="text-xs text-muted-foreground">إجمالي المستخدمين</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="border-amber-500/30 bg-amber-500/5">
-          <CardContent className="pt-4">
-            <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-full bg-amber-500/20 flex items-center justify-center">
-                <Crown className="h-5 w-5 text-amber-600" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-amber-600">{stats.owners}</p>
-                <p className="text-xs text-muted-foreground">المالكين</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-4">
-            <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-full bg-destructive/10 flex items-center justify-center">
-                <Shield className="h-5 w-5 text-destructive" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold">{stats.admins}</p>
-                <p className="text-xs text-muted-foreground">المشرفين</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-4">
-            <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
-                <UserCog className="h-5 w-5 text-primary" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold">{stats.agents}</p>
-                <p className="text-xs text-muted-foreground">الوكلاء</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-4">
-            <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center">
-                <UserCheck className="h-5 w-5 text-muted-foreground" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold">{stats.customers}</p>
-                <p className="text-xs text-muted-foreground">العملاء</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4">
+        <StatCard label="إجمالي المستخدمين" value={stats.total} icon={Users} tone="primary" index={0} />
+        <StatCard label="المالكين" value={stats.owners} icon={Crown} tone="gold" index={1} />
+        <StatCard label="المشرفين" value={stats.admins} icon={Shield} tone="danger" index={2} />
+        <StatCard label="الوكلاء" value={stats.agents} icon={UserCog} tone="primary" index={3} />
+        <StatCard label="العملاء" value={stats.customers} icon={UserCheck} tone="muted" index={4} />
       </div>
 
       <Tabs defaultValue="staff" className="w-full">
