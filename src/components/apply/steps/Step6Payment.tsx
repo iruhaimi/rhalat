@@ -291,7 +291,7 @@ export default function Step6Payment() {
           .update({
             status: 'submitted',
             submission_method: 'online',
-            payment_status: 'paid',
+            submitted_at: new Date().toISOString(),
             purpose_of_travel: JSON.stringify({
               fullName: applicationData.fullName,
               email: applicationData.email,
