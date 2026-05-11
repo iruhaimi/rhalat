@@ -462,6 +462,7 @@ export type Database = {
           rejection_reason: string | null
           return_date: string | null
           status: Database["public"]["Enums"]["application_status"]
+          submission_method: string | null
           submitted_at: string | null
           travel_date: string | null
           updated_at: string
@@ -484,6 +485,7 @@ export type Database = {
           rejection_reason?: string | null
           return_date?: string | null
           status?: Database["public"]["Enums"]["application_status"]
+          submission_method?: string | null
           submitted_at?: string | null
           travel_date?: string | null
           updated_at?: string
@@ -506,6 +508,7 @@ export type Database = {
           rejection_reason?: string | null
           return_date?: string | null
           status?: Database["public"]["Enums"]["application_status"]
+          submission_method?: string | null
           submitted_at?: string | null
           travel_date?: string | null
           updated_at?: string
