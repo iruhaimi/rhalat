@@ -253,11 +253,16 @@ export function ApplicationMessages({
                   <Avatar className="h-8 w-8 shrink-0">
                     <AvatarFallback className={cn(
                       "text-xs",
-                      message.sender_type === 'agent' 
-                        ? "bg-primary/10 text-primary" 
-                        : "bg-success/10 text-success"
+                      message.sender_type === 'agent'
+                        ? "bg-primary/10 text-primary"
+                        : message.sender_type === 'admin'
+                          ? "bg-amber-500/15 text-amber-700 dark:text-amber-300"
+                          : "bg-success/10 text-success"
                     )}>
-                      {(message.sender_name || (message.sender_type === 'agent' ? 'و' : 'ع')).charAt(0)}
+                      {(message.sender_name || (
+                        message.sender_type === 'agent' ? 'و' :
+                        message.sender_type === 'admin' ? 'إ' : 'ع'
+                      )).charAt(0)}
                     </AvatarFallback>
                   </Avatar>
 
@@ -268,8 +273,17 @@ export function ApplicationMessages({
                     {/* Sender name & priority */}
                     <div className="flex items-center gap-2 mb-1">
                       <span className="text-xs text-muted-foreground">
-                        {message.sender_name || (message.sender_type === 'agent' ? agentName || 'الوكيل' : customerName || 'العميل')}
+                        {message.sender_name || (
+                          message.sender_type === 'agent' ? (agentName || 'الوكيل') :
+                          message.sender_type === 'admin' ? 'الإدارة' :
+                          (customerName || 'العميل')
+                        )}
                       </span>
+                      {message.sender_type === 'admin' && (
+                        <Badge className="text-[10px] py-0 px-1 bg-gradient-to-r from-amber-500 to-orange-500 text-white border-0">
+                          الإدارة
+                        </Badge>
+                      )}
                       {priorityConfig && (
                         <Badge variant="outline" className={cn("text-[10px] py-0 px-1", priorityConfig.className)}>
                           <priorityConfig.icon className="h-2.5 w-2.5 ml-0.5" />
