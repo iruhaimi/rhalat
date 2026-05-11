@@ -56,6 +56,7 @@ import FooterManagement from "@/pages/admin/FooterManagement";
 import StaffAuditLog from "@/pages/admin/StaffAuditLog";
 import EmailLogsManagement from "@/pages/admin/EmailLogsManagement";
 import PortalSecurity from "@/pages/admin/PortalSecurity";
+import SecurityStatus from "@/pages/admin/SecurityStatus";
 import DynamicPortalRoute from "@/components/DynamicPortalRoute";
 // Agent Pages
 import AgentDashboard from "@/pages/agent/AgentDashboard";
@@ -129,6 +130,7 @@ const App = () => (
                 <Route path="audit-log" element={<StaffAuditLog />} />
                 <Route path="portal-security" element={<PortalSecurity />} />
                 <Route path="email-logs" element={<EmailLogsManagement />} />
+                <Route path="security-status" element={<SecurityStatus />} />
               </Route>
 
               {/* Agent Routes */}

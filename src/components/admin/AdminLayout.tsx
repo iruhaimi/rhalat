@@ -25,7 +25,8 @@ import {
    PanelBottom,
    ScrollText,
     KeyRound,
-    Mail
+     Mail,
+     ShieldCheck
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -142,6 +143,12 @@ export default function AdminLayout() {
       title: 'أمان البوابة',
       icon: KeyRound,
       href: '/admin/portal-security',
+      show: isAdmin && isSuperAdmin,
+    },
+    {
+      title: 'حالة الأمان وRLS',
+      icon: ShieldCheck,
+      href: '/admin/security-status',
       show: isAdmin && isSuperAdmin,
     },
     {
