@@ -103,6 +103,7 @@ const ROLE_OPTIONS: { value: AppRole; label: string; description: string }[] = [
   { value: 'customer', label: 'عميل', description: 'صلاحيات التقديم على التأشيرات' },
   { value: 'agent', label: 'وكيل', description: 'مراجعة الطلبات المُعيّنة' },
   { value: 'admin', label: 'مشرف', description: 'صلاحيات كاملة على النظام' },
+  { value: 'tour_operator', label: 'وكيل سياحي', description: 'إدارة البرامج السياحية في بوابة /tourism-portal' },
 ];
 
 export default function UsersManagement() {
