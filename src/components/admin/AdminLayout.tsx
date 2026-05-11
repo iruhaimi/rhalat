@@ -24,7 +24,8 @@ import {
    FileSearch,
    PanelBottom,
    ScrollText,
-   KeyRound
+    KeyRound,
+    Mail
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -130,6 +131,12 @@ export default function AdminLayout() {
       icon: ScrollText,
       href: '/admin/audit-log',
       show: isAdmin && isSuperAdmin,
+    },
+    {
+      title: 'سجل الإيميلات',
+      icon: Mail,
+      href: '/admin/email-logs',
+      show: isAdmin,
     },
     {
       title: 'أمان البوابة',
