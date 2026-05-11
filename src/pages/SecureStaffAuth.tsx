@@ -235,8 +235,9 @@ export default function SecureStaffAuth() {
         const userRoles = roles?.map(r => r.role) || [];
         const isAdmin = userRoles.includes('admin');
         const isAgent = userRoles.includes('agent');
+        const isTourOperator = userRoles.includes('tour_operator');
 
-        if (!isAdmin && !isAgent) {
+        if (!isAdmin && !isAgent && !isTourOperator) {
           await logLoginAttempt(false, 'Not staff user');
           setError('ليس لديك صلاحية الوصول لهذه اللوحة');
           await supabase.auth.signOut();
@@ -255,6 +256,7 @@ export default function SecureStaffAuth() {
           roles: userRoles,
           isAdmin,
           isAgent,
+          isTourOperator,
           needsRecoveryCodes: !hasRecoveryCodes,
           accessToken: data.session?.access_token,
           refreshToken: data.session?.refresh_token,
@@ -368,6 +370,8 @@ export default function SecureStaffAuth() {
       
       if (pendingSession.isAdmin) {
         navigate('/admin');
+      } else if (pendingSession.isTourOperator && !pendingSession.isAgent) {
+        navigate('/tourism-portal');
       } else {
         navigate('/agent');
       }
