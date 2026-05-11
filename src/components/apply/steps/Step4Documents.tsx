@@ -276,7 +276,7 @@ export default function Step4Documents() {
       {/* WhatsApp Guide */}
       <div className="p-4 bg-green-50 dark:bg-green-950/30 rounded-lg border border-green-200 dark:border-green-800">
         <h4 className="font-semibold text-green-900 dark:text-green-100 mb-2">
-          {direction === 'rtl' ? '📱 الإرسال عبر واتساب' : '📱 Send via WhatsApp'}
+          {direction === 'rtl' ? 'الإرسال عبر واتساب' : 'Send via WhatsApp'}
         </h4>
         <p className="text-sm text-green-900 dark:text-green-100 mb-2">
           {direction === 'rtl'
@@ -284,12 +284,12 @@ export default function Step4Documents() {
             : 'You can continue now and send your documents later via WhatsApp:'}
         </p>
         <a
-          href="https://wa.me/966920034158"
+          href="https://wa.me/966562525665"
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center gap-2 font-bold text-green-700 dark:text-green-300 hover:underline"
         >
-          +966 920 034 158
+          +966 56 252 5665
         </a>
         <ul className="text-sm text-green-900 dark:text-green-100 space-y-1 list-disc list-inside mt-2">
           <li>{direction === 'rtl' ? 'اذكر رقم طلبك عند إرسال المستندات' : 'Mention your application number when sending documents'}</li>
