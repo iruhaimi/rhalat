@@ -52,126 +52,159 @@ export default function AdminLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(!prefs.sidebarCollapsedDefault);
   const idle = useIdleTimeout();
 
-  const menuItems = [
+  const menuGroups: Array<{
+    label: string;
+    items: Array<{ title: string; icon: any; href: string; show: boolean }>;
+  }> = [
     {
-      title: 'لوحة التحكم',
-      icon: LayoutDashboard,
-      href: isAdmin ? '/admin' : '/agent',
-      show: true,
+      label: 'الرئيسية',
+      items: [
+        {
+          title: 'لوحة التحكم',
+          icon: LayoutDashboard,
+          href: isAdmin ? '/admin' : '/agent',
+          show: true,
+        },
+        {
+          title: 'الطلبات',
+          icon: FileText,
+          href: isAdmin ? '/admin/applications' : '/agent/applications',
+          show: isAdmin ? hasPermission('manage_applications') : true,
+        },
+      ],
     },
     {
-      title: 'الطلبات',
-      icon: FileText,
-      href: isAdmin ? '/admin/applications' : '/agent/applications',
-      show: isAdmin ? hasPermission('manage_applications') : true,
+      label: 'العملاء والمحتوى',
+      items: [
+        {
+          title: 'المستخدمين',
+          icon: Users,
+          href: '/admin/users',
+          show: isAdmin && hasPermission('manage_users'),
+        },
+        {
+          title: 'العروض الخاصة',
+          icon: Gift,
+          href: '/admin/offers',
+          show: isAdmin && hasPermission('manage_offers'),
+        },
+        {
+          title: 'طلبات الاسترداد',
+          icon: RotateCcw,
+          href: '/admin/refunds',
+          show: isAdmin && hasPermission('process_refunds'),
+        },
+        {
+          title: 'إدارة Hero',
+          icon: Image,
+          href: '/admin/hero',
+          show: isAdmin && hasPermission('manage_hero'),
+        },
+        {
+          title: 'برامج السياحة',
+          icon: Plane,
+          href: '/admin/tour-programs',
+          show: isAdmin,
+        },
+      ],
     },
     {
-      title: 'المستخدمين',
-      icon: Users,
-      href: '/admin/users',
-      show: isAdmin && hasPermission('manage_users'),
+      label: 'الموظفون والوكلاء',
+      items: [
+        {
+          title: 'طلبات الوكلاء',
+          icon: ArrowLeftRight,
+          href: '/admin/agent-requests',
+          show: isAdmin && hasPermission('manage_applications'),
+        },
+        {
+          title: 'سجل محاولات الدخول',
+          icon: ShieldAlert,
+          href: '/admin/login-attempts',
+          show: isAdmin && hasPermission('manage_staff'),
+        },
+        {
+          title: 'طلبات فك القفل',
+          icon: UserCheck,
+          href: '/admin/unlock-requests',
+          show: isAdmin && hasPermission('manage_unlock_requests'),
+        },
+      ],
     },
     {
-      title: 'العروض الخاصة',
-      icon: Gift,
-      href: '/admin/offers',
-      show: isAdmin && hasPermission('manage_offers'),
+      label: 'الأمان والتدقيق',
+      items: [
+        {
+          title: 'العمليات الحساسة',
+          icon: Shield,
+          href: '/admin/sensitive-operations',
+          show: isAdmin && isSuperAdmin,
+        },
+        {
+          title: 'سجلات وصول المستندات',
+          icon: FileSearch,
+          href: '/admin/document-logs',
+          show: isAdmin && isSuperAdmin,
+        },
+        {
+          title: 'سجل التدقيق',
+          icon: ScrollText,
+          href: '/admin/audit-log',
+          show: isAdmin && isSuperAdmin,
+        },
+        {
+          title: 'أمان البوابة',
+          icon: KeyRound,
+          href: '/admin/portal-security',
+          show: isAdmin && isSuperAdmin,
+        },
+        {
+          title: 'حالة الأمان وRLS',
+          icon: ShieldCheck,
+          href: '/admin/security-status',
+          show: isAdmin && isSuperAdmin,
+        },
+      ],
     },
     {
-      title: 'طلبات الاسترداد',
-      icon: RotateCcw,
-      href: '/admin/refunds',
-      show: isAdmin && hasPermission('process_refunds'),
+      label: 'الاتصالات',
+      items: [
+        {
+          title: 'سجل الإيميلات',
+          icon: Mail,
+          href: '/admin/email-logs',
+          show: isAdmin,
+        },
+      ],
     },
     {
-      title: 'إدارة Hero',
-      icon: Image,
-      href: '/admin/hero',
-      show: isAdmin && hasPermission('manage_hero'),
-    },
-    {
-      title: 'سجل محاولات الدخول',
-      icon: ShieldAlert,
-      href: '/admin/login-attempts',
-      show: isAdmin && hasPermission('manage_staff'),
-    },
-    {
-      title: 'طلبات فك القفل',
-      icon: UserCheck,
-      href: '/admin/unlock-requests',
-      show: isAdmin && hasPermission('manage_unlock_requests'),
-    },
-    {
-      title: 'طلبات الوكلاء',
-      icon: ArrowLeftRight,
-      href: '/admin/agent-requests',
-      show: isAdmin && hasPermission('manage_applications'),
-    },
-    {
-      title: 'العمليات الحساسة',
-      icon: Shield,
-      href: '/admin/sensitive-operations',
-      show: isAdmin && isSuperAdmin,
-    },
-    {
-      title: 'سجلات وصول المستندات',
-      icon: FileSearch,
-      href: '/admin/document-logs',
-      show: isAdmin && isSuperAdmin,
-    },
-    {
-      title: 'إدارة الـ Footer',
-      icon: PanelBottom,
-      href: '/admin/footer',
-      show: isAdmin && isSuperAdmin,
-    },
-    {
-      title: 'إعدادات المالك',
-      icon: Crown,
-      href: '/admin/owner-settings',
-      show: isAdmin && isSuperAdmin,
-    },
-    {
-      title: 'سجل التدقيق',
-      icon: ScrollText,
-      href: '/admin/audit-log',
-      show: isAdmin && isSuperAdmin,
-    },
-    {
-      title: 'سجل الإيميلات',
-      icon: Mail,
-      href: '/admin/email-logs',
-      show: isAdmin,
-    },
-    {
-      title: 'أمان البوابة',
-      icon: KeyRound,
-      href: '/admin/portal-security',
-      show: isAdmin && isSuperAdmin,
-    },
-    {
-      title: 'حالة الأمان وRLS',
-      icon: ShieldCheck,
-      href: '/admin/security-status',
-      show: isAdmin && isSuperAdmin,
-    },
-    {
-      title: 'إعدادات سريعة',
-      icon: SlidersHorizontal,
-      href: '/admin/quick-settings',
-      show: isAdmin,
-    },
-    {
-      title: 'برامج السياحة',
-      icon: Plane,
-      href: '/admin/tour-programs',
-      show: isAdmin,
-    },
-    {
-      title: 'الإعدادات',
-      icon: Settings,
-      href: '/admin/settings',
-      show: isAdmin && (hasPermission('manage_settings') || hasPermission('manage_countries')),
+      label: 'الإعدادات',
+      items: [
+        {
+          title: 'إعدادات سريعة',
+          icon: SlidersHorizontal,
+          href: '/admin/quick-settings',
+          show: isAdmin,
+        },
+        {
+          title: 'إدارة الـ Footer',
+          icon: PanelBottom,
+          href: '/admin/footer',
+          show: isAdmin && isSuperAdmin,
+        },
+        {
+          title: 'إعدادات المالك',
+          icon: Crown,
+          href: '/admin/owner-settings',
+          show: isAdmin && isSuperAdmin,
+        },
+        {
+          title: 'الإعدادات',
+          icon: Settings,
+          href: '/admin/settings',
+          show: isAdmin && (hasPermission('manage_settings') || hasPermission('manage_countries')),
+        },
+      ],
     },
   ];
 
@@ -214,40 +247,51 @@ export default function AdminLayout() {
           </div>
 
           {/* Navigation */}
-          <nav className="flex flex-col gap-2 p-4">
-            {menuItems.filter(item => item.show).map((item) => {
-              const isActive = location.pathname === item.href;
-              
-              const linkContent = (
-                <Link
-                  to={item.href}
-                  className={cn(
-                    "flex items-center gap-3 rounded-lg px-3 py-2 transition-colors",
-                    isActive 
-                      ? "bg-primary text-primary-foreground" 
-                      : "hover:bg-muted text-muted-foreground hover:text-foreground"
+          <nav className="flex flex-col gap-1 p-3 pb-24 overflow-y-auto h-[calc(100vh-8rem)]">
+            {menuGroups.map((group, gi) => {
+              const visible = group.items.filter(i => i.show);
+              if (visible.length === 0) return null;
+              return (
+                <div key={group.label} className={cn(gi > 0 && "mt-3")}>
+                  {sidebarOpen ? (
+                    <p className="px-3 pb-1 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground/70">
+                      {group.label}
+                    </p>
+                  ) : (
+                    gi > 0 && <div className="mx-2 my-2 border-t border-border/60" />
                   )}
-                >
-                  <item.icon className="h-5 w-5 shrink-0" />
-                  {sidebarOpen && <span>{item.title}</span>}
-                </Link>
+                  <div className="flex flex-col gap-1">
+                    {visible.map((item) => {
+                      const isActive = location.pathname === item.href;
+                      const linkContent = (
+                        <Link
+                          to={item.href}
+                          className={cn(
+                            "flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors",
+                            isActive
+                              ? "bg-primary text-primary-foreground"
+                              : "hover:bg-muted text-muted-foreground hover:text-foreground"
+                          )}
+                        >
+                          <item.icon className="h-5 w-5 shrink-0" />
+                          {sidebarOpen && <span className="truncate">{item.title}</span>}
+                        </Link>
+                      );
+                      if (!sidebarOpen) {
+                        return (
+                          <Tooltip key={item.href}>
+                            <TooltipTrigger asChild>{linkContent}</TooltipTrigger>
+                            <TooltipContent side={isRTL ? "left" : "right"}>
+                              {item.title}
+                            </TooltipContent>
+                          </Tooltip>
+                        );
+                      }
+                      return <div key={item.href}>{linkContent}</div>;
+                    })}
+                  </div>
+                </div>
               );
-
-              // Show tooltip only when sidebar is collapsed
-              if (!sidebarOpen) {
-                return (
-                  <Tooltip key={item.href}>
-                    <TooltipTrigger asChild>
-                      {linkContent}
-                    </TooltipTrigger>
-                    <TooltipContent side={isRTL ? "left" : "right"}>
-                      {item.title}
-                    </TooltipContent>
-                  </Tooltip>
-                );
-              }
-
-              return <div key={item.href}>{linkContent}</div>;
             })}
           </nav>
 
