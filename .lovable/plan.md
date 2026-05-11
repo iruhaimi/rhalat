@@ -1,97 +1,61 @@
-## الأهداف
+## Goal
 
-1. إرسال إيميل تأكيد للعميل بتفاصيل الطلب الكاملة + الشروط الموافق عليها (يحمي الشركة قانونياً ويمنع أي ادعاء بأن العميل لم يكن على علم).
-2. توفير لوحة إدارية لمتابعة جميع الإيميلات المرسلة (لضبط الجودة).
-3. تعديل نص "1-2 يوم عمل" إلى "1-2 ساعة عمل" في صفحة نجاح الطلب.
-
-## الوضع الحالي
-
-- البنية البريدية موجودة (`send-transactional-email`, `process-email-queue`, جدول `email_send_log`, نطاق `notify.visafaster.com`).
-- يوجد قالب واحد فقط حالياً: `staff-2fa.tsx`.
-- لا توجد صفحة إدارية لمراقبة الإيميلات حتى الآن (رغم وجود ذكر سابق لها).
-
-## التنفيذ
-
-### 1. قالب إيميل تأكيد الطلب (جديد)
-
-ملف جديد: `supabase/functions/_shared/transactional-email-templates/application-confirmation.tsx`
-
-محتوى الإيميل (RTL، عربي، بهوية "عطلات رحلاتكم" والألوان الزرقاء):
-- ترويسة بشعار العلامة + عنوان "تأكيد استلام طلبك"
-- **رقم الطلب** بصيغة `VF-YYYY-XXXX` بارز
-- **بيانات العميل**: الاسم، البريد، الجوال
-- **تفاصيل التأشيرة**: الدولة، نوع التأشيرة، تاريخ السفر، عدد المسافرين (بالغ/طفل/رضيع)
-- **تفصيل الأسعار**: سعر لكل فئة + الإجمالي + توضيح رسوم الحكومة
-- **طريقة الإكمال**: "الدفع عبر الموقع" أو "الإرسال عبر واتساب" مع توضيح أن الواتساب لم يتم فيه دفع
-- **المتطلبات الموافق عليها** (من `checkedRequirements`)
-- **بند الشروط والأحكام**: نص موافقة صريح + الطابع الزمني + رابط لصفحة الشروط الكاملة `/terms`
-- زر "تتبع الطلب" → `/track?app=VF-YYYY-XXXX`
-- خلفية بيضاء (#ffffff) إلزامياً، وألوان أزرار من النظام
-
-تسجيله في `registry.ts` تحت اسم `application-confirmation`.
-
-### 2. استدعاء الإرسال من `Step6Payment.tsx`
-
-يتم الاستدعاء في الحالتين، بعد إنشاء/تحديث الطلب وقبل الانتقال لصفحة النجاح:
-
-```ts
-await supabase.functions.invoke('send-transactional-email', {
-  body: {
-    templateName: 'application-confirmation',
-    recipientEmail: applicationData.email,
-    idempotencyKey: `app-confirm-${appId}`,
-    templateData: { /* جميع التفاصيل أعلاه */ },
-  },
-});
-```
-
-- يُرسل في **مسار الدفع** (نص واضح "تم الدفع").
-- يُرسل في **مسار واتساب** (نص واضح "تم استلام الطلب – لم يتم خصم أي مبلغ، سيتواصل معك الموظف").
-- `idempotencyKey` يستخدم `appId` لمنع التكرار عند الضغط مرتين.
-- الفشل لا يوقف العملية (try/catch صامت + log) — العميل يكمل تدفقه الطبيعي.
-
-### 3. صفحة `/admin/email-logs` لمراقبة الإيميلات
-
-ملف جديد: `src/pages/admin/EmailLogsManagement.tsx` + إضافته للـ Router والسايدبار (تحت صلاحية الأدمن).
-
-المزايا (وفق إرشادات نظام مراقبة الإيميلات):
-- **فلتر نطاق زمني**: آخر 24 ساعة / 7 أيام / 30 يوم / مخصص (الافتراضي 7 أيام).
-- **فلتر القالب**: قائمة منسدلة بكل `template_name` مميز.
-- **فلتر الحالة**: الكل / مُرسل / فاشل (DLQ) / مكبوت / معلّق — مع شارات ملوّنة.
-- **بطاقات إحصائية** أعلى الصفحة: إجمالي / مُرسل / فاشل / مكبوت (Deduplicated بـ `message_id`).
-- **جدول السجلات**: القالب | المستلم | الحالة | الوقت | تفاصيل الخطأ — صف واحد لكل إيميل (آخر حالة عبر `DISTINCT ON (message_id)`)، مرتبة تنازلياً، ترقيم صفحات بعد 50.
-- **عرض تفاصيل**: نقر على صف يفتح حوار يُظهر `metadata` الخام لتشخيص المشاكل.
-- يُحمي الوصول بـ `ProtectedRoute` للأدمن فقط (محتوى حساس: إيميلات وأسماء عملاء).
-
-### 4. تعديل النص في `PaymentSuccess.tsx`
-
-`step1`: "سيتم مراجعة طلبك خلال **1-2 ساعة عمل**" (بدلاً من "1-2 يوم عمل") — للحالتين.
-
-كذلك بطاقة الوقت المتوقع تُعدّل من `5-7 days` إلى `1-2 ساعة` لتوحيد الرسالة.
-
-### 5. النشر
-
-- نشر `send-transactional-email` بعد إضافة القالب وتحديث `registry.ts`.
-
-## الملفات
-
-**جديدة:**
-- `supabase/functions/_shared/transactional-email-templates/application-confirmation.tsx`
-- `src/pages/admin/EmailLogsManagement.tsx`
-
-**تُعدَّل:**
-- `supabase/functions/_shared/transactional-email-templates/registry.ts`
-- `src/components/apply/steps/Step6Payment.tsx` (استدعاء الإرسال في المسارين)
-- `src/pages/PaymentSuccess.tsx` (تعديل "يوم" إلى "ساعة")
-- `src/App.tsx` (إضافة المسار `/admin/email-logs`)
-- `src/components/admin/AdminLayout.tsx` (رابط في السايدبار للأدمن)
-
-## الإجابة على السؤال "أين أجد الإيميلات؟"
-
-بعد التنفيذ:
-- **داخل اللوحة**: مسار `/admin/email-logs` (مرئي للأدمن فقط من الشريط الجانبي).
-- جميع الإيميلات تُسجَّل تلقائياً في قاعدة البيانات لحظة الإرسال مع حالتها (مُرسل/فاشل/مكبوت)، مع تفاصيل أي خطأ — تستطيع تصفيتها بالقالب/الحالة/الفترة الزمنية لضبط الجودة.
+Replace the internal UUID with the human-readable application number (`VF-YYYY-XXXX`) everywhere the customer sees it, clean up the customer "Application Details" card, and redesign the admin "Travel Info" card so the JSON-blob in `purpose_of_travel` is rendered as a clean, readable summary instead of raw JSON.
 
 ---
 
-سأبدأ التنفيذ مباشرة عند الموافقة.
+## 1. Track page — search by `VF-YYYY-XXXX` instead of UUID
+
+File: `src/pages/TrackApplication.tsx`
+
+- Change the field label/placeholder from "أدخل رقم الطلب (UUID)" → "أدخل رقم الطلب (مثال: VF-2026-0120)".
+- Auto-uppercase + trim input as the user types; accept also raw digits like `2026-0120` and normalize to `VF-…`.
+- Replace `.eq('id', applicationNumber)` with `.eq('display_number', normalizedNumber)` on both the `applications` query and the `application_status_history` query (after fetching the row, reuse `application.id` for the history lookup).
+- Keep the secondary verification (phone or email) — also match it against the application's profile so that customers can't browse other people's tracking simply by knowing a number.
+- Update error copy to reference "رقم الطلب" only (no mention of UUID).
+
+## 2. Customer "My Application Detail" — cleaner card, hide empty fields, use display number
+
+File: `src/pages/MyApplicationDetail.tsx`
+
+- Add `display_number` and `created_at` to the `select`; show `display_number` (mono, large, e.g. `VF-2026-0120`) under the page title instead of the UUID.
+- "تاريخ التقديم" should fall back to `created_at` when `submitted_at` is null (the system always has a creation date, so the customer always sees one).
+- Conditionally render each date tile only when it has a value:
+  - "تاريخ السفر" → only if `travel_date`.
+  - "تاريخ العودة" → only if `return_date`.
+  - "مدة المعالجة" → keep (always available from `visa_type`).
+- Add a small "رقم الطلب" badge at the top of the visa card with a copy-to-clipboard button so customers can easily reuse it for tracking.
+
+## 3. Admin "Application Detail" — readable Travel Info instead of raw JSON
+
+File: `src/pages/admin/ApplicationDetail.tsx`
+
+The DB field `purpose_of_travel` is currently overloaded with a JSON snapshot of the wizard (fullName, email, phone, travelers, totalAmount, …). Instead of dumping it, parse it once in `fetchApplicationData` and render specific fields cleanly:
+
+- Add a helper `parseDraftBlob(raw: string | null)` that safely `JSON.parse`s the field and returns a typed object (or `null`).
+- Replace the large "الغرض من السفر" tile with a structured **"ملخص بيانات الطلب"** card showing only useful items in a 2-column grid:
+  - عدد المسافرين (بالغ / طفل / رضيع) — from `travelers`.
+  - إجمالي المبلغ — from `totalAmount` (formatted as `… ر.س`).
+  - حالة الموافقة على الشروط — ✅ / ❌.
+  - بريد العميل + جوال العميل — only if the `profiles` row doesn't already have them (avoid duplication with the "معلومات مقدم الطلب" card).
+- Keep the raw JSON accessible behind a small "عرض البيانات الخام" collapsible (`<details>`) for admin debugging only — never shown by default.
+- Also display `display_number` next to the UUID in the page header (UUID stays as small monospace text for staff, display number is the prominent identifier).
+
+## 4. Confirmation email — already includes the display number
+
+The transactional template `application-confirmation.tsx` already shows `applicationNumber` prominently, and `Step6Payment.tsx` passes `display_number` to it. No change needed beyond verifying the prop is wired in (sanity check during implementation).
+
+---
+
+## Technical notes
+
+- `display_number` already exists on `applications` (auto-generated by trigger `generate_application_display_number`, format `VF-YYYY-XXXX`, unique). No DB migration is required.
+- All RLS stays unchanged; the track page already uses an anonymous query gated by phone/email match.
+- All copy stays Arabic-first (RTL), per project memory.
+- No business-logic changes outside presentation/track-input parsing.
+
+## Files touched
+
+- `src/pages/TrackApplication.tsx` — search by display number, normalize input, update copy.
+- `src/pages/MyApplicationDetail.tsx` — show display number, hide empty dates, fallback `submitted_at` → `created_at`, copy button.
+- `src/pages/admin/ApplicationDetail.tsx` — parse JSON blob, redesign travel-info section, show display number in header.

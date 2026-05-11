@@ -34,7 +34,12 @@ import {
   Save,
   UserCog,
   FileDown,
-  FileCheck
+  FileCheck,
+  Users,
+  Wallet,
+  ShieldCheck,
+  Mail,
+  Phone
 } from 'lucide-react';
 import { WorkSubmissionsSection } from '@/components/admin/WorkSubmissionsSection';
 import { generateApplicationPDF } from '@/lib/generateApplicationPDF';
@@ -58,6 +63,7 @@ const STATUS_OPTIONS: { value: ApplicationStatus; label: string }[] = [
 
 interface ApplicationData {
   id: string;
+  display_number: string | null;
   status: ApplicationStatus;
   created_at: string;
   travel_date: string | null;
@@ -91,6 +97,31 @@ interface ApplicationData {
     id: string;
     full_name: string;
   } | null;
+}
+
+// Safely parse the wizard JSON blob stored in `purpose_of_travel`
+interface ParsedDraftBlob {
+  fullName?: string;
+  email?: string;
+  phone?: string;
+  countryCode?: string;
+  travelers?: { adults?: number; children?: number; infants?: number };
+  checkedRequirements?: string[];
+  totalAmount?: number;
+  paymentMethod?: string;
+  termsAccepted?: boolean;
+}
+function parseDraftBlob(raw: string | null | undefined): ParsedDraftBlob | null {
+  if (!raw) return null;
+  // Heuristic: only attempt JSON parse if it looks like a JSON object
+  const trimmed = raw.trim();
+  if (!trimmed.startsWith('{')) return null;
+  try {
+    const obj = JSON.parse(trimmed);
+    return typeof obj === 'object' && obj ? obj : null;
+  } catch {
+    return null;
+  }
 }
 
 interface Document {
@@ -423,7 +454,19 @@ export default function ApplicationDetail() {
           </Button>
           <div>
             <h2 className="text-xl sm:text-2xl font-bold">تفاصيل الطلب</h2>
-            <p className="text-muted-foreground font-mono text-xs sm:text-sm">{application.id}</p>
+            <div className="flex flex-wrap items-center gap-2 mt-1">
+              {application.display_number && (
+                <span
+                  dir="ltr"
+                  className="inline-flex items-center rounded-md bg-primary/10 px-2.5 py-1 font-mono text-sm font-bold text-primary tracking-wider"
+                >
+                  {application.display_number}
+                </span>
+              )}
+              <span className="text-muted-foreground font-mono text-[10px] sm:text-xs select-all" dir="ltr">
+                {application.id}
+              </span>
+            </div>
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-2 sm:gap-3 mr-12 sm:mr-0">
@@ -517,10 +560,18 @@ export default function ApplicationDetail() {
                   <p className="text-xs text-muted-foreground">تاريخ العودة</p>
                   <p className="font-medium">{application.return_date ? format(new Date(application.return_date), 'dd/MM/yyyy') : '-'}</p>
                 </div>
-                <div className="space-y-1 p-3 rounded-lg bg-muted/50 sm:col-span-2">
-                  <p className="text-xs text-muted-foreground">الغرض من السفر</p>
-                  <p className="font-medium">{application.purpose_of_travel || '-'}</p>
-                </div>
+                {(() => {
+                  const blob = parseDraftBlob(application.purpose_of_travel);
+                  if (blob) return null;
+                  // Plain-text purpose_of_travel: show as-is
+                  if (!application.purpose_of_travel) return null;
+                  return (
+                    <div className="space-y-1 p-3 rounded-lg bg-muted/50 sm:col-span-2">
+                      <p className="text-xs text-muted-foreground">الغرض من السفر</p>
+                      <p className="font-medium whitespace-pre-wrap">{application.purpose_of_travel}</p>
+                    </div>
+                  );
+                })()}
                 {application.accommodation_details && (
                   <div className="space-y-1 p-3 rounded-lg bg-muted/50 sm:col-span-2">
                     <p className="text-xs text-muted-foreground">تفاصيل الإقامة</p>
@@ -530,6 +581,112 @@ export default function ApplicationDetail() {
               </div>
             </CardContent>
           </Card>
+
+          {/* Parsed wizard data card — only when purpose_of_travel holds a JSON blob */}
+          {(() => {
+            const blob = parseDraftBlob(application.purpose_of_travel);
+            if (!blob) return null;
+            const t = blob.travelers || {};
+            const totalTravelers = (t.adults || 0) + (t.children || 0) + (t.infants || 0);
+            return (
+              <Card>
+                <CardHeader className="pb-4">
+                  <CardTitle className="flex items-center gap-2 text-lg">
+                    <FileCheck className="h-5 w-5 text-primary" />
+                    ملخص بيانات الطلب
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                    {totalTravelers > 0 && (
+                      <div className="flex items-start gap-3 p-3 rounded-lg bg-muted/50">
+                        <Users className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                        <div>
+                          <p className="text-xs text-muted-foreground">عدد المسافرين</p>
+                          <p className="font-medium text-sm">
+                            {[
+                              t.adults ? `${t.adults} بالغ` : null,
+                              t.children ? `${t.children} طفل` : null,
+                              t.infants ? `${t.infants} رضيع` : null,
+                            ].filter(Boolean).join('، ')}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                    {typeof blob.totalAmount === 'number' && (
+                      <div className="flex items-start gap-3 p-3 rounded-lg bg-muted/50">
+                        <Wallet className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                        <div>
+                          <p className="text-xs text-muted-foreground">إجمالي المبلغ</p>
+                          <p className="font-bold text-primary">{blob.totalAmount.toLocaleString('en-US')} ر.س</p>
+                        </div>
+                      </div>
+                    )}
+                    {typeof blob.termsAccepted === 'boolean' && (
+                      <div className="flex items-start gap-3 p-3 rounded-lg bg-muted/50">
+                        <ShieldCheck className={`h-5 w-5 shrink-0 mt-0.5 ${blob.termsAccepted ? 'text-success' : 'text-muted-foreground'}`} />
+                        <div>
+                          <p className="text-xs text-muted-foreground">الشروط والأحكام</p>
+                          <p className="font-medium text-sm">
+                            {blob.termsAccepted ? '✅ تمت الموافقة' : '❌ لم تتم الموافقة'}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                    {blob.paymentMethod && (
+                      <div className="flex items-start gap-3 p-3 rounded-lg bg-muted/50">
+                        <FileCheck className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                        <div>
+                          <p className="text-xs text-muted-foreground">طريقة الدفع</p>
+                          <p className="font-medium text-sm">{blob.paymentMethod}</p>
+                        </div>
+                      </div>
+                    )}
+                    {blob.email && (
+                      <div className="flex items-start gap-3 p-3 rounded-lg bg-muted/50">
+                        <Mail className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                        <div className="min-w-0">
+                          <p className="text-xs text-muted-foreground">البريد الإلكتروني</p>
+                          <p className="font-medium text-sm truncate" dir="ltr">{blob.email}</p>
+                        </div>
+                      </div>
+                    )}
+                    {blob.phone && (
+                      <div className="flex items-start gap-3 p-3 rounded-lg bg-muted/50">
+                        <Phone className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                        <div>
+                          <p className="text-xs text-muted-foreground">رقم الجوال</p>
+                          <p className="font-medium text-sm" dir="ltr">
+                            {blob.countryCode || ''} {blob.phone}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {blob.checkedRequirements && blob.checkedRequirements.length > 0 && (
+                    <div className="mt-4 p-3 rounded-lg bg-muted/30">
+                      <p className="text-xs text-muted-foreground mb-2">المتطلبات الموافق عليها</p>
+                      <ul className="list-disc pr-5 space-y-1">
+                        {blob.checkedRequirements.map((req, i) => (
+                          <li key={i} className="text-sm">{req}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  <details className="mt-4 group">
+                    <summary className="cursor-pointer text-xs text-muted-foreground hover:text-foreground transition select-none">
+                      عرض البيانات الخام (للتدقيق)
+                    </summary>
+                    <pre className="mt-2 p-3 rounded-lg bg-muted/50 text-[11px] overflow-x-auto" dir="ltr">
+                      {JSON.stringify(blob, null, 2)}
+                    </pre>
+                  </details>
+                </CardContent>
+              </Card>
+            );
+          })()}
 
           {/* Documents & Status History in a row */}
           <div className="grid gap-6 lg:grid-cols-2">

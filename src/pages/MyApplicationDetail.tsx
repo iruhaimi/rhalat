@@ -22,8 +22,10 @@ import {
   Send,
   Eye,
   CreditCard,
-  Ban
+  Ban,
+  Copy
 } from 'lucide-react';
+import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { ar, enUS } from 'date-fns/locale';
 import type { ApplicationStatus } from '@/types/database';
@@ -48,6 +50,7 @@ const STATUS_CONFIG: Record<ApplicationStatus, {
 
 interface ApplicationData {
   id: string;
+  display_number: string | null;
   status: ApplicationStatus;
   travel_date: string | null;
   return_date: string | null;
@@ -91,6 +94,7 @@ export default function MyApplicationDetail() {
         .from('applications')
         .select(`
           id,
+          display_number,
           status,
           travel_date,
           return_date,
@@ -186,6 +190,17 @@ export default function MyApplicationDetail() {
   const statusConfig = STATUS_CONFIG[application.status];
   const StatusIcon = statusConfig.icon;
 
+  const displayNumber = application.display_number || application.id;
+  const submissionDate = application.submitted_at || application.created_at;
+  const copyAppNumber = async () => {
+    try {
+      await navigator.clipboard.writeText(displayNumber);
+      toast.success(isRTL ? 'تم نسخ رقم الطلب' : 'Application number copied');
+    } catch {
+      toast.error(isRTL ? 'تعذر النسخ' : 'Copy failed');
+    }
+  };
+
   return (
     <div className="container-section py-8">
       <div className="max-w-5xl mx-auto space-y-6">
@@ -201,7 +216,15 @@ export default function MyApplicationDetail() {
               <h1 className="text-2xl font-bold">
                 {isRTL ? 'تفاصيل الطلب' : 'Application Details'}
               </h1>
-              <p className="text-muted-foreground text-sm font-mono">{application.id}</p>
+              <button
+                onClick={copyAppNumber}
+                className="mt-1 inline-flex items-center gap-2 rounded-lg bg-primary/10 px-3 py-1 text-primary hover:bg-primary/15 transition"
+                dir="ltr"
+                title={isRTL ? 'نسخ رقم الطلب' : 'Copy application number'}
+              >
+                <span className="font-mono font-bold tracking-wider">{displayNumber}</span>
+                <Copy className="h-3.5 w-3.5" />
+              </button>
             </div>
           </div>
           <Badge className={`${statusConfig.className} gap-1.5 px-3 py-1.5`}>
@@ -237,31 +260,35 @@ export default function MyApplicationDetail() {
                 </div>
 
                 <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
-                    <Calendar className="h-5 w-5 text-muted-foreground" />
-                    <div>
-                      <p className="text-xs text-muted-foreground">
-                        {isRTL ? 'تاريخ السفر' : 'Travel Date'}
-                      </p>
-                      <p className="font-medium">{formatDate(application.travel_date)}</p>
+                  {application.travel_date && (
+                    <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
+                      <Calendar className="h-5 w-5 text-muted-foreground" />
+                      <div>
+                        <p className="text-xs text-muted-foreground">
+                          {isRTL ? 'تاريخ السفر' : 'Travel Date'}
+                        </p>
+                        <p className="font-medium">{formatDate(application.travel_date)}</p>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
-                    <Calendar className="h-5 w-5 text-muted-foreground" />
-                    <div>
-                      <p className="text-xs text-muted-foreground">
-                        {isRTL ? 'تاريخ العودة' : 'Return Date'}
-                      </p>
-                      <p className="font-medium">{formatDate(application.return_date)}</p>
+                  )}
+                  {application.return_date && (
+                    <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
+                      <Calendar className="h-5 w-5 text-muted-foreground" />
+                      <div>
+                        <p className="text-xs text-muted-foreground">
+                          {isRTL ? 'تاريخ العودة' : 'Return Date'}
+                        </p>
+                        <p className="font-medium">{formatDate(application.return_date)}</p>
+                      </div>
                     </div>
-                  </div>
+                  )}
                   <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
                     <Clock className="h-5 w-5 text-muted-foreground" />
                     <div>
                       <p className="text-xs text-muted-foreground">
                         {isRTL ? 'تاريخ التقديم' : 'Submitted At'}
                       </p>
-                      <p className="font-medium">{formatDate(application.submitted_at)}</p>
+                      <p className="font-medium">{formatDate(submissionDate)}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">

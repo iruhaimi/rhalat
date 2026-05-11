@@ -34,6 +34,7 @@ import type { ApplicationStatus } from '@/types/database';
 
 interface ApplicationResult {
   id: string;
+  display_number: string | null;
   status: ApplicationStatus;
   travel_date: string | null;
   created_at: string;
@@ -179,6 +180,18 @@ export default function TrackApplication() {
     }
   }, [searchType]);
 
+  // Normalize input like "vf 2026 0120", "2026-0120", "20260120" to "VF-2026-0120"
+  const normalizeAppNumber = (raw: string): string => {
+    const cleaned = raw.toUpperCase().replace(/[^A-Z0-9]/g, '');
+    const withoutPrefix = cleaned.startsWith('VF') ? cleaned.slice(2) : cleaned;
+    if (withoutPrefix.length >= 8) {
+      const year = withoutPrefix.slice(0, 4);
+      const seq = withoutPrefix.slice(4);
+      return `VF-${year}-${seq}`;
+    }
+    return raw.toUpperCase().trim();
+  };
+
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -201,10 +214,12 @@ export default function TrackApplication() {
     setIsLoading(true);
 
     try {
+      const normalized = normalizeAppNumber(applicationNumber);
       const { data: application, error: appError } = await supabase
         .from('applications')
         .select(`
           id,
+          display_number,
           status,
           travel_date,
           created_at,
@@ -216,7 +231,7 @@ export default function TrackApplication() {
             country:countries(name, flag_url)
           )
         `)
-        .eq('id', applicationNumber.trim())
+        .eq('display_number', normalized)
         .maybeSingle();
 
       if (appError) throw appError;
@@ -234,7 +249,7 @@ export default function TrackApplication() {
       const { data: history, error: historyError } = await supabase
         .from('application_status_history')
         .select('id, old_status, new_status, created_at, notes')
-        .eq('application_id', applicationNumber.trim())
+        .eq('application_id', application.id)
         .order('created_at', { ascending: true });
 
       if (historyError) throw historyError;
@@ -343,10 +358,10 @@ export default function TrackApplication() {
                     <Input
                       id="applicationNumber"
                       type="text"
-                      placeholder={isRTL ? 'أدخل رقم الطلب (UUID)' : 'Enter application number (UUID)'}
+                      placeholder={isRTL ? 'أدخل رقم الطلب (مثال: VF-2026-0120)' : 'Enter application number (e.g. VF-2026-0120)'}
                       value={applicationNumber}
-                      onChange={(e) => setApplicationNumber(e.target.value)}
-                      className="text-base rounded-xl"
+                      onChange={(e) => setApplicationNumber(e.target.value.toUpperCase())}
+                      className="text-base rounded-xl font-mono uppercase tracking-wider"
                       dir="ltr"
                     />
                   </div>
