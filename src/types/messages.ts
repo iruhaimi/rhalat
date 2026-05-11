@@ -1,5 +1,5 @@
 export type MessagePriority = 'normal' | 'important' | 'urgent';
-export type SenderType = 'agent' | 'customer';
+export type SenderType = 'agent' | 'customer' | 'admin';
 export type AttachmentType = 'image' | 'pdf';
 
 export interface ApplicationMessage {
