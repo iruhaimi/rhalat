@@ -179,8 +179,8 @@ export function StaffUsersTable({
           </TableHeader>
           <TableBody>
             {users.map((userItem) => (
-              <TableRow key={userItem.id} className="group hover:bg-muted/30 transition-colors h-16">
-                <TableCell>
+              <TableRow key={userItem.id} className="group hover:bg-muted/30 transition-colors h-[68px]">
+                <TableCell className="align-middle">
                   <div className="flex items-center gap-3">
                     <button
                       onClick={() => onViewProfile(userItem)}
@@ -216,10 +216,10 @@ export function StaffUsersTable({
                     </div>
                   </div>
                 </TableCell>
-                <TableCell>
+                <TableCell className="align-middle">
                   {userItem.email ? (
-                    <div className="flex items-center gap-2">
-                      <div className="flex items-center gap-1.5 bg-muted/50 rounded-md px-2 py-1 max-w-[180px]">
+                    <div className="flex items-center gap-2 min-h-[40px]">
+                      <div className="flex items-center gap-1.5 max-w-[180px]">
                         <Mail className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />
                         <span className="text-sm truncate" dir="ltr" title={userItem.email}>
                           {userItem.email}
@@ -243,28 +243,29 @@ export function StaffUsersTable({
                     <span className="text-muted-foreground text-sm">-</span>
                   )}
                 </TableCell>
-                <TableCell>
-                  <span dir="ltr" className="text-sm">{userItem.phone || '-'}</span>
+                <TableCell className="align-middle">
+                  <div className="flex items-center min-h-[40px]">
+                    <span dir="ltr" className="text-sm">{userItem.phone || '-'}</span>
+                  </div>
                 </TableCell>
-                <TableCell>
+                <TableCell className="align-middle">
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <div className="flex flex-col leading-tight">
-                        <span className="text-sm">
+                      <div className="flex items-center min-h-[40px]">
+                        <span className="text-sm whitespace-nowrap">
                           {format(new Date(userItem.created_at), 'dd MMM yyyy', { locale: ar })}
-                        </span>
-                        <span className="text-[11px] text-muted-foreground">
-                          {formatDistanceToNow(new Date(userItem.created_at), { locale: ar, addSuffix: true })}
                         </span>
                       </div>
                     </TooltipTrigger>
                     <TooltipContent>
                       {format(new Date(userItem.created_at), 'EEEE dd MMMM yyyy - HH:mm', { locale: ar })}
+                      {' • '}
+                      {formatDistanceToNow(new Date(userItem.created_at), { locale: ar, addSuffix: true })}
                     </TooltipContent>
                   </Tooltip>
                 </TableCell>
-                <TableCell>
-                  <div className="flex flex-wrap items-center gap-1">
+                <TableCell className="align-middle">
+                  <div className="flex flex-wrap items-center gap-1 min-h-[40px]">
                     {ownerUserIds.has(userItem.user_id) && (
                       <Tooltip>
                         <TooltipTrigger asChild>
@@ -293,7 +294,7 @@ export function StaffUsersTable({
                     ) : null}
                   </div>
                 </TableCell>
-                <TableCell>
+                <TableCell className="align-middle">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-muted">
