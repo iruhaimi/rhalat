@@ -507,6 +507,8 @@ export default function SecureStaffAuth() {
 
           if (pendingSession.isAdmin) {
             navigate('/admin');
+          } else if (pendingSession.isTourOperator && !pendingSession.isAgent) {
+            navigate('/tourism-portal');
           } else {
             navigate('/agent');
           }
@@ -550,6 +552,8 @@ export default function SecureStaffAuth() {
     toast.success('تم تسجيل الدخول بنجاح');
     if (pendingSession?.isAdmin) {
       navigate('/admin');
+    } else if (pendingSession?.isTourOperator && !pendingSession?.isAgent) {
+      navigate('/tourism-portal');
     } else {
       navigate('/agent');
     }
