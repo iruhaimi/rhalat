@@ -54,6 +54,7 @@ export function ApplicationMessages({
     unreadCount,
     sendMessage, 
     markAsRead,
+    markOneAsRead,
     senderType,
     isReadOnly
   } = useApplicationMessages(applicationId);
@@ -217,12 +218,25 @@ export function ApplicationMessages({
               </Badge>
             )}
           </span>
-          {isReadOnly && (
-            <Badge variant="outline" className="text-xs gap-1">
-              <Lock className="h-3 w-3" />
-              عرض فقط
-            </Badge>
-          )}
+          <div className="flex items-center gap-2">
+            {unreadCount > 0 && (
+              <Button
+                size="sm"
+                variant="outline"
+                className="h-7 text-xs gap-1"
+                onClick={() => markAsRead()}
+              >
+                <CheckCheck className="h-3.5 w-3.5" />
+                تعليم الكل كمقروء
+              </Button>
+            )}
+            {isReadOnly && (
+              <Badge variant="outline" className="text-xs gap-1">
+                <Lock className="h-3 w-3" />
+                عرض فقط
+              </Badge>
+            )}
+          </div>
         </CardTitle>
       </CardHeader>
 
@@ -326,6 +340,15 @@ export function ApplicationMessages({
                         ) : (
                           <Check className="h-3 w-3 text-muted-foreground" />
                         )
+                      )}
+                      {!isOwnMessage && !message.is_read && (
+                        <button
+                          type="button"
+                          onClick={() => markOneAsRead(message.id)}
+                          className="text-[10px] text-primary hover:underline"
+                        >
+                          تعليم كمقروء
+                        </button>
                       )}
                     </div>
                   </div>
