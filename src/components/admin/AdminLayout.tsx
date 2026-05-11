@@ -28,7 +28,8 @@ import {
     KeyRound,
      Mail,
      ShieldCheck,
-     SlidersHorizontal
+     SlidersHorizontal,
+     Plane
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -158,6 +159,12 @@ export default function AdminLayout() {
       title: 'إعدادات سريعة',
       icon: SlidersHorizontal,
       href: '/admin/quick-settings',
+      show: isAdmin,
+    },
+    {
+      title: 'برامج السياحة',
+      icon: Plane,
+      href: '/admin/tour-programs',
       show: isAdmin,
     },
     {
