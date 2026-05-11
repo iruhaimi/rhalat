@@ -28,12 +28,14 @@ import {
   Loader2,
   RefreshCw,
   Download,
-  Users
+  Users,
+  ClipboardList
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { ar } from 'date-fns/locale';
 import { exportToExcel } from '@/lib/exportToExcel';
 import { BulkAssignDialog } from '@/components/admin/BulkAssignDialog';
+import { PageHeader } from '@/components/admin/PageHeader';
 
 const STATUS_OPTIONS = [
   { value: 'all', label: 'جميع الحالات' },
@@ -243,28 +245,29 @@ export default function ApplicationsList() {
 
   return (
     <div className="space-y-6" dir="rtl">
-      <div className="flex items-center justify-between flex-wrap gap-4">
-        <div>
-          <h2 className="text-2xl font-bold">إدارة الطلبات</h2>
-          <p className="text-muted-foreground">عرض وإدارة جميع طلبات التأشيرات</p>
-        </div>
-        <div className="flex gap-2 flex-wrap">
-          {selectedIds.size > 0 && (
-            <Button onClick={() => setBulkAssignOpen(true)} variant="default" size="sm">
-              <Users className="h-4 w-4 ml-2" />
-              تعيين جماعي ({selectedIds.size})
+      <PageHeader
+        icon={ClipboardList}
+        title="إدارة الطلبات"
+        description="عرض وإدارة جميع طلبات التأشيرات في مكان واحد"
+        actions={
+          <>
+            {selectedIds.size > 0 && (
+              <Button onClick={() => setBulkAssignOpen(true)} variant="default" size="sm">
+                <Users className="h-4 w-4 ml-2" />
+                تعيين جماعي ({selectedIds.size})
+              </Button>
+            )}
+            <Button onClick={handleExportToExcel} variant="outline" size="sm">
+              <Download className="h-4 w-4 ml-2" />
+              تصدير Excel
             </Button>
-          )}
-          <Button onClick={handleExportToExcel} variant="outline" size="sm">
-            <Download className="h-4 w-4 ml-2" />
-            تصدير Excel
-          </Button>
-          <Button onClick={fetchApplications} variant="outline" size="sm">
-            <RefreshCw className="h-4 w-4 ml-2" />
-            تحديث
-          </Button>
-        </div>
-      </div>
+            <Button onClick={fetchApplications} variant="outline" size="sm">
+              <RefreshCw className="h-4 w-4 ml-2" />
+              تحديث
+            </Button>
+          </>
+        }
+      />
 
       {/* Filters */}
       <Card>

@@ -37,6 +37,8 @@ import {
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { ar } from 'date-fns/locale';
+import { PageHeader } from '@/components/admin/PageHeader';
+import { StatCard } from '@/components/admin/StatCard';
 
 type LogRow = {
   id: string;
@@ -129,48 +131,23 @@ export default function EmailLogsManagement() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2">
-            <Mail className="w-6 h-6 text-primary" />
-            سجل الإيميلات المرسلة
-          </h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            مراقبة جميع الإيميلات الصادرة من النظام لضبط الجودة
-          </p>
-        </div>
-        <Button variant="outline" size="sm" onClick={() => refetch()} className="gap-2">
-          <RefreshCw className="w-4 h-4" />
-          تحديث
-        </Button>
-      </div>
+      <PageHeader
+        icon={Mail}
+        title="سجل الإيميلات المرسلة"
+        description="مراقبة جميع الإيميلات الصادرة من النظام لضبط الجودة"
+        actions={
+          <Button variant="outline" size="sm" onClick={() => refetch()} className="gap-2">
+            <RefreshCw className="w-4 h-4" />
+            تحديث
+          </Button>
+        }
+      />
 
-      {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Card>
-          <CardContent className="p-4">
-            <div className="text-xs text-muted-foreground">الإجمالي</div>
-            <div className="text-2xl font-bold">{stats.total}</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4">
-            <div className="text-xs text-muted-foreground">مُرسل بنجاح</div>
-            <div className="text-2xl font-bold text-green-600">{stats.sent}</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4">
-            <div className="text-xs text-muted-foreground">فشل</div>
-            <div className="text-2xl font-bold text-red-600">{stats.failed}</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4">
-            <div className="text-xs text-muted-foreground">مكبوت / شكاوى</div>
-            <div className="text-2xl font-bold text-amber-600">{stats.suppressed}</div>
-          </CardContent>
-        </Card>
+        <StatCard label="الإجمالي" value={stats.total} icon={Mail} tone="muted" index={0} />
+        <StatCard label="مُرسل بنجاح" value={stats.sent} icon={CheckCircle2} tone="success" index={1} />
+        <StatCard label="فشل" value={stats.failed} icon={XCircle} tone="danger" index={2} />
+        <StatCard label="مكبوت / شكاوى" value={stats.suppressed} icon={Ban} tone="gold" index={3} />
       </div>
 
       {/* Filters */}

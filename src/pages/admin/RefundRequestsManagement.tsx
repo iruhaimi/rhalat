@@ -48,6 +48,8 @@ import { exportToExcel } from '@/lib/exportToExcel';
 import { format } from 'date-fns';
 import { ar } from 'date-fns/locale';
 import { useToast } from '@/hooks/use-toast';
+import { PageHeader } from '@/components/admin/PageHeader';
+import { StatCard } from '@/components/admin/StatCard';
 
 type RefundRequest = {
   id: string;
@@ -218,67 +220,23 @@ export default function RefundRequestsManagement() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2">
-            <RotateCcw className="w-6 h-6 text-primary" />
-            إدارة طلبات الاسترداد
-          </h1>
-          <p className="text-muted-foreground">مراجعة ومعالجة طلبات استرداد المبالغ</p>
-        </div>
-        <Button onClick={handleExportExcel} variant="outline" className="gap-2">
-          <Download className="w-4 h-4" />
-          تصدير إلى Excel
-        </Button>
-      </div>
+      <PageHeader
+        icon={RotateCcw}
+        title="إدارة طلبات الاسترداد"
+        description="مراجعة ومعالجة طلبات استرداد المبالغ من العملاء"
+        actions={
+          <Button onClick={handleExportExcel} variant="outline" className="gap-2">
+            <Download className="w-4 h-4" />
+            تصدير إلى Excel
+          </Button>
+        }
+      />
 
-      {/* Stats Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">إجمالي الطلبات</p>
-                <p className="text-2xl font-bold">{stats.total}</p>
-              </div>
-              <FileText className="w-8 h-8 text-muted-foreground" />
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">قيد الانتظار</p>
-                <p className="text-2xl font-bold text-amber-600">{stats.pending}</p>
-              </div>
-              <Clock className="w-8 h-8 text-amber-600" />
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">مقبولة</p>
-                <p className="text-2xl font-bold text-green-600">{stats.approved}</p>
-              </div>
-              <CheckCircle2 className="w-8 h-8 text-green-600" />
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">مرفوضة</p>
-                <p className="text-2xl font-bold text-red-600">{stats.rejected}</p>
-              </div>
-              <XCircle className="w-8 h-8 text-red-600" />
-            </div>
-          </CardContent>
-        </Card>
+        <StatCard label="إجمالي الطلبات" value={stats.total} icon={FileText} tone="muted" index={0} />
+        <StatCard label="قيد الانتظار" value={stats.pending} icon={Clock} tone="gold" index={1} />
+        <StatCard label="مقبولة" value={stats.approved} icon={CheckCircle2} tone="success" index={2} />
+        <StatCard label="مرفوضة" value={stats.rejected} icon={XCircle} tone="danger" index={3} />
       </div>
 
       {/* Filters */}
