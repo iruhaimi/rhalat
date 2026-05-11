@@ -64,9 +64,9 @@ export function CustomersTable({
         </TableHeader>
         <TableBody>
           {users.map((userItem) => (
-            <TableRow key={userItem.id} className="group">
-              <TableCell>
-                <div className="flex items-center gap-3">
+            <TableRow key={userItem.id} className="group h-[68px]">
+              <TableCell className="align-middle">
+                <div className="flex items-center gap-3 min-h-[40px]">
                   <button 
                     onClick={() => onViewProfile(userItem)}
                     className="h-10 w-10 rounded-full bg-muted flex items-center justify-center hover:bg-muted/80 transition-colors cursor-pointer"
@@ -85,12 +85,12 @@ export function CustomersTable({
                   </div>
                 </div>
               </TableCell>
-              <TableCell dir="ltr" className="text-right">{userItem.phone || '-'}</TableCell>
-              <TableCell>{userItem.nationality || '-'}</TableCell>
-              <TableCell>
+              <TableCell dir="ltr" className="text-right align-middle text-sm">{userItem.phone || '-'}</TableCell>
+              <TableCell className="align-middle text-sm">{userItem.nationality || '-'}</TableCell>
+              <TableCell className="align-middle text-sm whitespace-nowrap">
                 {format(new Date(userItem.created_at), 'dd MMM yyyy', { locale: ar })}
               </TableCell>
-              <TableCell>
+              <TableCell className="align-middle">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" size="icon" className="h-8 w-8">
