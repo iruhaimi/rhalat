@@ -10,8 +10,13 @@ export function useApplicationMessages(applicationId: string) {
   const [sending, setSending] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
 
-  // Determine sender type based on user role
-  const senderType: SenderType = isAgent ? 'agent' : 'customer';
+  // Determine sender type based on user role.
+  // Admins/Owners send as 'admin'; agents as 'agent'; everyone else as 'customer'.
+  const senderType: SenderType = isAdmin
+    ? ('admin' as SenderType)
+    : isAgent
+      ? 'agent'
+      : 'customer';
 
   // Fetch messages
   const fetchMessages = useCallback(async () => {
@@ -172,6 +177,6 @@ export function useApplicationMessages(applicationId: string) {
     markAsRead,
     refetch: fetchMessages,
     senderType,
-    isReadOnly: isAdmin && !isAgent, // Admins can only view, not send
+    isReadOnly: false, // RLS enforces who can actually send
   };
 }
