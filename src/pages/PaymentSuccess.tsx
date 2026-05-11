@@ -1,4 +1,5 @@
 import { useSearchParams, Link } from 'react-router-dom';
+import { useMemo } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -70,7 +71,31 @@ export default function PaymentSuccess() {
   const headerGradient = isWhatsApp
     ? 'from-[#25D366] to-[#128C7E]'
     : 'from-green-500 to-green-600';
-  const whatsappUrl = `https://wa.me/966562525665`;
+  const savedMessage = useMemo(() => {
+    try {
+      return sessionStorage.getItem(`wa_message_${applicationNumber}`) || '';
+    } catch {
+      return '';
+    }
+  }, [applicationNumber]);
+
+  const fallbackMessage =
+    direction === 'rtl'
+      ? `مرحباً، أرغب بمتابعة طلبي رقم: ${applicationNumber}`
+      : `Hello, I'd like to follow up on my application: ${applicationNumber}`;
+  const whatsappText = savedMessage || fallbackMessage;
+  const whatsappUrl = `https://wa.me/966562525665?text=${encodeURIComponent(whatsappText)}`;
+
+  const openWhatsApp = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    try {
+      if (window.top && window.top !== window.self) {
+        window.top.location.href = whatsappUrl;
+        return;
+      }
+    } catch {}
+    window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+  };
 
   return (
     <div className="min-h-screen bg-muted/30 flex items-center justify-center p-4">
@@ -152,7 +177,7 @@ export default function PaymentSuccess() {
             <div className="space-y-3">
               {isWhatsApp ? (
                 <Button asChild className="w-full h-12 gap-2 bg-[#25D366] hover:bg-[#20BD5A] text-white">
-                  <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
+                  <a href={whatsappUrl} onClick={openWhatsApp} target="_blank" rel="noopener noreferrer">
                     <MessageCircle className="w-4 h-4" />
                     {content.whatsappBtn}
                   </a>
