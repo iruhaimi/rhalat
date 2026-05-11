@@ -46,6 +46,9 @@ export interface ApplicationData {
   
   // Step 6: Payment
   paymentMethod: string;
+
+  // Submission method (online payment vs WhatsApp)
+  submissionMethod: 'online' | 'whatsapp' | null;
 }
 
 interface ApplicationContextType {
@@ -100,6 +103,7 @@ const initialApplicationData: ApplicationData = {
   uploadedDocuments: [],
   termsAccepted: false,
   paymentMethod: '',
+  submissionMethod: null,
 };
 
 const ApplicationContext = createContext<ApplicationContextType | undefined>(undefined);

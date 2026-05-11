@@ -4,6 +4,8 @@ import { ar, enUS } from 'date-fns/locale';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useApplication } from '@/contexts/ApplicationContext';
+import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
@@ -28,7 +30,9 @@ import {
   Calendar,
   Users,
   FileText,
-  MessageCircle
+  MessageCircle,
+  AlertCircle,
+  Upload
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
@@ -56,8 +60,10 @@ const paymentMethods = [
 
 export default function Step6Payment() {
   const { t, direction, language } = useLanguage();
-  const { applicationData, updateApplicationData, calculateTotal, goToPreviousStep, resetApplication } = useApplication();
+  const { applicationData, updateApplicationData, calculateTotal, goToPreviousStep, resetApplication, setCurrentStep, draftId } = useApplication();
+  const { profile } = useAuth();
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isSubmittingWhatsApp, setIsSubmittingWhatsApp] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
   
@@ -65,7 +71,147 @@ export default function Step6Payment() {
   
   const ArrowPrevIcon = direction === 'rtl' ? ArrowRight : ArrowLeft;
 
+  // Required documents for online payment
+  const REQUIRED_DOC_TYPES = ['passport', 'photo'];
+  const uploadedTypes = applicationData.uploadedDocuments.filter(d => d.uploaded).map(d => d.type);
+  const missingDocs = REQUIRED_DOC_TYPES.filter(t => !uploadedTypes.includes(t));
+  const docsComplete = missingDocs.length === 0;
+
+  const submissionMethod = applicationData.submissionMethod;
+
+  const buildWhatsAppMessage = (appNumber: string) => {
+    const travelersStr = [
+      `${applicationData.travelers.adults} بالغ`,
+      applicationData.travelers.children > 0 ? `${applicationData.travelers.children} طفل` : null,
+      applicationData.travelers.infants > 0 ? `${applicationData.travelers.infants} رضيع` : null,
+    ].filter(Boolean).join('، ');
+
+    const travelDateStr = applicationData.travelDate
+      ? format(applicationData.travelDate, 'PPP', { locale: ar })
+      : 'غير محدد';
+
+    return `مرحباً، أرغب بإكمال طلب التأشيرة عبر واتساب
+
+📋 رقم الطلب: ${appNumber}
+👤 الاسم: ${applicationData.fullName}
+📧 البريد: ${applicationData.email}
+📱 الجوال: ${applicationData.countryCode} ${applicationData.phone}
+
+🌍 الدولة: ${applicationData.countryName}
+📄 نوع التأشيرة: ${applicationData.visaTypeName}
+📅 تاريخ السفر: ${travelDateStr}
+👥 المسافرون: ${travelersStr}
+
+💰 المبلغ الإجمالي: ${grandTotal.toLocaleString()} ر.س
+✅ موافق على الشروط والأحكام
+
+جاهز لإرسال المستندات وإكمال الدفع.`;
+  };
+
+  const handleSubmitViaWhatsApp = async () => {
+    if (!profile) {
+      toast({
+        title: 'خطأ',
+        description: 'يجب تسجيل الدخول أولاً',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    setIsSubmittingWhatsApp(true);
+
+    try {
+      const draftPayload = {
+        user_id: profile.id,
+        visa_type_id: applicationData.visaTypeId,
+        travel_date: applicationData.travelDate ? applicationData.travelDate.toISOString().split('T')[0] : null,
+        status: 'whatsapp_pending' as const,
+        submission_method: 'whatsapp',
+        purpose_of_travel: JSON.stringify({
+          fullName: applicationData.fullName,
+          email: applicationData.email,
+          phone: applicationData.phone,
+          countryCode: applicationData.countryCode,
+          travelers: applicationData.travelers,
+          checkedRequirements: applicationData.checkedRequirements,
+          totalAmount: grandTotal,
+          termsAccepted: applicationData.termsAccepted,
+        }),
+      };
+
+      let appId = draftId;
+      let displayNumber: string | null = null;
+
+      if (draftId) {
+        const { data, error } = await supabase
+          .from('applications')
+          .update({
+            status: 'whatsapp_pending',
+            submission_method: 'whatsapp',
+            purpose_of_travel: draftPayload.purpose_of_travel,
+            updated_at: new Date().toISOString(),
+          })
+          .eq('id', draftId)
+          .select('id, display_number')
+          .single();
+        if (error) throw error;
+        displayNumber = data.display_number;
+      } else {
+        const { data, error } = await supabase
+          .from('applications')
+          .insert(draftPayload)
+          .select('id, display_number')
+          .single();
+        if (error) throw error;
+        appId = data.id;
+        displayNumber = data.display_number;
+      }
+
+      const appNumber = displayNumber || `VF-${Date.now().toString(36).toUpperCase()}`;
+      const message = buildWhatsAppMessage(appNumber);
+      const whatsappUrl = `https://wa.me/966562525665?text=${encodeURIComponent(message)}`;
+
+      // Open WhatsApp in top-level window (bypass iframe in preview)
+      try {
+        if (window.top && window.top !== window.self) {
+          window.top.location.href = whatsappUrl;
+        } else {
+          window.open(whatsappUrl, '_blank');
+        }
+      } catch {
+        window.open(whatsappUrl, '_blank');
+      }
+
+      toast({
+        title: '✅ تم تسجيل طلبك',
+        description: `رقم طلبك: ${appNumber}. سيتواصل معك موظفنا عبر واتساب`,
+      });
+
+      setTimeout(() => {
+        resetApplication();
+        navigate(`/payment-success?app=${appNumber}&via=whatsapp`);
+      }, 1500);
+    } catch (error: any) {
+      console.error('WhatsApp submission error:', error);
+      toast({
+        title: 'خطأ',
+        description: error.message || 'فشل إرسال الطلب، حاول مرة أخرى',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsSubmittingWhatsApp(false);
+    }
+  };
+
   const handlePayment = async () => {
+    if (!docsComplete) {
+      toast({
+        title: 'مستندات ناقصة',
+        description: 'يجب رفع جواز السفر والصورة الشخصية قبل الدفع',
+        variant: 'destructive',
+      });
+      return;
+    }
     if (!applicationData.paymentMethod) {
       toast({
         title: direction === 'rtl' ? 'خطأ' : 'Error',
@@ -254,14 +400,90 @@ export default function Step6Payment() {
           </Card>
         </div>
 
-        {/* Payment Methods */}
+        {/* Right column: path selector + conditional content */}
         <div className="space-y-3 sm:space-y-4 order-1 lg:order-2">
-          <h3 className="font-bold text-base sm:text-lg flex items-center gap-2">
-            <CreditCard className="w-4 h-4 sm:w-5 sm:h-5" />
-            {t('payment.selectMethod')}
+          {/* Path Selector */}
+          <h3 className="font-bold text-base sm:text-lg">
+            {direction === 'rtl' ? 'كيف تريد إكمال طلبك؟' : 'How would you like to complete your application?'}
           </h3>
-          
-          <RadioGroup
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <button
+              type="button"
+              onClick={() => updateApplicationData({ submissionMethod: 'online' })}
+              className={cn(
+                'p-4 rounded-xl border-2 text-right transition-all',
+                submissionMethod === 'online'
+                  ? 'border-primary bg-primary/5 shadow-md'
+                  : 'border-muted hover:border-primary/40'
+              )}
+            >
+              <CreditCard className="w-6 h-6 text-primary mb-2" />
+              <div className="font-bold text-sm sm:text-base">
+                {direction === 'rtl' ? 'الدفع عبر الموقع' : 'Pay Online'}
+              </div>
+              <div className="text-xs text-muted-foreground mt-1">
+                {direction === 'rtl' ? 'يتطلب رفع المستندات قبل الدفع' : 'Requires uploading documents before payment'}
+              </div>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => updateApplicationData({ submissionMethod: 'whatsapp' })}
+              className={cn(
+                'p-4 rounded-xl border-2 text-right transition-all',
+                submissionMethod === 'whatsapp'
+                  ? 'border-green-500 bg-green-50 dark:bg-green-950/30 shadow-md'
+                  : 'border-muted hover:border-green-400'
+              )}
+            >
+              <MessageCircle className="w-6 h-6 text-green-600 mb-2" />
+              <div className="font-bold text-sm sm:text-base">
+                {direction === 'rtl' ? 'الإكمال عبر واتساب' : 'Complete via WhatsApp'}
+              </div>
+              <div className="text-xs text-muted-foreground mt-1">
+                {direction === 'rtl' ? 'سيتواصل معك موظفنا لإكمال الإجراءات' : 'Our staff will contact you'}
+              </div>
+            </button>
+          </div>
+
+          {/* PATH A: Online Payment */}
+          {submissionMethod === 'online' && (
+            <>
+              {!docsComplete && (
+                <div className="p-4 rounded-xl border-2 border-amber-300 bg-amber-50 dark:bg-amber-950/30">
+                  <div className="flex items-start gap-2 mb-2">
+                    <AlertCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+                    <div>
+                      <h4 className="font-semibold text-amber-900 dark:text-amber-100 text-sm">
+                        {direction === 'rtl' ? 'يجب رفع المستندات قبل الدفع' : 'Documents required before payment'}
+                      </h4>
+                      <p className="text-xs text-amber-800 dark:text-amber-200 mt-1">
+                        {direction === 'rtl'
+                          ? 'المستندات الإجبارية: جواز السفر + الصورة الشخصية'
+                          : 'Required: Passport + Personal Photo'}
+                      </p>
+                    </div>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="w-full gap-2 mt-2"
+                    onClick={() => setCurrentStep(4)}
+                  >
+                    <Upload className="w-4 h-4" />
+                    {direction === 'rtl' ? 'العودة لرفع المستندات' : 'Go to upload documents'}
+                  </Button>
+                </div>
+              )}
+
+              {docsComplete && (
+                <>
+                  <h3 className="font-bold text-base sm:text-lg flex items-center gap-2 pt-2">
+                    <CreditCard className="w-4 h-4 sm:w-5 sm:h-5" />
+                    {t('payment.selectMethod')}
+                  </h3>
+                  <RadioGroup
             value={applicationData.paymentMethod}
             onValueChange={(value) => updateApplicationData({ paymentMethod: value })}
             className="space-y-2 sm:space-y-3"
@@ -287,8 +509,8 @@ export default function Step6Payment() {
             ))}
           </RadioGroup>
 
-          {/* Security Badges */}
-          <div className="p-3 sm:p-4 bg-muted/30 rounded-xl">
+                  {/* Security Badges */}
+                  <div className="p-3 sm:p-4 bg-muted/30 rounded-xl">
             <div className="flex items-center gap-2 mb-2 sm:mb-3">
               <Shield className="w-4 h-4 sm:w-5 sm:h-5 text-accent" />
               <span className="font-medium text-xs sm:text-sm">
@@ -307,34 +529,8 @@ export default function Step6Payment() {
             </div>
           </div>
 
-          {/* WhatsApp Document Submission Guide */}
-          <div className="p-3 sm:p-4 bg-green-50 dark:bg-green-950/30 rounded-xl border border-green-200 dark:border-green-800">
-            <h4 className="font-semibold text-green-900 dark:text-green-100 mb-2 flex items-center gap-2 text-sm sm:text-base">
-              <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5" />
-              {direction === 'rtl' ? 'الإرسال عبر واتساب' : 'Send via WhatsApp'}
-            </h4>
-            <p className="text-xs sm:text-sm text-green-900 dark:text-green-100 mb-2">
-              {direction === 'rtl'
-                ? 'يمكنك إكمال الدفع الآن وإرسال المستندات لاحقًا عبر واتساب:'
-                : 'You can complete payment now and send documents later via WhatsApp:'}
-            </p>
-            <a
-              href="https://wa.me/966562525665"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 font-bold text-green-700 dark:text-green-300 hover:underline text-sm"
-            >
-              +966 56 252 5665
-            </a>
-            <ul className="text-xs sm:text-sm text-green-900 dark:text-green-100 space-y-1 list-disc list-inside mt-2">
-              <li>{direction === 'rtl' ? 'اذكر رقم طلبك عند إرسال المستندات' : 'Mention your application number when sending documents'}</li>
-              <li>{direction === 'rtl' ? 'تأكد من وضوح الصور وأن تكون مقروءة' : 'Make sure images are clear and readable'}</li>
-              <li>{direction === 'rtl' ? 'الصيغ المقبولة: PDF, JPG, PNG (بحد أقصى 10 ميجابايت)' : 'Accepted: PDF, JPG, PNG (max 10MB)'}</li>
-            </ul>
-          </div>
-
-          {/* Pay Button */}
-          <Button
+                  {/* Pay Button */}
+                  <Button
             size="lg"
             className="w-full h-12 sm:h-14 text-base sm:text-lg gap-2"
             onClick={handlePayment}
@@ -355,6 +551,54 @@ export default function Step6Payment() {
               </>
             )}
           </Button>
+                </>
+              )}
+            </>
+          )}
+
+          {/* PATH B: WhatsApp */}
+          {submissionMethod === 'whatsapp' && (
+            <div className="p-4 sm:p-5 rounded-xl border-2 border-green-300 bg-green-50 dark:bg-green-950/30 space-y-3">
+              <h4 className="font-bold text-green-900 dark:text-green-100 flex items-center gap-2 text-sm sm:text-base">
+                <MessageCircle className="w-5 h-5" />
+                {direction === 'rtl' ? 'إكمال الطلب عبر واتساب' : 'Complete via WhatsApp'}
+              </h4>
+              <p className="text-xs sm:text-sm text-green-900 dark:text-green-100">
+                {direction === 'rtl'
+                  ? 'سنقوم بإنشاء رقم طلب فريد لك وإرسال جميع بياناتك (الاسم، الجوال، الدولة، نوع التأشيرة، عدد المسافرين، المبلغ، وموافقتك على الشروط) إلى موظفنا تلقائياً ليتواصل معك ويكمل الإجراءات.'
+                  : 'We will generate a unique application number and auto-send all your details to our staff to contact you and complete the process.'}
+              </p>
+              <ul className="text-xs sm:text-sm text-green-900 dark:text-green-100 space-y-1 list-disc list-inside">
+                <li>{direction === 'rtl' ? 'لا حاجة لرفع المستندات الآن' : 'No need to upload documents now'}</li>
+                <li>{direction === 'rtl' ? 'الموظف سيرشدك خطوة بخطوة' : 'Our staff will guide you step by step'}</li>
+                <li>{direction === 'rtl' ? `سيتم تحويلك إلى: +966 56 252 5665` : 'You will be redirected to: +966 56 252 5665'}</li>
+              </ul>
+              <Button
+                size="lg"
+                className="w-full h-12 sm:h-14 text-base sm:text-lg gap-2 bg-[#25D366] hover:bg-[#20BD5A] text-white"
+                onClick={handleSubmitViaWhatsApp}
+                disabled={isSubmittingWhatsApp}
+              >
+                {isSubmittingWhatsApp ? (
+                  <>
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    <span>{direction === 'rtl' ? 'جاري التسجيل...' : 'Registering...'}</span>
+                  </>
+                ) : (
+                  <>
+                    <MessageCircle className="w-5 h-5" />
+                    <span>{direction === 'rtl' ? 'إرسال طلبي عبر واتساب' : 'Send via WhatsApp'}</span>
+                  </>
+                )}
+              </Button>
+            </div>
+          )}
+
+          {!submissionMethod && (
+            <div className="p-4 rounded-xl bg-muted/30 text-center text-sm text-muted-foreground">
+              {direction === 'rtl' ? 'اختر طريقة الإكمال أعلاه للمتابعة' : 'Choose a completion method above to continue'}
+            </div>
+          )}
         </div>
       </div>
 
