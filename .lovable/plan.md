@@ -1,61 +1,33 @@
-## Goal
+## السبب
 
-Replace the internal UUID with the human-readable application number (`VF-YYYY-XXXX`) everywhere the customer sees it, clean up the customer "Application Details" card, and redesign the admin "Travel Info" card so the JSON-blob in `purpose_of_travel` is rendered as a clean, readable summary instead of raw JSON.
+في الإصدار السابق، زر "فتح محادثة واتساب" كان يفتح واتساب مع نص الطلب الكامل (الاسم، رقم الطلب، الدولة، نوع التأشيرة، عدد المسافرين، المبلغ، المتطلبات…) عبر `buildWhatsAppMessage()` في `Step6Payment.tsx`.
 
----
+بعد التحديث الأخير الذي أضاف صفحة `PaymentSuccess.tsx` كوجهة بعد الإرسال، صار زر واتساب في صفحة النجاح يستخدم رابطًا فارغًا:
 
-## 1. Track page — search by `VF-YYYY-XXXX` instead of UUID
+```ts
+// src/pages/PaymentSuccess.tsx
+const whatsappUrl = `https://wa.me/966562525665`;  // ← لا يوجد ?text=
+```
 
-File: `src/pages/TrackApplication.tsx`
+أيضًا الزر العائم `FloatingWhatsApp.tsx` يستخدم رسالة استفسار عامة فقط.
 
-- Change the field label/placeholder from "أدخل رقم الطلب (UUID)" → "أدخل رقم الطلب (مثال: VF-2026-0120)".
-- Auto-uppercase + trim input as the user types; accept also raw digits like `2026-0120` and normalize to `VF-…`.
-- Replace `.eq('id', applicationNumber)` with `.eq('display_number', normalizedNumber)` on both the `applications` query and the `application_status_history` query (after fetching the row, reuse `application.id` for the history lookup).
-- Keep the secondary verification (phone or email) — also match it against the application's profile so that customers can't browse other people's tracking simply by knowing a number.
-- Update error copy to reference "رقم الطلب" only (no mention of UUID).
+النتيجة: الرسالة الكاملة تُبنى وتُفتح مرة واحدة فقط داخل `Step6Payment` قبل التحويل، وأي ضغط لاحق على أزرار واتساب يفتح محادثة فارغة.
 
-## 2. Customer "My Application Detail" — cleaner card, hide empty fields, use display number
+## الخطة
 
-File: `src/pages/MyApplicationDetail.tsx`
+1. **تمرير رسالة الطلب إلى صفحة النجاح**
+   - في `Step6Payment.tsx`: بعد بناء `message = buildWhatsAppMessage(appNumber)`، حفظها في `sessionStorage` بمفتاح `wa_message_<appNumber>` قبل التحويل إلى `/payment-success`.
 
-- Add `display_number` and `created_at` to the `select`; show `display_number` (mono, large, e.g. `VF-2026-0120`) under the page title instead of the UUID.
-- "تاريخ التقديم" should fall back to `created_at` when `submitted_at` is null (the system always has a creation date, so the customer always sees one).
-- Conditionally render each date tile only when it has a value:
-  - "تاريخ السفر" → only if `travel_date`.
-  - "تاريخ العودة" → only if `return_date`.
-  - "مدة المعالجة" → keep (always available from `visa_type`).
-- Add a small "رقم الطلب" badge at the top of the visa card with a copy-to-clipboard button so customers can easily reuse it for tracking.
+2. **استخدامها في `PaymentSuccess.tsx`**
+   - قراءة `sessionStorage.getItem('wa_message_' + applicationNumber)` عند تحميل الصفحة.
+   - بناء الرابط: `https://wa.me/966562525665?text=${encodeURIComponent(savedMessage)}` عند توفر الرسالة، وإلا الرجوع لرسالة افتراضية مختصرة تذكر رقم الطلب فقط.
+   - تطبيق نفس منطق `window.top` لتجاوز iframe المعاينة عند الضغط (بدلاً من رابط `<a>` مباشر) لضمان الفتح في نافذة أعلى.
 
-## 3. Admin "Application Detail" — readable Travel Info instead of raw JSON
+3. **الزر العائم (FloatingWhatsApp)**
+   - يبقى للاستفسار العام (سلوك مقصود)، لا تغيير.
 
-File: `src/pages/admin/ApplicationDetail.tsx`
+## الملفات المتأثرة
+- `src/components/apply/steps/Step6Payment.tsx` (حفظ الرسالة في sessionStorage)
+- `src/pages/PaymentSuccess.tsx` (قراءة الرسالة وبناء رابط واتساب الكامل + فتح آمن داخل iframe)
 
-The DB field `purpose_of_travel` is currently overloaded with a JSON snapshot of the wizard (fullName, email, phone, travelers, totalAmount, …). Instead of dumping it, parse it once in `fetchApplicationData` and render specific fields cleanly:
-
-- Add a helper `parseDraftBlob(raw: string | null)` that safely `JSON.parse`s the field and returns a typed object (or `null`).
-- Replace the large "الغرض من السفر" tile with a structured **"ملخص بيانات الطلب"** card showing only useful items in a 2-column grid:
-  - عدد المسافرين (بالغ / طفل / رضيع) — from `travelers`.
-  - إجمالي المبلغ — from `totalAmount` (formatted as `… ر.س`).
-  - حالة الموافقة على الشروط — ✅ / ❌.
-  - بريد العميل + جوال العميل — only if the `profiles` row doesn't already have them (avoid duplication with the "معلومات مقدم الطلب" card).
-- Keep the raw JSON accessible behind a small "عرض البيانات الخام" collapsible (`<details>`) for admin debugging only — never shown by default.
-- Also display `display_number` next to the UUID in the page header (UUID stays as small monospace text for staff, display number is the prominent identifier).
-
-## 4. Confirmation email — already includes the display number
-
-The transactional template `application-confirmation.tsx` already shows `applicationNumber` prominently, and `Step6Payment.tsx` passes `display_number` to it. No change needed beyond verifying the prop is wired in (sanity check during implementation).
-
----
-
-## Technical notes
-
-- `display_number` already exists on `applications` (auto-generated by trigger `generate_application_display_number`, format `VF-YYYY-XXXX`, unique). No DB migration is required.
-- All RLS stays unchanged; the track page already uses an anonymous query gated by phone/email match.
-- All copy stays Arabic-first (RTL), per project memory.
-- No business-logic changes outside presentation/track-input parsing.
-
-## Files touched
-
-- `src/pages/TrackApplication.tsx` — search by display number, normalize input, update copy.
-- `src/pages/MyApplicationDetail.tsx` — show display number, hide empty dates, fallback `submitted_at` → `created_at`, copy button.
-- `src/pages/admin/ApplicationDetail.tsx` — parse JSON blob, redesign travel-info section, show display number in header.
+لا تغييرات على قاعدة البيانات أو منطق الأعمال.

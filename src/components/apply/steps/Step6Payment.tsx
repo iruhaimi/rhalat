@@ -216,6 +216,11 @@ export default function Step6Payment() {
       const message = buildWhatsAppMessage(appNumber);
       const whatsappUrl = `https://wa.me/966562525665?text=${encodeURIComponent(message)}`;
 
+      // Persist message so PaymentSuccess can re-open WhatsApp with the full order details
+      try {
+        sessionStorage.setItem(`wa_message_${appNumber}`, message);
+      } catch {}
+
       // Open WhatsApp in top-level window (bypass iframe in preview)
       try {
         if (window.top && window.top !== window.self) {
