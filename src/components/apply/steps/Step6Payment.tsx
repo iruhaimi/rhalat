@@ -142,30 +142,30 @@ export default function Step6Payment() {
       let appId = draftId;
       let displayNumber: string | null = null;
 
-      if (draftId) {
-        const { data, error } = await supabase
-          .from('applications')
-          .update({
-            status: 'whatsapp_pending',
-            submission_method: 'whatsapp',
-            purpose_of_travel: draftPayload.purpose_of_travel,
-            updated_at: new Date().toISOString(),
-          })
-          .eq('id', draftId)
-          .select('id, display_number')
-          .single();
-        if (error) throw error;
-        displayNumber = data.display_number;
-      } else {
-        const { data, error } = await supabase
-          .from('applications')
-          .insert(draftPayload)
-          .select('id, display_number')
-          .single();
-        if (error) throw error;
-        appId = data.id;
-        displayNumber = data.display_number;
+      if (!appId) {
+        // Create draft via SECURITY DEFINER RPC to bypass RLS
+        const { data: newId, error: rpcError } = await supabase.rpc('create_application_draft', {
+          p_visa_type_id: applicationData.visaTypeId,
+          p_travel_date: applicationData.travelDate ? applicationData.travelDate.toISOString().split('T')[0] : null,
+          p_draft_data: {},
+        });
+        if (rpcError) throw rpcError;
+        appId = newId as string;
       }
+
+      const { data, error } = await supabase
+        .from('applications')
+        .update({
+          status: 'whatsapp_pending',
+          submission_method: 'whatsapp',
+          purpose_of_travel: draftPayload.purpose_of_travel,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', appId)
+        .select('id, display_number')
+        .single();
+      if (error) throw error;
+      displayNumber = data.display_number;
 
       const appNumber = displayNumber || `VF-${Date.now().toString(36).toUpperCase()}`;
       const message = buildWhatsAppMessage(appNumber);
