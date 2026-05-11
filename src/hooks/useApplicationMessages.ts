@@ -168,6 +168,25 @@ export function useApplicationMessages(applicationId: string) {
     }
   };
 
+  // Mark a single message as read
+  const markOneAsRead = async (messageId: string) => {
+    if (!profile?.id) return;
+    const target = messages.find(m => m.id === messageId);
+    if (!target || target.is_read || target.sender_id === profile.id) return;
+
+    try {
+      await supabase
+        .from('application_messages')
+        .update({ is_read: true, read_at: new Date().toISOString() })
+        .eq('id', messageId);
+
+      setMessages(prev => prev.map(m => m.id === messageId ? { ...m, is_read: true } : m));
+      setUnreadCount(prev => Math.max(0, prev - 1));
+    } catch (error) {
+      console.error('Error marking message as read:', error);
+    }
+  };
+
   return {
     messages,
     loading,
@@ -175,6 +194,7 @@ export function useApplicationMessages(applicationId: string) {
     unreadCount,
     sendMessage,
     markAsRead,
+    markOneAsRead,
     refetch: fetchMessages,
     senderType,
     isReadOnly: false, // RLS enforces who can actually send
