@@ -4,7 +4,9 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Shield, RotateCw, CheckCircle2, AlertTriangle, ExternalLink } from 'lucide-react';
+import { Shield, RotateCw, CheckCircle2, AlertTriangle, ExternalLink, MessageSquare, MailWarning, Lock } from 'lucide-react';
+import { PageHeader } from '@/components/admin/PageHeader';
+import { StatCard } from '@/components/admin/StatCard';
 
 // Snapshot of the most recent Supabase Linter result. Update via the migration that
 // triggers a linter run; this page displays the latest known posture.
@@ -86,58 +88,44 @@ export default function SecurityStatus() {
 
   return (
     <div className="space-y-6 p-4 md:p-6" dir="rtl">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <Shield className="h-7 w-7 text-primary" />
-          <div>
-            <h1 className="text-2xl font-bold">حالة الأمان وRLS</h1>
-            <p className="text-sm text-muted-foreground">
-              ملخّص فحوصات السلامة وتحذيرات Supabase Linter المتبقية
-            </p>
-          </div>
-        </div>
-        <Button onClick={refresh} variant="outline" className="gap-2">
-          <RotateCw className="h-4 w-4" />
-          إعادة تشغيل الفحوصات
-        </Button>
-      </div>
+      <PageHeader
+        icon={Shield}
+        title="حالة الأمان وRLS"
+        description="ملخّص فحوصات السلامة وتحذيرات Supabase Linter المتبقية"
+        actions={
+          <Button onClick={refresh} variant="outline" className="gap-2">
+            <RotateCw className="h-4 w-4" />
+            إعادة تشغيل الفحوصات
+          </Button>
+        }
+      />
 
       {/* Health checks */}
       <div className="grid gap-4 md:grid-cols-3">
-        <Card>
-          <CardHeader className="pb-2">
-            <CardDescription>إجمالي الرسائل في النظام</CardDescription>
-            <CardTitle className="text-3xl">{messages.data ?? '—'}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Badge variant="secondary" className="gap-1">
-              <CheckCircle2 className="h-3 w-3 text-emerald-600" />
-              المشغّل notify_on_new_message فعّال
-            </Badge>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="pb-2">
-            <CardDescription>رسائل غير مقروءة</CardDescription>
-            <CardTitle className="text-3xl">{unread.data ?? '—'}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-xs text-muted-foreground">
-              يتزامن is_read مع قاعدة البيانات فورًا عبر Realtime.
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="pb-2">
-            <CardDescription>محاولات دخول فاشلة آخر 24 ساعة</CardDescription>
-            <CardTitle className="text-3xl">{recentFails.data ?? '—'}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-xs text-muted-foreground">يحدث القفل تلقائيًا بعد 5 محاولات.</p>
-          </CardContent>
-        </Card>
+        <StatCard
+          label="إجمالي الرسائل في النظام"
+          value={messages.data ?? '—'}
+          icon={MessageSquare}
+          tone="primary"
+          hint="المشغّل notify_on_new_message فعّال"
+          index={0}
+        />
+        <StatCard
+          label="رسائل غير مقروءة"
+          value={unread.data ?? '—'}
+          icon={MailWarning}
+          tone="gold"
+          hint="يتزامن is_read مع قاعدة البيانات فورًا"
+          index={1}
+        />
+        <StatCard
+          label="محاولات دخول فاشلة (24س)"
+          value={recentFails.data ?? '—'}
+          icon={Lock}
+          tone={typeof recentFails.data === 'number' && recentFails.data > 5 ? 'danger' : 'success'}
+          hint="القفل التلقائي بعد 5 محاولات"
+          index={2}
+        />
       </div>
 
       {/* Linter snapshot */}
