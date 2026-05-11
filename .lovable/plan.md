@@ -1,89 +1,83 @@
-# خطة: تقليل تحذيرات Supabase Linter بأمان
+# خطة إعادة بناء بوابة وكلاء السياحة
 
-## 1) سياسات RLS الفضفاضة (USING/WITH CHECK = true)
+## الوضع الحالي
+- جداول قاعدة البيانات (`tour_operators`, `tour_programs`, `tour_bookings`, `tour_operators_public`) موجودة وسليمة مع RLS.
+- الدور `tour_operator` موجود في enum، ودالة `is_tour_operator` و trigger `auto_create_tour_operator` جاهزان.
+- **لا توجد أي صفحات أو مسارات في الواجهة** — هذا ما سنعيد بناءه.
 
-تحذيران فقط:
+## الأهداف
+1. الأدمن ينشئ حساب وكيل سياحي من `/admin/users` (تبويب جديد) ويعتمده.
+2. الوكيل يدخل من نفس بوابة الموظفين `/portal-x7k9m2` (نفس فلو CAPTCHA + 2FA).
+3. الوكيل يصل إلى **لوحة منفصلة تمامًا** عن لوحة الأدمن/وكلاء التأشيرات — لا يرى الطلبات أو العملاء أو أي بيانات حساسة.
+4. الوكيل يدير: ملف شركته + برامجه السياحية (إضافة/تعديل/حذف، رفع صور، تسعير).
+5. كل برنامج يمر بحالة `pending → approved/rejected` يعتمدها الأدمن.
+6. الزوار يرون البرامج المعتمدة في `/tourism` (قسم عام جديد).
 
-- **`public.user_push_devices` — "Service role full access"**: السياسة `FOR ALL TO public USING (true) WITH CHECK (true)`. النية واضحة: استخدامها من service_role فقط، لكن الـ`role` خاطئ. سيتم استبدالها بـ:
-  ```
-  USING (auth.role() = 'service_role') WITH CHECK (auth.role() = 'service_role')
-  ```
-  مع إبقاء سياسات المستخدم الحالية للقراءة/الكتابة على أجهزته. لن يكسر شيئاً لأن service_role يتجاوز RLS أصلاً.
+## المخطط
 
-- **`public.email_subscribers` — "Anyone can subscribe" (INSERT WITH CHECK true)**: مقصود — نموذج اشتراك عام في النشرة. سيتم تشديده بقيد بسيط بدلاً من `true`:
-  ```
-  WITH CHECK (length(email) BETWEEN 3 AND 320 AND email LIKE '%@%')
-  ```
-  ثم وضع علامة "تم الإصلاح" على التحذير.
+```text
+Admin (/admin/users → tab "وكلاء السياحة")
+  ├── إنشاء حساب → trigger يضيف tour_operators record
+  ├── اعتماد/تعليق الشركة (is_verified)
+  └── /admin/tour-programs → اعتماد/رفض البرامج
 
-## 2) "Public Can Execute SECURITY DEFINER Function"
+Tour Operator (login via /portal-x7k9m2)
+  └── /tourism-portal (لوحة مخصصة)
+       ├── ملف الشركة (تعديل اسم، شعار، وصف، اتصال)
+       ├── برامجي (CRUD على tour_programs)
+       └── الحجوزات (read-only من tour_bookings)
 
-التحذيرات الكثيرة (≈97 منها) ناتجة عن منح `EXECUTE` للأدوار `PUBLIC` و`anon` و`authenticated` على دوال `SECURITY DEFINER`.
-
-سأقسّم الدوال إلى فئتين وأتعامل مع كل منهما بشكل مختلف:
-
-### أ) دوال triggers بحتة — يتم سحب EXECUTE من جميع الأدوار
-
-في PostgreSQL، تنفيذ trigger لا يتطلب صلاحية `EXECUTE` للمستخدم المُحدِث (يستخدم صلاحيات مالك الـtrigger). لذلك آمن تماماً سحب `EXECUTE` من `PUBLIC, anon, authenticated`:
-
-```
-auto_assign_customer_role, auto_create_tour_operator,
-check_excessive_document_access, enforce_minimum_admins,
-enforce_minimum_super_admins, generate_application_display_number,
-handle_new_user, log_application_status_change,
-notify_admin_on_agent_note, notify_admin_on_transfer_request,
-notify_admin_on_whatsapp_order, notify_admin_on_work_submission,
-notify_agent_on_assignment, notify_agent_on_transfer_decision,
-notify_agent_on_work_decision, notify_application_status_change,
-protect_profile_wallet_balance, protect_wallet_balance,
-sync_price_notes_on_fee_type_change, update_updated_at_column,
-validate_application_status_transition
+Public
+  └── /tourism (قائمة البرامج المعتمدة + فلاتر)
+       └── /tourism/:programId (تفاصيل برنامج)
 ```
 
-→ يلغي ≈21 تحذيراً بدون أي تأثير على المستخدمين أو الـtriggers.
+## التغييرات
 
-### ب) دوال مساعدة لـ RLS — يتم سحب EXECUTE من `anon` و`PUBLIC` فقط، مع إبقاء `authenticated`
+### 1. توجيه الدخول (Routing & Auth)
+- **`ProtectedRoute.tsx`**: إضافة دعم `'tour_operator'` ضمن `allowedRoles`.
+- **`AuthContext.tsx`**: إضافة `isTourOperator` مشتقًا من `roles`.
+- **`SecureStaffAuth.tsx`** (بوابة الموظفين): بعد نجاح 2FA، توجيه `tour_operator` إلى `/tourism-portal` بدلاً من `/admin` أو `/agent`.
+- **`App.tsx`**: إضافة المسارات الجديدة:
+  - `/tourism` و `/tourism/:id` (عام، داخل MainLayout)
+  - `/tourism-portal/*` محمي بـ `allowedRoles={['tour_operator']}` مع `TourOperatorLayout`
+  - `/admin/tour-programs` لإدارة الاعتماد
 
-هذه دوال يستدعيها تعبير RLS مباشرة، ويجب أن يبقى `authenticated` قادراً على تنفيذها وإلا تنكسر السياسات. لكن `anon`/`PUBLIC` لا يحتاجانها لأي سيناريو فعلي:
+### 2. لوحة الوكيل السياحي (جديد)
+- `src/components/tourism/TourOperatorLayout.tsx` — شريط جانبي مبسّط (RTL، Framer-motion):
+  - 🏠 لوحة التحكم
+  - 🏢 ملف الشركة
+  - 🗺️ برامجي السياحية
+  - 📋 الحجوزات
+  - تسجيل خروج (يستدعي `signOut(true)`)
+- `src/pages/tourism-portal/Dashboard.tsx` — إحصائيات (عدد البرامج، المعتمد، الحجوزات).
+- `src/pages/tourism-portal/CompanyProfile.tsx` — تعديل بيانات `tour_operators` (نفس الوكيل فقط، عبر RLS الموجودة).
+- `src/pages/tourism-portal/MyPrograms.tsx` — جدول + Dialog إنشاء/تعديل برنامج، رفع صور إلى bucket `avatars`.
+- `src/pages/tourism-portal/MyBookings.tsx` — قراءة الحجوزات الخاصة ببرامجه.
 
-```
-has_role, has_permission, is_admin, is_agent, is_customer,
-is_super_admin, is_application_owner, is_assigned_agent,
-is_profile_owner, is_tour_operator, can_access_application,
-get_profile_id, get_user_email, get_audit_event_types,
-get_failed_attempts_count, get_secure_document_info,
-log_staff_action, clear_failed_login_attempts,
-check_2fa_rate_limit, check_recovery_rate_limit,
-verify_staff_2fa, rotate_staff_portal_path, record_login_attempt
-```
+### 3. صفحات الإدارة (Admin)
+- **`UsersManagement.tsx`**: إضافة تبويب "وكلاء السياحة" يعرض جدول `tour_operators` مع زر اعتماد/تعليق (حقل `is_verified`)، وزر "إنشاء حساب وكيل سياحي" يفتح حوار يستخدم edge function جديد `create-tour-operator-user` (نسخة معدّلة من `create-staff-user` تعيّن دور `tour_operator`).
+- `src/pages/admin/TourProgramsManagement.tsx` (جديد) — قائمة البرامج بحالاتها مع أزرار اعتماد/رفض/معاينة.
+- **`AdminLayout.tsx`**: إضافة عنصر "البرامج السياحية" في الشريط الجانبي (مرئي للأدمن فقط).
 
-ملاحظة مهمة: السياسات على جداول مثل `countries (is_active = true OR is_admin(auth.uid()))` تُقيَّم لمستخدمي `anon` أيضاً، لكن `anon` لديه `auth.uid() IS NULL` فيتم تخطي is_admin قصيراً في معظم الحالات. سأتحقق فعلياً قبل تنفيذ السحب من `anon` لأي دالة من هذه القائمة بفحص سياسات الجداول العامة (`countries`, `hero_destinations`, `hero_settings`, `site_content`, `footer_settings`, `special_offers`).
+### 4. الواجهة العامة
+- `src/pages/Tourism.tsx` — صفحة `/tourism` تستعلم `tour_programs` المعتمدة JOIN `tour_operators_public`. فلاتر بسيطة (وجهة، سعر).
+- `src/pages/TourismProgramDetail.tsx` — صفحة `/tourism/:id` مع زر "اطلب الآن" يفتح حوار حجز (يضيف صفًا في `tour_bookings`).
+- **`HeaderArabic.tsx`** و**`FooterArabic.tsx`**: إضافة رابط "البرامج السياحية" → `/tourism`.
 
-→ إذا تبيّن أن `anon` يحتاج فعلاً EXECUTE على بعضها، أُبقيها وأكتفي بسحبها من البقية.
+### 5. تغييرات قاعدة البيانات (Migration واحد)
+- التأكد من وجود سياسات RLS لـ `tour_programs`:
+  - وكيل يرى/يعدّل/يحذف برامجه فقط (`operator_id` يطابق `tour_operators.id` لـ `auth.uid()`).
+  - أي شخص يرى البرامج التي `status='approved'`.
+  - الأدمن يرى/يعدّل الكل.
+- سياسات لـ `tour_bookings`: العملاء ينشئون، الوكيل يرى حجوزات برامجه فقط، الأدمن يرى الكل.
+- سياسات Storage على bucket `avatars` لرفع شعارات البرامج تحت مجلد `tour-programs/{operator_id}/`.
+- أي حقل ناقص (مثل `is_verified` على `tour_operators` إن لم يكن موجودًا، أو `status` على `tour_programs`).
 
-### ج) RPCs مقصودة للمصادقين
+### 6. منع تسرب الواجهات
+- `TourOperatorLayout` لا يستورد أي مكون من `/admin` أو `/agent`.
+- `ProtectedRoute` على مسارات `/admin` و`/agent` يبقى يرفض `tour_operator`.
+- لا روابط في أي قائمة جانبية تظهر للوكيل السياحي إلى صفحات الموظفين الأخرى.
 
-`create_application_draft`, `enqueue_email`, `delete_email`, `move_to_dlq`, `read_email_batch`, `check_staff_portal_path`, `is_email_locked_out` — بعضها مسحوب من `PUBLIC` بالفعل. سأتأكد من سحب EXECUTE من `anon` لأي منها لا يُستدعى من واجهة المجهول.
-
-## 3) تحذيرات أخرى
-
-- **"Public Bucket Allows Listing"**: bucket `avatars` عام بنية لعرض شعارات الشركاء وصور الأعضاء. السماح بالقراءة (لا اللائحة) مقصود؛ سيتم تأكيد أن السياسة `SELECT` فقط ولا توجد سياسة list مخصصة، أو وضع علامة "ignore" مع تبرير في security memory.
-
-## ضمان عدم كسر المراسلات
-
-- لن يتم لمس: `notify_on_new_message` (مُحكَمة بالفعل)، سياسات `application_messages`، `notifications`، `applications`، أو RLS أي جدول تعتمد عليه واجهة المراسلات.
-- بعد كل migration سيتم إعادة تشغيل Linter للتحقق، ولن يُلمس RPC `create_application_draft` أو دوال `is_*` التي تستخدمها سياسات المراسلات (`is_admin`, `is_assigned_agent`, `is_application_owner`, `get_profile_id`) إلا بسحب صلاحية `anon` فقط (وهي غير مستخدمة من المجهول).
-
-## ملفات
-
-- migration واحدة جديدة تحتوي:
-  - تشديد سياستي RLS على `user_push_devices` و`email_subscribers`.
-  - `REVOKE EXECUTE ... FROM PUBLIC, anon, authenticated` لدوال الـtriggers.
-  - `REVOKE EXECUTE ... FROM PUBLIC, anon` للدوال المساعدة لـRLS وRPCs الموثّقة.
-- استدعاء `manage_security_finding` لتعليم التحذيرات المقصودة (نشرة، avatars العام) كـ"ignore" مع سبب، وتحديث security-memory.
-
-## النتيجة المتوقعة
-
-- إنهاء التحذيرات الفعلية المتعلقة بالسياستين `true`.
-- تقليل تحذيرات SECURITY DEFINER من ≈97 إلى رقم صغير (الدوال المساعدة لـRLS التي يجب أن تبقى متاحة للمصادقين، ولا يمكن للمجهول الوصول إليها بعد التغيير).
-- صفر تأثير وظيفي على المراسلات أو أي مسار مستخدم آخر.
+## ملاحظة شفافية
+لم أحذف هذه البوابة عمدًا في أي من جلساتنا الأخيرة — التعديلات الأخيرة كانت على الأمان، RLS، QuickSettings، وبوابة الموظفين فقط. على الأرجح أن واجهة بوابة السياحة لم تكتمل سابقًا أو فُقدت في تراجع قبل هذه الجلسات. سنعيد بناءها كاملة الآن وفق ما اخترته.
