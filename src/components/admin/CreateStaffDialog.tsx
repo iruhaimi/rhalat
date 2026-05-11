@@ -235,6 +235,12 @@ export function CreateStaffDialog({ open, onOpenChange, onSuccess }: CreateStaff
                     <span className="text-xs text-muted-foreground">إدارة الطلبات والتقارير والإعدادات</span>
                   </div>
                 </SelectItem>
+                <SelectItem value="tour_operator">
+                  <div className="flex flex-col items-start">
+                    <span className="font-medium">وكيل سفر وسياحة</span>
+                    <span className="text-xs text-muted-foreground">إدارة برامج سياحية فقط — بوابة منفصلة</span>
+                  </div>
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
