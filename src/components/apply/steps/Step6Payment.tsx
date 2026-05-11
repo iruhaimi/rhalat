@@ -27,7 +27,8 @@ import {
   MapPin,
   Calendar,
   Users,
-  FileText
+  FileText,
+  MessageCircle
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
@@ -304,6 +305,32 @@ export default function Step6Payment() {
                 <span>PCI Compliant</span>
               </div>
             </div>
+          </div>
+
+          {/* WhatsApp Document Submission Guide */}
+          <div className="p-3 sm:p-4 bg-green-50 dark:bg-green-950/30 rounded-xl border border-green-200 dark:border-green-800">
+            <h4 className="font-semibold text-green-900 dark:text-green-100 mb-2 flex items-center gap-2 text-sm sm:text-base">
+              <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5" />
+              {direction === 'rtl' ? 'الإرسال عبر واتساب' : 'Send via WhatsApp'}
+            </h4>
+            <p className="text-xs sm:text-sm text-green-900 dark:text-green-100 mb-2">
+              {direction === 'rtl'
+                ? 'يمكنك إكمال الدفع الآن وإرسال المستندات لاحقًا عبر واتساب:'
+                : 'You can complete payment now and send documents later via WhatsApp:'}
+            </p>
+            <a
+              href="https://wa.me/966562525665"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 font-bold text-green-700 dark:text-green-300 hover:underline text-sm"
+            >
+              +966 56 252 5665
+            </a>
+            <ul className="text-xs sm:text-sm text-green-900 dark:text-green-100 space-y-1 list-disc list-inside mt-2">
+              <li>{direction === 'rtl' ? 'اذكر رقم طلبك عند إرسال المستندات' : 'Mention your application number when sending documents'}</li>
+              <li>{direction === 'rtl' ? 'تأكد من وضوح الصور وأن تكون مقروءة' : 'Make sure images are clear and readable'}</li>
+              <li>{direction === 'rtl' ? 'الصيغ المقبولة: PDF, JPG, PNG (بحد أقصى 10 ميجابايت)' : 'Accepted: PDF, JPG, PNG (max 10MB)'}</li>
+            </ul>
           </div>
 
           {/* Pay Button */}

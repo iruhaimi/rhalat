@@ -94,9 +94,9 @@ export default function PaymentFailed() {
               <h4 className="font-medium mb-2">{content.supportTitle}</h4>
               <p className="text-sm text-muted-foreground mb-3">{content.supportDesc}</p>
               <div className="flex flex-wrap gap-3 text-sm">
-                <a href="tel:920034158" className="flex items-center gap-1 text-primary hover:underline">
+                <a href="tel:562525665" className="flex items-center gap-1 text-primary hover:underline">
                   <Phone className="w-3 h-3" />
-                  920034158
+                  562525665
                 </a>
                 <a href="mailto:info@rhalat.com" className="flex items-center gap-1 text-primary hover:underline">
                   <Mail className="w-3 h-3" />
