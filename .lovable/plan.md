@@ -1,50 +1,46 @@
-## السبب الجذري
+# خطة: اختبار وتحسين نظام مراسلات الطلبات
 
-عند تتبّع المنطق وجدت سببين يمنعان رسائل المالك/المشرف من الوصول للعميل:
+## 1) اختبار إشعارات رسائل الإدارة والوكلاء (تحقق فعلي)
 
-1. **في الواجهة (`useApplicationMessages.ts`)**
-   - تعريف صلاحية الإرسال: `isReadOnly: isAdmin && !isAgent` ⇒ المالك والمشرف يدخلون وضع "عرض فقط" ولا يظهر لهم صندوق الكتابة أصلاً.
-   - تعريف نوع المُرسل: `senderType = isAgent ? 'agent' : 'customer'` ⇒ لو تجاوزنا قيد الواجهة يُسجَّل المشرف على أنه "عميل" وهذا يكسر العرض ويفشل في RLS.
+سيتم اختبار trigger `notify_on_new_message` مباشرة على قاعدة البيانات عبر:
 
-2. **في قاعدة البيانات (RLS لجدول `application_messages`)**
-   - سياسات الإدراج (INSERT) مقتصرة على:
-     - وكيل مُعيَّن للطلب (`sender_type='agent'`)
-     - مالك الطلب نفسه (`sender_type='customer'`)
-   - **لا توجد سياسة تسمح للمشرف/المالك بإرسال رسالة**، حتى لو طبعها من الواجهة سيرفضها الـ RLS.
-   - أيضاً سياسة "Customers can mark as read" لا تسمح للمشرف بتعليم الرسائل كمقروءة.
+- إنشاء رسالة اختبارية بـ `sender_type='admin'` على طلب فعلي → التحقق من:
+  - وصول صف في `notifications` لمالك الطلب (`applications.user_id`).
+  - أن `action_url` = `/track?id={application_id}` وأن العنوان يحتوي "رسالة جديدة من الإدارة".
+- إنشاء رسالة بـ `sender_type='agent'` → التحقق من وصول إشعار للعميل (مالك الطلب) بنفس الرابط.
+- إنشاء رسالة بـ `sender_type='customer'` → التحقق من وصول إشعار للوكيل المعيّن `assigned_agent_id` بـ `action_url=/agent/applications/{id}`.
+- التحقق من أن `unreadCount` في الواجهة يتحدّث فوراً عبر اشتراك Realtime الموجود في `useApplicationMessages.ts` (postgres_changes على `application_messages`).
 
-النتيجة: المالك ضغط "إضافة ملاحظة" لكن إما لم يجد صندوق الإرسال (عرض فقط)، أو إن جرّبه عبر واجهة أخرى رفضته السياسة، فلم تصل للعميل.
+سيتم حذف صفوف الاختبار بعد التحقق حتى لا تترك ضوضاء.
 
-ملاحظة: زر "إضافة ملاحظة" داخل تفاصيل الطلب لدى المشرف هو في الغالب نظام `application_notes` المنفصل (ملاحظات داخلية للطاقم فقط، لا تُعرض للعميل قطعاً) - وليس قناة المراسلات. هذا أيضاً يجب توضيحه.
+## 2) ميزة "وضع علامة كمقروء" يدوياً
 
-## الخطة
+حالياً `markAsRead()` تُستدعى تلقائياً عند فتح اللوحة (سطر 80-85 من `ApplicationMessages.tsx`)، لكن لا يوجد زر صريح. سيتم:
 
-### 1) تمكين المشرف/المالك من المراسلة
-- **هجرة قاعدة بيانات** على `public.application_messages`:
-  - إضافة سياسة `INSERT` للمشرف:
-    `is_admin(auth.uid()) AND sender_type IN ('agent','admin') AND sender_id = get_profile_id(auth.uid())`
-  - إضافة سياسة `UPDATE` للمشرف لتعليم الرسائل كمقروءة:
-    `is_admin(auth.uid())`
-  - (اختياري) دعم قيمة `sender_type='admin'` كتمييز بصري؛ حالياً سنبقي القيم المتاحة `agent|customer|admin` بدون تغيير الـ enum إن كانت موجودة كنص.
+- إضافة زر "تعليم الكل كمقروء" في رأس واجهة `ApplicationMessages` يظهر فقط حين `unreadCount > 0`.
+- إضافة زر صغير لكل رسالة واردة غير مقروءة لتعليمها فردياً (يستدعي UPDATE على صف واحد).
+- تأكيد أن سياسات RLS الحالية تكفي لكل دور:
+  - عميل: `Customers can mark messages as read` ✓
+  - وكيل: `Agents can mark messages as read` ✓
+  - إدارة: `Admins can mark messages as read` ✓
+- بعد UPDATE، يقوم اشتراك Realtime القائم بمزامنة `is_read` لدى الطرف الآخر بدون أي تعديل إضافي.
 
-### 2) تحديث الواجهة (`useApplicationMessages.ts`)
-- جعل `senderType`:
-  - وكيل ⇒ `agent`
-  - مشرف/مالك ⇒ `admin` (أو `agent` إن أبقينا الأنواع كما هي)
-  - غير ذلك ⇒ `customer`
-- إزالة `isReadOnly` للمشرف؛ يصبح: `isReadOnly = false` للجميع (مع إبقاء قيود RLS كحارس حقيقي).
+## 3) تشديد أمان `notify_on_new_message`
 
-### 3) تحديث `ApplicationMessages.tsx`
-- إضافة لون/شارة للمُرسل من نوع `admin` ("الدعم/الإدارة") لتمييزه عن الوكيل بصرياً عند العميل.
-- إصلاح اسم المُرسل الافتراضي ليشمل المشرف ("الدعم").
+التحذير الذي يصدره Linter عادةً للدوال `SECURITY DEFINER` هو غياب `search_path` ثابت أو امتلاكها صلاحيات أوسع من اللازم. الدالة الحالية بالفعل تستخدم `SET search_path = public`، لكن سنطبّق التشديد التالي:
 
-### 4) توضيح للمالك (داخل واجهة تفاصيل الطلب)
-- إضافة شريط معلومة صغير فوق صندوق "ملاحظات داخلية" يوضح: "هذه ملاحظات داخلية للطاقم فقط ولا يراها العميل، للتواصل مع العميل استخدم قسم *المراسلات*."
+- إبقاء `SECURITY DEFINER` لأن الدالة تكتب في `notifications` نيابة عن المُرسِل (RLS لجدول الإشعارات تمنع المستخدم العادي من إنشاء إشعار لمستخدم آخر).
+- سحب صلاحية `EXECUTE` من `PUBLIC` و`anon`، ومنحها فقط لـ `authenticated` (أو حصرها على `service_role` إذا اكتفينا بأنها تُستدعى فقط من trigger — وهو ما لا يحتاج EXECUTE من المستخدم أصلاً).
+- إضافة فحص دفاعي داخل الدالة: التأكد من أن `NEW.sender_id = get_profile_id(auth.uid())` عند وجود `auth.uid()` (دفاع في العمق فوق RLS الذي يفرض ذلك بالفعل).
+- إعادة تشغيل Supabase Linter للتأكد من اختفاء التحذير، ومعالجة أي تحذير إضافي يظهر على الدوال المرتبطة.
 
-## الملفات المتأثرة
-- هجرة جديدة على `application_messages` (سياسات INSERT/UPDATE للمشرف).
-- `src/hooks/useApplicationMessages.ts` (senderType + isReadOnly).
-- `src/components/messages/ApplicationMessages.tsx` (تمييز الأدمن بصرياً).
-- `src/pages/admin/ApplicationDetail.tsx` (شريط توضيح بجانب قسم الملاحظات الداخلية، إن لزم).
+## ملفات سيتم تعديلها
 
-لا تعديل على بيانات أو منطق الأعمال الأخرى.
+- `src/components/messages/ApplicationMessages.tsx` — زر "تعليم الكل كمقروء" + زر فردي.
+- `src/hooks/useApplicationMessages.ts` — تصدير `markOneAsRead(messageId)`.
+- migration جديدة — تحديث `notify_on_new_message` (دفاع في العمق + تقييد `EXECUTE`).
+
+## غير مشمول
+
+- لن يتم تغيير منطق التوجيه (admin → عميل / customer → وكيل) لأنه مطلوب كما هو.
+- لن يتم لمس RLS لجدول `application_messages` (تم ضبطها في الجولة السابقة).
