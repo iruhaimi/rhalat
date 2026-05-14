@@ -123,7 +123,15 @@ export default function HeroSection() {
     <section className="relative min-h-[90vh] overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0">
-        <img src={heroBg} alt="Travel destinations" className="h-full w-full object-cover" />
+        <img
+          src={heroBg}
+          alt="Travel destinations"
+          className="h-full w-full object-cover"
+          width={1920}
+          height={1080}
+          fetchPriority="high"
+          decoding="async"
+        />
         <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background" />
       </div>
 
