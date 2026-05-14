@@ -10,6 +10,18 @@
     <meta name="author" content="عطلات رحلاتكم" />
     <link rel="canonical" href="https://visafaster.com/" />
     <meta name="google-site-verification" content="_VrNO8ya-g2i4T7L3X2a_oEFdbehc7ZQayUc9Kmj6KY" />
+
+    <!-- Redirect lovable.app preview/published hosts to canonical domain -->
+    <script>
+      (function () {
+        try {
+          var h = window.location.hostname;
+          if (h.endsWith('.lovable.app') && h !== 'id-preview--616b2e7f-7e45-4cdc-90ea-1c048e4da3b0.lovable.app') {
+            window.location.replace('https://visafaster.com' + window.location.pathname + window.location.search + window.location.hash);
+          }
+        } catch (e) {}
+      })();
+    </script>
     
     <!-- PWA Meta Tags -->
     <meta name="theme-color" content="#1a1a2e" />
