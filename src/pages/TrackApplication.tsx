@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import SEO from '@/components/seo/SEO';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
@@ -286,6 +287,7 @@ export default function TrackApplication() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/30">
+      <SEO title="تتبع طلب التأشيرة — عطلات رحلاتكم" description="تتبع حالة طلب تأشيرتك خطوة بخطوة باستخدام رقم الطلب." path="/track" />
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-primary via-primary/95 to-primary/85 py-20 overflow-hidden">
         {/* Decorative Elements */}

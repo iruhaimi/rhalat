@@ -1,4 +1,5 @@
 import { useLanguage } from '@/contexts/LanguageContext';
+import SEO from '@/components/seo/SEO';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { 
   Shield, 
@@ -416,6 +417,7 @@ If we make material changes, we will:
 
   return (
     <div className="min-h-screen">
+      <SEO title="سياسة الخصوصية — عطلات رحلاتكم" description="تعرف على كيفية حماية بياناتك الشخصية وفقًا لنظام حماية البيانات الشخصية في المملكة العربية السعودية." path="/privacy" />
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground py-16">
         <div className="container-section text-center">

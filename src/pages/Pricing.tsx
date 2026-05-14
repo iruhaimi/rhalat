@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import SEO from '@/components/seo/SEO';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { 
@@ -168,6 +169,7 @@ export default function Pricing() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/30">
+      <SEO title="الأسعار والباقات — عطلات رحلاتكم" description="اطّلع على أسعار خدمات التأشيرات لمختلف الدول مع تفاصيل واضحة للرسوم الحكومية ورسوم الخدمة." path="/pricing" />
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-primary via-primary/95 to-primary/85 py-20 overflow-hidden">
         {/* Decorative Elements */}

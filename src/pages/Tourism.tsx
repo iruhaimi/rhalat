@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import SEO from '@/components/seo/SEO';
 import { Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent } from '@/components/ui/card';
@@ -25,6 +26,7 @@ export default function Tourism() {
 
   return (
     <div className="min-h-screen bg-background py-8" dir="rtl">
+      <SEO title="البرامج السياحية — عطلات رحلاتكم" description="باقات سفر وعطلات سياحية مختارة من شركاء معتمدين، احجز برنامجك التالي بسهولة." path="/tourism" />
       <div className="container mx-auto px-4">
         <header className="mb-8 text-center">
           <div className="inline-flex items-center gap-2 mb-2">

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import SEO from '@/components/seo/SEO';
 import { supabase } from '@/integrations/supabase/client';
 import { useLanguage } from '@/contexts/LanguageContext';
 import type { Country, VisaType } from '@/types/database';
@@ -41,6 +42,7 @@ export default function HomeArabic() {
 
   return (
     <div className="flex flex-col">
+      <SEO title="عطلات رحلاتكم — خدمات التأشيرات السياحية والأعمال" description="احصل على تأشيرتك بسرعة وأمان مع عطلات رحلاتكم. تأشيرات سياحية، أعمال، طلابية، وشنغن لجميع الجنسيات." path="/" />
       {/* Hero Section */}
       <HeroSection />
 

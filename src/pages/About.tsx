@@ -1,4 +1,5 @@
 import { useLanguage } from '@/contexts/LanguageContext';
+import SEO from '@/components/seo/SEO';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -122,6 +123,7 @@ export default function About() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/30">
+      <SEO title="من نحن — عطلات رحلاتكم" description="تعرّف على عطلات رحلاتكم: فريق متخصص في خدمات التأشيرات حول العالم بخبرة ودعم محلي في الرياض." path="/about" />
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-primary via-primary/95 to-primary/85 py-24 overflow-hidden">
         {/* Decorative Elements */}

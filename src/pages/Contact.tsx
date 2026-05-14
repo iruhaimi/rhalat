@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import SEO from '@/components/seo/SEO';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -138,6 +139,7 @@ export default function Contact() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/30">
+      <SEO title="اتصل بنا — عطلات رحلاتكم" description="تواصل مع فريق دعم عطلات رحلاتكم عبر الهاتف 562525665 أو واتساب لأي استفسار حول التأشيرات." path="/contact" />
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-primary via-primary/95 to-primary/85 py-20 overflow-hidden">
         {/* Decorative Elements */}

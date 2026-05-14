@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import SEO from '@/components/seo/SEO';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -135,6 +136,7 @@ export default function TrackRefund() {
 
   return (
     <div className="flex min-h-screen flex-col">
+      <SEO title="تتبع طلب الاسترداد — عطلات رحلاتكم" description="تابع حالة طلب الاسترداد الخاص بك في أي وقت." path="/track-refund" />
       <Header />
       <main className="flex-1">
         <div className="min-h-screen bg-gradient-to-b from-background to-muted/30 py-12">
