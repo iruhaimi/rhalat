@@ -1,0 +1,25 @@
+# عطلات رحلاتكم (Otolat Rahlatcom)
+
+> Saudi-based visa services platform offering tourist, business, student, Schengen and other visa applications with fast processing and Arabic-first support.
+
+The site lets travelers in Saudi Arabia apply for visas to many countries online, track their applications, browse pricing, view tourism programs from approved partners, and request refunds.
+
+## Pages
+
+- [Home](/): Overview of visa services and featured destinations.
+- [Destinations](/destinations): Browse all countries and visa types.
+- [Apply](/apply): Start a new visa application.
+- [Pricing](/pricing): Service fees per country and visa type.
+- [Special Offers](/offers): Time-limited discounts on visa services.
+- [Tourism Programs](/tourism): Curated tour packages from approved operators.
+- [Track Application](/track): Check the status of a visa application.
+- [Track Refund](/track-refund): Check the status of a refund request.
+- [About](/about): Company background and team.
+- [Contact](/contact): Phone, WhatsApp, and address in Riyadh.
+- [FAQ](/faq): Common questions about visa applications.
+
+## Optional
+
+- [Terms of Service](/terms)
+- [Privacy Policy](/privacy)
+- [Refund Policy](/refund)
