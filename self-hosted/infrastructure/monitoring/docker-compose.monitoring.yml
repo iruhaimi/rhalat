@@ -1,0 +1,67 @@
+version: "3.9"
+
+name: visafaster-monitoring
+
+volumes:
+  prometheus_data:
+  grafana_data:
+  loki_data:
+  uptime_kuma_data:
+
+networks:
+  monitoring:
+    driver: bridge
+  visafaster_internal:
+    external: true
+    name: visafaster_internal
+
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    restart: unless-stopped
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    networks: [monitoring, visafaster_internal]
+    ports: ["9090:9090"]
+
+  loki:
+    image: grafana/loki:2.9.0
+    restart: unless-stopped
+    command: -config.file=/etc/loki/loki-config.yml
+    volumes:
+      - ./loki-config.yml:/etc/loki/loki-config.yml:ro
+      - loki_data:/loki
+    networks: [monitoring]
+    ports: ["3100:3100"]
+
+  promtail:
+    image: grafana/promtail:2.9.0
+    restart: unless-stopped
+    volumes:
+      - ./promtail-config.yml:/etc/promtail/config.yml:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    command: -config.file=/etc/promtail/config.yml
+    networks: [monitoring]
+    depends_on: [loki]
+
+  grafana:
+    image: grafana/grafana:latest
+    restart: unless-stopped
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-admin}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    volumes:
+      - grafana_data:/var/lib/grafana
+    networks: [monitoring]
+    ports: ["3001:3000"]
+    depends_on: [prometheus, loki]
+
+  uptime-kuma:
+    image: louislam/uptime-kuma:1
+    restart: unless-stopped
+    volumes:
+      - uptime_kuma_data:/app/data
+    networks: [monitoring, visafaster_internal]
+    ports: ["3002:3001"]

@@ -1,0 +1,103 @@
+// Prisma schema mirrors the SQL migration. Use `prisma migrate deploy` to apply.
+// We use `db pull`-friendly mappings to match the SQL types exactly.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum AppRole {
+  customer
+  agent
+  admin
+  super_admin
+  tour_operator
+
+  @@map("app_role")
+}
+
+enum ApplicationStatus {
+  draft
+  pending_payment
+  submitted
+  under_review
+  documents_required
+  processing
+  approved
+  rejected
+  cancelled
+  whatsapp_pending
+
+  @@map("application_status")
+}
+
+enum DocumentStatus {
+  pending
+  verified
+  rejected
+
+  @@map("document_status")
+}
+
+model User {
+  id            String    @id @default(uuid()) @db.Uuid
+  email         String    @unique @db.Citext
+  passwordHash  String    @map("password_hash")
+  emailVerified Boolean   @default(false) @map("email_verified")
+  isLocked      Boolean   @default(false) @map("is_locked")
+  lockedUntil   DateTime? @map("locked_until") @db.Timestamptz
+  createdAt     DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt     DateTime  @default(now()) @map("updated_at") @db.Timestamptz
+
+  sessions  Session[]
+  roles     UserRole[]
+  profile   Profile?
+
+  @@map("users")
+}
+
+model Session {
+  id         String   @id
+  userId     String   @map("user_id") @db.Uuid
+  expiresAt  DateTime @map("expires_at") @db.Timestamptz
+  ipAddress  String?  @map("ip_address") @db.Inet
+  userAgent  String?  @map("user_agent")
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@map("sessions")
+}
+
+model UserRole {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  role      AppRole
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, role])
+  @@map("user_roles")
+}
+
+model Profile {
+  id             String   @id @default(uuid()) @db.Uuid
+  userId         String   @unique @map("user_id") @db.Uuid
+  fullName       String?  @map("full_name")
+  phone          String?
+  avatarUrl      String?  @map("avatar_url")
+  walletBalance  Decimal  @default(0) @map("wallet_balance") @db.Decimal(12, 2)
+  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt      DateTime @default(now()) @map("updated_at") @db.Timestamptz
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("profiles")
+}
