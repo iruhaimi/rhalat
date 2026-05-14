@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import SEO from '@/components/seo/SEO';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { 
@@ -62,6 +63,7 @@ function CountdownTimer({ endDate, size = 'sm' }: { endDate: Date; size?: 'sm' |
 
   return (
     <div className="flex items-center justify-center gap-2 sm:gap-3">
+      <SEO title="العروض الخاصة — عطلات رحلاتكم" description="أحدث العروض والخصومات على خدمات التأشيرات لفترة محدودة." path="/offers" />
       {timeUnits.map((unit, index) => (
         <div key={index} className="text-center">
           <motion.div

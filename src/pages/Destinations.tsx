@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
+import SEO from '@/components/seo/SEO';
 import { useSearchParams, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -142,6 +143,7 @@ export default function Destinations() {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO title="الوجهات والدول — عطلات رحلاتكم" description="تصفح جميع الدول وأنواع التأشيرات المتاحة مع رسوم وتفاصيل التقديم لكل وجهة." path="/destinations" />
       {/* Hero */}
       <section className="relative bg-gradient-to-br from-primary via-primary/95 to-primary/85 py-20 overflow-hidden">
         {/* Decorative Elements */}

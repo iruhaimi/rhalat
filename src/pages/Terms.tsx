@@ -1,4 +1,5 @@
 import { useLanguage } from '@/contexts/LanguageContext';
+import SEO from '@/components/seo/SEO';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -190,6 +191,7 @@ Address: Riyadh - Al-Rabi' neighborhood - Ubay Bin Moaath Alansari Rd`
 
   return (
     <div className="min-h-screen">
+      <SEO title="الشروط والأحكام — عطلات رحلاتكم" description="اطّلع على الشروط والأحكام الخاصة باستخدام خدمات منصة عطلات رحلاتكم للتأشيرات." path="/terms" />
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground py-16">
         <div className="container-section text-center">

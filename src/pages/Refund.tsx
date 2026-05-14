@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import SEO from '@/components/seo/SEO';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -324,6 +325,7 @@ export default function Refund() {
 
   return (
     <div className="min-h-screen">
+      <SEO title="سياسة الاسترداد — عطلات رحلاتكم" description="تفاصيل سياسة الاسترداد ومتى يحق لك استرداد المبالغ المدفوعة لخدمات التأشيرات." path="/refund" />
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground py-16">
         <div className="container-section text-center">
