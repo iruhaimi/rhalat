@@ -55,8 +55,9 @@ export function AdminTable({
 }: AdminTableProps) {
   return (
     <TooltipProvider>
-      <div className="overflow-x-auto rounded-lg border bg-card">
+      <div className="overflow-x-auto rounded-lg border bg-card" dir="rtl">
         <Table
+          dir="rtl"
           className={cn('table-fixed w-full', className)}
           style={{ minWidth }}
         >
