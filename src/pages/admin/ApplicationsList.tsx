@@ -6,14 +6,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+import { TableBody, TableCell, TableRow } from '@/components/ui/table';
+import { AdminTable } from '@/components/admin/AdminTable';
 import {
   Select,
   SelectContent,
@@ -334,54 +328,57 @@ export default function ApplicationsList() {
               لا توجد طلبات مطابقة للبحث
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="w-10">
-                      <Checkbox
-                        checked={selectedIds.size === filteredApplications.length && filteredApplications.length > 0}
-                        onCheckedChange={toggleSelectAll}
-                      />
-                    </TableHead>
-                    <TableHead className="text-right">رقم الطلب</TableHead>
-                    <TableHead className="text-right">مقدم الطلب</TableHead>
-                    <TableHead className="text-right">الوجهة</TableHead>
-                    <TableHead className="text-right">الوكيل</TableHead>
-                    <TableHead className="text-right">تاريخ الإنشاء</TableHead>
-                    <TableHead className="text-right">الحالة</TableHead>
-                    <TableHead className="text-right">إجراءات</TableHead>
-                  </TableRow>
-                </TableHeader>
+            <AdminTable
+              minWidth="1100px"
+              columns={[
+                {
+                  width: '48px',
+                  align: 'center',
+                  label: (
+                    <Checkbox
+                      checked={selectedIds.size === filteredApplications.length && filteredApplications.length > 0}
+                      onCheckedChange={toggleSelectAll}
+                    />
+                  ),
+                },
+                { width: '120px', label: 'رقم الطلب' },
+                { width: '220px', label: 'مقدم الطلب' },
+                { width: '160px', label: 'الوجهة' },
+                { width: '160px', label: 'الوكيل' },
+                { width: '140px', label: 'تاريخ الإنشاء' },
+                { width: '140px', label: 'الحالة' },
+                { width: '110px', label: 'إجراءات' },
+              ]}
+            >
                 <TableBody>
                   {filteredApplications.map((app) => (
-                    <TableRow key={app.id} className={selectedIds.has(app.id) ? 'bg-primary/5' : ''}>
-                      <TableCell>
+                    <TableRow key={app.id} className={`h-[64px] ${selectedIds.has(app.id) ? 'bg-primary/5' : ''}`}>
+                      <TableCell className="text-center align-middle">
                         <Checkbox
                           checked={selectedIds.has(app.id)}
                           onCheckedChange={() => toggleSelect(app.id)}
                         />
                       </TableCell>
-                      <TableCell className="font-mono text-xs">
+                      <TableCell className="font-mono text-xs align-middle truncate">
                         {app.id.slice(0, 8)}...
                       </TableCell>
-                      <TableCell>
-                        <div>
-                          <p className="font-medium">{app.profile?.full_name || 'غير محدد'}</p>
-                          <p className="text-xs text-muted-foreground">{app.profile?.phone || '-'}</p>
+                      <TableCell className="align-middle">
+                        <div className="min-w-0">
+                          <p className="font-medium truncate">{app.profile?.full_name || 'غير محدد'}</p>
+                          <p className="text-xs text-muted-foreground tabular-nums truncate" dir="ltr">{app.profile?.phone || '-'}</p>
                         </div>
                       </TableCell>
-                      <TableCell>{app.visa_type?.country?.name || '-'}</TableCell>
-                      <TableCell>
+                      <TableCell className="align-middle truncate">{app.visa_type?.country?.name || '-'}</TableCell>
+                      <TableCell className="align-middle truncate">
                         {app.assigned_agent?.full_name || (
                           <span className="text-destructive text-xs">غير مُسند</span>
                         )}
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="align-middle whitespace-nowrap text-sm">
                         {format(new Date(app.created_at), 'dd MMM yyyy', { locale: ar })}
                       </TableCell>
-                      <TableCell>{getStatusBadge(app.status)}</TableCell>
-                      <TableCell>
+                      <TableCell className="align-middle">{getStatusBadge(app.status)}</TableCell>
+                      <TableCell className="align-middle">
                         <Button asChild size="sm" variant="outline">
                           <Link to={`${isAdmin ? '/admin' : '/agent'}/applications/${app.id}`}>
                             <Eye className="h-4 w-4 ml-1" />
@@ -392,8 +389,7 @@ export default function ApplicationsList() {
                     </TableRow>
                   ))}
                 </TableBody>
-              </Table>
-            </div>
+            </AdminTable>
           )}
         </CardContent>
       </Card>
