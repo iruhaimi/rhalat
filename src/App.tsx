@@ -68,6 +68,7 @@ import AgentApplicationDetail from "@/pages/agent/AgentApplicationDetail";
 import Tourism from "@/pages/Tourism";
 import TourismDetail from "@/pages/TourismDetail";
 import TourProgramsManagement from "@/pages/admin/TourProgramsManagement";
+import TourOperatorsApproval from "@/pages/admin/TourOperatorsApproval";
 import TourOperatorLayout from "@/components/tourism/TourOperatorLayout";
 import TourOperatorDashboard from "@/pages/tourism-portal/Dashboard";
 import TourOperatorCompanyProfile from "@/pages/tourism-portal/CompanyProfile";
@@ -146,6 +147,7 @@ const App = () => (
                 <Route path="security-status" element={<SecurityStatus />} />
                 <Route path="quick-settings" element={<QuickSettings />} />
                 <Route path="tour-programs" element={<TourProgramsManagement />} />
+                <Route path="tour-operators" element={<TourOperatorsApproval />} />
               </Route>
 
               {/* Agent Routes */}
