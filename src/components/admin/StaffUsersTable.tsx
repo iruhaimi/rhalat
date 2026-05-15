@@ -1,17 +1,9 @@
 import { useState, useEffect } from 'react';
 import { format, formatDistanceToNow } from 'date-fns';
 import { ar } from 'date-fns/locale';
-import { User as UserIcon, Shield, MoreHorizontal, UserCog, Trash2, UserX, Mail, Copy, Settings2, Crown } from 'lucide-react';
+import { User as UserIcon, Shield, MoreHorizontal, UserCog, Trash2, UserX, Settings2, Crown } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,13 +14,12 @@ import {
 import {
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import type { AppRole } from '@/types/database';
 import { EditPermissionsDialog } from './EditPermissionsDialog';
+import { AdminTable, AdminTableBody, AdminTableRow, AdminTableCell, EmailCell } from './AdminTable';
 
 interface UserWithRole {
   id: string;
@@ -79,11 +70,6 @@ export function StaffUsersTable({
     };
     fetchOwners();
   }, [users]);
-
-  const copyEmail = (email: string) => {
-    navigator.clipboard.writeText(email);
-    toast.success('تم نسخ البريد الإلكتروني');
-  };
 
   // Initials + color hash for avatar
   const getInitials = (name: string | null) => {
@@ -164,31 +150,22 @@ export function StaffUsersTable({
   }
 
   return (
-    <TooltipProvider>
-      <div className="overflow-x-auto rounded-lg border">
-        <Table className="table-fixed w-full">
-          <colgroup>
-            <col className="w-[260px]" />
-            <col className="w-[280px]" />
-            <col className="w-[140px]" />
-            <col className="w-[160px]" />
-            <col className="w-[180px]" />
-            <col className="w-[80px]" />
-          </colgroup>
-          <TableHeader>
-            <TableRow className="bg-muted/50 hover:bg-muted/50">
-              <TableHead className="text-right font-semibold">الموظف</TableHead>
-              <TableHead className="text-right font-semibold">البريد الإلكتروني</TableHead>
-              <TableHead className="text-right font-semibold">رقم الجوال</TableHead>
-              <TableHead className="text-right font-semibold">تاريخ التسجيل</TableHead>
-              <TableHead className="text-right font-semibold">الدور</TableHead>
-              <TableHead className="text-right font-semibold">إجراءات</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
+    <>
+      <AdminTable
+        minWidth="1100px"
+        columns={[
+          { width: '260px', label: 'الموظف' },
+          { width: '280px', label: 'البريد الإلكتروني' },
+          { width: '140px', label: 'رقم الجوال' },
+          { width: '160px', label: 'تاريخ التسجيل' },
+          { width: '180px', label: 'الدور' },
+          { width: '80px', label: 'إجراءات' },
+        ]}
+      >
+        <AdminTableBody>
             {users.map((userItem) => (
-              <TableRow key={userItem.id} className="group hover:bg-muted/30 transition-colors h-[68px]">
-                <TableCell className="align-middle">
+              <AdminTableRow key={userItem.id} className="group hover:bg-muted/30 transition-colors h-[68px]">
+                <AdminTableCell className="align-middle">
                   <div className="flex items-center gap-3">
                     <button
                       onClick={() => onViewProfile(userItem)}
@@ -223,38 +200,16 @@ export function StaffUsersTable({
                       </div>
                     </div>
                   </div>
-                </TableCell>
-                <TableCell className="align-middle">
-                  {userItem.email ? (
-                    <div className="flex items-center gap-2 min-h-[40px] min-w-0">
-                      <Mail className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />
-                      <span className="text-sm truncate flex-1 min-w-0" dir="ltr" title={userItem.email}>
-                        {userItem.email}
-                      </span>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-7 w-7 flex-shrink-0 text-muted-foreground hover:text-foreground"
-                            onClick={() => copyEmail(userItem.email!)}
-                          >
-                            <Copy className="h-3.5 w-3.5" />
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>نسخ البريد</TooltipContent>
-                      </Tooltip>
-                    </div>
-                  ) : (
-                    <span className="text-muted-foreground text-sm">-</span>
-                  )}
-                </TableCell>
-                <TableCell className="align-middle">
+                </AdminTableCell>
+                <AdminTableCell className="align-middle">
+                  <EmailCell email={userItem.email} />
+                </AdminTableCell>
+                <AdminTableCell className="align-middle">
                   <div className="flex items-center min-h-[40px]">
                     <span dir="ltr" className="text-sm tabular-nums">{userItem.phone || '-'}</span>
                   </div>
-                </TableCell>
-                <TableCell className="align-middle">
+                </AdminTableCell>
+                <AdminTableCell className="align-middle">
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <div className="flex items-center min-h-[40px]">
@@ -269,8 +224,8 @@ export function StaffUsersTable({
                       {formatDistanceToNow(new Date(userItem.created_at), { locale: ar, addSuffix: true })}
                     </TooltipContent>
                   </Tooltip>
-                </TableCell>
-                <TableCell className="align-middle">
+                </AdminTableCell>
+                <AdminTableCell className="align-middle">
                   <div className="flex flex-wrap items-center gap-1 min-h-[40px]">
                     {ownerUserIds.has(userItem.user_id) && (
                       <Tooltip>
@@ -299,8 +254,8 @@ export function StaffUsersTable({
                       <span className="text-xs text-muted-foreground">لا يوجد</span>
                     ) : null}
                   </div>
-                </TableCell>
-                <TableCell className="align-middle">
+                </AdminTableCell>
+                <AdminTableCell className="align-middle">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-muted">
@@ -341,12 +296,11 @@ export function StaffUsersTable({
                       )}
                     </DropdownMenuContent>
                   </DropdownMenu>
-                </TableCell>
-              </TableRow>
+                </AdminTableCell>
+              </AdminTableRow>
             ))}
-          </TableBody>
-        </Table>
-      </div>
+        </AdminTableBody>
+      </AdminTable>
 
       {/* Edit Permissions Dialog */}
       <EditPermissionsDialog
@@ -359,6 +313,6 @@ export function StaffUsersTable({
           onRefresh?.();
         }}
       />
-    </TooltipProvider>
+    </>
   );
 }
