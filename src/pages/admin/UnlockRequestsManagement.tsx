@@ -6,14 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+import { TableBody, TableCell, TableRow } from '@/components/ui/table';
+import { AdminTable, EmailCell } from '@/components/admin/AdminTable';
 import {
   Dialog,
   DialogContent,
@@ -269,41 +263,35 @@ export default function UnlockRequestsManagement() {
               <p>لا توجد طلبات فك قفل</p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="text-right">البريد الإلكتروني</TableHead>
-                    <TableHead className="text-right">السبب</TableHead>
-                    <TableHead className="text-right">الحالة</TableHead>
-                    <TableHead className="text-right">تاريخ الطلب</TableHead>
-                    <TableHead className="text-right w-32">إجراءات</TableHead>
-                  </TableRow>
-                </TableHeader>
+            <AdminTable
+              minWidth="900px"
+              columns={[
+                { width: '280px', label: 'البريد الإلكتروني' },
+                { width: '260px', label: 'السبب' },
+                { width: '130px', label: 'الحالة' },
+                { width: '160px', label: 'تاريخ الطلب' },
+                { width: '140px', label: 'إجراءات' },
+              ]}
+            >
                 <TableBody>
                   {filteredRequests.map((request) => (
-                    <TableRow key={request.id}>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          <User className="h-4 w-4 text-muted-foreground" />
-                          <span dir="ltr" className="font-mono text-sm">
-                            {request.email}
-                          </span>
-                        </div>
+                    <TableRow key={request.id} className="h-[60px]">
+                      <TableCell className="align-middle">
+                        <EmailCell email={request.email} />
                       </TableCell>
-                      <TableCell>
-                        <p className="text-sm text-muted-foreground max-w-xs truncate">
+                      <TableCell className="align-middle">
+                        <p className="text-sm text-muted-foreground truncate" title={request.reason}>
                           {request.reason}
                         </p>
                       </TableCell>
-                      <TableCell>{getStatusBadge(request.status)}</TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                      <TableCell className="align-middle">{getStatusBadge(request.status)}</TableCell>
+                      <TableCell className="align-middle whitespace-nowrap">
+                        <div className="flex items-center gap-1 text-sm text-muted-foreground tabular-nums">
                           <Clock className="h-3 w-3" />
                           {format(new Date(request.requested_at), 'yyyy/MM/dd HH:mm')}
                         </div>
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="align-middle">
                         {request.status === 'pending' ? (
                           <div className="flex gap-1">
                             <Button
@@ -332,8 +320,7 @@ export default function UnlockRequestsManagement() {
                     </TableRow>
                   ))}
                 </TableBody>
-              </Table>
-            </div>
+            </AdminTable>
           )}
         </CardContent>
       </Card>
