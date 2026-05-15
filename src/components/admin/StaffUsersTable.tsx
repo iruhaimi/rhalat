@@ -166,7 +166,15 @@ export function StaffUsersTable({
   return (
     <TooltipProvider>
       <div className="overflow-x-auto rounded-lg border">
-        <Table>
+        <Table className="table-fixed w-full">
+          <colgroup>
+            <col className="w-[260px]" />
+            <col className="w-[280px]" />
+            <col className="w-[140px]" />
+            <col className="w-[160px]" />
+            <col className="w-[180px]" />
+            <col className="w-[80px]" />
+          </colgroup>
           <TableHeader>
             <TableRow className="bg-muted/50 hover:bg-muted/50">
               <TableHead className="text-right font-semibold">الموظف</TableHead>
@@ -174,7 +182,7 @@ export function StaffUsersTable({
               <TableHead className="text-right font-semibold">رقم الجوال</TableHead>
               <TableHead className="text-right font-semibold">تاريخ التسجيل</TableHead>
               <TableHead className="text-right font-semibold">الدور</TableHead>
-              <TableHead className="text-right w-[80px] font-semibold">إجراءات</TableHead>
+              <TableHead className="text-right font-semibold">إجراءات</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -218,19 +226,17 @@ export function StaffUsersTable({
                 </TableCell>
                 <TableCell className="align-middle">
                   {userItem.email ? (
-                    <div className="flex items-center gap-2 min-h-[40px]">
-                      <div className="flex items-center gap-1.5 max-w-[180px]">
-                        <Mail className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />
-                        <span className="text-sm truncate" dir="ltr" title={userItem.email}>
-                          {userItem.email}
-                        </span>
-                      </div>
+                    <div className="flex items-center gap-2 min-h-[40px] min-w-0">
+                      <Mail className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />
+                      <span className="text-sm truncate flex-1 min-w-0" dir="ltr" title={userItem.email}>
+                        {userItem.email}
+                      </span>
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <Button
                             variant="ghost"
                             size="icon"
-                            className="h-7 w-7 opacity-0 group-hover:opacity-100 transition-opacity"
+                            className="h-7 w-7 flex-shrink-0 text-muted-foreground hover:text-foreground"
                             onClick={() => copyEmail(userItem.email!)}
                           >
                             <Copy className="h-3.5 w-3.5" />
@@ -245,7 +251,7 @@ export function StaffUsersTable({
                 </TableCell>
                 <TableCell className="align-middle">
                   <div className="flex items-center min-h-[40px]">
-                    <span dir="ltr" className="text-sm">{userItem.phone || '-'}</span>
+                    <span dir="ltr" className="text-sm tabular-nums">{userItem.phone || '-'}</span>
                   </div>
                 </TableCell>
                 <TableCell className="align-middle">
