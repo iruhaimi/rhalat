@@ -310,9 +310,6 @@ export default function AdminLayout() {
                               {item.badge}
                             </Badge>
                           ) : null}
-                          {!sidebarOpen && item.badge ? (
-                            <span className="absolute top-1 left-1 h-2 w-2 rounded-full bg-destructive" />
-                          ) : null}
                         </Link>
                       );
                       if (!sidebarOpen) {
