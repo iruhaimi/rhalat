@@ -767,17 +767,26 @@ export default function AgentApplicationsList() {
               )}
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <Table>
+            <div className="overflow-x-auto rounded-lg border">
+              <Table className="table-fixed w-full" style={{ minWidth: '1100px' }}>
+                <colgroup>
+                  <col style={{ width: '140px' }} />
+                  <col style={{ width: '220px' }} />
+                  <col style={{ width: '200px' }} />
+                  <col style={{ width: '140px' }} />
+                  <col style={{ width: '140px' }} />
+                  <col style={{ width: '160px' }} />
+                  <col style={{ width: '110px' }} />
+                </colgroup>
                 <TableHeader>
-                  <TableRow>
-                    <TableHead className="text-right">رقم الطلب</TableHead>
-                    <TableHead className="text-right">مقدم الطلب</TableHead>
-                    <TableHead className="text-right">الوجهة</TableHead>
-                    <TableHead className="text-right">تاريخ التقديم</TableHead>
-                    <TableHead className="text-right">الحالة</TableHead>
-                    <TableHead className="text-right">حالة العمل</TableHead>
-                    <TableHead className="text-right">إجراءات</TableHead>
+                  <TableRow className="bg-muted/50 hover:bg-muted/50">
+                    <TableHead className="text-right font-semibold">رقم الطلب</TableHead>
+                    <TableHead className="text-right font-semibold">مقدم الطلب</TableHead>
+                    <TableHead className="text-right font-semibold">الوجهة</TableHead>
+                    <TableHead className="text-right font-semibold">تاريخ التقديم</TableHead>
+                    <TableHead className="text-right font-semibold">الحالة</TableHead>
+                    <TableHead className="text-right font-semibold">حالة العمل</TableHead>
+                    <TableHead className="text-right font-semibold">إجراءات</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -786,10 +795,10 @@ export default function AgentApplicationsList() {
                     const daysSince = getDaysSinceSubmission(app.submitted_at, app.created_at);
                     
                     return (
-                      <TableRow key={app.id} className="hover:bg-muted/50">
-                        <TableCell className="font-mono text-xs">
+                      <TableRow key={app.id} className="hover:bg-muted/50 h-[68px]">
+                        <TableCell className="font-mono text-xs align-middle">
                           <div className="flex flex-col gap-1">
-                            <span>{app.id.slice(0, 8)}...</span>
+                            <span className="truncate">{app.id.slice(0, 8)}...</span>
                             {daysSince > 3 && (
                               <Badge variant="outline" className="text-[10px] px-1 py-0 w-fit bg-warning/10 text-warning border-warning/30">
                                 منذ {daysSince} يوم
@@ -797,35 +806,35 @@ export default function AgentApplicationsList() {
                             )}
                           </div>
                         </TableCell>
-                        <TableCell>
-                          <div>
-                            <p className="font-medium">{app.profile?.full_name || 'غير محدد'}</p>
-                            <p className="text-xs text-muted-foreground">{app.profile?.phone || '-'}</p>
+                        <TableCell className="align-middle">
+                          <div className="min-w-0">
+                            <p className="font-medium truncate">{app.profile?.full_name || 'غير محدد'}</p>
+                            <p className="text-xs text-muted-foreground tabular-nums truncate" dir="ltr">{app.profile?.phone || '-'}</p>
                           </div>
                         </TableCell>
-                        <TableCell>
-                          <div className="flex items-center gap-2">
+                        <TableCell className="align-middle">
+                          <div className="flex items-center gap-2 min-w-0">
                             <MapPin className="h-3 w-3 text-muted-foreground" />
-                            <div>
-                              <p>{app.visa_type?.country?.name || '-'}</p>
-                              <p className="text-xs text-muted-foreground">{app.visa_type?.name || '-'}</p>
+                            <div className="min-w-0">
+                              <p className="truncate">{app.visa_type?.country?.name || '-'}</p>
+                              <p className="text-xs text-muted-foreground truncate">{app.visa_type?.name || '-'}</p>
                             </div>
                           </div>
                         </TableCell>
-                        <TableCell>
+                        <TableCell className="align-middle whitespace-nowrap text-sm">
                           {app.submitted_at 
                             ? format(new Date(app.submitted_at), 'dd MMM yyyy', { locale: ar })
                             : format(new Date(app.created_at), 'dd MMM yyyy', { locale: ar })}
                         </TableCell>
-                        <TableCell>{getStatusBadge(app.status)}</TableCell>
-                        <TableCell>
-                          <div className="flex flex-wrap gap-1">
+                        <TableCell className="align-middle">{getStatusBadge(app.status)}</TableCell>
+                        <TableCell className="align-middle">
+                          <div className="flex flex-wrap gap-1 items-center">
                             {indicators.length > 0 ? indicators : (
                               <span className="text-xs text-muted-foreground">-</span>
                             )}
                           </div>
                         </TableCell>
-                        <TableCell>
+                        <TableCell className="align-middle">
                           <Button asChild size="sm" variant="outline">
                             <Link to={`/agent/applications/${app.id}`}>
                               <Eye className="h-4 w-4 ml-1" />
