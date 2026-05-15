@@ -5,14 +5,8 @@ import { Plus, Pencil, Trash2, Flame, Eye, EyeOff, Tag, TrendingUp, Clock, Check
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+import { TableBody, TableCell, TableRow } from '@/components/ui/table';
+import { AdminTable } from '@/components/admin/AdminTable';
 import {
   Dialog,
   DialogContent,
@@ -495,47 +489,46 @@ export default function OffersManagement() {
           </CardHeader>
           <CardContent>
             {filteredOffers && filteredOffers.length > 0 ? (
-              <div className="rounded-lg border overflow-hidden">
-                <Table>
-                  <TableHeader>
-                    <TableRow className="bg-muted/50">
-                      <TableHead className="font-semibold">العرض</TableHead>
-                      <TableHead className="font-semibold">الدولة</TableHead>
-                      <TableHead className="font-semibold">الخصم</TableHead>
-                      <TableHead className="font-semibold">السعر</TableHead>
-                      <TableHead className="font-semibold">تاريخ الانتهاء</TableHead>
-                      <TableHead className="font-semibold">الحالة</TableHead>
-                      <TableHead className="font-semibold text-center">الإجراءات</TableHead>
-                    </TableRow>
-                  </TableHeader>
+              <AdminTable
+                minWidth="1100px"
+                columns={[
+                  { width: '240px', label: 'العرض' },
+                  { width: '180px', label: 'الدولة' },
+                  { width: '100px', label: 'الخصم' },
+                  { width: '180px', label: 'السعر' },
+                  { width: '160px', label: 'تاريخ الانتهاء' },
+                  { width: '120px', label: 'الحالة' },
+                  { width: '160px', align: 'center', label: 'الإجراءات' },
+                ]}
+              >
                   <TableBody>
                     {filteredOffers.map((offer) => {
                       const expired = isOfferExpired(offer.end_date);
                       return (
-                        <TableRow key={offer.id} className={cn("group", expired && "bg-red-50/50")}>
-                          <TableCell>
+                        <TableRow key={offer.id} className={cn("group h-[64px]", expired && "bg-red-50/50")}>
+                          <TableCell className="align-middle">
                             <div className="flex items-center gap-2">
                               {offer.is_hot && (
-                                <span className="flex items-center justify-center h-6 w-6 rounded-full bg-orange-100">
+                                <span className="flex items-center justify-center h-6 w-6 rounded-full bg-orange-100 flex-shrink-0">
                                   <Flame className="h-3.5 w-3.5 text-orange-500" />
                                 </span>
                               )}
-                              <span className="font-medium">{offer.title}</span>
+                              <span className="font-medium truncate" title={offer.title}>{offer.title}</span>
                             </div>
                           </TableCell>
-                          <TableCell>
-                            <div className="flex items-center gap-2">
-                              <span className="text-xl">{offer.flag_emoji}</span>
-                              <span>{offer.country_name}</span>
+                          <TableCell className="align-middle">
+                            <div className="flex items-center gap-2 min-w-0">
+                              <span className="text-xl flex-shrink-0">{offer.flag_emoji}</span>
+                              <span className="truncate" title={offer.country_name}>{offer.country_name}</span>
                             </div>
                           </TableCell>
-                          <TableCell>
+                          <TableCell className="align-middle">
                             <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 font-bold">
                               {offer.discount_percentage}%
                             </Badge>
                           </TableCell>
-                          <TableCell>
-                            <div className="flex items-center gap-2">
+                          <TableCell className="align-middle">
+                            <div className="flex items-center gap-2 tabular-nums">
                               <span className="font-bold text-primary text-lg">{offer.sale_price}</span>
                               <SARSymbol size="xs" className="text-primary" />
                               <span className="text-muted-foreground line-through text-sm">
@@ -543,7 +536,7 @@ export default function OffersManagement() {
                               </span>
                             </div>
                           </TableCell>
-                          <TableCell>
+                          <TableCell className="align-middle whitespace-nowrap">
                             <div className={cn(
                               "flex items-center gap-1.5",
                               expired ? "text-destructive" : "text-foreground"
@@ -552,7 +545,7 @@ export default function OffersManagement() {
                               {format(new Date(offer.end_date), 'dd MMM yyyy', { locale: ar })}
                             </div>
                           </TableCell>
-                          <TableCell>
+                          <TableCell className="align-middle">
                             {expired ? (
                               <Badge variant="destructive" className="gap-1">
                                 <XCircle className="h-3 w-3" />
@@ -570,7 +563,7 @@ export default function OffersManagement() {
                               </Badge>
                             )}
                           </TableCell>
-                          <TableCell>
+                          <TableCell className="align-middle">
                             <div className="flex items-center justify-center gap-1">
                               <Tooltip>
                                 <TooltipTrigger asChild>
@@ -670,8 +663,7 @@ export default function OffersManagement() {
                       );
                     })}
                   </TableBody>
-                </Table>
-              </div>
+              </AdminTable>
             ) : (
               <div className="text-center py-16 text-muted-foreground">
                 <Tag className="h-12 w-12 mx-auto mb-4 text-muted-foreground/50" />
