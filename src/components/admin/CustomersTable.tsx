@@ -3,14 +3,6 @@ import { ar } from 'date-fns/locale';
 import { User as UserIcon, MoreHorizontal, Shield, UserCog } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -18,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import type { AppRole } from '@/types/database';
+import { AdminTable, AdminTableBody, AdminTableRow, AdminTableCell } from './AdminTable';
 
 interface UserWithRole {
   id: string;
@@ -51,28 +44,20 @@ export function CustomersTable({
   }
 
   return (
-    <div className="overflow-x-auto rounded-lg border">
-      <Table className="table-fixed w-full">
-        <colgroup>
-          <col className="w-[280px]" />
-          <col className="w-[160px]" />
-          <col className="w-[160px]" />
-          <col className="w-[160px]" />
-          <col className="w-[80px]" />
-        </colgroup>
-        <TableHeader>
-          <TableRow className="bg-muted/50 hover:bg-muted/50">
-            <TableHead className="text-right">العميل</TableHead>
-            <TableHead className="text-right">رقم الجوال</TableHead>
-            <TableHead className="text-right">الجنسية</TableHead>
-            <TableHead className="text-right">تاريخ التسجيل</TableHead>
-            <TableHead className="text-right">إجراءات</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
+    <AdminTable
+      minWidth="900px"
+      columns={[
+        { width: '280px', label: 'العميل' },
+        { width: '160px', label: 'رقم الجوال' },
+        { width: '160px', label: 'الجنسية' },
+        { width: '160px', label: 'تاريخ التسجيل' },
+        { width: '80px', label: 'إجراءات' },
+      ]}
+    >
+      <AdminTableBody>
           {users.map((userItem) => (
-            <TableRow key={userItem.id} className="group h-[68px]">
-              <TableCell className="align-middle">
+            <AdminTableRow key={userItem.id} className="group h-[68px]">
+              <AdminTableCell className="align-middle">
                 <div className="flex items-center gap-3 min-h-[40px] min-w-0">
                   <button 
                     onClick={() => onViewProfile(userItem)}
@@ -91,13 +76,13 @@ export function CustomersTable({
                     <p className="text-xs text-muted-foreground">{userItem.user_id.slice(0, 8)}...</p>
                   </div>
                 </div>
-              </TableCell>
-              <TableCell dir="ltr" className="text-right align-middle text-sm tabular-nums">{userItem.phone || '-'}</TableCell>
-              <TableCell className="align-middle text-sm truncate">{userItem.nationality || '-'}</TableCell>
-              <TableCell className="align-middle text-sm whitespace-nowrap">
+              </AdminTableCell>
+              <AdminTableCell dir="ltr" className="text-right align-middle text-sm tabular-nums">{userItem.phone || '-'}</AdminTableCell>
+              <AdminTableCell className="align-middle text-sm truncate">{userItem.nationality || '-'}</AdminTableCell>
+              <AdminTableCell className="align-middle text-sm whitespace-nowrap">
                 {format(new Date(userItem.created_at), 'dd MMM yyyy', { locale: ar })}
-              </TableCell>
-              <TableCell className="align-middle">
+              </AdminTableCell>
+              <AdminTableCell className="align-middle">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" size="icon" className="h-8 w-8">
@@ -120,11 +105,10 @@ export function CustomersTable({
                     )}
                   </DropdownMenuContent>
                 </DropdownMenu>
-              </TableCell>
-            </TableRow>
+              </AdminTableCell>
+            </AdminTableRow>
           ))}
-        </TableBody>
-      </Table>
-    </div>
+      </AdminTableBody>
+    </AdminTable>
   );
 }
