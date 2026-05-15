@@ -395,12 +395,11 @@ export default function LoginAttemptsManagement() {
                   ))}
                 </TableBody>
             </AdminTable>
-            {filteredAttempts.length > 100 && (
-                <p className="text-center text-sm text-muted-foreground py-4">
-                  يتم عرض أول 100 سجل من أصل {filteredAttempts.length}
-                </p>
-              )}
-            </div>
+          )}
+          {filteredAttempts.length > 100 && (
+            <p className="text-center text-sm text-muted-foreground py-4">
+              يتم عرض أول 100 سجل من أصل {filteredAttempts.length}
+            </p>
           )}
         </CardContent>
       </Card>
