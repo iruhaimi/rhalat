@@ -5,14 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+import { TableBody, TableCell, TableRow } from '@/components/ui/table';
+import { AdminTable, EmailCell } from '@/components/admin/AdminTable';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -341,30 +335,24 @@ export default function LoginAttemptsManagement() {
               <p>لا توجد محاولات دخول مسجلة</p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="text-right">البريد الإلكتروني</TableHead>
-                    <TableHead className="text-right">الحالة</TableHead>
-                    <TableHead className="text-right">السبب</TableHead>
-                    <TableHead className="text-right">IP</TableHead>
-                    <TableHead className="text-right">التاريخ</TableHead>
-                    <TableHead className="text-right w-20">إجراءات</TableHead>
-                  </TableRow>
-                </TableHeader>
+            <AdminTable
+              minWidth="1050px"
+              columns={[
+                { width: '280px', label: 'البريد الإلكتروني' },
+                { width: '120px', label: 'الحالة' },
+                { width: '220px', label: 'السبب' },
+                { width: '140px', label: 'IP' },
+                { width: '180px', label: 'التاريخ' },
+                { width: '90px', label: 'إجراءات' },
+              ]}
+            >
                 <TableBody>
                   {filteredAttempts.slice(0, 100).map((attempt) => (
-                    <TableRow key={attempt.id}>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          <Monitor className="h-4 w-4 text-muted-foreground" />
-                          <span dir="ltr" className="font-mono text-sm">
-                            {attempt.email}
-                          </span>
-                        </div>
+                    <TableRow key={attempt.id} className="h-[60px]">
+                      <TableCell className="align-middle">
+                        <EmailCell email={attempt.email} />
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="align-middle">
                         {attempt.success ? (
                           <Badge variant="outline" className="bg-green-500/10 text-green-600 border-green-500/30">
                             <CheckCircle className="h-3 w-3 ml-1" />
@@ -377,23 +365,23 @@ export default function LoginAttemptsManagement() {
                           </Badge>
                         )}
                       </TableCell>
-                      <TableCell>
-                        <span className="text-sm text-muted-foreground">
+                      <TableCell className="align-middle">
+                        <span className="text-sm text-muted-foreground truncate block" title={attempt.failure_reason || ''}>
                           {attempt.failure_reason || '-'}
                         </span>
                       </TableCell>
-                      <TableCell>
-                        <span dir="ltr" className="font-mono text-xs text-muted-foreground">
+                      <TableCell className="align-middle">
+                        <span dir="ltr" className="font-mono text-xs text-muted-foreground tabular-nums">
                           {attempt.ip_address || '-'}
                         </span>
                       </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                      <TableCell className="align-middle whitespace-nowrap">
+                        <div className="flex items-center gap-1 text-sm text-muted-foreground tabular-nums">
                           <Clock className="h-3 w-3" />
                           {format(new Date(attempt.created_at), 'yyyy/MM/dd HH:mm:ss')}
                         </div>
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="align-middle">
                         <Button
                           variant="ghost"
                           size="icon"
@@ -406,8 +394,8 @@ export default function LoginAttemptsManagement() {
                     </TableRow>
                   ))}
                 </TableBody>
-              </Table>
-              {filteredAttempts.length > 100 && (
+            </AdminTable>
+            {filteredAttempts.length > 100 && (
                 <p className="text-center text-sm text-muted-foreground py-4">
                   يتم عرض أول 100 سجل من أصل {filteredAttempts.length}
                 </p>
