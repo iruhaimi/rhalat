@@ -59,7 +59,8 @@ import {
   UserPlus,
   Trash2,
   X,
-  Crown
+  Crown,
+  Plane
 } from 'lucide-react';
 import { exportToExcel } from '@/lib/exportToExcel';
 import { format } from 'date-fns';
@@ -432,25 +433,20 @@ export default function UsersManagement() {
       return true;
     };
 
-    // Staff = users with admin or agent role (may also have customer)
+    // Staff = users with admin, agent, or tour_operator role (may also have customer)
     const staff = users.filter(u => {
-      const isStaff = u.roles.includes('admin') || u.roles.includes('agent');
+      const isStaff = u.roles.includes('admin') || u.roles.includes('agent') || u.roles.includes('tour_operator');
       return isStaff && filterBySearchAndDate(u);
     });
     
-    // Customers = users with ONLY customer role
-    const customers = users.filter(u => {
-      const isOnlyCustomer = u.roles.length === 1 && u.roles.includes('customer');
-      const hasNoRoles = u.roles.length === 0;
-      return (isOnlyCustomer || hasNoRoles) && filterBySearchAndDate(u);
-    });
-
-    // Count customers same way as list: only customer role OR no roles, and NOT admin/agent
-    const customersCount = users.filter(u => {
-      const isOnlyCustomer = u.roles.length === 1 && u.roles.includes('customer');
-      const hasNoRoles = u.roles.length === 0;
-      return isOnlyCustomer || hasNoRoles;
-    }).length;
+    // Customers = users with ONLY customer role (no staff roles)
+    const isCustomerOnly = (u: UserWithRole) => {
+      const hasStaffRole = u.roles.includes('admin') || u.roles.includes('agent') || u.roles.includes('tour_operator');
+      if (hasStaffRole) return false;
+      return u.roles.length === 0 || (u.roles.length === 1 && u.roles.includes('customer'));
+    };
+    const customers = users.filter(u => isCustomerOnly(u) && filterBySearchAndDate(u));
+    const customersCount = users.filter(isCustomerOnly).length;
 
     // Count owners (admins with manage_staff permission)
     const ownersCount = users.filter(u => u.roles.includes('admin') && owners.has(u.user_id)).length;
@@ -466,6 +462,7 @@ export default function UsersManagement() {
         owners: ownersCount,
         admins: regularAdminsCount,
         agents: users.filter(u => u.roles.includes('agent')).length,
+        tourOperators: users.filter(u => u.roles.includes('tour_operator')).length,
         customers: customersCount,
       }
     };
@@ -662,12 +659,13 @@ export default function UsersManagement() {
       />
 
       {/* Stats Cards */}
-      <div data-admin-stats="true" className="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4">
+      <div data-admin-stats="true" className="grid grid-cols-2 md:grid-cols-6 gap-3 md:gap-4">
         <StatCard label="إجمالي المستخدمين" value={stats.total} icon={Users} tone="primary" index={0} />
         <StatCard label="المالكين" value={stats.owners} icon={Crown} tone="gold" index={1} />
         <StatCard label="المشرفين" value={stats.admins} icon={Shield} tone="danger" index={2} />
         <StatCard label="الوكلاء" value={stats.agents} icon={UserCog} tone="primary" index={3} />
-        <StatCard label="العملاء" value={stats.customers} icon={UserCheck} tone="muted" index={4} />
+        <StatCard label="وكلاء سياحيون" value={stats.tourOperators} icon={Plane} tone="primary" index={4} />
+        <StatCard label="العملاء" value={stats.customers} icon={UserCheck} tone="muted" index={5} />
       </div>
 
       <Tabs defaultValue="staff" className="w-full">
@@ -737,7 +735,7 @@ export default function UsersManagement() {
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle className="flex items-center gap-2">
                 <UserCog className="h-5 w-5" />
-                الموظفين (المشرفين والوكلاء)
+                الموظفين (المشرفون، الوكلاء، الوكلاء السياحيون)
               </CardTitle>
               <div className="flex items-center gap-2">
                 {isAdmin && (
