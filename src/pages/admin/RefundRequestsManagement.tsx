@@ -7,14 +7,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+import { TableBody, TableCell, TableRow } from '@/components/ui/table';
+import { AdminTable, EmailCell } from '@/components/admin/AdminTable';
 import {
   Dialog,
   DialogContent,
@@ -284,40 +278,42 @@ export default function RefundRequestsManagement() {
               <p>لا توجد طلبات استرداد</p>
             </div>
           ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>رقم الطلب</TableHead>
-                  <TableHead>البريد الإلكتروني</TableHead>
-                  <TableHead>السبب</TableHead>
-                  <TableHead>الحالة</TableHead>
-                  <TableHead>تاريخ التقديم</TableHead>
-                  <TableHead>الإجراءات</TableHead>
-                </TableRow>
-              </TableHeader>
+            <AdminTable
+              minWidth="950px"
+              columns={[
+                { width: '160px', label: 'رقم الطلب' },
+                { width: '260px', label: 'البريد الإلكتروني' },
+                { width: '240px', label: 'السبب' },
+                { width: '130px', label: 'الحالة' },
+                { width: '140px', label: 'تاريخ التقديم' },
+                { width: '110px', label: 'الإجراءات' },
+              ]}
+            >
               <TableBody>
                 {filteredRequests?.map((request) => {
                   const status = statusConfig[request.status] || statusConfig.pending;
                   const StatusIcon = status.icon;
                   return (
-                    <TableRow key={request.id}>
-                      <TableCell className="font-medium">
+                    <TableRow key={request.id} className="h-[60px]">
+                      <TableCell className="font-medium align-middle truncate" dir="ltr">
                         {request.application_number}
                       </TableCell>
-                      <TableCell>{request.email}</TableCell>
-                      <TableCell className="max-w-[200px] truncate">
+                      <TableCell className="align-middle">
+                        <EmailCell email={request.email} />
+                      </TableCell>
+                      <TableCell className="align-middle truncate" title={request.reason}>
                         {request.reason}
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="align-middle">
                         <Badge className={status.color}>
                           <StatusIcon className="w-3 h-3 ml-1" />
                           {status.label}
                         </Badge>
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="align-middle whitespace-nowrap text-sm">
                         {format(new Date(request.created_at), 'dd MMM yyyy', { locale: ar })}
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="align-middle">
                         <Button
                           variant="outline"
                           size="sm"
@@ -331,7 +327,7 @@ export default function RefundRequestsManagement() {
                   );
                 })}
               </TableBody>
-            </Table>
+            </AdminTable>
           )}
         </CardContent>
       </Card>

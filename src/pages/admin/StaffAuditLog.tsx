@@ -145,43 +145,53 @@ export default function StaffAuditLog() {
             </div>
           ) : (
             <ScrollArea className="h-[600px]">
-              <Table>
-                <TableHeader className="sticky top-0 bg-card z-10">
-                  <TableRow>
-                    <TableHead className="text-right">الوقت</TableHead>
-                    <TableHead className="text-right">المستخدم</TableHead>
-                    <TableHead className="text-right">الحدث</TableHead>
-                    <TableHead className="text-right">الفئة</TableHead>
-                    <TableHead className="text-right">الوصف</TableHead>
-                    <TableHead className="text-right">الهدف</TableHead>
-                  </TableRow>
-                </TableHeader>
+              <div className="overflow-x-auto">
+                <Table className="table-fixed w-full" style={{ minWidth: '1100px' }}>
+                  <colgroup>
+                    <col style={{ width: '160px' }} />
+                    <col style={{ width: '220px' }} />
+                    <col style={{ width: '160px' }} />
+                    <col style={{ width: '140px' }} />
+                    <col style={{ width: '320px' }} />
+                    <col style={{ width: '180px' }} />
+                  </colgroup>
+                  <TableHeader className="sticky top-0 bg-card z-10">
+                    <TableRow className="bg-muted/50 hover:bg-muted/50">
+                      <TableHead className="text-right font-semibold">الوقت</TableHead>
+                      <TableHead className="text-right font-semibold">المستخدم</TableHead>
+                      <TableHead className="text-right font-semibold">الحدث</TableHead>
+                      <TableHead className="text-right font-semibold">الفئة</TableHead>
+                      <TableHead className="text-right font-semibold">الوصف</TableHead>
+                      <TableHead className="text-right font-semibold">الهدف</TableHead>
+                    </TableRow>
+                  </TableHeader>
                 <TableBody>
                   {data?.rows.length === 0 ? (
                     <TableRow><TableCell colSpan={6} className="text-center py-8 text-muted-foreground">لا توجد سجلات مطابقة</TableCell></TableRow>
                   ) : data?.rows.map((row: any) => (
-                    <TableRow key={row.id}>
-                      <TableCell className="text-xs whitespace-nowrap">
+                    <TableRow key={row.id} className="h-[60px]">
+                      <TableCell className="text-xs whitespace-nowrap align-middle tabular-nums">
                         {format(new Date(row.created_at), 'yyyy/MM/dd HH:mm', { locale: ar })}
                       </TableCell>
-                      <TableCell className="text-sm">
-                        <div className="font-medium">{row.actor_name || '—'}</div>
-                        <div className="text-xs text-muted-foreground">{row.actor_email}</div>
+                      <TableCell className="text-sm align-middle">
+                        <div className="font-medium truncate">{row.actor_name || '—'}</div>
+                        <div className="text-xs text-muted-foreground truncate" dir="ltr">{row.actor_email}</div>
                       </TableCell>
-                      <TableCell><Badge variant="outline">{row.event_type}</Badge></TableCell>
-                      <TableCell>
+                      <TableCell className="align-middle"><Badge variant="outline" className="truncate max-w-full">{row.event_type}</Badge></TableCell>
+                      <TableCell className="align-middle">
                         <Badge variant="outline" className={categoryColors[row.event_category] || ''}>
                           {row.event_category}
                         </Badge>
                       </TableCell>
-                      <TableCell className="text-sm max-w-md">{row.description}</TableCell>
-                      <TableCell className="text-xs text-muted-foreground">
+                      <TableCell className="text-sm align-middle truncate" title={row.description}>{row.description}</TableCell>
+                      <TableCell className="text-xs text-muted-foreground align-middle truncate">
                         {row.target_type ? `${row.target_type}#${(row.target_id || '').slice(0, 8)}` : '—'}
                       </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
-              </Table>
+                </Table>
+              </div>
             </ScrollArea>
           )}
         </CardContent>

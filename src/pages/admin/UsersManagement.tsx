@@ -877,36 +877,43 @@ export default function UsersManagement() {
                   {activityLog.length === 0 ? 'لا توجد نشاطات مسجلة بعد' : 'لا توجد نتائج مطابقة للبحث'}
                 </div>
               ) : (
-                <div className="overflow-x-auto">
-                  <Table>
+                <div className="overflow-x-auto rounded-lg border">
+                  <Table className="table-fixed w-full" style={{ minWidth: '900px' }}>
+                    <colgroup>
+                      <col style={{ width: '200px' }} />
+                      <col style={{ width: '180px' }} />
+                      <col style={{ width: '220px' }} />
+                      <col style={{ width: '140px' }} />
+                      <col style={{ width: '180px' }} />
+                    </colgroup>
                     <TableHeader>
-                      <TableRow>
-                        <TableHead className="text-right">التاريخ والوقت</TableHead>
-                        <TableHead className="text-right">الإجراء</TableHead>
-                        <TableHead className="text-right">المستخدم المستهدف</TableHead>
-                        <TableHead className="text-right">الصلاحية</TableHead>
-                        <TableHead className="text-right">بواسطة</TableHead>
+                      <TableRow className="bg-muted/50 hover:bg-muted/50">
+                        <TableHead className="text-right font-semibold">التاريخ والوقت</TableHead>
+                        <TableHead className="text-right font-semibold">الإجراء</TableHead>
+                        <TableHead className="text-right font-semibold">المستخدم المستهدف</TableHead>
+                        <TableHead className="text-right font-semibold">الصلاحية</TableHead>
+                        <TableHead className="text-right font-semibold">بواسطة</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {paginatedActivityLog.map((log) => (
-                        <TableRow key={log.id}>
-                          <TableCell className="text-muted-foreground">
+                        <TableRow key={log.id} className="h-[60px]">
+                          <TableCell className="text-muted-foreground align-middle whitespace-nowrap text-sm tabular-nums">
                             {format(new Date(log.created_at), 'dd MMM yyyy - HH:mm', { locale: ar })}
                           </TableCell>
-                          <TableCell>
+                          <TableCell className="align-middle">
                             <div className="flex items-center gap-2">
                               {getActionIcon(log.action)}
-                              <span>{getActionLabel(log.action)}</span>
+                              <span className="truncate">{getActionLabel(log.action)}</span>
                             </div>
                           </TableCell>
-                          <TableCell className="font-medium">
+                          <TableCell className="font-medium align-middle truncate">
                             {log.target_user_name}
                           </TableCell>
-                          <TableCell>
+                          <TableCell className="align-middle">
                             {getRoleBadge(log.role)}
                           </TableCell>
-                          <TableCell className="text-muted-foreground">
+                          <TableCell className="text-muted-foreground align-middle truncate">
                             {log.performer_name}
                           </TableCell>
                         </TableRow>

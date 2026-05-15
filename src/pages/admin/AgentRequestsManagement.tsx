@@ -524,42 +524,51 @@ export default function AgentRequestsManagement() {
                   <p className="text-sm text-muted-foreground">لا توجد طلبات تحويل</p>
                 </div>
               ) : (
-                <div className="overflow-x-auto">
-                  <Table>
+                <div className="overflow-x-auto rounded-lg border">
+                  <Table className="table-fixed w-full" style={{ minWidth: '1100px' }}>
+                    <colgroup>
+                      <col style={{ width: '220px' }} />
+                      <col style={{ width: '160px' }} />
+                      <col style={{ width: '160px' }} />
+                      <col style={{ width: '220px' }} />
+                      <col style={{ width: '140px' }} />
+                      <col style={{ width: '120px' }} />
+                      <col style={{ width: '120px' }} />
+                    </colgroup>
                     <TableHeader>
-                      <TableRow>
-                        <TableHead className="text-right">الطلب</TableHead>
-                        <TableHead className="text-right">من وكيل</TableHead>
-                        <TableHead className="text-right">إلى وكيل</TableHead>
-                        <TableHead className="text-right">السبب</TableHead>
-                        <TableHead className="text-right">التاريخ</TableHead>
-                        <TableHead className="text-right">الحالة</TableHead>
-                        <TableHead className="text-right">إجراءات</TableHead>
+                      <TableRow className="bg-muted/50 hover:bg-muted/50">
+                        <TableHead className="text-right font-semibold">الطلب</TableHead>
+                        <TableHead className="text-right font-semibold">من وكيل</TableHead>
+                        <TableHead className="text-right font-semibold">إلى وكيل</TableHead>
+                        <TableHead className="text-right font-semibold">السبب</TableHead>
+                        <TableHead className="text-right font-semibold">التاريخ</TableHead>
+                        <TableHead className="text-right font-semibold">الحالة</TableHead>
+                        <TableHead className="text-right font-semibold">إجراءات</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {transferRequests.map((transfer) => (
-                        <TableRow key={transfer.id}>
-                          <TableCell>
+                        <TableRow key={transfer.id} className="h-[68px]">
+                          <TableCell className="align-middle">
                             <Link 
                               to={`/admin/applications/${transfer.application_id}`}
-                              className="text-primary hover:underline"
+                              className="text-primary hover:underline block min-w-0"
                             >
-                              {transfer.application?.profile?.full_name || '-'}
+                              <span className="truncate block">{transfer.application?.profile?.full_name || '-'}</span>
                               <br />
-                              <span className="text-xs text-muted-foreground">
+                              <span className="text-xs text-muted-foreground truncate block">
                                 {transfer.application?.visa_type?.country?.name}
                               </span>
                             </Link>
                           </TableCell>
-                          <TableCell>{transfer.from_agent?.full_name || '-'}</TableCell>
-                          <TableCell>{transfer.to_agent?.full_name || '-'}</TableCell>
-                          <TableCell className="max-w-[200px] truncate">{transfer.reason}</TableCell>
-                          <TableCell className="text-sm">
+                          <TableCell className="align-middle truncate">{transfer.from_agent?.full_name || '-'}</TableCell>
+                          <TableCell className="align-middle truncate">{transfer.to_agent?.full_name || '-'}</TableCell>
+                          <TableCell className="align-middle truncate" title={transfer.reason}>{transfer.reason}</TableCell>
+                          <TableCell className="text-sm align-middle whitespace-nowrap">
                             {format(new Date(transfer.created_at), 'dd MMM yyyy', { locale: ar })}
                           </TableCell>
-                          <TableCell>{getStatusBadge(transfer.status)}</TableCell>
-                          <TableCell>
+                          <TableCell className="align-middle">{getStatusBadge(transfer.status)}</TableCell>
+                          <TableCell className="align-middle">
                             {transfer.status === 'pending' ? (
                               <Button
                                 size="sm"
@@ -599,36 +608,45 @@ export default function AgentRequestsManagement() {
                   <p className="text-sm text-muted-foreground">لا توجد ملفات إتمام</p>
                 </div>
               ) : (
-                <div className="overflow-x-auto">
-                  <Table>
+                <div className="overflow-x-auto rounded-lg border">
+                  <Table className="table-fixed w-full" style={{ minWidth: '1100px' }}>
+                    <colgroup>
+                      <col style={{ width: '220px' }} />
+                      <col style={{ width: '160px' }} />
+                      <col style={{ width: '140px' }} />
+                      <col style={{ width: '220px' }} />
+                      <col style={{ width: '140px' }} />
+                      <col style={{ width: '120px' }} />
+                      <col style={{ width: '120px' }} />
+                    </colgroup>
                     <TableHeader>
-                      <TableRow>
-                        <TableHead className="text-right">الطلب</TableHead>
-                        <TableHead className="text-right">الوكيل</TableHead>
-                        <TableHead className="text-right">الملفات</TableHead>
-                        <TableHead className="text-right">ملاحظات</TableHead>
-                        <TableHead className="text-right">التاريخ</TableHead>
-                        <TableHead className="text-right">الحالة</TableHead>
-                        <TableHead className="text-right">إجراءات</TableHead>
+                      <TableRow className="bg-muted/50 hover:bg-muted/50">
+                        <TableHead className="text-right font-semibold">الطلب</TableHead>
+                        <TableHead className="text-right font-semibold">الوكيل</TableHead>
+                        <TableHead className="text-right font-semibold">الملفات</TableHead>
+                        <TableHead className="text-right font-semibold">ملاحظات</TableHead>
+                        <TableHead className="text-right font-semibold">التاريخ</TableHead>
+                        <TableHead className="text-right font-semibold">الحالة</TableHead>
+                        <TableHead className="text-right font-semibold">إجراءات</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {groupedSubmissions.map((group) => (
-                        <TableRow key={`${group.application_id}-${group.agent_id}`}>
-                          <TableCell>
+                        <TableRow key={`${group.application_id}-${group.agent_id}`} className="h-[68px]">
+                          <TableCell className="align-middle">
                             <Link 
                               to={`/admin/applications/${group.application_id}`}
-                              className="text-primary hover:underline"
+                              className="text-primary hover:underline block min-w-0"
                             >
-                              {group.application?.profile?.full_name || '-'}
+                              <span className="truncate block">{group.application?.profile?.full_name || '-'}</span>
                               <br />
-                              <span className="text-xs text-muted-foreground">
+                              <span className="text-xs text-muted-foreground truncate block">
                                 {group.application?.visa_type?.country?.name}
                               </span>
                             </Link>
                           </TableCell>
-                          <TableCell>{group.agent?.full_name || '-'}</TableCell>
-                          <TableCell>
+                          <TableCell className="align-middle truncate">{group.agent?.full_name || '-'}</TableCell>
+                          <TableCell className="align-middle">
                             <div className="flex items-center gap-2">
                               <Badge variant="secondary" className="gap-1">
                                 <FileCheck className="h-3 w-3" />
@@ -636,14 +654,14 @@ export default function AgentRequestsManagement() {
                               </Badge>
                             </div>
                           </TableCell>
-                          <TableCell className="max-w-[200px] truncate">
+                          <TableCell className="align-middle truncate" title={group.notes || ''}>
                             {group.notes || '-'}
                           </TableCell>
-                          <TableCell className="text-sm">
+                          <TableCell className="text-sm align-middle whitespace-nowrap">
                             {format(new Date(group.created_at), 'dd MMM yyyy', { locale: ar })}
                           </TableCell>
-                          <TableCell>{getStatusBadge(group.status)}</TableCell>
-                          <TableCell>
+                          <TableCell className="align-middle">{getStatusBadge(group.status)}</TableCell>
+                          <TableCell className="align-middle">
                             {group.status === 'pending' ? (
                               <Button
                                 size="sm"
