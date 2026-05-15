@@ -62,10 +62,11 @@ Deno.serve(async (req) => {
 
     const adminClient = createClient(supabaseUrl, supabaseServiceKey)
 
-    // Verify caller is staff (admin or agent) — only staff get recovery codes
+    // Verify caller is staff (admin, agent, or tour_operator) — only staff get recovery codes
     const { data: isAdmin } = await adminClient.rpc('is_admin', { _user_id: user.id })
     const { data: isAgent } = await adminClient.rpc('is_agent', { _user_id: user.id })
-    if (!isAdmin && !isAgent) {
+    const { data: isTourOperator } = await adminClient.rpc('is_tour_operator', { _user_id: user.id })
+    if (!isAdmin && !isAgent && !isTourOperator) {
       return new Response(JSON.stringify({ error: 'Forbidden: staff only' }), {
         status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       })
