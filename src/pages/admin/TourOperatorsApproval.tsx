@@ -143,7 +143,7 @@ export default function TourOperatorsApproval() {
       />
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <StatCard label="بانتظار الاعتماد" value={stats.pending} icon={Clock} tone="warning" index={0} />
+        <StatCard label="بانتظار الاعتماد" value={stats.pending} icon={Clock} tone="gold" index={0} />
         <StatCard label="معتمدون" value={stats.verified} icon={CheckCircle2} tone="success" index={1} />
         <StatCard label="إجمالي الوكلاء" value={stats.total} icon={Plane} tone="primary" index={2} />
       </div>
