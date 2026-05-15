@@ -118,7 +118,13 @@ export function CreateStaffDialog({ open, onOpenChange, onSuccess }: CreateStaff
         throw new Error(translateError(data.error || 'فشل في إنشاء الحساب'));
       }
 
-      toast.success('تم إنشاء حساب الموظف بنجاح');
+      if (data?.emailSent === false) {
+        toast.warning('تم إنشاء الحساب بنجاح، لكن لم يُرسل إيميل الإعداد. اطلب من الموظف استخدام "نسيت كلمة المرور" لتعيين كلمة السر.', {
+          duration: 8000,
+        });
+      } else {
+        toast.success('تم إنشاء حساب الموظف بنجاح');
+      }
       resetForm();
       onOpenChange(false);
       onSuccess();
