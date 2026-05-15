@@ -12,14 +12,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+import { TableBody, TableCell, TableRow } from '@/components/ui/table';
+import { AdminTable, EmailCell } from '@/components/admin/AdminTable';
 import {
   Dialog,
   DialogContent,
@@ -200,16 +194,16 @@ export default function EmailLogsManagement() {
       {/* Table */}
       <Card>
         <CardContent className="p-0">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="text-right">القالب</TableHead>
-                <TableHead className="text-right">المستلم</TableHead>
-                <TableHead className="text-right">الحالة</TableHead>
-                <TableHead className="text-right">الوقت</TableHead>
-                <TableHead className="text-right">تفاصيل</TableHead>
-              </TableRow>
-            </TableHeader>
+          <AdminTable
+            minWidth="900px"
+            columns={[
+              { width: '220px', label: 'القالب' },
+              { width: '300px', label: 'المستلم' },
+              { width: '140px', label: 'الحالة' },
+              { width: '160px', label: 'الوقت' },
+              { width: '100px', label: 'تفاصيل' },
+            ]}
+          >
             <TableBody>
               {isLoading && (
                 <TableRow>
@@ -233,22 +227,24 @@ export default function EmailLogsManagement() {
                 };
                 const Icon = cfg.icon;
                 return (
-                  <TableRow key={log.id}>
-                    <TableCell className="font-mono text-xs">{log.template_name}</TableCell>
-                    <TableCell dir="ltr" className="text-right">{log.recipient_email}</TableCell>
-                    <TableCell>
+                  <TableRow key={log.id} className="h-[56px]">
+                    <TableCell className="font-mono text-xs align-middle truncate" title={log.template_name}>{log.template_name}</TableCell>
+                    <TableCell className="align-middle">
+                      <EmailCell email={log.recipient_email} />
+                    </TableCell>
+                    <TableCell className="align-middle">
                       <Badge className={`${cfg.color} gap-1`}>
                         <Icon className="w-3 h-3" />
                         {cfg.label}
                       </Badge>
                     </TableCell>
-                    <TableCell className="text-xs text-muted-foreground">
+                    <TableCell className="text-xs text-muted-foreground align-middle whitespace-nowrap">
                       {formatDistanceToNow(new Date(log.created_at), {
                         addSuffix: true,
                         locale: ar,
                       })}
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="align-middle">
                       <Button variant="ghost" size="sm" onClick={() => setSelected(log)}>
                         عرض
                       </Button>
@@ -257,7 +253,7 @@ export default function EmailLogsManagement() {
                 );
               })}
             </TableBody>
-          </Table>
+          </AdminTable>
           {filtered.length > 200 && (
             <div className="p-3 text-center text-xs text-muted-foreground border-t">
               يتم عرض أول 200 سجل من أصل {filtered.length}. ضيّق الفلاتر للحصول على نتائج أدق.
