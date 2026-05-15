@@ -289,45 +289,53 @@ export default function DocumentAccessLogs() {
             </div>
           ) : (
             <ScrollArea className="h-[500px]">
-              <Table>
+              <div className="overflow-x-auto">
+              <Table className="table-fixed w-full" style={{ minWidth: '900px' }}>
+                <colgroup>
+                  <col style={{ width: '240px' }} />
+                  <col style={{ width: '180px' }} />
+                  <col style={{ width: '180px' }} />
+                  <col style={{ width: '160px' }} />
+                  <col style={{ width: '200px' }} />
+                </colgroup>
                 <TableHeader>
-                  <TableRow>
-                    <TableHead>الموظف</TableHead>
-                    <TableHead>نوع العملية</TableHead>
-                    <TableHead>نوع المستند</TableHead>
-                    <TableHead>رقم الطلب</TableHead>
-                    <TableHead>التوقيت</TableHead>
+                  <TableRow className="bg-muted/50 hover:bg-muted/50">
+                    <TableHead className="text-right font-semibold">الموظف</TableHead>
+                    <TableHead className="text-right font-semibold">نوع العملية</TableHead>
+                    <TableHead className="text-right font-semibold">نوع المستند</TableHead>
+                    <TableHead className="text-right font-semibold">رقم الطلب</TableHead>
+                    <TableHead className="text-right font-semibold">التوقيت</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {filteredLogs.map((log) => (
-                    <TableRow key={log.id}>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
+                    <TableRow key={log.id} className="h-[60px]">
+                      <TableCell className="align-middle">
+                        <div className="flex items-center gap-2 min-w-0">
                           <User className="h-4 w-4 text-muted-foreground" />
-                          <span className="font-medium">
+                          <span className="font-medium truncate">
                             {log.accessed_by_name || 'غير معروف'}
                           </span>
                         </div>
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="align-middle">
                         <div className="flex items-center gap-2">
                           {getAccessTypeIcon(log.access_type)}
                           {getAccessTypeBadge(log.access_type)}
                         </div>
                       </TableCell>
-                      <TableCell>
-                        <span className="text-sm">
+                      <TableCell className="align-middle">
+                        <span className="text-sm truncate block">
                           {log.document_type || '-'}
                         </span>
                       </TableCell>
-                      <TableCell>
-                        <code className="text-xs bg-muted px-2 py-1 rounded">
+                      <TableCell className="align-middle">
+                        <code className="text-xs bg-muted px-2 py-1 rounded font-mono">
                           {log.application_id.slice(0, 8)}...
                         </code>
                       </TableCell>
-                      <TableCell>
-                        <div className="text-sm">
+                      <TableCell className="align-middle">
+                        <div className="text-sm tabular-nums">
                           <p>{format(new Date(log.created_at), 'dd/MM/yyyy HH:mm', { locale: ar })}</p>
                           <p className="text-xs text-muted-foreground">
                             {formatDistanceToNow(new Date(log.created_at), { addSuffix: true, locale: ar })}
@@ -338,6 +346,7 @@ export default function DocumentAccessLogs() {
                   ))}
                 </TableBody>
               </Table>
+              </div>
             </ScrollArea>
           )}
         </CardContent>
