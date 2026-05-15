@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { usePermissions } from '@/hooks/usePermissions';
@@ -51,10 +52,32 @@ export default function AdminLayout() {
   const { prefs } = useAdminUIPrefs();
   const [sidebarOpen, setSidebarOpen] = useState(!prefs.sidebarCollapsedDefault);
   const idle = useIdleTimeout();
+  const [pendingOperators, setPendingOperators] = useState(0);
+
+  useEffect(() => {
+    if (!isAdmin) return;
+    let active = true;
+    const load = async () => {
+      const { count } = await supabase
+        .from('tour_operators')
+        .select('id', { count: 'exact', head: true })
+        .eq('is_verified', false);
+      if (active) setPendingOperators(count ?? 0);
+    };
+    load();
+    const channel = supabase
+      .channel('admin-tour-operators-pending')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'tour_operators' }, load)
+      .subscribe();
+    return () => {
+      active = false;
+      supabase.removeChannel(channel);
+    };
+  }, [isAdmin]);
 
   const menuGroups: Array<{
     label: string;
-    items: Array<{ title: string; icon: any; href: string; show: boolean }>;
+    items: Array<{ title: string; icon: any; href: string; show: boolean; badge?: number }>;
   }> = [
     {
       label: 'الرئيسية',
@@ -105,6 +128,13 @@ export default function AdminLayout() {
           icon: Plane,
           href: '/admin/tour-programs',
           show: isAdmin,
+        },
+        {
+          title: 'اعتماد الوكلاء السياحيين',
+          icon: UserCheck,
+          href: '/admin/tour-operators',
+          show: isAdmin,
+          badge: pendingOperators,
         },
       ],
     },
@@ -274,7 +304,15 @@ export default function AdminLayout() {
                           )}
                         >
                           <item.icon className="h-5 w-5 shrink-0" />
-                          {sidebarOpen && <span className="truncate">{item.title}</span>}
+                          {sidebarOpen && <span className="truncate flex-1">{item.title}</span>}
+                          {sidebarOpen && item.badge ? (
+                            <Badge variant="destructive" className="h-5 px-1.5 text-[10px]">
+                              {item.badge}
+                            </Badge>
+                          ) : null}
+                          {!sidebarOpen && item.badge ? (
+                            <span className="absolute top-1 left-1 h-2 w-2 rounded-full bg-destructive" />
+                          ) : null}
                         </Link>
                       );
                       if (!sidebarOpen) {
