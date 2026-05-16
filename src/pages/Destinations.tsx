@@ -41,7 +41,7 @@ export default function Destinations() {
   useEffect(() => {
     async function fetchData() {
       const [countriesRes, visaTypesRes] = await Promise.all([
-        supabase.from('countries').select('*').eq('is_active', true).order('name'),
+        supabase.from('countries').select('*').eq('is_active', true).order('display_order', { ascending: true }).order('name'),
         supabase.from('visa_types').select('*').eq('is_active', true),
       ]);
 
