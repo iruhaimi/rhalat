@@ -83,6 +83,7 @@ export default function Home() {
         .from('countries')
         .select('*')
         .eq('is_active', true)
+        .order('display_order', { ascending: true })
         .order('name');
 
       if (!error && data) {

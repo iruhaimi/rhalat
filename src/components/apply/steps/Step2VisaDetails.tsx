@@ -42,6 +42,7 @@ export default function Step2VisaDetails() {
         .from('countries')
         .select('*')
         .eq('is_active', true)
+        .order('display_order', { ascending: true })
         .order('name');
       if (error) throw error;
       return data;
