@@ -284,8 +284,8 @@ export default function Pricing() {
                     </h3>
                     <p className="text-sm text-muted-foreground">
                       {isRTL 
-                        ? 'استرداد كامل في حال رفض الطلب بسبب خطأ منا'
-                        : 'Full refund if application is rejected due to our error'}
+                        ? 'نضمن لك استرداد كامل لرسوم الخدمة المدفوعة لنا فقط، في حال رفض الطلب بسبب خطأ موثّق من مكتبنا ومُثبت من السفارة. لا يشمل ذلك رسوم السفارة أو مركز التأشيرات.'
+                        : 'Full refund of our service fees only if your application is rejected due to a documented error from our office, confirmed by the embassy. Embassy and visa center fees are not included.'}
                     </p>
                   </div>
                 </CardContent>
