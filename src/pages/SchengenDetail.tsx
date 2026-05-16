@@ -36,6 +36,7 @@ export default function SchengenDetail() {
         .select('*')
         .in('code', [...SCHENGEN_COUNTRY_CODES])
         .eq('is_active', true)
+        .order('display_order', { ascending: true })
         .order('name');
 
       if (countriesData) {
