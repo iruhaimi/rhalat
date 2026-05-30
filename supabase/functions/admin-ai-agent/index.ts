@@ -148,6 +148,69 @@ const TOOL_NAME_MAP: Record<string, string> = {
   ai_update_site_content: "ai_update_site_content",
 };
 
+// Allow-list: only these tool names are EVER executed. Anything else from the model is ignored.
+const ALLOWED_TOOLS = new Set<string>([
+  ...Object.keys(TOOL_NAME_MAP),
+  "lookup_visa",
+  "lookup_offer",
+]);
+
+// Server-side argument validators (defense in depth on top of RPC checks)
+function validateArgs(name: string, args: any): { ok: true; data: any } | { ok: false; error: string } {
+  if (args === null || typeof args !== "object") return { ok: false, error: "arguments_not_object" };
+  const isUuid = (v: any) => typeof v === "string" && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(v);
+  switch (name) {
+    case "ai_update_visa_price":
+      if (!isUuid(args.visa_id)) return { ok: false, error: "invalid_visa_id" };
+      if (typeof args.new_price !== "number" || args.new_price <= 0 || args.new_price > 100000) return { ok: false, error: "invalid_price" };
+      return { ok: true, data: { visa_id: args.visa_id, new_price: args.new_price } };
+    case "ai_toggle_offer":
+      if (!isUuid(args.offer_id)) return { ok: false, error: "invalid_offer_id" };
+      if (typeof args.active !== "boolean") return { ok: false, error: "invalid_active" };
+      return { ok: true, data: { offer_id: args.offer_id, active: args.active } };
+    case "ai_query_applications": {
+      const out: any = {};
+      if (args.status !== undefined) {
+        if (typeof args.status !== "string" || args.status.length > 40) return { ok: false, error: "invalid_status" };
+        out.status = args.status;
+      }
+      out.days_back = Math.min(Math.max(parseInt(args.days_back ?? 30, 10) || 30, 1), 365);
+      out.limit = Math.min(Math.max(parseInt(args.limit ?? 20, 10) || 20, 1), 100);
+      return { ok: true, data: out };
+    }
+    case "ai_agent_performance":
+      return { ok: true, data: { days_back: Math.min(Math.max(parseInt(args.days_back ?? 30, 10) || 30, 1), 365) } };
+    case "ai_bulk_notify":
+      if (typeof args.title !== "string" || args.title.trim().length < 3 || args.title.length > 200) return { ok: false, error: "invalid_title" };
+      if (typeof args.message !== "string" || args.message.trim().length < 5 || args.message.length > 1000) return { ok: false, error: "invalid_message" };
+      return {
+        ok: true,
+        data: {
+          status_filter: typeof args.status_filter === "string" ? args.status_filter : null,
+          title: args.title.trim(),
+          message: args.message.trim(),
+          max_recipients: Math.min(Math.max(parseInt(args.max_recipients ?? 200, 10) || 200, 1), 500),
+        },
+      };
+    case "ai_update_site_content":
+      if (typeof args.page !== "string" || typeof args.section !== "string") return { ok: false, error: "invalid_page_section" };
+      if (!args.content || typeof args.content !== "object") return { ok: false, error: "invalid_content" };
+      return { ok: true, data: { page: args.page, section: args.section, content: args.content } };
+    case "lookup_visa":
+    case "lookup_offer":
+      if (typeof args.query !== "string" || args.query.length < 1 || args.query.length > 100) return { ok: false, error: "invalid_query" };
+      // Strip wildcards used in ilike to prevent SQL pattern injection abuse
+      return { ok: true, data: { query: args.query.replace(/[%_\\]/g, "") } };
+    default:
+      return { ok: false, error: "unknown_tool" };
+  }
+}
+
+function sanitizeMessage(msg: string): string {
+  // Strip control chars (except \n, \t)
+  return msg.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, "").trim();
+}
+
 async function executeTool(name: string, args: any, userJwt: string) {
   // Use a user-scoped client so the RPC sees auth.uid() and enforces has_permission.
   const userClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
@@ -243,13 +306,34 @@ Deno.serve(async (req) => {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
+    const cleanMessage = sanitizeMessage(message);
+    if (cleanMessage.length === 0) {
+      return new Response(JSON.stringify({ error: "empty_message" }), {
+        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    // Rate limit: max 30 messages in last 60 seconds for this user
+    const { count: recentCount } = await admin
+      .from("ai_assistant_messages")
+      .select("id", { count: "exact", head: true })
+      .eq("role", "user")
+      .in("conversation_id",
+        (await admin.from("ai_assistant_conversations").select("id").eq("user_id", userData.user.id)).data?.map((c: any) => c.id) ?? ["00000000-0000-0000-0000-000000000000"]
+      )
+      .gte("created_at", new Date(Date.now() - 60_000).toISOString());
+    if ((recentCount ?? 0) >= 30) {
+      return new Response(JSON.stringify({ error: "rate_limited" }), {
+        status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
 
     // Get or create conversation
     let convId = conversation_id as string | null;
     if (!convId) {
       const { data, error } = await admin
         .from("ai_assistant_conversations")
-        .insert({ user_id: userData.user.id, title: message.slice(0, 60) })
+        .insert({ user_id: userData.user.id, title: cleanMessage.slice(0, 60) })
         .select("id")
         .single();
       if (error) throw error;
@@ -279,11 +363,11 @@ Deno.serve(async (req) => {
         });
       }
     }
-    aiMessages.push({ role: "user", content: message });
+    aiMessages.push({ role: "user", content: cleanMessage });
 
     // Save user message
     await admin.from("ai_assistant_messages").insert({
-      conversation_id: convId, role: "user", content: message,
+      conversation_id: convId, role: "user", content: cleanMessage,
     });
 
     // Tool-calling loop (max 4 iterations)
@@ -306,17 +390,61 @@ Deno.serve(async (req) => {
         for (const tc of assistantMsg.tool_calls) {
           let args = {};
           try { args = JSON.parse(tc.function.arguments || "{}"); } catch (_) {}
-          const result = await executeTool(tc.function.name, args, userJwt);
+
+          const toolName = tc.function.name;
+          let result: any;
+          let success = true;
+          let errText: string | null = null;
+          const t0 = Date.now();
+
+          if (!ALLOWED_TOOLS.has(toolName)) {
+            result = { error: "tool_not_allowed" };
+            success = false;
+            errText = "tool_not_allowed";
+          } else {
+            const validated = validateArgs(toolName, args);
+            if (!validated.ok) {
+              result = { error: "invalid_arguments", detail: validated.error };
+              success = false;
+              errText = validated.error;
+            } else {
+              try {
+                result = await executeTool(toolName, validated.data, userJwt);
+                if (result && typeof result === "object" && "error" in result) {
+                  success = false;
+                  errText = String((result as any).error);
+                }
+              } catch (e) {
+                success = false;
+                errText = e instanceof Error ? e.message : "unknown";
+                result = { error: errText };
+              }
+            }
+          }
+          const duration_ms = Date.now() - t0;
+
+          // Persist tool invocation audit
+          await admin.from("ai_tool_invocations").insert({
+            user_id: userData.user.id,
+            conversation_id: convId,
+            tool_name: toolName,
+            arguments: args,
+            result,
+            success,
+            error: errText,
+            duration_ms,
+          });
+
           aiMessages.push({
             role: "tool",
             tool_call_id: tc.id,
-            name: tc.function.name,
+            name: toolName,
             content: JSON.stringify(result),
           });
           await admin.from("ai_assistant_messages").insert({
             conversation_id: convId,
             role: "tool",
-            tool_name: tc.function.name,
+            tool_name: toolName,
             tool_calls: [{ id: tc.id }],
             tool_result: result,
           });
