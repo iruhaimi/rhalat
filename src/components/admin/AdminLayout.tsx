@@ -212,6 +212,12 @@ export default function AdminLayout() {
       label: 'الإعدادات',
       items: [
         {
+          title: 'المساعد الذكي',
+          icon: Sparkles,
+          href: '/admin/ai-assistant',
+          show: isAdmin && isSuperAdmin,
+        },
+        {
           title: 'إعدادات سريعة',
           icon: SlidersHorizontal,
           href: '/admin/quick-settings',
