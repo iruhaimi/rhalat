@@ -31,7 +31,9 @@ import {
      ShieldCheck,
      SlidersHorizontal,
       Plane,
-      Sparkles
+      Sparkles,
+      History,
+      ClipboardList
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
