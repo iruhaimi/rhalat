@@ -30,7 +30,8 @@ import {
      Mail,
      ShieldCheck,
      SlidersHorizontal,
-     Plane
+      Plane,
+      Sparkles
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
