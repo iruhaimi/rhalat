@@ -220,6 +220,18 @@ export default function AdminLayout() {
           show: isAdmin && isSuperAdmin,
         },
         {
+          title: 'سجل المحادثات',
+          icon: History,
+          href: '/admin/ai-assistant/history',
+          show: isAdmin && isSuperAdmin,
+        },
+        {
+          title: 'تدقيق أدوات المساعد',
+          icon: ClipboardList,
+          href: '/admin/ai-assistant/audit',
+          show: isAdmin && isSuperAdmin,
+        },
+        {
           title: 'إعدادات سريعة',
           icon: SlidersHorizontal,
           href: '/admin/quick-settings',
