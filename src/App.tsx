@@ -59,6 +59,7 @@ import PortalSecurity from "@/pages/admin/PortalSecurity";
 import SecurityStatus from "@/pages/admin/SecurityStatus";
 import QuickSettings from "@/pages/admin/QuickSettings";
 import DynamicPortalRoute from "@/components/DynamicPortalRoute";
+import AIAssistant from "@/pages/admin/AIAssistant";
 // Agent Pages
 import AgentDashboard from "@/pages/agent/AgentDashboard";
 import AgentApplicationsList from "@/pages/agent/AgentApplicationsList";
@@ -148,6 +149,7 @@ const App = () => (
                 <Route path="quick-settings" element={<QuickSettings />} />
                 <Route path="tour-programs" element={<TourProgramsManagement />} />
                 <Route path="tour-operators" element={<TourOperatorsApproval />} />
+                <Route path="ai-assistant" element={<AIAssistant />} />
               </Route>
 
               {/* Agent Routes */}

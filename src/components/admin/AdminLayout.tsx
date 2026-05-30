@@ -30,7 +30,8 @@ import {
      Mail,
      ShieldCheck,
      SlidersHorizontal,
-     Plane
+      Plane,
+      Sparkles
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -210,6 +211,12 @@ export default function AdminLayout() {
     {
       label: 'الإعدادات',
       items: [
+        {
+          title: 'المساعد الذكي',
+          icon: Sparkles,
+          href: '/admin/ai-assistant',
+          show: isAdmin && isSuperAdmin,
+        },
         {
           title: 'إعدادات سريعة',
           icon: SlidersHorizontal,

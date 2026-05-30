@@ -229,6 +229,71 @@ export type Database = {
           },
         ]
       }
+      ai_assistant_conversations: {
+        Row: {
+          created_at: string
+          id: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          title?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      ai_assistant_messages: {
+        Row: {
+          content: string | null
+          conversation_id: string
+          created_at: string
+          id: string
+          role: string
+          tool_calls: Json | null
+          tool_name: string | null
+          tool_result: Json | null
+        }
+        Insert: {
+          content?: string | null
+          conversation_id: string
+          created_at?: string
+          id?: string
+          role: string
+          tool_calls?: Json | null
+          tool_name?: string | null
+          tool_result?: Json | null
+        }
+        Update: {
+          content?: string | null
+          conversation_id?: string
+          created_at?: string
+          id?: string
+          role?: string
+          tool_calls?: Json | null
+          tool_name?: string | null
+          tool_result?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_assistant_messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "ai_assistant_conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       application_documents: {
         Row: {
           application_id: string
@@ -2225,6 +2290,32 @@ export type Database = {
       }
     }
     Functions: {
+      ai_agent_performance: { Args: { p_days_back?: number }; Returns: Json }
+      ai_bulk_notify: {
+        Args: {
+          p_max_recipients?: number
+          p_message: string
+          p_status_filter: string
+          p_title: string
+        }
+        Returns: Json
+      }
+      ai_query_applications: {
+        Args: { p_days_back?: number; p_limit?: number; p_status?: string }
+        Returns: Json
+      }
+      ai_toggle_offer: {
+        Args: { p_active: boolean; p_offer_id: string }
+        Returns: Json
+      }
+      ai_update_site_content: {
+        Args: { p_content: Json; p_page: string; p_section: string }
+        Returns: Json
+      }
+      ai_update_visa_price: {
+        Args: { p_new_price: number; p_visa_id: string }
+        Returns: Json
+      }
       can_access_application: {
         Args: { _app_id: string; _user_id: string }
         Returns: boolean
