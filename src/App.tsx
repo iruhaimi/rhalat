@@ -149,6 +149,7 @@ const App = () => (
                 <Route path="quick-settings" element={<QuickSettings />} />
                 <Route path="tour-programs" element={<TourProgramsManagement />} />
                 <Route path="tour-operators" element={<TourOperatorsApproval />} />
+                <Route path="ai-assistant" element={<AIAssistant />} />
               </Route>
 
               {/* Agent Routes */}
