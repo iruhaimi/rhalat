@@ -31,7 +31,9 @@ import {
      ShieldCheck,
      SlidersHorizontal,
       Plane,
-      Sparkles
+      Sparkles,
+      History,
+      ClipboardList
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -215,6 +217,18 @@ export default function AdminLayout() {
           title: 'المساعد الذكي',
           icon: Sparkles,
           href: '/admin/ai-assistant',
+          show: isAdmin && isSuperAdmin,
+        },
+        {
+          title: 'سجل المحادثات',
+          icon: History,
+          href: '/admin/ai-assistant/history',
+          show: isAdmin && isSuperAdmin,
+        },
+        {
+          title: 'تدقيق أدوات المساعد',
+          icon: ClipboardList,
+          href: '/admin/ai-assistant/audit',
           show: isAdmin && isSuperAdmin,
         },
         {

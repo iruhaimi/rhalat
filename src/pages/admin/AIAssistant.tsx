@@ -10,6 +10,10 @@ import { Badge } from '@/components/ui/badge';
 import { Sparkles, Send, Loader2, Plus, AlertTriangle, Wrench } from 'lucide-react';
 import { toast } from 'sonner';
 import ReactMarkdown from 'react-markdown';
+import { Link } from 'react-router-dom';
+
+const MAX_LEN = 4000;
+const sanitize = (s: string) => s.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '').slice(0, MAX_LEN);
 
 type Msg = {
   id: string;
@@ -62,7 +66,7 @@ export default function AIAssistant() {
   }, [messages]);
 
   const send = async (text?: string) => {
-    const message = (text ?? input).trim();
+    const message = sanitize((text ?? input).trim());
     if (!message || sending) return;
     setInput('');
     setSending(true);
@@ -86,7 +90,12 @@ export default function AIAssistant() {
         }
       );
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'فشل الطلب');
+      if (!res.ok) {
+        const msg = data.error === 'rate_limited'
+          ? 'تجاوزت الحد المسموح (30 رسالة/دقيقة). انتظر قليلاً.'
+          : data.error || 'فشل الطلب';
+        throw new Error(msg);
+      }
 
       const newId = data.conversation_id;
       if (!convId) setConvId(newId);
@@ -140,6 +149,12 @@ export default function AIAssistant() {
           <Sparkles className="h-5 w-5 text-primary" />
           <h2 className="font-semibold">المساعد الذكي للإدارة</h2>
           <Badge variant="outline" className="mr-auto">Gemini Flash</Badge>
+          <Button asChild variant="ghost" size="sm">
+            <Link to="/admin/ai-assistant/history">السجل</Link>
+          </Button>
+          <Button asChild variant="ghost" size="sm">
+            <Link to="/admin/ai-assistant/audit">التدقيق</Link>
+          </Button>
         </div>
 
         <ScrollArea className="flex-1 p-4" ref={scrollRef as any}>
@@ -196,10 +211,10 @@ export default function AIAssistant() {
           )}
         </ScrollArea>
 
-        <div className="border-t p-3 flex gap-2">
+        <div className="border-t p-3 flex gap-2 items-end">
           <Textarea
             value={input}
-            onChange={e => setInput(e.target.value)}
+            onChange={e => setInput(sanitize(e.target.value))}
             placeholder="اكتب أمرك هنا... (Shift+Enter لسطر جديد)"
             className="resize-none min-h-[44px] max-h-32"
             rows={1}
@@ -211,9 +226,14 @@ export default function AIAssistant() {
             }}
             disabled={sending}
           />
-          <Button onClick={() => send()} disabled={sending || !input.trim()} size="icon">
-            {sending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-          </Button>
+          <div className="flex flex-col items-center gap-1">
+            <Button onClick={() => send()} disabled={sending || !input.trim()} size="icon">
+              {sending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+            </Button>
+            <span className="text-[10px] text-muted-foreground tabular-nums">
+              {input.length}/{MAX_LEN}
+            </span>
+          </div>
         </div>
       </Card>
     </div>

@@ -294,6 +294,53 @@ export type Database = {
           },
         ]
       }
+      ai_tool_invocations: {
+        Row: {
+          arguments: Json
+          conversation_id: string | null
+          created_at: string
+          duration_ms: number | null
+          error: string | null
+          id: string
+          result: Json | null
+          success: boolean
+          tool_name: string
+          user_id: string
+        }
+        Insert: {
+          arguments?: Json
+          conversation_id?: string | null
+          created_at?: string
+          duration_ms?: number | null
+          error?: string | null
+          id?: string
+          result?: Json | null
+          success?: boolean
+          tool_name: string
+          user_id: string
+        }
+        Update: {
+          arguments?: Json
+          conversation_id?: string | null
+          created_at?: string
+          duration_ms?: number | null
+          error?: string | null
+          id?: string
+          result?: Json | null
+          success?: boolean
+          tool_name?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_tool_invocations_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "ai_assistant_conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       application_documents: {
         Row: {
           application_id: string

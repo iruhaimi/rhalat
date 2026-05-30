@@ -1,94 +1,81 @@
+# خطة تحسين المساعد الذكي
 
-## أولاً: توضيح مهم قبل البناء
+## 1. اختبار حي لأدوات RPC
+- فتح `/admin/ai-assistant` وإرسال سؤالين تجريبيين:
+  - **قراءة**: "كم عدد الطلبات المعلقة آخر 7 أيام؟" — يفترض استدعاء `ai_query_applications`.
+  - **بحث**: "ابحث عن تأشيرة فرنسا" — يفترض استدعاء `lookup_visa`.
+- مراقبة لوجز Edge Function `admin-ai-agent` للتأكد من نجاح التوول كولينج وعدم رجوع `access_denied`.
+- إصلاح أي خطأ يظهر (مثلاً انعدام صلاحية `manage_applications` للمالك → نضيف bypass لـ `is_super_admin`).
 
-طلبت "الكل" (وكيل يعدّل الكود + لوحة بالأوامر + وكيل خارجي). من الناحية التقنية:
+## 2. صفحة سجل المحادثات السابقة
+- صفحة جديدة: `src/pages/admin/AIAssistantHistory.tsx` على المسار `/admin/ai-assistant/history`.
+- تعرض كل المحادثات (جدول): العنوان، تاريخ آخر تحديث، عدد الرسائل، عدد استدعاءات الأدوات.
+- نقر على محادثة → drawer/ صفحة تفصيلية تعرض كل الرسائل بالترتيب مع تمييز رسائل الأدوات (اسم الأداة + JSON النتيجة).
+- زر "فتح في المساعد" لاستئناف المحادثة.
+- زر "حذف المحادثة" (Super Admin فقط) مع تأكيد.
+- ربط زر في الشريط الجانبي للمساعد: "📜 السجل".
 
-### 1) وكيل يعدّل كود الموقع (مثل Lovable/Hermes) — **لا يمكن بناؤه داخل الموقع**
-- Lovable و Hermes و Cursor تعمل على مستوى **مستودع GitHub** والـ IDE، لها صلاحية كتابة ملفات `.tsx` و `.sql` ونشر التغييرات.
-- لا يمكن أن يكون هذا "ميزة داخل موقعك" — هذا يعني السماح للذكاء الاصطناعي بإعادة نشر موقعك، وهو مخاطرة أمنية كبيرة.
-- **البديل العملي**: استخدم Lovable نفسه (أنا) أو Cursor/Claude Code محلياً على مستودعك في GitHub. لا حاجة لبناء شيء.
+## 3. تشديد صلاحيات المالك
+- **Frontend**: `AIAssistant.tsx` و`AIAssistantHistory.tsx` يستخدمان `isSuperAdmin` فقط (موجود) + إعادة توجيه لو `false`.
+- **Route guard**: إضافة wrapper في `App.tsx` يتحقق من `is_super_admin` قبل عرض الصفحة.
+- **Edge Function**: التحقق الحالي من `is_super_admin` كافٍ، نضيف:
+  - تحقق إضافي من أن `auth.users.banned_until` فارغ.
+  - تسجيل محاولات وصول مرفوضة في `staff_audit_log` (event_type: `ai_access_denied`).
+- **DB**: التأكد أن RLS على `ai_assistant_conversations` و`ai_assistant_messages` يقتصر على `is_super_admin(auth.uid())` (لا يكفي `user_id = auth.uid()` لأن أي مستخدم قد يُدرج).
 
-### 2) وكيل خارجي (n8n / Hermes API) عبر REST — **نفس نتيجة الخيار التالي**
-- يستدعي نفس Edge Functions التي سنبنيها للخيار 3.
-- بمجرد بناء أدوات RPC الآمنة، يمكن لأي خدمة خارجية الاتصال بها بمفتاح API.
+## 4. تنقية المدخلات وقائمة الأدوات المسموحة
+- **Edge Function سيرفر-سايد**:
+  - حد أقصى للرسالة: 4000 حرف (موجود) + رفض إذا احتوت على أنماط حقن (مثل `\x00`, `</script>`, روابط `data:` كبيرة).
+  - **Allow-list** صريحة لأسماء الأدوات في `ALLOWED_TOOLS = Set([...])`؛ أي `tool_call.function.name` خارجها → نتجاهله ونسجل تحذير.
+  - تحقق من المعاملات بـ Zod قبل تمريرها لـ RPC (مثلاً `new_price` بين 1 و100000، `days_back` بين 1 و365).
+  - Rate limit: 30 رسالة/دقيقة لكل مالك (عبر جدول `ai_assistant_rate_limit` بسيط أو فحص آخر 60 ثانية في `ai_assistant_messages`).
+- **Frontend**: تنظيف `input` من أحرف تحكم قبل الإرسال + حد العدّاد المرئي.
 
-### 3) لوحة تحكم بالأوامر العربية داخل `/admin` — **هذا ما يمكن بناؤه فعلياً** ✅
+## 5. سجل تدقيق لكل استدعاء أداة
+- إضافة جدول `ai_tool_invocations` بأعمدة: `id, user_id, conversation_id, message_id, tool_name, arguments jsonb, result jsonb, success bool, error text, duration_ms int, created_at`.
+- GRANT + RLS: قراءة فقط لـ Super Admin؛ كتابة عبر service_role من Edge Function.
+- في `admin-ai-agent/index.ts` بعد كل `executeTool`:
+  - حساب `Date.now()` قبل/بعد.
+  - INSERT في `ai_tool_invocations` + استدعاء `log_staff_action` بـ `event_type='ai_tool_invocation'` و`event_category='ai_assistant'`.
+- صفحة جديدة `src/pages/admin/AIToolAuditLog.tsx` على `/admin/ai-assistant/audit`:
+  - جدول مفلتر حسب: اسم الأداة، النجاح/الفشل، التاريخ.
+  - يعرض الـ JSON arguments/result بشكل قابل للطي.
+  - تصدير CSV.
+- ربط الصفحة في sidebar تحت "المساعد الذكي".
 
-سنبني صفحة `/admin/ai-assistant` يكتب فيها المالك أمراً بالعربية مثل:
-- "غيّر سعر تأشيرة فرنسا السياحية إلى 1500 ريال"
-- "أوقف عرض الجمعة البيضاء"
-- "اعرض لي أكثر 5 وكلاء أداءً هذا الشهر"
-- "أرسل تنبيه لكل العملاء الذين طلباتهم معلقة منذ 3 أيام"
+## تفاصيل تقنية
 
-والوكيل ينفذها عبر أدوات (tools) محددة ومحمية بصلاحيات.
+### تغييرات قاعدة البيانات (Migration واحدة)
+```sql
+-- 1. Allow super admin RLS on conversations/messages (تشديد)
+DROP POLICY IF EXISTS ... ON ai_assistant_conversations;
+CREATE POLICY ai_conv_owner_only ON ai_assistant_conversations
+  FOR ALL TO authenticated
+  USING (is_super_admin(auth.uid()))
+  WITH CHECK (is_super_admin(auth.uid()) AND user_id = auth.uid());
 
----
+-- 2. Tool invocation audit table
+CREATE TABLE public.ai_tool_invocations (...);
+GRANT SELECT ON public.ai_tool_invocations TO authenticated;
+GRANT ALL ON public.ai_tool_invocations TO service_role;
+ALTER TABLE ... ENABLE ROW LEVEL SECURITY;
+CREATE POLICY ai_audit_super_admin_read ON ai_tool_invocations
+  FOR SELECT TO authenticated USING (is_super_admin(auth.uid()));
 
-## الخطة المقترحة (الخيار 3)
-
-### المعمارية
+-- 3. Bypass للمالك في دوال ai_* (السماح للمالك بتنفيذ كل أداة دون اشتراط permission محدد)
+-- تعديل ai_query_applications, ai_agent_performance... ليكون:
+--   IF NOT (is_super_admin(auth.uid()) OR has_permission(auth.uid(), '...')) THEN
 ```
-لوحة /admin/ai-assistant (واجهة شات)
-        ↓
-Edge Function: admin-ai-agent
-        ↓
-Lovable AI Gateway (gpt-5 مع tool calling)
-        ↓
-أدوات RPC محمية (SECURITY DEFINER + has_permission)
-        ↓
-قاعدة البيانات
-```
 
-### الأدوات (Tools) المتاحة للوكيل في المرحلة الأولى
-| الأداة | الوصف | الصلاحية المطلوبة |
-|---|---|---|
-| `update_visa_price` | تغيير سعر تأشيرة | `manage_visas` |
-| `toggle_offer` | تفعيل/إيقاف عرض | `manage_offers` |
-| `query_applications` | استعلام آمن (قراءة فقط) | `view_applications` |
-| `agent_performance_report` | تقرير أداء الوكلاء | `view_reports` |
-| `bulk_notify_customers` | إرسال إشعارات مجمعة | `manage_communications` |
-| `update_site_content` | تعديل نصوص CMS | `manage_content` |
+### ملفات جديدة
+- `src/pages/admin/AIAssistantHistory.tsx`
+- `src/pages/admin/AIToolAuditLog.tsx`
 
-كل أداة هي **RPC منفصل** بـ `SECURITY DEFINER` + `search_path = public` + فحص `has_permission(auth.uid(), ...)`.
+### ملفات معدّلة
+- `supabase/functions/admin-ai-agent/index.ts` (allow-list، Zod، logging، rate limit)
+- `src/pages/admin/AIAssistant.tsx` (زر للسجل، تنظيف input، عداد أحرف)
+- `src/components/admin/AdminLayout.tsx` (روابط جديدة sub-menu)
+- `src/App.tsx` (route جديدتان)
 
-### قواعد الأمان (مهمة جداً)
-1. **Owner فقط** يصل إلى `/admin/ai-assistant` (نتحقق عبر `is_super_admin`).
-2. أي أمر **حساس** (تغيير سعر، حذف، إرسال جماعي >50) يمر عبر **Two-Person Rule** الموجود لديك (`SensitiveOperations`).
-3. كل أمر يُسجّل في `staff_audit_log` مع النص الأصلي + الأداة المستخدمة + النتيجة.
-4. الوكيل **يعرض تأكيداً** قبل تنفيذ أي عملية كتابة، ويعرض ما سيفعله بالعربي.
-5. لا يصل الوكيل أبداً إلى: كلمات المرور، رموز 2FA، أرصدة محفظة، مستندات جوازات.
-
-### مكونات سنبنيها
-1. **Edge Function**: `supabase/functions/admin-ai-agent/index.ts`
-   - يستقبل رسالة المستخدم + سياق المحادثة
-   - يستدعي Lovable AI (`google/gemini-3-flash-preview`) مع تعريفات الأدوات
-   - ينفذ tool calls عبر service role بعد التحقق من هوية المستدعي
-2. **RPCs جديدة** (migration):
-   - `ai_update_visa_price(visa_id, new_price)`
-   - `ai_toggle_offer(offer_id, active)`
-   - `ai_query_applications(filters jsonb)`
-   - `ai_bulk_notify(filter jsonb, title, message)`
-3. **جدول `ai_assistant_conversations`** لحفظ سجل المحادثات
-4. **صفحة `src/pages/admin/AIAssistant.tsx`**:
-   - واجهة شات RTL بسيطة
-   - عرض تأكيد لكل عملية كتابة (Approve/Cancel)
-   - عرض النتيجة بشكل منسق (جدول/رسالة)
-5. **رابط جديد في sidebar**: "المساعد الذكي 🤖" (للمالك فقط)
-
-### مرحلة 2 (لاحقاً، إن نجحت المرحلة 1)
-- فتح نقطة وصول API خارجية (`/functions/v1/external-ai-agent`) بمفتاح API لتمكين n8n/Hermes/Zapier من استدعاء نفس الأدوات.
-- إضافة أدوات أكثر تقدماً (إنشاء برامج سياحية، الرد على رسائل العملاء، إلخ).
-
-### ملاحظات على التكلفة
-- كل أمر يستهلك ~5,000-15,000 توكن من Lovable AI Gateway (رخيص جداً مع `gemini-3-flash`).
-- لا توجد رسوم إضافية على البنية التحتية (يستخدم Edge Functions الموجودة).
-
----
-
-## ما يحتاج قراراً منك
-
-1. هل توافق على البدء بالمرحلة 1 فقط (لوحة `/admin/ai-assistant` مع 6 أدوات أساسية)؟
-2. أيّ الأدوات تريد إضافتها أولاً، وأيّها يمكن تأجيله؟
-3. هل تريد أن يكون نموذج الذكاء الاصطناعي `gemini-3-flash` (سريع ورخيص) أم `gpt-5` (أذكى وأغلى)؟
-
-عند الموافقة، سأبدأ بإنشاء migration للأدوات + edge function + الصفحة.
+### اختبار نهائي
+- بعد التطبيق: إعادة فتح `/admin/ai-assistant`، إرسال 3 طلبات (قراءة + تعديل سعر مع رفض التأكيد + بحث)، ثم زيارة `/admin/ai-assistant/audit` للتأكد من تسجيل كل استدعاء.
