@@ -152,6 +152,8 @@ const App = () => (
                 <Route path="tour-programs" element={<TourProgramsManagement />} />
                 <Route path="tour-operators" element={<TourOperatorsApproval />} />
                 <Route path="ai-assistant" element={<AIAssistant />} />
+                <Route path="ai-assistant/history" element={<AIAssistantHistory />} />
+                <Route path="ai-assistant/audit" element={<AIToolAuditLog />} />
               </Route>
 
               {/* Agent Routes */}
