@@ -25,6 +25,7 @@ import {
 } from '@/components/ui/accordion';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import SEO from '@/components/seo/SEO';
 import type { Country, VisaType } from '@/types/database';
 
 const faqs = [
