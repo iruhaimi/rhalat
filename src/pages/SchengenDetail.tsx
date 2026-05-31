@@ -18,6 +18,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useLanguage } from '@/contexts/LanguageContext';
 import SARSymbol from '@/components/ui/SARSymbol';
 import { SCHENGEN_INFO, SCHENGEN_COUNTRY_CODES } from '@/lib/schengenCountries';
+import SEO from '@/components/seo/SEO';
 import type { Country, VisaType } from '@/types/database';
 
 export default function SchengenDetail() {
@@ -114,6 +115,51 @@ export default function SchengenDetail() {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO
+        title="تأشيرة الشنغن للسعوديين والمقيمين — الشروط والأسعار | عطلات رحلاتكم"
+        description="استخرج تأشيرة شنغن واحدة تتيح لك دخول 27 دولة أوروبية. متطلبات واضحة، أسعار منافسة، ومعالجة سريعة من السعودية."
+        path="/country/SCHENGEN"
+        jsonLd={[
+          {
+            "@context": "https://schema.org",
+            "@type": "Service",
+            name: "خدمات تأشيرة الشنغن",
+            serviceType: "Schengen Visa Application Service",
+            areaServed: { "@type": "Place", name: "Schengen Area" },
+            provider: { "@type": "Organization", name: "عطلات رحلاتكم", url: "https://visafaster.com/" },
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              { "@type": "ListItem", position: 1, name: "الرئيسية", item: "https://visafaster.com/" },
+              { "@type": "ListItem", position: 2, name: "الوجهات", item: "https://visafaster.com/destinations" },
+              { "@type": "ListItem", position: 3, name: "تأشيرة الشنغن", item: "https://visafaster.com/country/SCHENGEN" },
+            ],
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: [
+              {
+                "@type": "Question",
+                name: "كم دولة تشمل تأشيرة الشنغن؟",
+                acceptedAnswer: { "@type": "Answer", text: "تتيح لك تأشيرة الشنغن دخول 27 دولة أوروبية بتأشيرة واحدة." },
+              },
+              {
+                "@type": "Question",
+                name: "ما مدة الإقامة المسموح بها بتأشيرة الشنغن؟",
+                acceptedAnswer: { "@type": "Answer", text: "حتى 90 يوماً خلال أي فترة 180 يوماً في منطقة الشنغن." },
+              },
+              {
+                "@type": "Question",
+                name: "ما المستندات المطلوبة لتأشيرة الشنغن من السعودية؟",
+                acceptedAnswer: { "@type": "Answer", text: "جواز سفر ساري، صور شخصية، نموذج طلب مكتمل، كشف حساب بنكي 3-6 أشهر، حجز فندق وطيران، تأمين سفر بتغطية 30,000 يورو على الأقل." },
+              },
+            ],
+          },
+        ]}
+      />
       {/* Hero */}
       <section className="gradient-hero py-12">
         <div className="container-section">
