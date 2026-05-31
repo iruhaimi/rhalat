@@ -16,6 +16,7 @@ import { NotificationBell } from '@/components/notifications/NotificationBell';
 import { cn } from '@/lib/utils';
 import { useIdleTimeout } from '@/hooks/useIdleTimeout';
 import IdleWarningDialog from '@/components/admin/security/IdleWarningDialog';
+import NoIndex from '@/components/seo/NoIndex';
 
 const navItems = [
   { path: '/tourism-portal', label: 'لوحة التحكم', icon: LayoutDashboard, end: true },
@@ -39,6 +40,7 @@ export default function TourOperatorLayout() {
 
   return (
     <div className="min-h-screen bg-background" dir="rtl">
+      <NoIndex />
       {/* Mobile Header */}
       <header className="sticky top-0 z-50 flex h-16 items-center justify-between border-b bg-card px-4 lg:hidden">
         <Button variant="ghost" size="icon" onClick={() => setSidebarOpen(!sidebarOpen)}>
