@@ -13,6 +13,7 @@ import { Progress } from '@/components/ui/progress';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
+import NoIndex from '@/components/seo/NoIndex';
 import logo from '@/assets/logo.jpeg';
 
 // Password strength checker
@@ -285,6 +286,7 @@ export default function ResetPassword() {
 
   return (
     <div className={`flex min-h-screen ${isRTL ? 'flex-row-reverse' : ''}`} dir={isRTL ? 'rtl' : 'ltr'}>
+      <NoIndex />
       {/* Left side - Form */}
       <div className="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24 bg-gradient-to-br from-background via-background to-muted/30">
         <div className="mx-auto w-full max-w-sm lg:w-96">

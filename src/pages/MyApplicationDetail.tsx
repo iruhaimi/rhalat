@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ApplicationMessages } from '@/components/messages/ApplicationMessages';
+import NoIndex from '@/components/seo/NoIndex';
 import {
   ArrowRight,
   MapPin,
@@ -203,6 +204,7 @@ export default function MyApplicationDetail() {
 
   return (
     <div className="container-section py-8">
+      <NoIndex />
       <div className="max-w-5xl mx-auto space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between flex-wrap gap-4">
