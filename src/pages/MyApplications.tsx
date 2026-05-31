@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Progress } from '@/components/ui/progress';
+import NoIndex from '@/components/seo/NoIndex';
 import { 
   FileText, 
   Calendar, 
@@ -201,6 +202,7 @@ const MyApplications = () => {
 
   return (
     <div className="container mx-auto py-8 px-4" dir={direction}>
+      <NoIndex />
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">

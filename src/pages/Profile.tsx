@@ -12,6 +12,7 @@ import { User, Phone, Save, Loader2, Camera, Upload, FileText, RotateCcw, Chevro
 import { Link } from 'react-router-dom';
 import CountryCodePicker from '@/components/ui/CountryCodePicker';
 import { filterNonNumeric as filterPhoneNonNumeric } from '@/lib/inputFilters';
+import NoIndex from '@/components/seo/NoIndex';
 
 const Profile = () => {
   const { user, profile, refreshProfile } = useAuth();
@@ -195,6 +196,7 @@ const Profile = () => {
 
   return (
     <div className="container mx-auto py-8 px-4" dir={direction}>
+      <NoIndex />
       <div className="max-w-2xl mx-auto">
         {/* Header with Avatar Upload */}
         <div className="flex items-center gap-6 mb-8">

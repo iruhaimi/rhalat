@@ -44,6 +44,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import NoIndex from '@/components/seo/NoIndex';
 
 export default function AdminLayout() {
   const { direction } = useLanguage();
@@ -265,6 +266,7 @@ export default function AdminLayout() {
 
   return (
     <TooltipProvider delayDuration={0}>
+      <NoIndex />
       <div className={cn("flex min-h-screen bg-muted/30", isRTL && "flex-row-reverse")}>
         {/* Sidebar */}
         <aside

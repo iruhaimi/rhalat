@@ -14,6 +14,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { VisaCard } from '@/components/visa/VisaCard';
 import SchengenDetail from './SchengenDetail';
+import SEO from '@/components/seo/SEO';
 import type { Country, VisaType } from '@/types/database';
 
 export default function CountryDetail() {
@@ -116,8 +117,65 @@ export default function CountryDetail() {
     'Valid travel insurance',
   ];
 
+  const minPrice = visaTypes.length ? Math.min(...visaTypes.map(v => v.price)) : null;
+  const minDays = visaTypes.length ? Math.min(...visaTypes.map(v => v.processing_days)) : null;
+  const countryTitle = `تأشيرة ${country.name} — الشروط والأسعار | عطلات رحلاتكم`;
+  const countryDesc = `استخرج تأشيرة ${country.name} بسهولة من السعودية: ${visaTypes.length} نوع تأشيرة${minPrice ? `، تبدأ من ${minPrice} ر.س` : ''}${minDays ? `، معالجة خلال ${minDays} أيام` : ''}. متطلبات واضحة ودعم متواصل.`;
+  const serviceLd = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: `خدمات تأشيرة ${country.name}`,
+    serviceType: "Visa Application Service",
+    areaServed: { "@type": "Country", name: country.name },
+    provider: { "@type": "Organization", name: "عطلات رحلاتكم", url: "https://visafaster.com/" },
+    ...(minPrice && {
+      offers: {
+        "@type": "AggregateOffer",
+        priceCurrency: "SAR",
+        lowPrice: String(minPrice),
+        offerCount: String(visaTypes.length),
+      },
+    }),
+  };
+  const breadcrumbLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "الرئيسية", item: "https://visafaster.com/" },
+      { "@type": "ListItem", position: 2, name: "الوجهات", item: "https://visafaster.com/destinations" },
+      { "@type": "ListItem", position: 3, name: country.name, item: `https://visafaster.com/country/${country.code}` },
+    ],
+  };
+  const faqLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: `كم تستغرق تأشيرة ${country.name}؟`,
+        acceptedAnswer: { "@type": "Answer", text: minDays ? `مدة المعالجة تبدأ من ${minDays} أيام عمل حسب نوع التأشيرة وحالة الطلب.` : "تختلف مدة المعالجة حسب نوع التأشيرة." },
+      },
+      {
+        "@type": "Question",
+        name: `كم سعر تأشيرة ${country.name}؟`,
+        acceptedAnswer: { "@type": "Answer", text: minPrice ? `الأسعار تبدأ من ${minPrice} ر.س حسب نوع التأشيرة المختار.` : "تختلف الأسعار حسب نوع التأشيرة." },
+      },
+      {
+        "@type": "Question",
+        name: `ما المستندات المطلوبة لتأشيرة ${country.name}؟`,
+        acceptedAnswer: { "@type": "Answer", text: generalRequirements.join('، ') + '.' },
+      },
+    ],
+  };
+
   return (
     <div className="min-h-screen bg-background">
+      <SEO
+        title={countryTitle}
+        description={countryDesc}
+        path={`/country/${country.code}`}
+        jsonLd={[serviceLd, breadcrumbLd, faqLd]}
+      />
       {/* Hero */}
       <section className="gradient-hero py-12">
         <div className="container-section">

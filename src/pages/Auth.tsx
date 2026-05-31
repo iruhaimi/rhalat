@@ -13,6 +13,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
 import GoogleSignInButton from '@/components/auth/GoogleSignInButton';
+import NoIndex from '@/components/seo/NoIndex';
 import { createClient } from '@supabase/supabase-js';
 
 const REQUIRED_PROFILE_FIELDS = [
@@ -308,6 +309,7 @@ export default function Auth() {
 
   return (
     <div className={`flex min-h-screen ${isRTL ? 'flex-row-reverse' : ''}`} dir={isRTL ? 'rtl' : 'ltr'}>
+      <NoIndex />
       {/* Left side - Form */}
       <div className="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
         <div className="mx-auto w-full max-w-sm lg:w-96">

@@ -14,6 +14,7 @@ import { NotificationBell } from '@/components/notifications/NotificationBell';
 import { cn } from '@/lib/utils';
 import { useIdleTimeout } from '@/hooks/useIdleTimeout';
 import IdleWarningDialog from '@/components/admin/security/IdleWarningDialog';
+import NoIndex from '@/components/seo/NoIndex';
 
 const agentNavItems = [
   { path: '/agent', label: 'لوحة التحكم', icon: LayoutDashboard },
@@ -32,6 +33,7 @@ export default function AgentLayout() {
 
   return (
     <div className="min-h-screen bg-background" dir="rtl">
+      <NoIndex />
       {/* Mobile Header */}
       <header className="sticky top-0 z-50 flex h-16 items-center justify-between border-b bg-card px-4 lg:hidden">
         <Button

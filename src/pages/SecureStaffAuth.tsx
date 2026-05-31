@@ -13,6 +13,7 @@ import logo from '@/assets/logo.jpeg';
 import AdvancedCaptcha from '@/components/auth/AdvancedCaptcha';
 import TwoFactorVerification from '@/components/auth/TwoFactorVerification';
 import RecoveryCodesDisplay from '@/components/auth/RecoveryCodesDisplay';
+import NoIndex from '@/components/seo/NoIndex';
 import RecoveryCodeVerification from '@/components/auth/RecoveryCodeVerification';
 import UnlockRequestForm from '@/components/auth/UnlockRequestForm';
 import { verifyRecoveryCode } from '@/lib/recoveryCodeUtils';
@@ -650,6 +651,7 @@ export default function SecureStaffAuth() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4">
+      <NoIndex />
       <BackgroundPattern />
 
       <Card className="w-full max-w-md relative z-10 border-slate-700 bg-slate-800/90 backdrop-blur-sm shadow-2xl">
