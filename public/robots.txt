@@ -12,5 +12,15 @@ Allow: /
 
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /agent
+Disallow: /tourism-portal
+Disallow: /portal-x7k9m2
+Disallow: /auth
+Disallow: /profile
+Disallow: /my-applications
+Disallow: /reset-password
+Disallow: /payment-success
+Disallow: /payment-failed
 
 Sitemap: https://visafaster.com/sitemap.xml
