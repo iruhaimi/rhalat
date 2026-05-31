@@ -138,8 +138,42 @@ export default function VisaDetail() {
   const country = visa.country as Country;
   const requirements = Array.isArray(visa.requirements) ? visa.requirements : [];
 
+  const visaTitle = `${visa.name} — ${country?.name} | عطلات رحلاتكم`;
+  const visaDesc = `قدّم على ${visa.name} لـ${country?.name}: السعر يبدأ من ${visa.price} ر.س، مدة المعالجة ${visa.processing_days} يوماً. متطلبات واضحة ودعم متواصل.`;
+  const serviceLd = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: `${visa.name} — ${country?.name}`,
+    serviceType: "Visa Application Service",
+    provider: { "@type": "Organization", name: "عطلات رحلاتكم", url: "https://visafaster.com/" },
+    areaServed: country?.name,
+    offers: {
+      "@type": "Offer",
+      price: String(visa.price),
+      priceCurrency: "SAR",
+      availability: "https://schema.org/InStock",
+      url: `https://visafaster.com/visa/${visa.id}`,
+    },
+  };
+  const breadcrumbLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "الرئيسية", item: "https://visafaster.com/" },
+      { "@type": "ListItem", position: 2, name: "الوجهات", item: "https://visafaster.com/destinations" },
+      { "@type": "ListItem", position: 3, name: country?.name, item: `https://visafaster.com/country/${country?.code}` },
+      { "@type": "ListItem", position: 4, name: visa.name, item: `https://visafaster.com/visa/${visa.id}` },
+    ],
+  };
+
   return (
     <div className="min-h-screen bg-background">
+      <SEO
+        title={visaTitle}
+        description={visaDesc}
+        path={`/visa/${visa.id}`}
+        jsonLd={[serviceLd, breadcrumbLd]}
+      />
       {/* Header */}
       <section className="gradient-hero py-12">
         <div className="container-section">
