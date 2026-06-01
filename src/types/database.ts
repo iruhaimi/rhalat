@@ -77,9 +77,9 @@ export interface Country {
   seo_title?: string | null;
   seo_description?: string | null;
   long_description?: string | null;
-  faqs?: Array<{ question: string; answer: string }> | null;
-  processing_steps?: Array<{ title: string; description?: string }> | null;
-  tips?: Array<string | { title: string; description?: string }> | null;
+  faqs?: any;
+  processing_steps?: any;
+  tips?: any;
 }
 
 export interface VisaType {
@@ -104,13 +104,9 @@ export interface VisaType {
   updated_at: string;
   country?: Country;
   seo_description?: string | null;
-  requirements_detailed?: {
-    citizen?: string[];
-    resident?: string[];
-    [key: string]: string[] | undefined;
-  } | null;
-  common_rejection_reasons?: string[] | null;
-  processing_timeline?: Array<{ stage: string; days?: string; description?: string }> | null;
+  requirements_detailed?: any;
+  common_rejection_reasons?: any;
+  processing_timeline?: any;
 }
 
 export interface Application {
