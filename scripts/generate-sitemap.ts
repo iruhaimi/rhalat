@@ -28,16 +28,17 @@ const staticEntries: SitemapEntry[] = [
   { path: "/about", changefreq: "monthly", priority: "0.6" },
   { path: "/contact", changefreq: "monthly", priority: "0.6" },
   { path: "/faq", changefreq: "monthly", priority: "0.7" },
+  { path: "/blog", changefreq: "weekly", priority: "0.8" },
   { path: "/country/SCHENGEN", changefreq: "weekly", priority: "0.9" },
   { path: "/terms", changefreq: "yearly", priority: "0.3" },
   { path: "/privacy", changefreq: "yearly", priority: "0.3" },
   { path: "/refund", changefreq: "yearly", priority: "0.3" },
 ];
 
-async function fetchTable(table: string, select: string): Promise<any[]> {
+async function fetchTable(table: string, select: string, filter = "is_active=eq.true"): Promise<any[]> {
   try {
     const res = await fetch(
-      `${SUPABASE_URL}/rest/v1/${table}?select=${select}&is_active=eq.true`,
+      `${SUPABASE_URL}/rest/v1/${table}?select=${select}&${filter}`,
       {
         headers: {
           apikey: SUPABASE_ANON_KEY,
@@ -103,9 +104,20 @@ async function main() {
     });
   }
 
+  const posts = await fetchTable("blog_posts", "slug,updated_at,published_at", "status=eq.published");
+  for (const p of posts) {
+    if (!p?.slug) continue;
+    all.push({
+      path: `/blog/${p.slug}`,
+      lastmod: (p.updated_at || p.published_at) ? String(p.updated_at || p.published_at).slice(0, 10) : undefined,
+      changefreq: "monthly",
+      priority: "0.7",
+    });
+  }
+
   writeFileSync(resolve("public/sitemap.xml"), generateSitemap(all));
   console.log(
-    `sitemap.xml written (${all.length} entries — ${staticEntries.length} static, ${countries.length} countries, ${visas.length} visas)`,
+    `sitemap.xml written (${all.length} entries — ${staticEntries.length} static, ${countries.length} countries, ${visas.length} visas, ${posts.length} posts)`,
   );
 }
 
