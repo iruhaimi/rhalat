@@ -74,6 +74,12 @@ export interface Country {
   is_active: boolean;
   created_at: string;
   updated_at: string;
+  seo_title?: string | null;
+  seo_description?: string | null;
+  long_description?: string | null;
+  faqs?: Array<{ question: string; answer: string }> | null;
+  processing_steps?: Array<{ title: string; description?: string }> | null;
+  tips?: Array<string | { title: string; description?: string }> | null;
 }
 
 export interface VisaType {
@@ -97,6 +103,14 @@ export interface VisaType {
   created_at: string;
   updated_at: string;
   country?: Country;
+  seo_description?: string | null;
+  requirements_detailed?: {
+    citizen?: string[];
+    resident?: string[];
+    [key: string]: string[] | undefined;
+  } | null;
+  common_rejection_reasons?: string[] | null;
+  processing_timeline?: Array<{ stage: string; days?: string; description?: string }> | null;
 }
 
 export interface Application {
