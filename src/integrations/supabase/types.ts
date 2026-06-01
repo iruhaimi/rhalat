@@ -665,6 +665,119 @@ export type Database = {
           },
         ]
       }
+      blog_categories: {
+        Row: {
+          created_at: string
+          description: string | null
+          display_order: number
+          id: string
+          is_active: boolean
+          name_ar: string
+          name_en: string | null
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          id?: string
+          is_active?: boolean
+          name_ar: string
+          name_en?: string | null
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          id?: string
+          is_active?: boolean
+          name_ar?: string
+          name_en?: string | null
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      blog_posts: {
+        Row: {
+          author_id: string | null
+          author_name: string | null
+          category_id: string | null
+          content_ar: string
+          content_en: string | null
+          cover_image_url: string | null
+          created_at: string
+          excerpt_ar: string | null
+          excerpt_en: string | null
+          id: string
+          published_at: string | null
+          seo_description: string | null
+          seo_title: string | null
+          slug: string
+          status: string
+          tags: string[]
+          title_ar: string
+          title_en: string | null
+          updated_at: string
+          views_count: number
+        }
+        Insert: {
+          author_id?: string | null
+          author_name?: string | null
+          category_id?: string | null
+          content_ar: string
+          content_en?: string | null
+          cover_image_url?: string | null
+          created_at?: string
+          excerpt_ar?: string | null
+          excerpt_en?: string | null
+          id?: string
+          published_at?: string | null
+          seo_description?: string | null
+          seo_title?: string | null
+          slug: string
+          status?: string
+          tags?: string[]
+          title_ar: string
+          title_en?: string | null
+          updated_at?: string
+          views_count?: number
+        }
+        Update: {
+          author_id?: string | null
+          author_name?: string | null
+          category_id?: string | null
+          content_ar?: string
+          content_en?: string | null
+          cover_image_url?: string | null
+          created_at?: string
+          excerpt_ar?: string | null
+          excerpt_en?: string | null
+          id?: string
+          published_at?: string | null
+          seo_description?: string | null
+          seo_title?: string | null
+          slug?: string
+          status?: string
+          tags?: string[]
+          title_ar?: string
+          title_en?: string | null
+          updated_at?: string
+          views_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blog_posts_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "blog_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       countries: {
         Row: {
           code: string
@@ -2474,6 +2587,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      increment_blog_post_views: { Args: { _slug: string }; Returns: undefined }
       is_admin: { Args: { _user_id: string }; Returns: boolean }
       is_agent: { Args: { _user_id: string }; Returns: boolean }
       is_application_owner: {
