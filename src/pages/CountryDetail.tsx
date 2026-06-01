@@ -5,11 +5,20 @@ import {
   ArrowRight,
   CheckCircle2, 
   FileText,
-  AlertCircle
+  AlertCircle,
+  XCircle,
+  Lightbulb,
+  ListChecks
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion';
 import { supabase } from '@/integrations/supabase/client';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { VisaCard } from '@/components/visa/VisaCard';
@@ -119,8 +128,11 @@ export default function CountryDetail() {
 
   const minPrice = visaTypes.length ? Math.min(...visaTypes.map(v => v.price)) : null;
   const minDays = visaTypes.length ? Math.min(...visaTypes.map(v => v.processing_days)) : null;
-  const countryTitle = `تأشيرة ${country.name} — الشروط والأسعار | عطلات رحلاتكم`;
-  const countryDesc = `استخرج تأشيرة ${country.name} بسهولة من السعودية: ${visaTypes.length} نوع تأشيرة${minPrice ? `، تبدأ من ${minPrice} ر.س` : ''}${minDays ? `، معالجة خلال ${minDays} أيام` : ''}. متطلبات واضحة ودعم متواصل.`;
+  const countryTitle = country.seo_title || `تأشيرة ${country.name} — الشروط والأسعار | عطلات رحلاتكم`;
+  const countryDesc = country.seo_description || `استخرج تأشيرة ${country.name} بسهولة من السعودية: ${visaTypes.length} نوع تأشيرة${minPrice ? `، تبدأ من ${minPrice} ر.س` : ''}${minDays ? `، معالجة خلال ${minDays} أيام` : ''}. متطلبات واضحة ودعم متواصل.`;
+  const faqsArr: Array<{ question: string; answer: string }> = Array.isArray(country.faqs) ? country.faqs : [];
+  const stepsArr: Array<{ title: string; description?: string }> = Array.isArray(country.processing_steps) ? country.processing_steps : [];
+  const tipsArr: Array<any> = Array.isArray(country.tips) ? country.tips : [];
   const serviceLd = {
     "@context": "https://schema.org",
     "@type": "Service",
@@ -146,26 +158,19 @@ export default function CountryDetail() {
       { "@type": "ListItem", position: 3, name: country.name, item: `https://visafaster.com/country/${country.code}` },
     ],
   };
+  const dynamicFaqs = faqsArr.length > 0 ? faqsArr : [
+    { question: `كم تستغرق تأشيرة ${country.name}؟`, answer: minDays ? `مدة المعالجة تبدأ من ${minDays} أيام عمل حسب نوع التأشيرة وحالة الطلب.` : "تختلف مدة المعالجة حسب نوع التأشيرة." },
+    { question: `كم سعر تأشيرة ${country.name}؟`, answer: minPrice ? `الأسعار تبدأ من ${minPrice} ر.س حسب نوع التأشيرة المختار.` : "تختلف الأسعار حسب نوع التأشيرة." },
+    { question: `ما المستندات المطلوبة لتأشيرة ${country.name}؟`, answer: generalRequirements.join('، ') + '.' },
+  ];
   const faqLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: [
-      {
-        "@type": "Question",
-        name: `كم تستغرق تأشيرة ${country.name}؟`,
-        acceptedAnswer: { "@type": "Answer", text: minDays ? `مدة المعالجة تبدأ من ${minDays} أيام عمل حسب نوع التأشيرة وحالة الطلب.` : "تختلف مدة المعالجة حسب نوع التأشيرة." },
-      },
-      {
-        "@type": "Question",
-        name: `كم سعر تأشيرة ${country.name}؟`,
-        acceptedAnswer: { "@type": "Answer", text: minPrice ? `الأسعار تبدأ من ${minPrice} ر.س حسب نوع التأشيرة المختار.` : "تختلف الأسعار حسب نوع التأشيرة." },
-      },
-      {
-        "@type": "Question",
-        name: `ما المستندات المطلوبة لتأشيرة ${country.name}؟`,
-        acceptedAnswer: { "@type": "Answer", text: generalRequirements.join('، ') + '.' },
-      },
-    ],
+    mainEntity: dynamicFaqs.map(f => ({
+      "@type": "Question",
+      name: f.question,
+      acceptedAnswer: { "@type": "Answer", text: f.answer },
+    })),
   };
 
   return (
@@ -236,6 +241,98 @@ export default function CountryDetail() {
           )}
         </div>
       </section>
+
+      {/* Long description / Overview */}
+      {country.long_description && (
+        <section className="py-12">
+          <div className="container-section">
+            <Card>
+              <CardContent className="py-6 prose prose-sm max-w-none rtl:text-right">
+                <h2 className="text-2xl font-bold mb-4">
+                  {direction === 'rtl' ? `نظرة عامة عن تأشيرة ${country.name}` : `About ${country.name} visa`}
+                </h2>
+                <div className="whitespace-pre-wrap text-muted-foreground leading-relaxed">
+                  {country.long_description}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
+      )}
+
+      {/* Processing Steps */}
+      {stepsArr.length > 0 && (
+        <section className="py-12 bg-muted/30">
+          <div className="container-section">
+            <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
+              <ListChecks className="h-6 w-6 text-primary" />
+              {direction === 'rtl' ? 'خطوات التقديم' : 'Application Steps'}
+            </h2>
+            <div className="grid gap-4 md:grid-cols-2">
+              {stepsArr.map((step, i) => (
+                <Card key={i}>
+                  <CardContent className="py-4 flex gap-3">
+                    <div className="h-8 w-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold flex-shrink-0">
+                      {i + 1}
+                    </div>
+                    <div>
+                      <h3 className="font-semibold">{step.title}</h3>
+                      {step.description && <p className="text-sm text-muted-foreground mt-1">{step.description}</p>}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Tips */}
+      {tipsArr.length > 0 && (
+        <section className="py-12">
+          <div className="container-section">
+            <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
+              <Lightbulb className="h-6 w-6 text-yellow-500" />
+              {direction === 'rtl' ? 'نصائح مهمة' : 'Helpful Tips'}
+            </h2>
+            <Card>
+              <CardContent className="py-6">
+                <ul className="space-y-3">
+                  {tipsArr.map((tip, i) => (
+                    <li key={i} className="flex items-start gap-2">
+                      <CheckCircle2 className="h-5 w-5 text-success mt-0.5 flex-shrink-0" />
+                      <span>{typeof tip === 'string' ? tip : tip?.title || ''}{typeof tip === 'object' && tip?.description ? ` — ${tip.description}` : ''}</span>
+                    </li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
+      )}
+
+      {/* FAQ */}
+      {dynamicFaqs.length > 0 && (
+        <section className="py-12 bg-muted/30">
+          <div className="container-section">
+            <h2 className="text-2xl font-bold mb-6">
+              {direction === 'rtl' ? 'الأسئلة الشائعة' : 'Frequently Asked Questions'}
+            </h2>
+            <Card>
+              <CardContent className="py-4">
+                <Accordion type="single" collapsible className="w-full">
+                  {dynamicFaqs.map((f, i) => (
+                    <AccordionItem key={i} value={`faq-${i}`}>
+                      <AccordionTrigger className="text-start">{f.question}</AccordionTrigger>
+                      <AccordionContent className="text-muted-foreground whitespace-pre-wrap">{f.answer}</AccordionContent>
+                    </AccordionItem>
+                  ))}
+                </Accordion>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
+      )}
 
       {/* General Requirements */}
       <section className="py-12 bg-muted/50">

@@ -137,9 +137,12 @@ export default function VisaDetail() {
 
   const country = visa.country as Country;
   const requirements = Array.isArray(visa.requirements) ? visa.requirements : [];
+  const reqDetailed = (visa.requirements_detailed && typeof visa.requirements_detailed === 'object') ? visa.requirements_detailed as any : null;
+  const rejectionReasons: string[] = Array.isArray(visa.common_rejection_reasons) ? visa.common_rejection_reasons : [];
+  const timeline: Array<{ stage: string; days?: string; description?: string }> = Array.isArray(visa.processing_timeline) ? visa.processing_timeline : [];
 
   const visaTitle = `${visa.name} — ${country?.name} | عطلات رحلاتكم`;
-  const visaDesc = `قدّم على ${visa.name} لـ${country?.name}: السعر يبدأ من ${visa.price} ر.س، مدة المعالجة ${visa.processing_days} يوماً. متطلبات واضحة ودعم متواصل.`;
+  const visaDesc = visa.seo_description || `قدّم على ${visa.name} لـ${country?.name}: السعر يبدأ من ${visa.price} ر.س، مدة المعالجة ${visa.processing_days} يوماً. متطلبات واضحة ودعم متواصل.`;
   const serviceLd = {
     "@context": "https://schema.org",
     "@type": "Service",
@@ -165,6 +168,20 @@ export default function VisaDetail() {
       { "@type": "ListItem", position: 4, name: visa.name, item: `https://visafaster.com/visa/${visa.id}` },
     ],
   };
+  const dynamicFaqs = [
+    { q: `كم تستغرق ${visa.name} لـ${country?.name}؟`, a: `مدة المعالجة المعتادة ${visa.processing_days} يوم عمل.` },
+    { q: `كم سعر ${visa.name}؟`, a: `السعر يبدأ من ${visa.price} ر.س للطلب الواحد.` },
+    ...(rejectionReasons.length > 0 ? [{ q: `ما أبرز أسباب رفض ${visa.name}؟`, a: rejectionReasons.join('، ') + '.' }] : []),
+  ];
+  const faqLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: dynamicFaqs.map(f => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -172,7 +189,7 @@ export default function VisaDetail() {
         title={visaTitle}
         description={visaDesc}
         path={`/visa/${visa.id}`}
-        jsonLd={[serviceLd, breadcrumbLd]}
+        jsonLd={[serviceLd, breadcrumbLd, faqLd]}
       />
       {/* Header */}
       <section className="gradient-hero py-12">
@@ -267,6 +284,91 @@ export default function VisaDetail() {
                   )}
                 </CardContent>
               </Card>
+
+              {/* Requirements by nationality */}
+              {reqDetailed && (reqDetailed.citizen?.length || reqDetailed.resident?.length) && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle>الشروط حسب الجنسية</CardTitle>
+                    <CardDescription>قائمة المستندات تختلف بحسب صفة المتقدم</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    {reqDetailed.citizen?.length > 0 && (
+                      <div>
+                        <h3 className="font-semibold mb-2 text-primary">للمواطنين السعوديين</h3>
+                        <ul className="space-y-2">
+                          {reqDetailed.citizen.map((r: string, i: number) => (
+                            <li key={i} className="flex items-start gap-2">
+                              <CheckCircle2 className="h-4 w-4 text-success mt-1 flex-shrink-0" />
+                              <span className="text-sm">{r}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                    {reqDetailed.resident?.length > 0 && (
+                      <div>
+                        <h3 className="font-semibold mb-2 text-primary">للمقيمين في السعودية</h3>
+                        <ul className="space-y-2">
+                          {reqDetailed.resident.map((r: string, i: number) => (
+                            <li key={i} className="flex items-start gap-2">
+                              <CheckCircle2 className="h-4 w-4 text-success mt-1 flex-shrink-0" />
+                              <span className="text-sm">{r}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* Processing timeline */}
+              {timeline.length > 0 && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle>الجدول الزمني للمعالجة</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ol className="space-y-3">
+                      {timeline.map((t, i) => (
+                        <li key={i} className="flex gap-3">
+                          <div className="h-7 w-7 rounded-full bg-primary/10 text-primary flex items-center justify-center text-sm font-bold flex-shrink-0">
+                            {i + 1}
+                          </div>
+                          <div>
+                            <p className="font-medium">{t.stage}{t.days ? ` — ${t.days}` : ''}</p>
+                            {t.description && <p className="text-sm text-muted-foreground">{t.description}</p>}
+                          </div>
+                        </li>
+                      ))}
+                    </ol>
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* Common rejection reasons */}
+              {rejectionReasons.length > 0 && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <AlertCircle className="h-5 w-5 text-destructive" />
+                      أسباب الرفض الشائعة
+                    </CardTitle>
+                    <CardDescription>تجنّب هذه الأخطاء لزيادة فرص القبول</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="space-y-2">
+                      {rejectionReasons.map((r, i) => (
+                        <li key={i} className="flex items-start gap-2 text-sm">
+                          <span className="text-destructive mt-1">•</span>
+                          <span>{r}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </CardContent>
+                </Card>
+              )}
 
               {/* FAQs */}
               <Card>

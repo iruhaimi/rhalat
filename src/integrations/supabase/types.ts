@@ -674,11 +674,17 @@ export type Database = {
           expected_appointment_note: string | null
           expected_appointment_updated_at: string | null
           expected_appointment_updated_by: string | null
+          faqs: Json
           flag_url: string | null
           id: string
           is_active: boolean | null
           is_schengen: boolean
+          long_description: string | null
           name: string
+          processing_steps: Json
+          seo_description: string | null
+          seo_title: string | null
+          tips: Json
           updated_at: string
         }
         Insert: {
@@ -689,11 +695,17 @@ export type Database = {
           expected_appointment_note?: string | null
           expected_appointment_updated_at?: string | null
           expected_appointment_updated_by?: string | null
+          faqs?: Json
           flag_url?: string | null
           id?: string
           is_active?: boolean | null
           is_schengen?: boolean
+          long_description?: string | null
           name: string
+          processing_steps?: Json
+          seo_description?: string | null
+          seo_title?: string | null
+          tips?: Json
           updated_at?: string
         }
         Update: {
@@ -704,11 +716,17 @@ export type Database = {
           expected_appointment_note?: string | null
           expected_appointment_updated_at?: string | null
           expected_appointment_updated_by?: string | null
+          faqs?: Json
           flag_url?: string | null
           id?: string
           is_active?: boolean | null
           is_schengen?: boolean
+          long_description?: string | null
           name?: string
+          processing_steps?: Json
+          seo_description?: string | null
+          seo_title?: string | null
+          tips?: Json
           updated_at?: string
         }
         Relationships: []
@@ -2071,6 +2089,7 @@ export type Database = {
       visa_types: {
         Row: {
           child_price: number | null
+          common_rejection_reasons: Json
           country_id: string
           created_at: string
           description: string | null
@@ -2090,12 +2109,16 @@ export type Database = {
           price_notes: string | null
           price_notes_en: string | null
           processing_days: number
+          processing_timeline: Json
           requirements: Json | null
+          requirements_detailed: Json
+          seo_description: string | null
           updated_at: string
           validity_days: number | null
         }
         Insert: {
           child_price?: number | null
+          common_rejection_reasons?: Json
           country_id: string
           created_at?: string
           description?: string | null
@@ -2115,12 +2138,16 @@ export type Database = {
           price_notes?: string | null
           price_notes_en?: string | null
           processing_days?: number
+          processing_timeline?: Json
           requirements?: Json | null
+          requirements_detailed?: Json
+          seo_description?: string | null
           updated_at?: string
           validity_days?: number | null
         }
         Update: {
           child_price?: number | null
+          common_rejection_reasons?: Json
           country_id?: string
           created_at?: string
           description?: string | null
@@ -2140,7 +2167,10 @@ export type Database = {
           price_notes?: string | null
           price_notes_en?: string | null
           processing_days?: number
+          processing_timeline?: Json
           requirements?: Json | null
+          requirements_detailed?: Json
+          seo_description?: string | null
           updated_at?: string
           validity_days?: number | null
         }
