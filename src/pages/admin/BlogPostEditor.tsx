@@ -57,7 +57,7 @@ export default function BlogPostEditor() {
             tags: (data.tags || []).join(", "),
             seo_title: data.seo_title || "",
             seo_description: data.seo_description || "",
-            status: data.status,
+            status: (data.status as "draft" | "published") || "draft",
           });
         }
       }
