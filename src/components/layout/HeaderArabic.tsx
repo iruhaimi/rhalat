@@ -32,6 +32,7 @@ export default function HeaderArabic() {
     { name: t('nav.pricing'), href: '/pricing' },
     { name: t('nav.track'), href: '/track' },
     { name: t('nav.faq'), href: '/faq' },
+    { name: 'المدونة', href: '/blog' },
     { name: t('nav.about'), href: '/about' },
     { name: t('nav.contact'), href: '/contact' },
   ];

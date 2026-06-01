@@ -34,7 +34,8 @@ import {
       Sparkles,
       History,
       ClipboardList,
-      Globe
+      Globe,
+      BookOpen
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -243,6 +244,12 @@ export default function AdminLayout() {
           title: 'إدارة محتوى SEO',
           icon: Globe,
           href: '/admin/seo-content',
+          show: isAdmin && (hasPermission('manage_countries') || isSuperAdmin),
+        },
+        {
+          title: 'المدونة',
+          icon: BookOpen,
+          href: '/admin/blog',
           show: isAdmin && (hasPermission('manage_countries') || isSuperAdmin),
         },
         {
