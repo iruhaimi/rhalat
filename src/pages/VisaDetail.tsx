@@ -137,9 +137,12 @@ export default function VisaDetail() {
 
   const country = visa.country as Country;
   const requirements = Array.isArray(visa.requirements) ? visa.requirements : [];
+  const reqDetailed = (visa.requirements_detailed && typeof visa.requirements_detailed === 'object') ? visa.requirements_detailed as any : null;
+  const rejectionReasons: string[] = Array.isArray(visa.common_rejection_reasons) ? visa.common_rejection_reasons : [];
+  const timeline: Array<{ stage: string; days?: string; description?: string }> = Array.isArray(visa.processing_timeline) ? visa.processing_timeline : [];
 
   const visaTitle = `${visa.name} — ${country?.name} | عطلات رحلاتكم`;
-  const visaDesc = `قدّم على ${visa.name} لـ${country?.name}: السعر يبدأ من ${visa.price} ر.س، مدة المعالجة ${visa.processing_days} يوماً. متطلبات واضحة ودعم متواصل.`;
+  const visaDesc = visa.seo_description || `قدّم على ${visa.name} لـ${country?.name}: السعر يبدأ من ${visa.price} ر.س، مدة المعالجة ${visa.processing_days} يوماً. متطلبات واضحة ودعم متواصل.`;
   const serviceLd = {
     "@context": "https://schema.org",
     "@type": "Service",
@@ -165,6 +168,20 @@ export default function VisaDetail() {
       { "@type": "ListItem", position: 4, name: visa.name, item: `https://visafaster.com/visa/${visa.id}` },
     ],
   };
+  const dynamicFaqs = [
+    { q: `كم تستغرق ${visa.name} لـ${country?.name}؟`, a: `مدة المعالجة المعتادة ${visa.processing_days} يوم عمل.` },
+    { q: `كم سعر ${visa.name}؟`, a: `السعر يبدأ من ${visa.price} ر.س للطلب الواحد.` },
+    ...(rejectionReasons.length > 0 ? [{ q: `ما أبرز أسباب رفض ${visa.name}؟`, a: rejectionReasons.join('، ') + '.' }] : []),
+  ];
+  const faqLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: dynamicFaqs.map(f => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -172,7 +189,7 @@ export default function VisaDetail() {
         title={visaTitle}
         description={visaDesc}
         path={`/visa/${visa.id}`}
-        jsonLd={[serviceLd, breadcrumbLd]}
+        jsonLd={[serviceLd, breadcrumbLd, faqLd]}
       />
       {/* Header */}
       <section className="gradient-hero py-12">
