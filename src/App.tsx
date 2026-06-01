@@ -63,6 +63,10 @@ import AIAssistant from "@/pages/admin/AIAssistant";
 import AIAssistantHistory from "@/pages/admin/AIAssistantHistory";
 import AIToolAuditLog from "@/pages/admin/AIToolAuditLog";
 import SEOContentManagement from "@/pages/admin/SEOContentManagement";
+import BlogManagement from "@/pages/admin/BlogManagement";
+import BlogPostEditor from "@/pages/admin/BlogPostEditor";
+import Blog from "@/pages/Blog";
+import BlogPost from "@/pages/BlogPost";
 // Agent Pages
 import AgentDashboard from "@/pages/agent/AgentDashboard";
 import AgentApplicationsList from "@/pages/agent/AgentApplicationsList";
@@ -114,6 +118,8 @@ const App = () => (
                 <Route path="/offers" element={<SpecialOffers />} />
                 <Route path="/tourism" element={<Tourism />} />
                 <Route path="/tourism/:id" element={<TourismDetail />} />
+                <Route path="/blog" element={<Blog />} />
+                <Route path="/blog/:slug" element={<BlogPost />} />
               </Route>
 
               {/* Auth Routes */}
@@ -156,6 +162,9 @@ const App = () => (
                 <Route path="ai-assistant/history" element={<AIAssistantHistory />} />
                 <Route path="ai-assistant/audit" element={<AIToolAuditLog />} />
                 <Route path="seo-content" element={<SEOContentManagement />} />
+                <Route path="blog" element={<BlogManagement />} />
+                <Route path="blog/new" element={<BlogPostEditor />} />
+                <Route path="blog/:id/edit" element={<BlogPostEditor />} />
               </Route>
 
               {/* Agent Routes */}
