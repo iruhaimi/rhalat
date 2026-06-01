@@ -33,7 +33,8 @@ import {
       Plane,
       Sparkles,
       History,
-      ClipboardList
+      ClipboardList,
+      Globe
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -237,6 +238,12 @@ export default function AdminLayout() {
           icon: SlidersHorizontal,
           href: '/admin/quick-settings',
           show: isAdmin,
+        },
+        {
+          title: 'إدارة محتوى SEO',
+          icon: Globe,
+          href: '/admin/seo-content',
+          show: isAdmin && (hasPermission('manage_countries') || isSuperAdmin),
         },
         {
           title: 'إدارة الـ Footer',

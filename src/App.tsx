@@ -62,6 +62,7 @@ import DynamicPortalRoute from "@/components/DynamicPortalRoute";
 import AIAssistant from "@/pages/admin/AIAssistant";
 import AIAssistantHistory from "@/pages/admin/AIAssistantHistory";
 import AIToolAuditLog from "@/pages/admin/AIToolAuditLog";
+import SEOContentManagement from "@/pages/admin/SEOContentManagement";
 // Agent Pages
 import AgentDashboard from "@/pages/agent/AgentDashboard";
 import AgentApplicationsList from "@/pages/agent/AgentApplicationsList";
@@ -154,6 +155,7 @@ const App = () => (
                 <Route path="ai-assistant" element={<AIAssistant />} />
                 <Route path="ai-assistant/history" element={<AIAssistantHistory />} />
                 <Route path="ai-assistant/audit" element={<AIToolAuditLog />} />
+                <Route path="seo-content" element={<SEOContentManagement />} />
               </Route>
 
               {/* Agent Routes */}
