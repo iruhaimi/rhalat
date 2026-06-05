@@ -9,6 +9,7 @@ import {
   filterOutSchengenCountries,
   getSchengenCountries,
 } from '@/lib/schengenCountries';
+import { getSharpFlagUrl } from '@/lib/flagUtils';
 import type { Country, VisaType } from '@/types/database';
 
 interface CountriesSectionProps {
@@ -71,7 +72,7 @@ export default function CountriesSection({ countries, visaTypes, t }: CountriesS
       id: c.id,
       name: c.name,
       code: c.code,
-              flagUrl: c.flag_url || `https://flagcdn.com/w2560/${c.code.toLowerCase()}.png`,
+      flagUrl: getSharpFlagUrl(c),
       minPrice: getCountryMinPrice(c.id),
       processingDays: getCountryProcessingDays(c.id),
       href: `/country/${c.code}`,
@@ -128,7 +129,7 @@ export default function CountriesSection({ countries, visaTypes, t }: CountriesS
                   alt={item.name}
                   loading="lazy"
                   decoding="async"
-                  className="w-full h-full object-cover saturate-[1.8] contrast-125 brightness-105 group-hover:scale-110 transition-transform duration-700"
+                  className="w-full h-full object-cover image-render-auto group-hover:scale-110 transition-transform duration-700"
                 />
                 <div className="absolute inset-0 " />
                 {item.region && (

@@ -34,6 +34,7 @@ import {
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { supabase } from '@/integrations/supabase/client';
+import { getSharpFlagUrl } from '@/lib/flagUtils';
 import type { Country, VisaType } from '@/types/database';
 
 const visaCategories = [
@@ -175,7 +176,7 @@ export default function VisaServices() {
               <SelectItem key={country.id} value={country.code}>
                 <div className="flex items-center gap-2">
                   <img 
-                    src={country.flag_url || `https://flagcdn.com/w20/${country.code.toLowerCase()}.png`} 
+                    src={getSharpFlagUrl(country)} 
                     alt="" 
                     className="h-4 w-5 rounded-sm object-cover"
                   />
@@ -435,9 +436,9 @@ export default function VisaServices() {
                         <CardHeader className="pb-4">
                           <div className="flex items-start gap-3">
                             <img
-                              src={country?.flag_url || `https://flagcdn.com/w320/${country?.code.toLowerCase()}.png`}
+                              src={getSharpFlagUrl(country)}
                               alt={country?.name}
-                              className="h-10 w-14 rounded-lg object-cover shadow-sm saturate-[1.8] contrast-125 brightness-105"
+                              className="h-10 w-14 rounded-lg object-cover shadow-sm"
                             />
                             <div className="flex-1 min-w-0">
                               <CardTitle className="font-heading-ar text-lg font-extrabold text-navy truncate">{visa.name}</CardTitle>
@@ -516,9 +517,9 @@ export default function VisaServices() {
                 }`}
               >
                 <img
-                  src={country.flag_url || `https://flagcdn.com/w160/${country.code.toLowerCase()}.png`}
+                  src={getSharpFlagUrl(country)}
                   alt={country.name}
-                  className="h-7 w-9 rounded-md object-cover shadow-sm saturate-[1.8] contrast-125 brightness-105"
+                  className="h-7 w-9 rounded-md object-cover shadow-sm"
                 />
                 <span className="text-sm font-heading-ar font-bold truncate text-navy">{country.name}</span>
               </button>

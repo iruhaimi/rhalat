@@ -29,6 +29,7 @@ import {
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { ar, enUS } from 'date-fns/locale';
+import { getSharpFlagUrl } from '@/lib/flagUtils';
 import type { ApplicationStatus } from '@/types/database';
 
 const STATUS_CONFIG: Record<ApplicationStatus, {
@@ -64,6 +65,7 @@ interface ApplicationData {
     processing_days: number;
     country: {
       name: string;
+      code: string;
       flag_url: string | null;
     };
   };
@@ -106,7 +108,7 @@ export default function MyApplicationDetail() {
           visa_type:visa_types(
             name,
             processing_days,
-            country:countries(name, flag_url)
+            country:countries(name, code, flag_url)
           ),
           assigned_agent:profiles!applications_assigned_agent_id_fkey(full_name)
         `)
@@ -257,9 +259,9 @@ export default function MyApplicationDetail() {
                 <div className="flex items-center gap-4 mb-6">
                   {application.visa_type?.country?.flag_url && (
                     <img
-                      src={application.visa_type.country.flag_url}
+                      src={getSharpFlagUrl(application.visa_type.country)}
                       alt=""
-                      className="w-20 h-14 object-cover rounded-2xl shadow-md saturate-[1.8] contrast-125 brightness-105"
+                      className="w-20 h-14 object-cover rounded-2xl shadow-md"
                     />
                   )}
                   <div>

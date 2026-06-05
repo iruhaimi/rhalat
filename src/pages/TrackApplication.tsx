@@ -31,6 +31,7 @@ import {
 } from 'lucide-react';
 import { format, differenceInDays } from 'date-fns';
 import { ar, enUS } from 'date-fns/locale';
+import { getSharpFlagUrl } from '@/lib/flagUtils';
 import type { ApplicationStatus } from '@/types/database';
 
 interface ApplicationResult {
@@ -46,6 +47,7 @@ interface ApplicationResult {
     processing_days: number;
     country: {
       name: string;
+      code: string;
       flag_url: string | null;
     };
   };
@@ -229,7 +231,7 @@ export default function TrackApplication() {
           visa_type:visa_types(
             name,
             processing_days,
-            country:countries(name, flag_url)
+            country:countries(name, code, flag_url)
           )
         `)
         .eq('display_number', normalized)
@@ -477,7 +479,7 @@ export default function TrackApplication() {
                           <motion.img 
                             initial={{ scale: 0 }}
                             animate={{ scale: 1 }}
-                            src={result.visa_type.country.flag_url} 
+                            src={getSharpFlagUrl(result.visa_type.country)} 
                             alt="" 
                             className="w-14 h-10 object-cover rounded-lg shadow-lg"
                           />

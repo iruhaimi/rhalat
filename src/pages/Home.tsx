@@ -17,6 +17,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { supabase } from '@/integrations/supabase/client';
+import { getSharpFlagUrl } from '@/lib/flagUtils';
 import type { Country, VisaType } from '@/types/database';
 
 const features = [
@@ -180,7 +181,7 @@ export default function Home() {
                 className="group flex flex-col items-center rounded-lg border border-border bg-card p-4 transition-all hover:border-primary hover:shadow-md"
               >
                 <img
-                  src={country.flag_url || `https://flagcdn.com/w80/${country.code.toLowerCase()}.png`}
+                  src={getSharpFlagUrl(country)}
                   alt={country.name}
                   className="h-10 w-14 rounded object-cover shadow-sm"
                 />

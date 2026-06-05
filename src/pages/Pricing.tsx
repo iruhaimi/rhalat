@@ -34,6 +34,7 @@ import {
 import { supabase } from '@/integrations/supabase/client';
 import { useLanguage } from '@/contexts/LanguageContext';
 import SARSymbol from '@/components/ui/SARSymbol';
+import { getSharpFlagUrl } from '@/lib/flagUtils';
 
 interface Country {
   id: string;
@@ -323,7 +324,7 @@ export default function Pricing() {
                   className="gap-2 rounded-xl"
                 >
                   <img 
-                    src={country.flag_url || `https://flagcdn.com/w40/${country.code.toLowerCase()}.png`}
+                    src={getSharpFlagUrl(country)}
                     alt={country.name}
                     className="h-4 w-6 rounded object-cover"
                   />
@@ -356,7 +357,7 @@ export default function Pricing() {
                         <div className="flex items-center gap-4">
                           <motion.img 
                             whileHover={{ scale: 1.1 }}
-                            src={country?.flag_url || `https://flagcdn.com/w80/${countryCode.toLowerCase()}.png`}
+                            src={getSharpFlagUrl(country || { code: countryCode })}
                             alt={country?.name}
                             className="h-12 w-16 rounded-xl object-cover shadow-lg"
                           />
