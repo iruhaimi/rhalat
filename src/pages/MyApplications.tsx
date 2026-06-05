@@ -25,6 +25,7 @@ import {
 } from 'lucide-react';
 import { format, differenceInDays } from 'date-fns';
 import { ar, enUS } from 'date-fns/locale';
+import { getSharpFlagUrl } from '@/lib/flagUtils';
 import type { ApplicationStatus } from '@/types/database';
 
 interface ApplicationWithVisa {
@@ -315,9 +316,9 @@ const MyApplications = () => {
                       <div className="flex items-center gap-4 flex-1">
                         {app.visa_type?.country?.flag_url && (
                           <img
-                            src={app.visa_type.country.flag_url}
+                            src={getSharpFlagUrl(app.visa_type.country)}
                             alt={app.visa_type.country.name}
-                            className="h-14 w-20 object-cover rounded-2xl shadow-md saturate-[1.8] contrast-125 brightness-105"
+                            className="h-14 w-20 object-cover rounded-2xl shadow-md"
                           />
                         )}
                         <div>
