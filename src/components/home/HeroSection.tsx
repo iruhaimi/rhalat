@@ -195,7 +195,7 @@ export default function HeroSection() {
               decoding="async"
               className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
               onError={(e) => {
-                (e.target as HTMLImageElement).src = `https://flagcdn.com/w1280/${featuredDestination.country.toLowerCase()}.jpg`;
+                (e.target as HTMLImageElement).src = `https://flagcdn.com/w2560/${featuredDestination.country.toLowerCase()}.jpg`;
               }}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-navy via-navy/40 to-transparent" />

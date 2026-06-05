@@ -317,7 +317,7 @@ const MyApplications = () => {
                           <img
                             src={app.visa_type.country.flag_url}
                             alt={app.visa_type.country.name}
-                            className="h-14 w-20 object-cover rounded-2xl shadow-md saturate-150 contrast-110"
+                            className="h-14 w-20 object-cover rounded-2xl shadow-md saturate-[1.8] contrast-125 brightness-105"
                           />
                         )}
                         <div>

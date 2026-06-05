@@ -192,9 +192,9 @@ export default function SchengenDetail() {
                 <img
                   src={SCHENGEN_INFO.flag_url}
                   alt="Schengen"
-                  className="w-full h-full object-cover saturate-150 contrast-110"
+                  className="w-full h-full object-cover saturate-[1.8] contrast-125 brightness-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-navy/30 via-transparent to-transparent" />
+                <div className="absolute inset-0 " />
               </div>
             </div>
           </div>
@@ -248,7 +248,7 @@ export default function SchengenDetail() {
                     <img
                       src={country.flag_url || `https://flagcdn.com/w160/${country.code.toLowerCase()}.png`}
                       alt={country.name}
-                      className="w-9 h-7 rounded-md object-cover saturate-150 contrast-110 shadow-sm"
+                      className="w-9 h-7 rounded-md object-cover saturate-[1.8] contrast-125 brightness-105 shadow-sm"
                     />
                     <span className="font-heading-ar font-bold text-sm truncate text-navy">{country.name}</span>
                   </CardContent>

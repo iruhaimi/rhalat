@@ -208,7 +208,7 @@ export default function VisaDetail() {
               <img
                 src={country?.flag_url || `https://flagcdn.com/w640/${country?.code.toLowerCase()}.png`}
                 alt={country?.name}
-                className="w-full h-full object-cover saturate-150 contrast-110"
+                className="w-full h-full object-cover saturate-[1.8] contrast-125 brightness-105"
               />
             </div>
             <div>

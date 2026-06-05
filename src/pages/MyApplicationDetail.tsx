@@ -259,7 +259,7 @@ export default function MyApplicationDetail() {
                     <img
                       src={application.visa_type.country.flag_url}
                       alt=""
-                      className="w-20 h-14 object-cover rounded-2xl shadow-md saturate-150 contrast-110"
+                      className="w-20 h-14 object-cover rounded-2xl shadow-md saturate-[1.8] contrast-125 brightness-105"
                     />
                   )}
                   <div>

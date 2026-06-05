@@ -211,11 +211,11 @@ export default function CountryDetail() {
             <div className="lg:col-span-5">
               <div className="relative aspect-[4/3] rounded-4xl overflow-hidden border border-white/10 shadow-2xl bg-white/5">
                 <img
-                  src={country.flag_url || `https://flagcdn.com/w1280/${country.code.toLowerCase()}.png`}
+                  src={country.flag_url || `https://flagcdn.com/w2560/${country.code.toLowerCase()}.png`}
                   alt={country.name}
-                  className="w-full h-full object-cover saturate-150 contrast-110"
+                  className="w-full h-full object-cover saturate-[1.8] contrast-125 brightness-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-navy/30 via-transparent to-transparent" />
+                <div className="absolute inset-0 " />
               </div>
             </div>
           </div>
