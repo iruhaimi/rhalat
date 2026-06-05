@@ -8,7 +8,7 @@ export const SCHENGEN_INFO = {
   name: 'شنغن (الاتحاد الأوروبي)',
   nameEn: 'Schengen (EU)',
   code: 'SCHENGEN',
-  flag_url: 'https://flagcdn.com/w80/eu.png',
+  flag_url: 'https://flagcdn.com/eu.svg',
   is_active: true,
 };
 
