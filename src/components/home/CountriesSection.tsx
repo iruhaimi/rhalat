@@ -71,7 +71,7 @@ export default function CountriesSection({ countries, visaTypes, t }: CountriesS
       id: c.id,
       name: c.name,
       code: c.code,
-      flagUrl: c.flag_url || `https://flagcdn.com/w640/${c.code.toLowerCase()}.png`,
+              flagUrl: c.flag_url || `https://flagcdn.com/w1280/${c.code.toLowerCase()}.png`,
       minPrice: getCountryMinPrice(c.id),
       processingDays: getCountryProcessingDays(c.id),
       href: `/country/${c.code}`,
@@ -122,14 +122,15 @@ export default function CountriesSection({ countries, visaTypes, t }: CountriesS
               whileHover={{ y: -6 }}
               className="group bg-card border border-border rounded-4xl overflow-hidden hover:shadow-2xl hover:shadow-navy/5 hover:border-brand/30 transition-all"
             >
-              <div className="relative h-48 overflow-hidden bg-cream">
+              <div className="relative h-48 overflow-hidden bg-gradient-to-br from-navy/5 to-brand/10">
                 <img
                   src={item.flagUrl}
                   alt={item.name}
                   loading="lazy"
                   decoding="async"
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                  className="w-full h-full object-cover saturate-150 contrast-110 group-hover:scale-110 transition-transform duration-700"
                 />
+                <div className="absolute inset-0 bg-gradient-to-t from-navy/30 via-transparent to-transparent pointer-events-none" />
                 {item.region && (
                   <span className="absolute top-4 end-4 bg-white/95 backdrop-blur-md px-3 py-1.5 rounded-xl text-[10px] font-jakarta font-bold text-navy uppercase tracking-wider">
                     {item.region}
