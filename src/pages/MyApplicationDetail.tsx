@@ -203,46 +203,53 @@ export default function MyApplicationDetail() {
   };
 
   return (
-    <div className="container-section py-8">
+    <div className="min-h-screen bg-canvas">
       <NoIndex />
-      <div className="max-w-5xl mx-auto space-y-6">
-        {/* Header */}
-        <div className="flex items-center justify-between flex-wrap gap-4">
-          <div className="flex items-center gap-4">
-            <Button asChild variant="ghost" size="icon">
-              <Link to="/my-applications">
-                <ArrowRight className={`h-5 w-5 ${!isRTL && 'rotate-180'}`} />
-              </Link>
-            </Button>
-            <div>
-              <h1 className="text-2xl font-bold">
-                {isRTL ? 'تفاصيل الطلب' : 'Application Details'}
-              </h1>
-              <button
-                onClick={copyAppNumber}
-                className="mt-1 inline-flex items-center gap-2 rounded-lg bg-primary/10 px-3 py-1 text-primary hover:bg-primary/15 transition"
-                dir="ltr"
-                title={isRTL ? 'نسخ رقم الطلب' : 'Copy application number'}
-              >
-                <span className="font-mono font-bold tracking-wider">{displayNumber}</span>
-                <Copy className="h-3.5 w-3.5" />
-              </button>
+      {/* Hero */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-navy via-navy/95 to-brand text-white">
+        <div className="absolute inset-0 opacity-30" style={{ backgroundImage: 'radial-gradient(circle at 20% 30%, hsl(var(--brand)/0.4), transparent 50%)' }} />
+        <div className="container mx-auto px-4 py-10 relative">
+          <div className="max-w-5xl mx-auto flex items-center justify-between flex-wrap gap-4">
+            <div className="flex items-center gap-4">
+              <Button asChild variant="ghost" size="icon" className="text-white hover:bg-white/10 rounded-xl">
+                <Link to="/my-applications">
+                  <ArrowRight className={`h-5 w-5 ${!isRTL && 'rotate-180'}`} />
+                </Link>
+              </Button>
+              <div>
+                <h1 className="font-heading-ar text-3xl md:text-4xl font-black text-white">
+                  {isRTL ? 'تفاصيل الطلب' : 'Application Details'}
+                </h1>
+                <button
+                  onClick={copyAppNumber}
+                  className="mt-2 inline-flex items-center gap-2 rounded-xl bg-white/15 backdrop-blur-sm px-3 py-1.5 text-white hover:bg-white/25 transition"
+                  dir="ltr"
+                  title={isRTL ? 'نسخ رقم الطلب' : 'Copy application number'}
+                >
+                  <span className="font-mono font-bold tracking-wider">{displayNumber}</span>
+                  <Copy className="h-3.5 w-3.5" />
+                </button>
+              </div>
             </div>
+            <Badge className={`${statusConfig.className} gap-1.5 px-4 py-2 rounded-xl text-sm`}>
+              <StatusIcon className="h-4 w-4" />
+              {isRTL ? statusConfig.labelAr : statusConfig.labelEn}
+            </Badge>
           </div>
-          <Badge className={`${statusConfig.className} gap-1.5 px-3 py-1.5`}>
-            <StatusIcon className="h-4 w-4" />
-            {isRTL ? statusConfig.labelAr : statusConfig.labelEn}
-          </Badge>
         </div>
+      </section>
+
+      <div className="container mx-auto px-4 -mt-6 pb-16 relative">
+        <div className="max-w-5xl mx-auto space-y-6">
 
         <div className="grid gap-6 lg:grid-cols-5">
           {/* Main Info */}
           <div className="lg:col-span-3 space-y-6">
             {/* Visa Info */}
-            <Card>
+            <Card className="rounded-3xl border-border shadow-xl shadow-navy/5">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-lg">
-                  <Plane className="h-5 w-5 text-primary" />
+                <CardTitle className="flex items-center gap-2 text-lg font-heading-ar text-navy">
+                  <Plane className="h-5 w-5 text-brand" />
                   {isRTL ? 'معلومات التأشيرة' : 'Visa Information'}
                 </CardTitle>
               </CardHeader>
@@ -252,54 +259,54 @@ export default function MyApplicationDetail() {
                     <img
                       src={application.visa_type.country.flag_url}
                       alt=""
-                      className="w-16 h-12 object-cover rounded-lg shadow"
+                      className="w-20 h-14 object-cover rounded-2xl shadow-md saturate-150 contrast-110"
                     />
                   )}
                   <div>
-                    <h3 className="text-xl font-bold">{application.visa_type?.country?.name}</h3>
+                    <h3 className="font-heading-ar text-2xl font-black text-navy">{application.visa_type?.country?.name}</h3>
                     <p className="text-muted-foreground">{application.visa_type?.name}</p>
                   </div>
                 </div>
 
                 <div className="grid gap-4 sm:grid-cols-2">
                   {application.travel_date && (
-                    <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
-                      <Calendar className="h-5 w-5 text-muted-foreground" />
+                    <div className="flex items-center gap-3 p-4 rounded-2xl bg-navy/5 border border-navy/10">
+                      <Calendar className="h-5 w-5 text-navy/70" />
                       <div>
                         <p className="text-xs text-muted-foreground">
                           {isRTL ? 'تاريخ السفر' : 'Travel Date'}
                         </p>
-                        <p className="font-medium">{formatDate(application.travel_date)}</p>
+                        <p className="font-semibold text-navy">{formatDate(application.travel_date)}</p>
                       </div>
                     </div>
                   )}
                   {application.return_date && (
-                    <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
-                      <Calendar className="h-5 w-5 text-muted-foreground" />
+                    <div className="flex items-center gap-3 p-4 rounded-2xl bg-navy/5 border border-navy/10">
+                      <Calendar className="h-5 w-5 text-navy/70" />
                       <div>
                         <p className="text-xs text-muted-foreground">
                           {isRTL ? 'تاريخ العودة' : 'Return Date'}
                         </p>
-                        <p className="font-medium">{formatDate(application.return_date)}</p>
+                        <p className="font-semibold text-navy">{formatDate(application.return_date)}</p>
                       </div>
                     </div>
                   )}
-                  <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
-                    <Clock className="h-5 w-5 text-muted-foreground" />
+                  <div className="flex items-center gap-3 p-4 rounded-2xl bg-navy/5 border border-navy/10">
+                    <Clock className="h-5 w-5 text-navy/70" />
                     <div>
                       <p className="text-xs text-muted-foreground">
                         {isRTL ? 'تاريخ التقديم' : 'Submitted At'}
                       </p>
-                      <p className="font-medium">{formatDate(submissionDate)}</p>
+                      <p className="font-semibold text-navy">{formatDate(submissionDate)}</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
-                    <Clock className="h-5 w-5 text-muted-foreground" />
+                  <div className="flex items-center gap-3 p-4 rounded-2xl bg-navy/5 border border-navy/10">
+                    <Clock className="h-5 w-5 text-navy/70" />
                     <div>
                       <p className="text-xs text-muted-foreground">
                         {isRTL ? 'مدة المعالجة' : 'Processing Time'}
                       </p>
-                      <p className="font-medium">
+                      <p className="font-semibold text-navy">
                         {application.visa_type?.processing_days} {isRTL ? 'يوم عمل' : 'business days'}
                       </p>
                     </div>
@@ -310,7 +317,7 @@ export default function MyApplicationDetail() {
 
             {/* Rejection Reason */}
             {application.status === 'rejected' && application.rejection_reason && (
-              <Card className="border-destructive/50 bg-destructive/5">
+              <Card className="rounded-3xl border-destructive/50 bg-destructive/5">
                 <CardContent className="pt-6">
                   <div className="flex items-start gap-3">
                     <XCircle className="h-5 w-5 text-destructive shrink-0 mt-0.5" />
@@ -327,7 +334,7 @@ export default function MyApplicationDetail() {
 
             {/* Approval Info */}
             {application.status === 'approved' && application.approved_at && (
-              <Card className="border-success/50 bg-success/5">
+              <Card className="rounded-3xl border-success/50 bg-success/5">
                 <CardContent className="pt-6">
                   <div className="flex items-start gap-3">
                     <CheckCircle2 className="h-5 w-5 text-success shrink-0 mt-0.5" />
@@ -354,10 +361,10 @@ export default function MyApplicationDetail() {
                 agentName={application.assigned_agent.full_name}
               />
             ) : (
-              <Card>
+              <Card className="rounded-3xl border-border shadow-xl shadow-navy/5">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-lg">
-                    <Send className="h-5 w-5 text-muted-foreground" />
+                  <CardTitle className="flex items-center gap-2 text-lg font-heading-ar text-navy">
+                    <Send className="h-5 w-5 text-brand" />
                     {isRTL ? 'المراسلات' : 'Messages'}
                   </CardTitle>
                 </CardHeader>
@@ -373,6 +380,7 @@ export default function MyApplicationDetail() {
               </Card>
             )}
           </div>
+        </div>
         </div>
       </div>
     </div>

@@ -195,15 +195,17 @@ const Profile = () => {
   };
 
   return (
-    <div className="container mx-auto py-8 px-4" dir={direction}>
+    <div className="min-h-screen bg-canvas" dir={direction}>
       <NoIndex />
-      <div className="max-w-2xl mx-auto">
-        {/* Header with Avatar Upload */}
-        <div className="flex items-center gap-6 mb-8">
+      {/* Hero band */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-navy via-navy/95 to-brand text-white">
+        <div className="absolute inset-0 opacity-30" style={{ backgroundImage: 'radial-gradient(circle at 20% 20%, hsl(var(--brand)/0.4), transparent 50%)' }} />
+        <div className="container mx-auto px-4 py-12 relative">
+          <div className="max-w-2xl mx-auto flex items-center gap-6">
           <div className="relative group">
-            <Avatar className="h-24 w-24">
+            <Avatar className="h-24 w-24 ring-4 ring-white/20">
               <AvatarImage src={profile?.avatar_url || ''} />
-              <AvatarFallback className="text-2xl bg-primary text-primary-foreground">
+              <AvatarFallback className="text-2xl bg-white/15 text-white font-display font-black">
                 {getInitials(profile?.full_name)}
               </AvatarFallback>
             </Avatar>
@@ -231,12 +233,12 @@ const Profile = () => {
           </div>
           
           <div className="flex-1">
-            <h1 className="text-3xl font-bold">{profile?.full_name || labels.pageTitle}</h1>
-            <p className="text-muted-foreground">{user?.email}</p>
+            <h1 className="font-heading-ar text-3xl md:text-4xl font-black text-white">{profile?.full_name || labels.pageTitle}</h1>
+            <p className="text-white/70 mt-1">{user?.email}</p>
             <Button 
-              variant="outline" 
+              variant="secondary"
               size="sm" 
-              className="mt-2"
+              className="mt-3 rounded-xl bg-white text-navy hover:bg-white/90"
               onClick={handleAvatarClick}
               disabled={isUploadingAvatar}
             >
@@ -253,14 +255,19 @@ const Profile = () => {
               )}
             </Button>
           </div>
+          </div>
         </div>
+      </section>
+
+      <div className="container mx-auto px-4 -mt-8 pb-16 relative">
+        <div className="max-w-2xl mx-auto">
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Personal Information */}
-          <Card>
+          <Card className="rounded-3xl border-border shadow-xl shadow-navy/5">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <User className="h-5 w-5" />
+              <CardTitle className="flex items-center gap-2 font-heading-ar text-navy">
+                <User className="h-5 w-5 text-brand" />
                 {labels.personalInfo}
               </CardTitle>
             </CardHeader>
@@ -316,19 +323,19 @@ const Profile = () => {
           </Card>
 
           {/* Quick Links */}
-          <Card>
+          <Card className="rounded-3xl border-border shadow-xl shadow-navy/5">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+              <CardTitle className="flex items-center gap-2 font-heading-ar text-navy">
                 {isRTL ? 'روابط سريعة' : 'Quick Links'}
               </CardTitle>
             </CardHeader>
             <CardContent className="grid gap-3 sm:grid-cols-2">
               <Link 
                 to="/my-applications" 
-                className="flex items-center justify-between p-4 rounded-lg border hover:bg-accent transition-colors group"
+                className="flex items-center justify-between p-4 rounded-2xl border border-border hover:border-navy/30 hover:shadow-md hover:-translate-y-0.5 transition-all group bg-card"
               >
                 <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-full bg-primary/10 text-primary">
+                  <div className="p-2 rounded-xl bg-navy/10 text-navy">
                     <FileText className="h-5 w-5" />
                   </div>
                   <span className="font-medium">
@@ -344,10 +351,10 @@ const Profile = () => {
               
               <Link 
                 to="/track-refund" 
-                className="flex items-center justify-between p-4 rounded-lg border hover:bg-accent transition-colors group"
+                className="flex items-center justify-between p-4 rounded-2xl border border-border hover:border-navy/30 hover:shadow-md hover:-translate-y-0.5 transition-all group bg-card"
               >
                 <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-full bg-orange-500/10 text-orange-500">
+                  <div className="p-2 rounded-xl bg-brand/10 text-brand">
                     <RotateCcw className="h-5 w-5" />
                   </div>
                   <span className="font-medium">
@@ -365,7 +372,7 @@ const Profile = () => {
 
           {/* Submit Button */}
           <div className="flex justify-end">
-            <Button type="submit" disabled={isLoading} size="lg">
+            <Button type="submit" disabled={isLoading} size="lg" className="rounded-2xl bg-navy hover:bg-navy/90 text-white h-12 px-8">
               {isLoading ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin mr-2" />
@@ -380,6 +387,7 @@ const Profile = () => {
             </Button>
           </div>
         </form>
+        </div>
       </div>
     </div>
   );
