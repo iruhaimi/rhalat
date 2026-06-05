@@ -23,6 +23,7 @@ import {
   getSchengenCountries,
   isSchengenCountry 
 } from '@/lib/schengenCountries';
+import { getSharpFlagUrl } from '@/lib/flagUtils';
 
 export default function Step2VisaDetails() {
   const { t, direction, language } = useLanguage();
@@ -256,7 +257,7 @@ export default function Step2VisaDetails() {
                     <SelectItem key={country.id} value={country.id}>
                       <div className="flex items-center gap-2">
                         <img 
-                          src={country.flag_url || `https://flagcdn.com/w40/${country.code.toLowerCase()}.png`}
+                          src={getSharpFlagUrl(country)}
                           alt={country.name}
                           className="w-5 h-4 object-cover rounded"
                         />
@@ -285,7 +286,7 @@ export default function Step2VisaDetails() {
                     <SelectItem key={country.id} value={country.id}>
                       <div className="flex items-center gap-2">
                         <img 
-                          src={country.flag_url || `https://flagcdn.com/w40/${country.code.toLowerCase()}.png`}
+                          src={getSharpFlagUrl(country)}
                           alt={country.name}
                           className="w-5 h-4 object-cover rounded"
                         />
