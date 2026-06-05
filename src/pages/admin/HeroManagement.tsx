@@ -391,7 +391,7 @@ function DestinationsManagement({ isRTL }: { isRTL: boolean }) {
                     setImagePreview(e.target.value);
                     setImageFile(null);
                   }}
-                  placeholder="https://flagcdn.com/w80/us.png"
+                  placeholder="https://flagcdn.com/us.svg"
                   dir="ltr"
                 />
                 {formData.country && !formData.image_url && (
@@ -400,7 +400,7 @@ function DestinationsManagement({ isRTL }: { isRTL: boolean }) {
                     variant="outline"
                     size="sm"
                     onClick={() => {
-                      const url = `https://flagcdn.com/w80/${formData.country.toLowerCase()}.png`;
+                      const url = `https://flagcdn.com/${formData.country.toLowerCase()}.svg`;
                       setFormData({ ...formData, image_url: url });
                       setImagePreview(url);
                     }}
