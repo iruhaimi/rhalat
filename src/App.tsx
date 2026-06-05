@@ -3,87 +3,98 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { lazy, Suspense } from "react";
+import { Loader2 } from "lucide-react";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 
 // Layouts
 import MainLayout from "@/components/layout/MainLayout";
-import AdminLayout from "@/components/admin/AdminLayout";
-import AgentLayout from "@/components/agent/AgentLayout";
 import ProtectedRoute from "@/components/admin/ProtectedRoute";
 
-// Pages
+// Public Pages — eager (critical path)
 import HomeArabic from "@/pages/HomeArabic";
-import Destinations from "@/pages/Destinations";
-import CountryDetail from "@/pages/CountryDetail";
-import Apply from "@/pages/Apply";
-import Pricing from "@/pages/Pricing";
-import TrackApplication from "@/pages/TrackApplication";
-import About from "@/pages/About";
-import Contact from "@/pages/Contact";
-import FAQ from "@/pages/FAQ";
-import Terms from "@/pages/Terms";
-import Privacy from "@/pages/Privacy";
-import Refund from "@/pages/Refund";
-import TrackRefund from "@/pages/TrackRefund";
-import PaymentSuccess from "@/pages/PaymentSuccess";
-import PaymentFailed from "@/pages/PaymentFailed";
 import Auth from "@/pages/Auth";
-import Profile from "@/pages/Profile";
-import MyApplications from "@/pages/MyApplications";
-import MyApplicationDetail from "@/pages/MyApplicationDetail";
-import SpecialOffers from "@/pages/SpecialOffers";
-import ResetPassword from "@/pages/ResetPassword";
-import Install from "@/pages/Install";
 import NotFound from "@/pages/NotFound";
-
-// Admin Pages
-import AdminDashboard from "@/pages/admin/AdminDashboard";
-import ApplicationsList from "@/pages/admin/ApplicationsList";
-import ApplicationDetail from "@/pages/admin/ApplicationDetail";
-import UsersManagement from "@/pages/admin/UsersManagement";
-import Settings from "@/pages/admin/Settings";
-import OffersManagement from "@/pages/admin/OffersManagement";
-import RefundRequestsManagement from "@/pages/admin/RefundRequestsManagement";
-import HeroManagement from "@/pages/admin/HeroManagement";
-import LoginAttemptsManagement from "@/pages/admin/LoginAttemptsManagement";
-import UnlockRequestsManagement from "@/pages/admin/UnlockRequestsManagement";
-import AgentRequestsManagement from "@/pages/admin/AgentRequestsManagement";
-import SensitiveOperations from "@/pages/admin/SensitiveOperations";
-import OwnerSettings from "@/pages/admin/OwnerSettings";
-import DocumentAccessLogs from "@/pages/admin/DocumentAccessLogs";
-import FooterManagement from "@/pages/admin/FooterManagement";
-import StaffAuditLog from "@/pages/admin/StaffAuditLog";
-import EmailLogsManagement from "@/pages/admin/EmailLogsManagement";
-import PortalSecurity from "@/pages/admin/PortalSecurity";
-import SecurityStatus from "@/pages/admin/SecurityStatus";
-import QuickSettings from "@/pages/admin/QuickSettings";
 import DynamicPortalRoute from "@/components/DynamicPortalRoute";
-import AIAssistant from "@/pages/admin/AIAssistant";
-import AIAssistantHistory from "@/pages/admin/AIAssistantHistory";
-import AIToolAuditLog from "@/pages/admin/AIToolAuditLog";
-import SEOContentManagement from "@/pages/admin/SEOContentManagement";
-import BlogManagement from "@/pages/admin/BlogManagement";
-import BlogPostEditor from "@/pages/admin/BlogPostEditor";
-import Blog from "@/pages/Blog";
-import BlogPost from "@/pages/BlogPost";
-// Agent Pages
-import AgentDashboard from "@/pages/agent/AgentDashboard";
-import AgentApplicationsList from "@/pages/agent/AgentApplicationsList";
-import AgentApplicationDetail from "@/pages/agent/AgentApplicationDetail";
 
-// Tourism
-import Tourism from "@/pages/Tourism";
-import TourismDetail from "@/pages/TourismDetail";
-import TourProgramsManagement from "@/pages/admin/TourProgramsManagement";
-import TourOperatorsApproval from "@/pages/admin/TourOperatorsApproval";
-import TourOperatorLayout from "@/components/tourism/TourOperatorLayout";
-import TourOperatorDashboard from "@/pages/tourism-portal/Dashboard";
-import TourOperatorCompanyProfile from "@/pages/tourism-portal/CompanyProfile";
-import TourOperatorMyPrograms from "@/pages/tourism-portal/MyPrograms";
-import TourOperatorMyBookings from "@/pages/tourism-portal/MyBookings";
+// Public Pages — lazy
+const Destinations = lazy(() => import("@/pages/Destinations"));
+const CountryDetail = lazy(() => import("@/pages/CountryDetail"));
+const Apply = lazy(() => import("@/pages/Apply"));
+const Pricing = lazy(() => import("@/pages/Pricing"));
+const TrackApplication = lazy(() => import("@/pages/TrackApplication"));
+const About = lazy(() => import("@/pages/About"));
+const Contact = lazy(() => import("@/pages/Contact"));
+const FAQ = lazy(() => import("@/pages/FAQ"));
+const Terms = lazy(() => import("@/pages/Terms"));
+const Privacy = lazy(() => import("@/pages/Privacy"));
+const Refund = lazy(() => import("@/pages/Refund"));
+const TrackRefund = lazy(() => import("@/pages/TrackRefund"));
+const PaymentSuccess = lazy(() => import("@/pages/PaymentSuccess"));
+const PaymentFailed = lazy(() => import("@/pages/PaymentFailed"));
+const Profile = lazy(() => import("@/pages/Profile"));
+const MyApplications = lazy(() => import("@/pages/MyApplications"));
+const MyApplicationDetail = lazy(() => import("@/pages/MyApplicationDetail"));
+const SpecialOffers = lazy(() => import("@/pages/SpecialOffers"));
+const ResetPassword = lazy(() => import("@/pages/ResetPassword"));
+const Install = lazy(() => import("@/pages/Install"));
+const Blog = lazy(() => import("@/pages/Blog"));
+const BlogPost = lazy(() => import("@/pages/BlogPost"));
+const Tourism = lazy(() => import("@/pages/Tourism"));
+const TourismDetail = lazy(() => import("@/pages/TourismDetail"));
+
+// Admin — lazy
+const AdminLayout = lazy(() => import("@/components/admin/AdminLayout"));
+const AdminDashboard = lazy(() => import("@/pages/admin/AdminDashboard"));
+const ApplicationsList = lazy(() => import("@/pages/admin/ApplicationsList"));
+const ApplicationDetail = lazy(() => import("@/pages/admin/ApplicationDetail"));
+const UsersManagement = lazy(() => import("@/pages/admin/UsersManagement"));
+const Settings = lazy(() => import("@/pages/admin/Settings"));
+const OffersManagement = lazy(() => import("@/pages/admin/OffersManagement"));
+const RefundRequestsManagement = lazy(() => import("@/pages/admin/RefundRequestsManagement"));
+const HeroManagement = lazy(() => import("@/pages/admin/HeroManagement"));
+const LoginAttemptsManagement = lazy(() => import("@/pages/admin/LoginAttemptsManagement"));
+const UnlockRequestsManagement = lazy(() => import("@/pages/admin/UnlockRequestsManagement"));
+const AgentRequestsManagement = lazy(() => import("@/pages/admin/AgentRequestsManagement"));
+const SensitiveOperations = lazy(() => import("@/pages/admin/SensitiveOperations"));
+const OwnerSettings = lazy(() => import("@/pages/admin/OwnerSettings"));
+const DocumentAccessLogs = lazy(() => import("@/pages/admin/DocumentAccessLogs"));
+const FooterManagement = lazy(() => import("@/pages/admin/FooterManagement"));
+const StaffAuditLog = lazy(() => import("@/pages/admin/StaffAuditLog"));
+const EmailLogsManagement = lazy(() => import("@/pages/admin/EmailLogsManagement"));
+const PortalSecurity = lazy(() => import("@/pages/admin/PortalSecurity"));
+const SecurityStatus = lazy(() => import("@/pages/admin/SecurityStatus"));
+const QuickSettings = lazy(() => import("@/pages/admin/QuickSettings"));
+const AIAssistant = lazy(() => import("@/pages/admin/AIAssistant"));
+const AIAssistantHistory = lazy(() => import("@/pages/admin/AIAssistantHistory"));
+const AIToolAuditLog = lazy(() => import("@/pages/admin/AIToolAuditLog"));
+const SEOContentManagement = lazy(() => import("@/pages/admin/SEOContentManagement"));
+const BlogManagement = lazy(() => import("@/pages/admin/BlogManagement"));
+const BlogPostEditor = lazy(() => import("@/pages/admin/BlogPostEditor"));
+const TourProgramsManagement = lazy(() => import("@/pages/admin/TourProgramsManagement"));
+const TourOperatorsApproval = lazy(() => import("@/pages/admin/TourOperatorsApproval"));
+
+// Agent — lazy
+const AgentLayout = lazy(() => import("@/components/agent/AgentLayout"));
+const AgentDashboard = lazy(() => import("@/pages/agent/AgentDashboard"));
+const AgentApplicationsList = lazy(() => import("@/pages/agent/AgentApplicationsList"));
+const AgentApplicationDetail = lazy(() => import("@/pages/agent/AgentApplicationDetail"));
+
+// Tour Operator Portal — lazy
+const TourOperatorLayout = lazy(() => import("@/components/tourism/TourOperatorLayout"));
+const TourOperatorDashboard = lazy(() => import("@/pages/tourism-portal/Dashboard"));
+const TourOperatorCompanyProfile = lazy(() => import("@/pages/tourism-portal/CompanyProfile"));
+const TourOperatorMyPrograms = lazy(() => import("@/pages/tourism-portal/MyPrograms"));
+const TourOperatorMyBookings = lazy(() => import("@/pages/tourism-portal/MyBookings"));
 
 const queryClient = new QueryClient();
+
+const RouteFallback = () => (
+  <div className="min-h-[50vh] flex items-center justify-center">
+    <Loader2 className="h-8 w-8 animate-spin text-primary" />
+  </div>
+);
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -93,6 +104,7 @@ const App = () => (
           <Toaster />
           <Sonner />
           <BrowserRouter>
+            <Suspense fallback={<RouteFallback />}>
             <Routes>
               {/* Public Routes with Main Layout */}
               <Route element={<MainLayout />}>
@@ -199,6 +211,7 @@ const App = () => (
               {/* Catch-all */}
               <Route path="*" element={<DynamicPortalRoute fallback={<NotFound />} />} />
             </Routes>
+            </Suspense>
           </BrowserRouter>
         </TooltipProvider>
       </AuthProvider>
