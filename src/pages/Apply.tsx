@@ -290,48 +290,52 @@ function ApplyContent() {
   }
 
   return (
-    <div className="min-h-screen bg-muted/30">
-      {/* Header - More compact on mobile */}
-      <div className="bg-gradient-to-b from-primary/10 to-transparent py-4 sm:py-8">
-        <div className="container-section px-4 sm:px-6">
-          <div className="flex items-center justify-center gap-3">
-            <h1 className="text-xl sm:text-3xl font-bold text-center">
+    <div className="min-h-screen bg-canvas">
+      {/* Hero — Navy/Cream wizard header */}
+      <div className="relative overflow-hidden bg-gradient-to-br from-navy via-navy/95 to-brand text-white">
+        <div className="absolute inset-0 opacity-[0.07] pointer-events-none"
+          style={{ backgroundImage: 'radial-gradient(circle at 20% 20%, white 1px, transparent 1px)', backgroundSize: '32px 32px' }}
+        />
+        <div className="container-section px-4 sm:px-6 py-8 sm:py-12 relative">
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            <h1 className="font-heading-ar text-2xl sm:text-4xl font-black text-center">
               {direction === 'rtl' ? 'تقديم طلب التأشيرة' : 'Visa Application'}
             </h1>
-            {/* Draft Save Indicator */}
             {draftId && profile && (
-              <Badge variant="secondary" className="gap-1 text-xs">
+              <Badge variant="secondary" className="gap-1 text-xs bg-white/15 text-white border-white/20 hover:bg-white/20">
                 {isSaving.current ? (
                   <Loader2 className="w-3 h-3 animate-spin" />
                 ) : (
                   <Save className="w-3 h-3" />
                 )}
-                {direction === 'rtl' ? 'محفوظ' : 'Saved'}
+                {direction === 'rtl' ? 'محفوظ تلقائياً' : 'Auto-saved'}
               </Badge>
             )}
           </div>
           {(country || applicationData.countryName) && (
-            <p className="text-center text-sm sm:text-base text-muted-foreground mt-1 sm:mt-2">
-              {direction === 'rtl' 
-                ? `التأشيرة إلى ${country?.name || applicationData.countryName}` 
+            <p className="text-center text-sm sm:text-base text-white/75 mt-2">
+              {direction === 'rtl'
+                ? `التأشيرة إلى ${country?.name || applicationData.countryName}`
                 : `Visa to ${country?.name || applicationData.countryName}`}
             </p>
           )}
         </div>
       </div>
 
-      {/* Wizard Stepper */}
-      <div className="container-section px-4 sm:px-6">
-        <WizardStepper 
-          currentStep={currentStep} 
-          totalSteps={6} 
-          onStepClick={handleStepClick}
-        />
+      {/* Wizard Stepper card — lifted over hero */}
+      <div className="container-section px-4 sm:px-6 -mt-6 sm:-mt-8 relative z-10">
+        <div className="max-w-4xl mx-auto bg-card border border-border rounded-3xl shadow-xl shadow-navy/5 px-4 sm:px-6 py-2 sm:py-3">
+          <WizardStepper
+            currentStep={currentStep}
+            totalSteps={6}
+            onStepClick={handleStepClick}
+          />
+        </div>
       </div>
 
       {/* Step Content */}
-      <div className="container-section px-4 sm:px-6 py-4 sm:py-8 pb-24 sm:pb-8">
-        <div className="max-w-4xl mx-auto bg-card rounded-xl shadow-sm border p-4 sm:p-6 md:p-8">
+      <div className="container-section px-4 sm:px-6 py-6 sm:py-10 pb-24 sm:pb-12">
+        <div className="max-w-4xl mx-auto bg-card rounded-4xl shadow-lg shadow-navy/5 border border-border p-5 sm:p-8 md:p-10">
           {renderStep()}
         </div>
       </div>

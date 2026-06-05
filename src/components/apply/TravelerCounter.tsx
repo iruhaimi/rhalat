@@ -38,13 +38,13 @@ export default function TravelerCounter({
   };
 
   return (
-    <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-muted/30 rounded-xl border border-border gap-4">
+    <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 sm:p-5 bg-card rounded-2xl border border-border gap-4 hover:border-navy/30 hover:shadow-md hover:shadow-navy/5 transition-all">
       <div className="flex-1">
-        <div className="font-semibold text-foreground">{label}</div>
+        <div className="font-bold text-base text-navy">{label}</div>
         <div className="text-sm text-muted-foreground">{description}</div>
-        <div className="text-sm font-medium text-primary mt-1 flex items-center gap-1">
+        <div className="text-sm font-display font-semibold text-brand mt-1 flex items-center gap-1">
           {price.toLocaleString()}
-          <SARSymbol size="xs" className="text-primary" />
+          <SARSymbol size="xs" className="text-brand" />
           <span className="text-muted-foreground font-normal">
             {direction === 'rtl' ? ' / للشخص' : ' / person'}
           </span>
@@ -58,7 +58,7 @@ export default function TravelerCounter({
           variant="outline"
           size="icon"
           className={cn(
-            "h-12 w-12 sm:h-10 sm:w-10 rounded-full text-lg font-bold",
+            "h-12 w-12 sm:h-11 sm:w-11 rounded-full text-lg font-bold border-border hover:bg-navy hover:text-white hover:border-navy",
             value <= min && "opacity-50 cursor-not-allowed"
           )}
           onClick={handleDecrement}
@@ -66,15 +66,15 @@ export default function TravelerCounter({
         >
           <Minus className="h-5 w-5 sm:h-4 sm:w-4" />
         </Button>
-        
-        <span className="w-12 text-center text-2xl sm:text-xl font-bold tabular-nums">{value}</span>
-        
+
+        <span className="w-12 text-center text-2xl sm:text-xl font-display font-black tabular-nums text-navy">{value}</span>
+
         <Button
           type="button"
           variant="outline"
           size="icon"
           className={cn(
-            "h-12 w-12 sm:h-10 sm:w-10 rounded-full text-lg font-bold",
+            "h-12 w-12 sm:h-11 sm:w-11 rounded-full text-lg font-bold border-border hover:bg-navy hover:text-white hover:border-navy",
             value >= max && "opacity-50 cursor-not-allowed"
           )}
           onClick={handleIncrement}
