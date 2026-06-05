@@ -1,105 +1,55 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Plane, Phone } from 'lucide-react';
+import { ArrowLeft, Phone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface CTASectionProps {
   t: (key: string) => string;
 }
 
 export default function CTASection({ t }: CTASectionProps) {
+  const { direction } = useLanguage();
+  const isRTL = direction === 'rtl';
+
   return (
-    <section className="py-20 relative overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary to-primary/80" />
-      
-      {/* Pattern Overlay */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute inset-0" style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-        }} />
-      </div>
+    <section className="py-20 bg-canvas">
+      <div className="container-section">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="relative bg-brand rounded-7xl p-12 md:p-20 text-center overflow-hidden shadow-2xl shadow-brand/20"
+        >
+          <div className="absolute -top-20 -end-20 w-80 h-80 bg-white/10 rounded-full blur-3xl" />
+          <div className="absolute -bottom-20 -start-20 w-80 h-80 bg-navy/20 rounded-full blur-3xl" />
 
-      {/* Floating Elements */}
-      <motion.div
-        className="absolute top-10 left-10 w-20 h-20 rounded-full bg-white/10 blur-xl"
-        animate={{ y: [0, 20, 0], x: [0, 10, 0] }}
-        transition={{ duration: 5, repeat: Infinity }}
-      />
-      <motion.div
-        className="absolute bottom-10 right-10 w-32 h-32 rounded-full bg-white/10 blur-xl"
-        animate={{ y: [0, -20, 0], x: [0, -10, 0] }}
-        transition={{ duration: 7, repeat: Infinity }}
-      />
-
-      <div className="container-section relative">
-        <div className="max-w-3xl mx-auto text-center text-white">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            {/* Icon */}
-            <motion.div 
-              className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-white/20 mb-6"
-              animate={{ rotate: [0, 10, -10, 0] }}
-              transition={{ duration: 3, repeat: Infinity }}
-            >
-              <Plane className="h-8 w-8" />
-            </motion.div>
-
-            <h2 className="text-3xl md:text-5xl font-bold mb-6">
-              جاهز لبدء رحلتك؟
+          <div className="relative z-10 max-w-2xl mx-auto text-white">
+            <h2 className="font-heading-ar text-4xl md:text-6xl font-extrabold mb-6 leading-tight">
+              {isRTL ? 'ابدأ مغامرتك القادمة الآن' : 'Start your next adventure'}
             </h2>
-            <p className="text-xl text-white/80 mb-10 leading-relaxed">
-              قدّم على تأشيرتك اليوم مع عطلات رحلاتكم
-              <br />
-              واستمتع بخدمة احترافية وسريعة
+            <p className="font-body-ar text-lg md:text-xl opacity-90 mb-10 leading-relaxed">
+              {isRTL
+                ? 'فريقنا جاهز لمساعدتك في الحصول على تأشيرتك بأسرع وقت وأقل تكلفة.'
+                : 'Our team is ready to help you get your visa quickly and affordably.'}
             </p>
-
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Button 
-                size="lg" 
-                variant="secondary" 
-                className="rounded-full px-8 h-14 text-lg shadow-xl hover:shadow-2xl transition-shadow"
-                asChild
-              >
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button asChild size="lg" className="h-14 px-10 rounded-2xl bg-white text-brand hover:bg-white/95 hover:scale-[1.02] transition-transform font-jakarta font-extrabold text-base shadow-xl">
                 <Link to="/apply">
-                  ابدأ طلبك الآن
-                  <ArrowLeft className="h-5 w-5 mr-2" />
+                  {isRTL ? 'ابدأ بتقديم طلبك' : 'Start your application'}
+                  <ArrowLeft className="h-5 w-5 ms-1 rtl-flip" />
                 </Link>
               </Button>
-              <Button 
-                size="lg" 
-                variant="outline" 
-                className="rounded-full px-8 h-14 text-lg border-white/30 text-white hover:bg-white/10 hover:text-white"
-                asChild
-              >
-                <a href="tel:562525665">
-                  <Phone className="h-5 w-5 ml-2" />
-                  اتصل بنا: 562525665
+              <Button asChild size="lg" variant="outline" className="h-14 px-10 rounded-2xl bg-transparent border-2 border-white/40 text-white hover:bg-white/10 hover:text-white hover:border-white/60 font-jakarta font-extrabold text-base backdrop-blur-sm">
+                <a href="tel:+966562525665">
+                  <Phone className="h-5 w-5 me-1" />
+                  {isRTL ? 'تواصل مع خبير' : 'Talk to an expert'}
                 </a>
               </Button>
             </div>
-
-            {/* Trust Badges */}
-            <div className="mt-12 flex flex-wrap items-center justify-center gap-6 text-white/70 text-sm">
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-success" />
-                <span>معالجة سريعة</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-success" />
-                <span>أسعار تنافسية</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-success" />
-                <span>دعم متواصل</span>
-              </div>
-            </div>
-          </motion.div>
-        </div>
+          </div>
+        </motion.div>
       </div>
     </section>
   );

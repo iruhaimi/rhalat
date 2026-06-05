@@ -1,94 +1,73 @@
 import { motion } from 'framer-motion';
-import { Globe, FileText, Plane, CreditCard, CheckCircle } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface HowItWorksSectionProps {
   t: (key: string) => string;
 }
 
 export default function HowItWorksSection({ t }: HowItWorksSectionProps) {
+  const { direction } = useLanguage();
+  const isRTL = direction === 'rtl';
+
   const steps = [
-    { 
-      icon: Globe, 
-      title: t('howItWorks.step1.title'), 
-      desc: t('howItWorks.step1.desc'),
-      color: 'from-blue-500 to-cyan-500'
+    {
+      num: '01',
+      title: t('howItWorks.step1.title') || (isRTL ? 'اختر وجهتك' : 'Choose destination'),
+      desc: t('howItWorks.step1.desc') || (isRTL ? 'تصفح الدول والخدمات المتاحة واختر ما يناسب خطة سفرك.' : 'Browse destinations and pick the visa that fits your plan.'),
     },
-    { 
-      icon: FileText, 
-      title: t('howItWorks.step2.title'), 
-      desc: t('howItWorks.step2.desc'),
-      color: 'from-purple-500 to-pink-500'
+    {
+      num: '02',
+      title: t('howItWorks.step2.title') || (isRTL ? 'ارفع مستنداتك' : 'Upload documents'),
+      desc: t('howItWorks.step2.desc') || (isRTL ? 'ارفع الوثائق المطلوبة عبر لوحة تحكم آمنة ومشفرة بالكامل.' : 'Upload required documents securely through our encrypted dashboard.'),
     },
-    { 
-      icon: CreditCard, 
-      title: t('howItWorks.step3.title'), 
-      desc: t('howItWorks.step3.desc'),
-      color: 'from-orange-500 to-red-500'
-    },
-    { 
-      icon: Plane, 
-      title: t('howItWorks.step4.title'), 
-      desc: t('howItWorks.step4.desc'),
-      color: 'from-green-500 to-emerald-500'
+    {
+      num: '03',
+      title: t('howItWorks.step3.title') || (isRTL ? 'استلم تأشيرتك' : 'Receive your visa'),
+      desc: t('howItWorks.step3.desc') || (isRTL ? 'سنعالج طلبك ونرسل التأشيرة إلكترونياً، خطوة بخطوة معك.' : 'We process and deliver — we’ll keep you posted at every step.'),
     },
   ];
 
   return (
-    <section className="py-20 bg-muted/30 overflow-hidden">
-      <div className="container-section">
-        <motion.div 
-          className="text-center mb-16"
+    <section className="py-28 bg-cream/60 relative overflow-hidden">
+      <div className="pointer-events-none absolute top-0 end-0 w-1/3 h-full bg-brand/5 blur-[120px] -translate-y-1/3" />
+      <div className="container-section relative">
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
+          className="text-center max-w-2xl mx-auto mb-20"
         >
-          <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
-            خطوات بسيطة
+          <span className="font-jakarta text-xs font-bold tracking-[0.25em] uppercase text-brand mb-3 block">
+            {isRTL ? 'كيف نعمل' : 'How it works'}
           </span>
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+          <h2 className="font-heading-ar text-4xl md:text-5xl font-extrabold text-navy mb-4">
             {t('howItWorks.title')}
           </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          <p className="font-body-ar text-base text-muted-foreground leading-relaxed">
             {t('howItWorks.subtitle')}
           </p>
         </motion.div>
 
-        {/* Steps Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {steps.map((step, index) => (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-10">
+          {steps.map((step, i) => (
             <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 50 }}
+              key={step.num}
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.15 }}
+              transition={{ duration: 0.5, delay: i * 0.12 }}
               className="relative group"
             >
-              {/* Card */}
-              <div className="relative bg-card rounded-2xl p-6 shadow-lg border border-border/50 hover:shadow-xl hover:border-primary/30 transition-all duration-300 h-full">
-                {/* Step Number */}
-                <div className="absolute -top-4 right-6 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold text-sm shadow-lg">
-                  {index + 1}
-                </div>
-
-                {/* Icon */}
-                <motion.div 
-                  className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${step.color} flex items-center justify-center mb-4 shadow-lg`}
-                  whileHover={{ scale: 1.1, rotate: 5 }}
-                  transition={{ type: 'spring', stiffness: 300 }}
-                >
-                  <step.icon className="h-8 w-8 text-white" />
-                </motion.div>
-
-                <h3 className="text-lg font-bold mb-2">{step.title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">{step.desc}</p>
-
-                {/* Checkmark */}
-                <div className="absolute bottom-4 left-4">
-                  <CheckCircle className="h-5 w-5 text-primary/30 group-hover:text-primary/60 transition-colors" />
-                </div>
+              <div className={`w-20 h-20 rounded-3xl flex items-center justify-center font-display text-3xl font-bold mb-8 shadow-xl transition-transform group-hover:-rotate-6 ${
+                i === 0
+                  ? 'bg-brand text-brand-foreground shadow-brand/30'
+                  : 'bg-card text-navy shadow-navy/5 border border-border'
+              }`}>
+                {step.num}
               </div>
+              <h3 className="font-heading-ar text-2xl font-extrabold text-navy mb-3">{step.title}</h3>
+              <p className="font-body-ar text-muted-foreground leading-relaxed">{step.desc}</p>
             </motion.div>
           ))}
         </div>

@@ -1,22 +1,18 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDown, HelpCircle, ArrowLeft, MessageCircleQuestion } from 'lucide-react';
+import { Plus, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useLanguage } from '@/contexts/LanguageContext';
 
-interface FAQItem {
-  question: string;
-  answer: string;
-}
-
-const faqs: FAQItem[] = [
+const faqs = [
   {
     question: 'كم تستغرق معالجة طلب التأشيرة؟',
     answer: 'تختلف مدة المعالجة حسب نوع التأشيرة والدولة. عادة ما تتراوح بين 3-14 يوم عمل. نوفر أيضاً خدمة المعالجة السريعة لبعض التأشيرات.',
   },
   {
     question: 'ما هي المستندات المطلوبة عادةً؟',
-    answer: 'تختلف المستندات حسب نوع التأشيرة. بشكل عام تحتاج: جواز سفر ساري المفعول، صور شخصية حديثة، كشف حساب بنكي، وحجوزات الطيران والفندق.',
+    answer: 'تختلف المستندات حسب نوع التأشيرة. بشكل عام تحتاج: جواز سفر ساري، صور شخصية حديثة، كشف حساب بنكي، وحجوزات الطيران والفندق.',
   },
   {
     question: 'هل الأسعار شاملة لرسوم السفارة؟',
@@ -28,155 +24,92 @@ const faqs: FAQItem[] = [
   },
 ];
 
-interface AccordionItemProps {
-  item: FAQItem;
-  isOpen: boolean;
-  onToggle: () => void;
-  index: number;
-}
-
-function AccordionItem({ item, isOpen, onToggle, index }: AccordionItemProps) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ delay: index * 0.1 }}
-      className="group"
-    >
-      <div
-        className={`bg-card rounded-2xl border overflow-hidden transition-all duration-300 ${
-          isOpen 
-            ? 'border-primary/30 shadow-lg shadow-primary/5' 
-            : 'border-border/50 hover:border-primary/20 hover:shadow-md'
-        }`}
-      >
-        <button
-          onClick={onToggle}
-          className="w-full flex items-center justify-between p-5 md:p-6 text-right"
-        >
-          <div className="flex items-center gap-4 flex-1">
-            <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors ${
-              isOpen ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary'
-            }`}>
-              <span className="font-bold">{index + 1}</span>
-            </div>
-            <h3 className={`font-bold text-lg transition-colors ${isOpen ? 'text-primary' : 'text-foreground'}`}>
-              {item.question}
-            </h3>
-          </div>
-          <motion.div
-            animate={{ rotate: isOpen ? 180 : 0 }}
-            transition={{ duration: 0.3 }}
-            className={`flex-shrink-0 mr-4 ${isOpen ? 'text-primary' : 'text-muted-foreground'}`}
-          >
-            <ChevronDown className="h-5 w-5" />
-          </motion.div>
-        </button>
-
-        <AnimatePresence>
-          {isOpen && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: 'auto', opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              <div className="px-5 md:px-6 pb-5 md:pb-6 pr-20">
-                <p className="text-muted-foreground leading-relaxed">
-                  {item.answer}
-                </p>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-    </motion.div>
-  );
-}
-
 interface FAQSectionProps {
   t: (key: string) => string;
 }
 
 export default function FAQSection({ t }: FAQSectionProps) {
-  const [openIndex, setOpenIndex] = useState<number | null>(0);
-
-  const handleToggle = (index: number) => {
-    setOpenIndex(openIndex === index ? null : index);
-  };
+  const { direction } = useLanguage();
+  const isRTL = direction === 'rtl';
+  const [open, setOpen] = useState<number | null>(0);
 
   return (
-    <section className="py-24 bg-gradient-to-b from-muted/30 to-background relative overflow-hidden">
-      {/* Decorative Elements */}
-      <div className="absolute top-20 left-10 w-64 h-64 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-20 right-10 w-80 h-80 bg-accent/5 rounded-full blur-3xl pointer-events-none" />
-
-      <div className="container-section relative">
-        <div className="grid lg:grid-cols-5 gap-12 items-start">
-          {/* Left Side - Header */}
+    <section className="py-28 bg-canvas">
+      <div className="container-section">
+        <div className="grid lg:grid-cols-12 gap-12">
           <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="lg:col-span-2 lg:sticky lg:top-24"
+            className="lg:col-span-4 lg:sticky lg:top-24 self-start"
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6">
-              <MessageCircleQuestion className="h-4 w-4" />
-              <span>الأسئلة الشائعة</span>
-            </div>
-
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
+            <span className="font-jakarta text-xs font-bold tracking-[0.25em] uppercase text-brand mb-3 block">
+              {isRTL ? 'الأسئلة الشائعة' : 'FAQ'}
+            </span>
+            <h2 className="font-heading-ar text-4xl md:text-5xl font-extrabold text-navy mb-6 leading-tight">
               {t('faq.title')}
             </h2>
-            
-            <p className="text-lg text-muted-foreground mb-8">
+            <p className="font-body-ar text-base text-muted-foreground mb-8 leading-relaxed">
               {t('faq.subtitle')}
             </p>
-
-            {/* Help Card */}
-            <div className="bg-card rounded-2xl p-6 border border-border/50 shadow-sm">
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
-                  <HelpCircle className="h-6 w-6 text-primary" />
-                </div>
-                <div>
-                  <h4 className="font-bold mb-1">لم تجد إجابتك؟</h4>
-                  <p className="text-sm text-muted-foreground mb-3">
-                    فريقنا جاهز لمساعدتك على مدار الساعة
-                  </p>
-                  <Button asChild size="sm" className="rounded-full">
-                    <Link to="/contact">
-                      تواصل معنا
-                      <ArrowLeft className="h-4 w-4 mr-2" />
-                    </Link>
-                  </Button>
-                </div>
-              </div>
-            </div>
-
-            {/* View All Link */}
-            <div className="mt-6">
-              <Button variant="outline" className="rounded-full" asChild>
-                <Link to="/faq">
-                  عرض جميع الأسئلة
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                </Link>
-              </Button>
-            </div>
+            <Button asChild variant="outline" className="rounded-2xl h-12 px-6 border-border hover:bg-brand hover:text-brand-foreground hover:border-brand">
+              <Link to="/faq" className="font-jakarta font-bold">
+                {isRTL ? 'عرض كل الأسئلة' : 'See all questions'}
+                <ArrowLeft className="h-4 w-4 ms-1 rtl-flip" />
+              </Link>
+            </Button>
           </motion.div>
 
-          {/* Right Side - Accordion */}
-          <div className="lg:col-span-3 space-y-4">
-            {faqs.map((faq, index) => (
-              <AccordionItem
-                key={index}
-                item={faq}
-                isOpen={openIndex === index}
-                onToggle={() => handleToggle(index)}
-                index={index}
-              />
+          <div className="lg:col-span-8 space-y-3">
+            {faqs.map((faq, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.08 }}
+                className={`bg-card border rounded-3xl overflow-hidden transition-all ${
+                  open === i ? 'border-brand/40 shadow-xl shadow-brand/5' : 'border-border hover:border-brand/20'
+                }`}
+              >
+                <button
+                  onClick={() => setOpen(open === i ? null : i)}
+                  className="w-full flex items-center justify-between p-6 text-start"
+                >
+                  <div className="flex items-center gap-4 flex-1">
+                    <span className={`font-display text-xl font-bold ${open === i ? 'text-brand' : 'text-navy/40'}`}>
+                      0{i + 1}
+                    </span>
+                    <h3 className={`font-heading-ar font-extrabold text-lg ${open === i ? 'text-brand' : 'text-navy'}`}>
+                      {faq.question}
+                    </h3>
+                  </div>
+                  <motion.span
+                    animate={{ rotate: open === i ? 45 : 0 }}
+                    transition={{ duration: 0.25 }}
+                    className={`flex h-9 w-9 items-center justify-center rounded-full flex-shrink-0 ms-3 ${
+                      open === i ? 'bg-brand text-brand-foreground' : 'bg-cream text-navy'
+                    }`}
+                  >
+                    <Plus className="h-4 w-4" />
+                  </motion.span>
+                </button>
+                <AnimatePresence initial={false}>
+                  {open === i && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.25 }}
+                    >
+                      <p className="font-body-ar text-muted-foreground leading-relaxed px-6 pb-6 ps-[4.5rem]">
+                        {faq.answer}
+                      </p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
             ))}
           </div>
         </div>

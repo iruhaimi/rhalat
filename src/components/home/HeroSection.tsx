@@ -1,23 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Search, ArrowLeft, Shield, Clock, CheckCircle2, Plane, Loader2, Globe } from 'lucide-react';
+import { Search, ArrowLeft, Globe, Sparkles, Clock, ShieldCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-
-import heroBgFallback from '@/assets/hero-bg.jpg';
-
-// English country names by code
-const countryNamesEn: Record<string, string> = {
-  US: 'United States', AU: 'Australia', DE: 'Germany', AE: 'UAE',
-  SA: 'Saudi Arabia', GB: 'United Kingdom', JP: 'Japan', SG: 'Singapore',
-  FR: 'France', CA: 'Canada', IT: 'Italy', ES: 'Spain', NL: 'Netherlands',
-  TR: 'Turkey', IN: 'India', CN: 'China', BR: 'Brazil', ZA: 'South Africa',
-};
 
 interface HeroDestination {
   id: string;
@@ -28,9 +17,6 @@ interface HeroDestination {
   image_url: string;
   link_url: string | null;
   display_order: number;
-  is_active: boolean;
-  created_at: string;
-  updated_at: string;
 }
 
 interface HeroSetting {
@@ -39,24 +25,18 @@ interface HeroSetting {
   value_en: string | null;
 }
 
-// Fallback destinations
 const fallbackDestinations: HeroDestination[] = [
-  { id: '1', name: 'الولايات المتحدة', name_en: 'United States', country: 'US', country_en: 'United States', image_url: 'https://flagcdn.com/w160/us.png', link_url: null, display_order: 1, is_active: true, created_at: '', updated_at: '' },
-  { id: '2', name: 'أستراليا', name_en: 'Australia', country: 'AU', country_en: 'Australia', image_url: 'https://flagcdn.com/w160/au.png', link_url: null, display_order: 2, is_active: true, created_at: '', updated_at: '' },
-  { id: '3', name: 'ألمانيا', name_en: 'Germany', country: 'DE', country_en: 'Germany', image_url: 'https://flagcdn.com/w160/de.png', link_url: null, display_order: 3, is_active: true, created_at: '', updated_at: '' },
-  { id: '4', name: 'الإمارات', name_en: 'UAE', country: 'AE', country_en: 'UAE', image_url: 'https://flagcdn.com/w160/ae.png', link_url: null, display_order: 4, is_active: true, created_at: '', updated_at: '' },
-  { id: '5', name: 'المملكة المتحدة', name_en: 'United Kingdom', country: 'GB', country_en: 'United Kingdom', image_url: 'https://flagcdn.com/w160/gb.png', link_url: null, display_order: 5, is_active: true, created_at: '', updated_at: '' },
-  { id: '6', name: 'اليابان', name_en: 'Japan', country: 'JP', country_en: 'Japan', image_url: 'https://flagcdn.com/w160/jp.png', link_url: null, display_order: 6, is_active: true, created_at: '', updated_at: '' },
+  { id: '1', name: 'فرنسا', name_en: 'France', country: 'FR', country_en: 'France', image_url: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=800&q=80', link_url: null, display_order: 1 },
+  { id: '2', name: 'تركيا', name_en: 'Turkey', country: 'TR', country_en: 'Turkey', image_url: 'https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?w=800&q=80', link_url: null, display_order: 2 },
+  { id: '3', name: 'اليابان', name_en: 'Japan', country: 'JP', country_en: 'Japan', image_url: 'https://images.unsplash.com/photo-1492571350019-22de08371fd3?w=800&q=80', link_url: null, display_order: 3 },
 ];
 
 export default function HeroSection() {
   const { direction } = useLanguage();
-  const [searchQuery, setSearchQuery] = useState('');
-  const [visibleStart, setVisibleStart] = useState(0);
   const isRTL = direction === 'rtl';
+  const [searchQuery, setSearchQuery] = useState('');
 
-  // Fetch destinations
-  const { data: dbDestinations, isLoading: loadingDestinations } = useQuery({
+  const { data: dbDestinations } = useQuery({
     queryKey: ['hero-destinations'],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -69,7 +49,6 @@ export default function HeroSection() {
     },
   });
 
-  // Fetch settings
   const { data: dbSettings } = useQuery({
     queryKey: ['hero-settings'],
     queryFn: async () => {
@@ -82,7 +61,6 @@ export default function HeroSection() {
     },
   });
 
-  // Create settings map
   const settings: Record<string, { ar: string; en: string }> = {};
   dbSettings?.forEach(s => {
     settings[s.key] = { ar: s.value, en: s.value_en || s.value };
@@ -94,212 +72,162 @@ export default function HeroSection() {
     return isRTL ? s.ar : s.en;
   };
 
-  const heroBg = settings['background_image']?.ar || heroBgFallback;
-  const destinations = (dbDestinations && dbDestinations.length > 0) ? dbDestinations : fallbackDestinations;
+  const destinations = (dbDestinations && dbDestinations.length > 0)
+    ? dbDestinations.slice(0, 3)
+    : fallbackDestinations;
 
-  // Auto-cycle visible destinations (show 6 at a time)
-  const visibleCount = 6;
-  useEffect(() => {
-    if (destinations.length <= visibleCount) return;
-    const timer = setInterval(() => {
-      setVisibleStart(prev => (prev + visibleCount) % destinations.length);
-    }, 4000);
-    return () => clearInterval(timer);
-  }, [destinations.length]);
-
-  const visibleDestinations = destinations.slice(visibleStart, visibleStart + visibleCount);
-  // Wrap around if needed
-  const remaining = visibleCount - visibleDestinations.length;
-  const displayDestinations = remaining > 0
-    ? [...visibleDestinations, ...destinations.slice(0, remaining)]
-    : visibleDestinations;
-
-  const getDisplayName = (dest: HeroDestination) =>
-    isRTL ? dest.name : (dest.name_en || dest.country_en || countryNamesEn[dest.country] || dest.country);
-
-  const getLargeFlagUrl = (flagUrl: string) => flagUrl.replace('/w80/', '/w160/');
+  const featuredDestination = destinations[0] ?? fallbackDestinations[0];
 
   return (
-    <section className="relative min-h-[90vh] overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0">
-        <img
-          src={heroBg}
-          alt="Travel destinations"
-          className="h-full w-full object-cover"
-          width={1920}
-          height={1080}
-          fetchPriority="high"
-          decoding="async"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background" />
-      </div>
+    <section className="relative bg-canvas pt-10 pb-16 md:pt-14 md:pb-24 overflow-hidden">
+      {/* Soft brand glow */}
+      <div className="pointer-events-none absolute -top-40 -start-40 h-[480px] w-[480px] rounded-full bg-brand/10 blur-[120px]" />
+      <div className="pointer-events-none absolute top-1/3 -end-40 h-[420px] w-[420px] rounded-full bg-navy/5 blur-[100px]" />
 
-      <div className="container-section relative z-10 flex flex-col min-h-[90vh] py-8">
-        <div className="flex-1 flex flex-col lg:flex-row items-center gap-8 lg:gap-12 pt-8">
-          {/* Left Content */}
-          <div className="flex-1 text-center lg:text-start">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-            >
-              <Badge className="mb-4 bg-primary/10 text-primary border-primary/20 hover:bg-primary/20">
-                <Plane className="h-3 w-3 ml-1" />
-                {getSetting('badge_text', 'عطلات رحلاتكم للسياحة والسفر', 'Otolat Rahlatcom Travel & Tourism')}
-              </Badge>
+      <div className="container-section relative">
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-5"
+        >
+          {/* Main Brand Tile */}
+          <div className="md:col-span-8 bg-card border border-border rounded-5xl p-8 md:p-12 relative overflow-hidden flex flex-col justify-center min-h-[460px]">
+            <div className="relative z-10">
+              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand/10 text-brand text-xs font-bold mb-8 font-jakarta">
+                <span className="h-2 w-2 rounded-full bg-brand animate-pulse" />
+                {getSetting('badge_text', 'خبير التأشيرات الأول في المملكة', 'Saudi Arabia’s leading visa expert')}
+              </span>
 
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-foreground leading-tight">
-                {getSetting('main_title_line1', 'رحلتك تبدأ', 'Your Journey')}
-                <span className="block text-primary mt-2">
-                  {getSetting('main_title_line2', 'من هنا', 'Starts Here')}
+              <h1 className="font-heading-ar text-5xl sm:text-6xl md:text-7xl font-extrabold leading-[1.1] tracking-tight text-navy mb-8">
+                {getSetting('main_title_line1', 'رحلتك تبدأ', 'Your journey starts')}
+                <span className="block text-brand mt-2">
+                  {getSetting('main_title_line2', 'بلمسة واحدة', 'with one tap')}
                 </span>
               </h1>
 
-              <p className="mt-6 text-lg text-muted-foreground max-w-xl mx-auto lg:mx-0">
+              <p className="font-body-ar text-base md:text-lg text-muted-foreground max-w-lg leading-relaxed mb-10">
                 {getSetting('description',
                   'نقدم لك خدمات التأشيرات والسفر بأعلى جودة وأفضل الأسعار. احصل على تأشيرتك بكل سهولة ويسر مع فريقنا المتخصص.',
-                  'We offer you visa and travel services with the highest quality and best prices. Get your visa easily with our specialized team.'
+                  'We offer visa and travel services with the highest quality and best prices. Get your visa with ease.'
                 )}
               </p>
 
-              {/* Search Box */}
-              <div className="mt-8 max-w-lg mx-auto lg:mx-0">
-                <div className="flex gap-2 bg-card rounded-xl p-2 shadow-lg border border-border/50">
-                  <div className="relative flex-1">
-                    <Search className="absolute start-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
-                    <Input
-                      type="text"
-                      placeholder={getSetting('search_placeholder', 'ابحث عن وجهتك...', 'Search your destination...')}
-                      className="border-0 ps-10 bg-transparent focus-visible:ring-0 h-12"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                    />
-                  </div>
-                  <Button asChild size="lg" className="h-12 px-6 rounded-lg">
-                    <Link to="/destinations">
-                      {getSetting('search_button', 'ابحث الآن', 'Search Now')}
-                      <ArrowLeft className="h-4 w-4 mr-2" />
-                    </Link>
-                  </Button>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <div className="relative flex-1">
+                  <Search className="absolute start-5 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                  <Input
+                    type="text"
+                    placeholder={getSetting('search_placeholder', 'أين وجهتك القادمة؟', 'Where to next?')}
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="h-14 ps-12 bg-canvas border-border rounded-2xl text-base focus-visible:ring-4 focus-visible:ring-brand/15"
+                  />
                 </div>
+                <Button asChild size="lg" className="h-14 px-8 rounded-2xl bg-navy hover:bg-navy/90 text-navy-foreground font-bold text-base shadow-lg shadow-navy/10">
+                  <Link to="/destinations">
+                    {getSetting('search_button', 'ابحث الآن', 'Search now')}
+                    <ArrowLeft className="h-4 w-4 ms-1 rtl-flip" />
+                  </Link>
+                </Button>
               </div>
+            </div>
 
-              {/* Trust Indicators */}
-              <div className="mt-8 flex flex-wrap items-center justify-center lg:justify-start gap-6 text-sm text-muted-foreground">
-                <div className="flex items-center gap-2 bg-card/50 px-4 py-2 rounded-full border border-border/50">
-                  <CheckCircle2 className="h-4 w-4 text-primary" />
-                  <span>
-                    {getSetting('stat_success_rate', '98%', '98%')} {getSetting('stat_success_label', 'نسبة النجاح', 'Success Rate')}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2 bg-card/50 px-4 py-2 rounded-full border border-border/50">
-                  <Shield className="h-4 w-4 text-primary" />
-                  <span>
-                    {getSetting('stat_countries', '+50', '+50')} {getSetting('stat_countries_label', 'دولة', 'Countries')}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2 bg-card/50 px-4 py-2 rounded-full border border-border/50">
-                  <Clock className="h-4 w-4 text-primary" />
-                  <span>{getSetting('stat_support', 'دعم متواصل', '24/7 Support')}</span>
-                </div>
-              </div>
-            </motion.div>
+            <div className="absolute -bottom-24 -end-24 w-96 h-96 bg-brand/5 rounded-full blur-[100px]" />
           </div>
 
-          {/* Right Content - Destinations Showcase */}
-          <div className="flex-1 w-full max-w-lg lg:max-w-xl">
-            <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="relative"
-            >
-              <div className="bg-card/80 backdrop-blur-sm rounded-2xl border border-border/50 shadow-2xl p-6">
-                {/* Header */}
-                <div className="flex items-center gap-3 mb-5">
-                  <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                    <Globe className="h-5 w-5 text-primary" />
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-foreground">
-                      {isRTL ? 'وجهاتنا المميزة' : 'Featured Destinations'}
-                    </h3>
-                    <p className="text-xs text-muted-foreground">
-                      {isRTL ? 'تأشيرات لأكثر من 50 دولة' : 'Visas for 50+ countries'}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Destinations Grid */}
-                {loadingDestinations ? (
-                  <div className="flex items-center justify-center h-48">
-                    <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-3 gap-3">
-                    {displayDestinations.map((dest, index) => (
-                      <motion.div
-                        key={`${dest.id}-${visibleStart}-${index}`}
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.3, delay: index * 0.05 }}
-                      >
-                        <Link
-                          to="/destinations"
-                          className="group block bg-background hover:bg-primary/5 border border-border/50 hover:border-primary/30 rounded-xl p-3 text-center transition-all"
-                        >
-                          <div className="overflow-hidden rounded-lg mb-2 mx-auto w-full aspect-[3/2]">
-                            <img
-                              src={getLargeFlagUrl(dest.image_url)}
-                              alt={getDisplayName(dest)}
-                              className="w-full h-full object-cover group-hover:scale-105 transition-transform"
-                              onError={(e) => { (e.target as HTMLImageElement).src = '/placeholder.svg'; }}
-                            />
-                          </div>
-                          <p className="text-xs font-medium text-foreground truncate">
-                            {getDisplayName(dest)}
-                          </p>
-                          <p className="text-xs text-muted-foreground">{dest.country}</p>
-                        </Link>
-                      </motion.div>
-                    ))}
-                  </div>
-                )}
-
-                {/* Footer stats */}
-                <div className="mt-5 pt-4 border-t border-border/50 flex items-center justify-between">
-                  <div className="text-center">
-                    <p className="text-lg font-bold text-primary">
-                      {getSetting('card_visas_count', '+10,000', '+10,000')}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      {getSetting('card_visas_label', 'تأشيرة مُنجزة', 'Visas Completed')}
-                    </p>
-                  </div>
-                  <div className="h-8 w-px bg-border" />
-                  <div className="text-center">
-                    <p className="text-lg font-bold text-green-600">
-                      {getSetting('card_processing_time', '5 أيام', '5 Days')}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      {getSetting('card_processing_label', 'متوسط المعالجة', 'Avg. Processing')}
-                    </p>
-                  </div>
-                  <div className="h-8 w-px bg-border" />
-                  <div className="text-center">
-                    <p className="text-lg font-bold text-foreground">
-                      {destinations.length}+
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      {isRTL ? 'وجهة' : 'Destinations'}
-                    </p>
-                  </div>
-                </div>
+          {/* Processing Speed Tile */}
+          <div className="md:col-span-4 bg-navy text-navy-foreground rounded-5xl p-8 md:p-10 flex flex-col justify-between relative overflow-hidden min-h-[280px] md:min-h-[460px]">
+            <div className="relative z-10">
+              <p className="font-jakarta text-xs uppercase tracking-[0.2em] opacity-60 mb-3">
+                {isRTL ? 'متوسط سرعة المعالجة' : 'Average processing'}
+              </p>
+              <div className="flex items-baseline gap-3 mb-6">
+                <span className="font-display text-7xl md:text-8xl font-bold tracking-tighter leading-none">
+                  {getSetting('card_processing_time_value', '05', '05')}
+                </span>
+                <span className="font-heading-ar text-xl md:text-2xl font-bold opacity-80">
+                  {isRTL ? 'أيام' : 'days'}
+                </span>
               </div>
-            </motion.div>
+              <p className="font-body-ar text-sm opacity-75 leading-relaxed max-w-[260px]">
+                {isRTL
+                  ? 'نلتزم بتقديم أسرع خدمة إصدار تأشيرات في المنطقة بضمان كامل.'
+                  : 'The fastest visa processing in the region — guaranteed.'}
+              </p>
+            </div>
+
+            <div className="relative z-10 pt-6 border-t border-white/10">
+              <div className="flex -space-x-3 rtl:space-x-reverse mb-3">
+                <div className="w-10 h-10 rounded-full border-2 border-navy bg-brand flex items-center justify-center text-[10px] font-display font-bold">+10k</div>
+                <div className="w-10 h-10 rounded-full border-2 border-navy bg-cream" />
+                <div className="w-10 h-10 rounded-full border-2 border-navy bg-cream/70" />
+                <div className="w-10 h-10 rounded-full border-2 border-navy bg-cream/50" />
+              </div>
+              <p className="font-jakarta text-xs font-bold opacity-90">
+                {isRTL ? 'أكثر من 10,000 عميل سعيد' : '10,000+ happy travelers'}
+              </p>
+            </div>
+
+            <div className="absolute -top-8 -end-8 w-40 h-40 bg-brand/20 rounded-full blur-3xl" />
           </div>
-        </div>
+
+          {/* Success rate tile */}
+          <div className="md:col-span-3 bg-cream rounded-5xl p-8 flex flex-col justify-center items-center text-center min-h-[200px]">
+            <ShieldCheck className="h-7 w-7 text-brand mb-3" strokeWidth={1.75} />
+            <div className="font-display text-5xl md:text-6xl font-bold text-brand leading-none mb-2">
+              {getSetting('stat_success_rate', '98%', '98%')}
+            </div>
+            <h4 className="font-heading-ar font-extrabold text-navy">
+              {isRTL ? 'نسبة النجاح' : 'Success rate'}
+            </h4>
+            <p className="font-body-ar text-xs text-navy/60 mt-2 max-w-[180px]">
+              {isRTL ? 'أعلى معدل قبول للتأشيرات في السوق' : 'Highest approval rate in the market'}
+            </p>
+          </div>
+
+          {/* Featured destination tile */}
+          <div className="md:col-span-6 rounded-5xl relative overflow-hidden group min-h-[220px] md:min-h-[260px]">
+            <img
+              src={featuredDestination.image_url}
+              alt={isRTL ? featuredDestination.name : (featuredDestination.name_en || featuredDestination.name)}
+              loading="lazy"
+              decoding="async"
+              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = `https://flagcdn.com/w1280/${featuredDestination.country.toLowerCase()}.jpg`;
+              }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-navy via-navy/40 to-transparent" />
+            <div className="absolute bottom-8 start-8 end-8 text-white">
+              <p className="font-jakarta text-[10px] font-bold tracking-[0.3em] uppercase opacity-80 mb-2">
+                <Sparkles className="inline h-3 w-3 me-1" />
+                {isRTL ? 'الوجهة الأكثر طلباً' : 'Most requested destination'}
+              </p>
+              <h3 className="font-heading-ar text-2xl md:text-3xl font-bold">
+                {isRTL ? featuredDestination.name : (featuredDestination.name_en || featuredDestination.name)}
+              </h3>
+            </div>
+            <Link to="/destinations" className="absolute inset-0" aria-label="View destinations" />
+          </div>
+
+          {/* Countries counter tile */}
+          <div className="md:col-span-3 bg-card border border-border rounded-5xl p-8 flex flex-col justify-center items-center text-center min-h-[200px]">
+            <div className="w-14 h-14 rounded-2xl bg-brand/10 flex items-center justify-center mb-4">
+              <Globe className="h-7 w-7 text-brand" strokeWidth={1.5} />
+            </div>
+            <div className="font-display text-4xl md:text-5xl font-bold text-navy leading-none">
+              {getSetting('stat_countries', '+50', '+50')}
+            </div>
+            <p className="font-heading-ar font-bold text-navy mt-2">
+              {isRTL ? 'دولة حول العالم' : 'Countries worldwide'}
+            </p>
+            <p className="font-body-ar text-xs text-muted-foreground mt-1 flex items-center gap-1">
+              <Clock className="h-3 w-3" />
+              {isRTL ? 'دعم متواصل 24/7' : '24/7 support'}
+            </p>
+          </div>
+        </motion.div>
       </div>
     </section>
   );
