@@ -248,32 +248,36 @@ export default function VisaServices() {
   );
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-canvas">
       {/* Hero Section */}
-      <section className="gradient-hero py-16">
-        <div className="container-section">
+      <section className="relative overflow-hidden bg-gradient-to-br from-navy via-navy/95 to-brand py-20">
+        <div className="absolute -top-32 -end-32 w-80 h-80 bg-white/5 rounded-full blur-3xl" />
+        <div className="container-section relative">
           <div className="mx-auto max-w-2xl text-center">
-            <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+            <span className="font-jakarta text-xs font-bold tracking-[0.25em] uppercase text-white/60 mb-3 block">
+              Visa Catalog
+            </span>
+            <h1 className="font-heading-ar text-5xl md:text-6xl font-extrabold tracking-tight text-white leading-tight">
               Visa Services
             </h1>
-            <p className="mt-4 text-lg text-white/80">
+            <p className="mt-4 font-body-ar text-lg text-white/75">
               Find and apply for visas to 50+ countries worldwide
             </p>
 
             {/* Search Bar */}
             <div className="mt-8">
-              <div className="flex gap-2 bg-white rounded-lg p-2 shadow-xl">
+              <div className="flex gap-2 bg-white rounded-3xl p-2 shadow-2xl shadow-navy/30">
                 <div className="relative flex-1">
                   <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
                   <Input
                     type="text"
                     placeholder="Search by country or visa type..."
-                    className="border-0 pl-10 focus-visible:ring-0"
+                    className="border-0 pl-10 focus-visible:ring-0 rounded-2xl py-6 font-body-ar"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                   />
                 </div>
-                <Button type="button">
+                <Button type="button" className="rounded-2xl px-6 bg-navy hover:bg-navy/90 text-navy-foreground font-bold">
                   Search
                 </Button>
               </div>
@@ -283,14 +287,14 @@ export default function VisaServices() {
       </section>
 
       {/* Main Content */}
-      <section className="py-8 sm:py-12">
+      <section className="py-16">
         <div className="container-section">
           <div className="flex gap-8">
             {/* Desktop Sidebar */}
             <aside className="hidden lg:block w-64 flex-shrink-0">
-              <div className="sticky top-24 rounded-lg border border-border bg-card p-6">
-                <h3 className="font-semibold mb-4 flex items-center gap-2">
-                  <Filter className="h-4 w-4" />
+              <div className="sticky top-24 rounded-3xl border border-border bg-card p-6">
+                <h3 className="font-heading-ar font-extrabold text-navy mb-4 flex items-center gap-2">
+                  <Filter className="h-4 w-4 text-brand" />
                   Filters
                 </h3>
                 <FilterSidebar />
@@ -301,22 +305,22 @@ export default function VisaServices() {
             <div className="flex-1">
               {/* Mobile Filter Button & Results Count */}
               <div className="flex items-center justify-between mb-6">
-                <div className="text-sm text-muted-foreground">
+                <div className="text-sm text-muted-foreground font-body-ar">
                   {isLoading ? (
                     <Skeleton className="h-5 w-32" />
                   ) : (
-                    <span>{filteredVisaTypes.length} visa services found</span>
+                    <span><span className="font-display font-bold text-navy">{filteredVisaTypes.length}</span> visa services found</span>
                   )}
                 </div>
 
                 {/* Mobile Filter */}
                 <Sheet open={mobileFilterOpen} onOpenChange={setMobileFilterOpen}>
                   <SheetTrigger asChild>
-                    <Button variant="outline" size="sm" className="lg:hidden">
+                    <Button variant="outline" size="sm" className="lg:hidden rounded-2xl border-border">
                       <Filter className="mr-2 h-4 w-4" />
                       Filters
                       {hasActiveFilters && (
-                        <Badge variant="secondary" className="ml-2">
+                        <Badge variant="secondary" className="ml-2 rounded-lg">
                           Active
                         </Badge>
                       )}
@@ -324,8 +328,8 @@ export default function VisaServices() {
                   </SheetTrigger>
                   <SheetContent side="right" className="w-80">
                     <SheetHeader>
-                      <SheetTitle>Filter Visa Services</SheetTitle>
-                      <SheetDescription>
+                      <SheetTitle className="font-heading-ar text-navy">Filter Visa Services</SheetTitle>
+                      <SheetDescription className="font-body-ar">
                         Narrow down your search with filters
                       </SheetDescription>
                     </SheetHeader>
@@ -386,7 +390,7 @@ export default function VisaServices() {
               {isLoading ? (
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
                   {Array.from({ length: 6 }).map((_, i) => (
-                    <Card key={i} className="overflow-hidden">
+                    <Card key={i} className="overflow-hidden rounded-3xl border-border">
                       <CardHeader className="pb-4">
                         <div className="flex items-start gap-3">
                           <Skeleton className="h-10 w-14 rounded" />
@@ -411,14 +415,14 @@ export default function VisaServices() {
                 </div>
               ) : filteredVisaTypes.length === 0 ? (
                 <div className="text-center py-16">
-                  <div className="mx-auto h-24 w-24 rounded-full bg-muted flex items-center justify-center mb-4">
+                  <div className="mx-auto h-24 w-24 rounded-3xl bg-cream flex items-center justify-center mb-4">
                     <Search className="h-10 w-10 text-muted-foreground" />
                   </div>
-                  <h3 className="text-lg font-semibold">No visa services found</h3>
-                  <p className="text-muted-foreground mt-2">
+                  <h3 className="font-heading-ar text-xl font-extrabold text-navy">No visa services found</h3>
+                  <p className="text-muted-foreground mt-2 font-body-ar">
                     Try adjusting your filters or search query
                   </p>
-                  <Button variant="outline" className="mt-4" onClick={clearFilters}>
+                  <Button variant="outline" className="mt-4 rounded-2xl border-border" onClick={clearFilters}>
                     Clear All Filters
                   </Button>
                 </div>
@@ -427,39 +431,39 @@ export default function VisaServices() {
                   {filteredVisaTypes.map((visa) => {
                     const country = visa.country as Country;
                     return (
-                      <Card key={visa.id} className="overflow-hidden transition-all hover:shadow-lg group">
+                      <Card key={visa.id} className="overflow-hidden rounded-3xl border-border bg-card transition-all hover:shadow-2xl hover:shadow-navy/5 hover:border-brand/30 hover:-translate-y-1 group">
                         <CardHeader className="pb-4">
                           <div className="flex items-start gap-3">
                             <img
-                              src={country?.flag_url || `https://flagcdn.com/w80/${country?.code.toLowerCase()}.png`}
+                              src={country?.flag_url || `https://flagcdn.com/w320/${country?.code.toLowerCase()}.png`}
                               alt={country?.name}
-                              className="h-10 w-14 rounded object-cover shadow-sm"
+                              className="h-10 w-14 rounded-lg object-cover shadow-sm saturate-150 contrast-110"
                             />
                             <div className="flex-1 min-w-0">
-                              <CardTitle className="text-lg truncate">{visa.name}</CardTitle>
-                              <CardDescription className="truncate">{country?.name}</CardDescription>
+                              <CardTitle className="font-heading-ar text-lg font-extrabold text-navy truncate">{visa.name}</CardTitle>
+                              <CardDescription className="truncate font-body-ar">{country?.name}</CardDescription>
                             </div>
                           </div>
                         </CardHeader>
                         <CardContent className="space-y-4">
-                          <p className="text-sm text-muted-foreground line-clamp-2">
+                          <p className="text-sm text-muted-foreground line-clamp-2 font-body-ar">
                             {visa.description || `Apply for a ${visa.name} to ${country?.name}. Fast processing and expert assistance.`}
                           </p>
 
                           <div className="grid grid-cols-2 gap-3">
-                            <div className="rounded-lg bg-muted/50 p-3">
-                              <div className="flex items-center gap-1.5 text-muted-foreground text-xs mb-1">
+                            <div className="rounded-2xl bg-cream/60 p-3">
+                              <div className="flex items-center gap-1.5 text-muted-foreground text-[10px] mb-1 font-jakarta font-bold uppercase tracking-wider">
                                 <Clock className="h-3.5 w-3.5" />
                                 Processing
                               </div>
-                              <p className="font-semibold text-sm">{visa.processing_days} Days</p>
+                              <p className="font-display font-bold text-sm text-navy">{visa.processing_days} Days</p>
                             </div>
-                            <div className="rounded-lg bg-muted/50 p-3">
-                              <div className="flex items-center gap-1.5 text-muted-foreground text-xs mb-1">
+                            <div className="rounded-2xl bg-cream/60 p-3">
+                              <div className="flex items-center gap-1.5 text-muted-foreground text-[10px] mb-1 font-jakarta font-bold uppercase tracking-wider">
                                 <Calendar className="h-3.5 w-3.5" />
                                 Validity
                               </div>
-                              <p className="font-semibold text-sm">
+                              <p className="font-display font-bold text-sm text-navy">
                                 {visa.validity_days ? `${visa.validity_days} Days` : 'Varies'}
                               </p>
                             </div>
@@ -467,21 +471,21 @@ export default function VisaServices() {
 
                           <div className="flex items-center justify-between">
                             <div>
-                              <span className="text-2xl font-bold text-primary">{visa.price}</span>
-                              <span className="text-sm text-muted-foreground mr-1">ر.س</span>
+                              <span className="font-display text-3xl font-bold text-brand">{visa.price}</span>
+                              <span className="text-sm text-muted-foreground mr-1 font-body-ar">ر.س</span>
                             </div>
-                            <Badge variant="outline" className="capitalize">
+                            <Badge variant="outline" className="capitalize rounded-xl border-border font-jakarta text-[10px] font-bold">
                               {visa.entry_type === 'single' ? 'دخول واحد' : 'دخول متعدد'}
                             </Badge>
                           </div>
                         </CardContent>
                         <CardFooter className="pt-0 gap-2">
-                          <Button variant="outline" className="flex-1" asChild>
+                          <Button variant="outline" className="flex-1 rounded-2xl border-border" asChild>
                             <Link to={`/visa/${visa.id}`}>
                               Details
                             </Link>
                           </Button>
-                          <Button className="flex-1" asChild>
+                          <Button className="flex-1 rounded-2xl bg-navy hover:bg-navy/90 text-navy-foreground font-bold" asChild>
                             <Link to={`/visa/${visa.id}`}>
                               Apply Now
                               <ArrowRight className="ml-2 h-4 w-4" />
@@ -499,24 +503,24 @@ export default function VisaServices() {
       </section>
 
       {/* Countries Quick Access */}
-      <section className="py-12 bg-muted/50">
+      <section className="py-16 bg-cream/40">
         <div className="container-section">
-          <h2 className="text-2xl font-bold mb-6">Browse by Country</h2>
+          <h2 className="font-heading-ar text-3xl md:text-4xl font-extrabold text-navy mb-8">Browse by Country</h2>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
             {countries.map((country) => (
               <button
                 key={country.id}
                 onClick={() => setSelectedCountry(country.code)}
-                className={`flex items-center gap-3 rounded-lg border p-3 transition-all hover:border-primary hover:shadow-sm ${
-                  selectedCountry === country.code ? 'border-primary bg-primary/5' : 'border-border bg-card'
+                className={`flex items-center gap-3 rounded-2xl border p-3 transition-all hover:border-brand hover:shadow-md hover:-translate-y-0.5 ${
+                  selectedCountry === country.code ? 'border-brand bg-brand/5' : 'border-border bg-card'
                 }`}
               >
                 <img
-                  src={country.flag_url || `https://flagcdn.com/w40/${country.code.toLowerCase()}.png`}
+                  src={country.flag_url || `https://flagcdn.com/w160/${country.code.toLowerCase()}.png`}
                   alt={country.name}
-                  className="h-6 w-8 rounded object-cover shadow-sm"
+                  className="h-7 w-9 rounded-md object-cover shadow-sm saturate-150 contrast-110"
                 />
-                <span className="text-sm font-medium truncate">{country.name}</span>
+                <span className="text-sm font-heading-ar font-bold truncate text-navy">{country.name}</span>
               </button>
             ))}
           </div>

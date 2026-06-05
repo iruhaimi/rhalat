@@ -174,7 +174,7 @@ export default function CountryDetail() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-canvas">
       <SEO
         title={countryTitle}
         description={countryDesc}
@@ -182,49 +182,58 @@ export default function CountryDetail() {
         jsonLd={[serviceLd, breadcrumbLd, faqLd]}
       />
       {/* Hero */}
-      <section className="gradient-hero py-12">
-        <div className="container-section">
+      <section className="relative overflow-hidden bg-gradient-to-br from-navy via-navy/95 to-brand py-16">
+        <div className="absolute -top-32 -end-32 w-80 h-80 bg-white/5 rounded-full blur-3xl" />
+        <div className="container-section relative">
           <Link 
             to="/destinations" 
-            className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-6"
+            className="inline-flex items-center gap-2 text-white/75 hover:text-white mb-8 font-jakarta text-sm font-bold transition-colors"
           >
             <ArrowIcon className="h-4 w-4 rotate-180 rtl:rotate-0" />
             {direction === 'rtl' ? 'عودة للدول' : 'Back to Countries'}
           </Link>
 
-          <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-            <img
-              src={country.flag_url || `https://flagcdn.com/w160/${country.code.toLowerCase()}.png`}
-              alt={country.name}
-              className="h-20 w-28 rounded-lg object-cover shadow-lg"
-            />
-            <div>
-              <h1 className="text-3xl font-bold text-white sm:text-4xl">
+          <div className="grid lg:grid-cols-12 gap-8 items-center">
+            <div className="lg:col-span-7">
+              <span className="font-jakarta text-xs font-bold tracking-[0.25em] uppercase text-white/60 mb-3 block">
+                {country.code}
+              </span>
+              <h1 className="font-heading-ar text-5xl md:text-6xl font-extrabold tracking-tight text-white leading-[1.05]">
                 {direction === 'rtl' ? `تأشيرات ${country.name}` : `${country.name} Visas`}
               </h1>
-              <p className="text-lg text-white/80 mt-1">
-                {direction === 'rtl' 
-                  ? `${visaTypes.length} نوع تأشيرة متاح`
+              <p className="font-body-ar text-lg text-white/75 mt-4 max-w-lg">
+                {direction === 'rtl'
+                  ? `${visaTypes.length} نوع تأشيرة متاح${minDays ? ` • معالجة من ${minDays} أيام` : ''}${minPrice ? ` • تبدأ من ${minPrice} ر.س` : ''}`
                   : `${visaTypes.length} visa types available`
                 }
               </p>
+            </div>
+            <div className="lg:col-span-5">
+              <div className="relative aspect-[4/3] rounded-4xl overflow-hidden border border-white/10 shadow-2xl bg-white/5">
+                <img
+                  src={country.flag_url || `https://flagcdn.com/w1280/${country.code.toLowerCase()}.png`}
+                  alt={country.name}
+                  className="w-full h-full object-cover saturate-150 contrast-110"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-navy/30 via-transparent to-transparent" />
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Visa Types */}
-      <section className="py-12">
+      <section className="py-20">
         <div className="container-section">
-          <h2 className="text-2xl font-bold mb-6">
+          <h2 className="font-heading-ar text-3xl md:text-4xl font-extrabold text-navy mb-8">
             {direction === 'rtl' ? 'أنواع التأشيرات المتاحة' : 'Available Visa Types'}
           </h2>
 
           {visaTypes.length === 0 ? (
-            <Card>
+            <Card className="rounded-4xl border-border">
               <CardContent className="py-12 text-center">
                 <FileText className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                <p className="text-muted-foreground">
+                <p className="font-body-ar text-muted-foreground">
                   {direction === 'rtl' 
                     ? 'لا توجد تأشيرات متاحة حالياً لهذه الدولة'
                     : 'No visas currently available for this country'
@@ -244,40 +253,38 @@ export default function CountryDetail() {
 
       {/* Long description / Overview */}
       {country.long_description && (
-        <section className="py-12">
+        <section className="py-16 bg-cream/40">
           <div className="container-section">
-            <Card>
-              <CardContent className="py-6 prose prose-sm max-w-none rtl:text-right">
-                <h2 className="text-2xl font-bold mb-4">
-                  {direction === 'rtl' ? `نظرة عامة عن تأشيرة ${country.name}` : `About ${country.name} visa`}
-                </h2>
-                <div className="whitespace-pre-wrap text-muted-foreground leading-relaxed">
-                  {country.long_description}
-                </div>
-              </CardContent>
-            </Card>
+            <div className="max-w-4xl">
+              <h2 className="font-heading-ar text-3xl md:text-4xl font-extrabold text-navy mb-6">
+                {direction === 'rtl' ? `نظرة عامة عن تأشيرة ${country.name}` : `About ${country.name} visa`}
+              </h2>
+              <div className="font-body-ar whitespace-pre-wrap text-muted-foreground leading-relaxed text-base">
+                {country.long_description}
+              </div>
+            </div>
           </div>
         </section>
       )}
 
       {/* Processing Steps */}
       {stepsArr.length > 0 && (
-        <section className="py-12 bg-muted/30">
+        <section className="py-20">
           <div className="container-section">
-            <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-              <ListChecks className="h-6 w-6 text-primary" />
+            <h2 className="font-heading-ar text-3xl md:text-4xl font-extrabold text-navy mb-8 flex items-center gap-3">
+              <ListChecks className="h-7 w-7 text-brand" />
               {direction === 'rtl' ? 'خطوات التقديم' : 'Application Steps'}
             </h2>
             <div className="grid gap-4 md:grid-cols-2">
               {stepsArr.map((step, i) => (
-                <Card key={i}>
-                  <CardContent className="py-4 flex gap-3">
-                    <div className="h-8 w-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold flex-shrink-0">
-                      {i + 1}
+                <Card key={i} className="rounded-3xl border-border bg-card hover:shadow-xl hover:shadow-navy/5 transition-all">
+                  <CardContent className="p-6 flex gap-4">
+                    <div className="h-12 w-12 rounded-2xl bg-navy text-white flex items-center justify-center font-display font-bold text-lg flex-shrink-0">
+                      {String(i + 1).padStart(2, '0')}
                     </div>
                     <div>
-                      <h3 className="font-semibold">{step.title}</h3>
-                      {step.description && <p className="text-sm text-muted-foreground mt-1">{step.description}</p>}
+                      <h3 className="font-heading-ar font-extrabold text-navy text-lg">{step.title}</h3>
+                      {step.description && <p className="font-body-ar text-sm text-muted-foreground mt-1 leading-relaxed">{step.description}</p>}
                     </div>
                   </CardContent>
                 </Card>
@@ -289,19 +296,19 @@ export default function CountryDetail() {
 
       {/* Tips */}
       {tipsArr.length > 0 && (
-        <section className="py-12">
+        <section className="py-16 bg-cream/40">
           <div className="container-section">
-            <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-              <Lightbulb className="h-6 w-6 text-yellow-500" />
+            <h2 className="font-heading-ar text-3xl md:text-4xl font-extrabold text-navy mb-8 flex items-center gap-3">
+              <Lightbulb className="h-7 w-7 text-brand" />
               {direction === 'rtl' ? 'نصائح مهمة' : 'Helpful Tips'}
             </h2>
-            <Card>
-              <CardContent className="py-6">
-                <ul className="space-y-3">
+            <Card className="rounded-4xl border-border bg-card">
+              <CardContent className="p-8">
+                <ul className="space-y-4">
                   {tipsArr.map((tip, i) => (
-                    <li key={i} className="flex items-start gap-2">
-                      <CheckCircle2 className="h-5 w-5 text-success mt-0.5 flex-shrink-0" />
-                      <span>{typeof tip === 'string' ? tip : tip?.title || ''}{typeof tip === 'object' && tip?.description ? ` — ${tip.description}` : ''}</span>
+                    <li key={i} className="flex items-start gap-3 font-body-ar">
+                      <CheckCircle2 className="h-5 w-5 text-brand mt-0.5 flex-shrink-0" />
+                      <span className="text-foreground">{typeof tip === 'string' ? tip : tip?.title || ''}{typeof tip === 'object' && tip?.description ? ` — ${tip.description}` : ''}</span>
                     </li>
                   ))}
                 </ul>
@@ -313,18 +320,18 @@ export default function CountryDetail() {
 
       {/* FAQ */}
       {dynamicFaqs.length > 0 && (
-        <section className="py-12 bg-muted/30">
+        <section className="py-20">
           <div className="container-section">
-            <h2 className="text-2xl font-bold mb-6">
+            <h2 className="font-heading-ar text-3xl md:text-4xl font-extrabold text-navy mb-8">
               {direction === 'rtl' ? 'الأسئلة الشائعة' : 'Frequently Asked Questions'}
             </h2>
-            <Card>
-              <CardContent className="py-4">
+            <Card className="rounded-4xl border-border bg-card">
+              <CardContent className="p-4 sm:p-6">
                 <Accordion type="single" collapsible className="w-full">
                   {dynamicFaqs.map((f, i) => (
-                    <AccordionItem key={i} value={`faq-${i}`}>
-                      <AccordionTrigger className="text-start">{f.question}</AccordionTrigger>
-                      <AccordionContent className="text-muted-foreground whitespace-pre-wrap">{f.answer}</AccordionContent>
+                    <AccordionItem key={i} value={`faq-${i}`} className="border-border">
+                      <AccordionTrigger className="text-start font-heading-ar font-bold text-navy hover:no-underline">{f.question}</AccordionTrigger>
+                      <AccordionContent className="text-muted-foreground whitespace-pre-wrap font-body-ar leading-relaxed">{f.answer}</AccordionContent>
                     </AccordionItem>
                   ))}
                 </Accordion>
@@ -335,22 +342,22 @@ export default function CountryDetail() {
       )}
 
       {/* General Requirements */}
-      <section className="py-12 bg-muted/50">
+      <section className="py-20 bg-cream/40">
         <div className="container-section">
-          <h2 className="text-2xl font-bold mb-6">
+          <h2 className="font-heading-ar text-3xl md:text-4xl font-extrabold text-navy mb-8">
             {direction === 'rtl' ? 'المتطلبات العامة' : 'General Requirements'}
           </h2>
-          <Card>
-            <CardContent className="py-6">
-              <ul className="grid gap-3 sm:grid-cols-2">
+          <Card className="rounded-4xl border-border bg-card">
+            <CardContent className="p-8">
+              <ul className="grid gap-4 sm:grid-cols-2">
                 {generalRequirements.map((req, i) => (
-                  <li key={i} className="flex items-center gap-2">
-                    <CheckCircle2 className="h-5 w-5 text-success flex-shrink-0" />
-                    <span>{req}</span>
+                  <li key={i} className="flex items-center gap-3 font-body-ar">
+                    <CheckCircle2 className="h-5 w-5 text-brand flex-shrink-0" />
+                    <span className="text-foreground">{req}</span>
                   </li>
                 ))}
               </ul>
-              <p className="mt-4 text-sm text-muted-foreground">
+              <p className="mt-6 text-xs text-muted-foreground font-body-ar">
                 {direction === 'rtl' 
                   ? '* قد تختلف المتطلبات حسب نوع التأشيرة والجنسية. سيتم عرض المتطلبات الكاملة أثناء عملية التقديم.'
                   : '* Requirements may vary based on visa type and nationality. Full requirements will be shown during the application process.'

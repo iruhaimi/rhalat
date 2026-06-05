@@ -142,10 +142,10 @@ export default function Destinations() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-canvas">
       <SEO title="الوجهات والدول — عطلات رحلاتكم" description="تصفح جميع الدول وأنواع التأشيرات المتاحة مع رسوم وتفاصيل التقديم لكل وجهة." path="/destinations" />
       {/* Hero */}
-      <section className="relative bg-gradient-to-br from-primary via-primary/95 to-primary/85 py-20 overflow-hidden">
+      <section className="relative bg-gradient-to-br from-navy via-navy/95 to-brand py-24 overflow-hidden">
         {/* Decorative Elements */}
         <div className="absolute inset-0 overflow-hidden">
           <motion.div
@@ -171,15 +171,15 @@ export default function Destinations() {
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-              className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-white/20 backdrop-blur-sm mb-6"
+              className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-white/15 backdrop-blur-md mb-6"
             >
               <Globe className="w-10 h-10 text-white" />
             </motion.div>
             
-            <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-4">
+            <h1 className="font-heading-ar text-5xl md:text-6xl font-extrabold tracking-tight text-white mb-4 leading-[1.1]">
               {t('countries.title')}
             </h1>
-            <p className="text-lg text-white/80 mb-8">
+            <p className="font-body-ar text-lg text-white/75 mb-8 max-w-xl mx-auto">
               {t('countries.subtitle')}
             </p>
 
@@ -189,18 +189,18 @@ export default function Destinations() {
               transition={{ delay: 0.4 }}
               className="max-w-lg mx-auto"
             >
-              <div className="flex gap-2 bg-white rounded-2xl p-2 shadow-2xl">
+              <div className="flex gap-2 bg-white rounded-3xl p-2 shadow-2xl shadow-navy/30">
                 <div className="relative flex-1">
                   <Search className="absolute start-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
                   <Input
                     type="text"
                     placeholder={t('hero.searchPlaceholder')}
-                    className="border-0 ps-12 py-6 text-base focus-visible:ring-0 rounded-xl"
+                    className="border-0 ps-12 py-6 text-base focus-visible:ring-0 rounded-2xl font-body-ar"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                   />
                 </div>
-                <Button size="lg" className="rounded-xl px-6">
+                <Button size="lg" className="rounded-2xl px-6 bg-navy hover:bg-navy/90 text-navy-foreground">
                   <Search className="h-5 w-5" />
                 </Button>
               </div>
@@ -270,22 +270,24 @@ export default function Destinations() {
                     key="schengen"
                     variants={itemVariants}
                     layout
-                    whileHover={{ y: -8, transition: { duration: 0.3 } }}
-                    className="group relative overflow-hidden rounded-2xl bg-card border border-border/50 shadow-sm hover:shadow-xl transition-all duration-300"
+                    whileHover={{ y: -6, transition: { duration: 0.3 } }}
+                    className="group relative overflow-hidden rounded-4xl bg-card border border-border hover:shadow-2xl hover:shadow-navy/5 hover:border-brand/30 transition-all duration-300"
                   >
                     {/* Flag Background */}
-                    <div className="relative h-36 overflow-hidden">
+                    <div className="relative h-44 overflow-hidden bg-gradient-to-br from-navy/5 to-brand/10">
                       <img
                         src={SCHENGEN_INFO.flag_url}
                         alt={SCHENGEN_INFO.name}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                        loading="lazy"
+                        decoding="async"
+                        className="w-full h-full object-cover saturate-150 contrast-110 transition-transform duration-700 group-hover:scale-110"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-card via-card/60 to-transparent" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-navy/30 via-transparent to-transparent pointer-events-none" />
                       
                       {/* Processing Days Badge */}
-                      <div className="absolute top-3 right-3 flex items-center gap-2">
+                      <div className="absolute top-4 end-4 flex items-center gap-2">
                         {schengenProcessingDays && (
-                          <Badge variant="secondary" className="bg-background/90 backdrop-blur-sm gap-1">
+                          <Badge className="bg-navy/90 backdrop-blur-md text-white border-0 rounded-xl px-3 py-1.5 font-jakarta text-[10px] font-bold gap-1">
                             <Clock className="h-3 w-3" />
                             {schengenProcessingDays} أيام
                           </Badge>
@@ -294,26 +296,26 @@ export default function Destinations() {
                     </div>
 
                     {/* Content */}
-                    <div className="p-5">
-                      <h3 className="text-xl font-bold mb-3">{SCHENGEN_INFO.name}</h3>
+                    <div className="p-6">
+                      <h3 className="font-heading-ar text-xl font-extrabold text-navy mb-3">{SCHENGEN_INFO.name}</h3>
                       
                       {schengenMinPrice && (
                         <div className="flex items-baseline gap-2 mb-4">
-                          <span className="text-xs text-muted-foreground">يبدأ من</span>
-                          <span className="text-2xl font-bold text-primary flex items-center gap-1">
+                          <span className="font-jakarta text-[10px] font-bold tracking-wider uppercase text-muted-foreground">يبدأ من</span>
+                          <span className="font-display text-2xl font-bold text-brand flex items-center gap-1">
                             {schengenMinPrice}
-                            <SARSymbol size="sm" className="text-primary" />
+                            <SARSymbol size="sm" className="text-brand" />
                           </span>
                         </div>
                       )}
 
                       <div className="flex gap-2">
-                        <Button variant="outline" size="sm" className="flex-1 rounded-xl" asChild>
+                        <Button variant="outline" size="sm" className="flex-1 rounded-2xl h-10 border-border" asChild>
                           <Link to="/country/SCHENGEN">
                             التفاصيل
                           </Link>
                         </Button>
-                        <Button size="sm" className="flex-1 rounded-xl gap-1" asChild>
+                        <Button size="sm" className="flex-1 rounded-2xl h-10 gap-1 bg-navy hover:bg-navy/90 text-navy-foreground" asChild>
                           <Link to="/apply?country=SCHENGEN">
                             قدّم الآن
                             <ArrowIcon className="h-4 w-4" />
@@ -335,22 +337,24 @@ export default function Destinations() {
                       key={country.id}
                       variants={itemVariants}
                       layout
-                      whileHover={{ y: -8, transition: { duration: 0.3 } }}
-                      className="group relative overflow-hidden rounded-2xl bg-card border border-border/50 shadow-sm hover:shadow-xl transition-all duration-300"
+                      whileHover={{ y: -6, transition: { duration: 0.3 } }}
+                      className="group relative overflow-hidden rounded-4xl bg-card border border-border hover:shadow-2xl hover:shadow-navy/5 hover:border-brand/30 transition-all duration-300"
                     >
                       {/* Flag Background */}
-                      <div className="relative h-36 overflow-hidden">
+                      <div className="relative h-44 overflow-hidden bg-gradient-to-br from-navy/5 to-brand/10">
                         <img
-                          src={country.flag_url || `https://flagcdn.com/w320/${country.code.toLowerCase()}.png`}
+                          src={country.flag_url || `https://flagcdn.com/w1280/${country.code.toLowerCase()}.png`}
                           alt={country.name}
-                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                          loading="lazy"
+                          decoding="async"
+                          className="w-full h-full object-cover saturate-150 contrast-110 transition-transform duration-700 group-hover:scale-110"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-card via-card/60 to-transparent" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-navy/30 via-transparent to-transparent pointer-events-none" />
                         
                         {/* Badges */}
-                        <div className="absolute top-3 right-3 flex items-center gap-2">
+                        <div className="absolute top-4 end-4 flex items-center gap-2">
                           {processingDays && (
-                            <Badge variant="secondary" className="bg-background/90 backdrop-blur-sm gap-1">
+                            <Badge className="bg-navy/90 backdrop-blur-md text-white border-0 rounded-xl px-3 py-1.5 font-jakarta text-[10px] font-bold gap-1">
                               <Clock className="h-3 w-3" />
                               {processingDays} أيام
                             </Badge>
@@ -358,33 +362,33 @@ export default function Destinations() {
                         </div>
                         
                         {visaCount > 0 && (
-                          <Badge className="absolute top-3 left-3 bg-primary/90 backdrop-blur-sm">
+                          <Badge className="absolute top-4 start-4 bg-white/95 text-navy backdrop-blur-md rounded-xl px-3 py-1.5 font-jakarta text-[10px] font-bold">
                             {visaCount} نوع تأشيرة
                           </Badge>
                         )}
                       </div>
 
                       {/* Content */}
-                      <div className="p-5">
-                        <h3 className="text-xl font-bold mb-3">{country.name}</h3>
+                      <div className="p-6">
+                        <h3 className="font-heading-ar text-xl font-extrabold text-navy mb-3">{country.name}</h3>
                         
                         {minPrice && (
                           <div className="flex items-baseline gap-2 mb-4">
-                            <span className="text-xs text-muted-foreground">يبدأ من</span>
-                            <span className="text-2xl font-bold text-primary flex items-center gap-1">
+                            <span className="font-jakarta text-[10px] font-bold tracking-wider uppercase text-muted-foreground">يبدأ من</span>
+                            <span className="font-display text-2xl font-bold text-brand flex items-center gap-1">
                               {minPrice}
-                              <SARSymbol size="sm" className="text-primary" />
+                              <SARSymbol size="sm" className="text-brand" />
                             </span>
                           </div>
                         )}
 
                         <div className="flex gap-2">
-                          <Button variant="outline" size="sm" className="flex-1 rounded-xl" asChild>
+                          <Button variant="outline" size="sm" className="flex-1 rounded-2xl h-10 border-border" asChild>
                             <Link to={`/country/${country.code}`}>
                               التفاصيل
                             </Link>
                           </Button>
-                          <Button size="sm" className="flex-1 rounded-xl gap-1" asChild>
+                          <Button size="sm" className="flex-1 rounded-2xl h-10 gap-1 bg-navy hover:bg-navy/90 text-navy-foreground" asChild>
                             <Link to={`/apply?country=${country.code}`}>
                               قدّم الآن
                               <ArrowIcon className="h-4 w-4" />

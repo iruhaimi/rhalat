@@ -114,7 +114,7 @@ export default function SchengenDetail() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-canvas">
       <SEO
         title="تأشيرة الشنغن للسعوديين والمقيمين — الشروط والأسعار | عطلات رحلاتكم"
         description="استخرج تأشيرة شنغن واحدة تتيح لك دخول 27 دولة أوروبية. متطلبات واضحة، أسعار منافسة، ومعالجة سريعة من السعودية."
@@ -161,41 +161,50 @@ export default function SchengenDetail() {
         ]}
       />
       {/* Hero */}
-      <section className="gradient-hero py-12">
-        <div className="container-section">
+      <section className="relative overflow-hidden bg-gradient-to-br from-navy via-navy/95 to-brand py-16">
+        <div className="absolute -top-32 -end-32 w-80 h-80 bg-white/5 rounded-full blur-3xl" />
+        <div className="container-section relative">
           <Link 
             to="/destinations" 
-            className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-6"
+            className="inline-flex items-center gap-2 text-white/75 hover:text-white mb-8 font-jakarta text-sm font-bold transition-colors"
           >
             <ArrowIcon className="h-4 w-4 rotate-180 rtl:rotate-0" />
             {direction === 'rtl' ? 'عودة للوجهات' : 'Back to Destinations'}
           </Link>
 
-          <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-            <img
-              src={SCHENGEN_INFO.flag_url}
-              alt="Schengen"
-              className="h-20 w-28 rounded-lg object-cover shadow-lg"
-            />
-            <div>
-              <h1 className="text-3xl font-bold text-white sm:text-4xl">
-                {direction === 'rtl' ? 'تأشيرة شنغن (الاتحاد الأوروبي)' : 'Schengen Visa (EU)'}
+          <div className="grid lg:grid-cols-12 gap-8 items-center">
+            <div className="lg:col-span-7">
+              <span className="font-jakarta text-xs font-bold tracking-[0.25em] uppercase text-white/60 mb-3 block">
+                EU / SCHENGEN
+              </span>
+              <h1 className="font-heading-ar text-5xl md:text-6xl font-extrabold tracking-tight text-white leading-[1.05]">
+                {direction === 'rtl' ? 'تأشيرة شنغن' : 'Schengen Visa'}
               </h1>
-              <p className="text-lg text-white/80 mt-1">
+              <p className="font-body-ar text-lg text-white/75 mt-4 max-w-lg">
                 {direction === 'rtl' 
                   ? `${schengenCountries.length} دولة مشمولة بتأشيرة واحدة`
                   : `${schengenCountries.length} countries covered with one visa`
                 }
               </p>
             </div>
+            <div className="lg:col-span-5">
+              <div className="relative aspect-[4/3] rounded-4xl overflow-hidden border border-white/10 shadow-2xl bg-white/5">
+                <img
+                  src={SCHENGEN_INFO.flag_url}
+                  alt="Schengen"
+                  className="w-full h-full object-cover saturate-150 contrast-110"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-navy/30 via-transparent to-transparent" />
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Benefits */}
-      <section className="py-8 bg-muted/30">
+      <section className="py-16">
         <div className="container-section">
-          <div className="grid gap-4 md:grid-cols-3">
+          <div className="grid gap-6 md:grid-cols-3">
             {schengenBenefits.map((benefit, i) => (
               <motion.div
                 key={i}
@@ -203,11 +212,13 @@ export default function SchengenDetail() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.1 }}
               >
-                <Card className="text-center h-full">
-                  <CardContent className="pt-6">
-                    <benefit.icon className="h-10 w-10 mx-auto text-primary mb-3" />
-                    <h3 className="font-bold text-lg">{benefit.title}</h3>
-                    <p className="text-sm text-muted-foreground">{benefit.desc}</p>
+                <Card className="text-center h-full rounded-4xl border-border bg-card hover:shadow-2xl hover:shadow-navy/5 hover:-translate-y-1 transition-all">
+                  <CardContent className="p-8">
+                    <div className="inline-flex h-14 w-14 rounded-2xl bg-cream items-center justify-center mb-4">
+                      <benefit.icon className="h-7 w-7 text-brand" />
+                    </div>
+                    <h3 className="font-heading-ar font-extrabold text-2xl text-navy mb-2">{benefit.title}</h3>
+                    <p className="font-body-ar text-sm text-muted-foreground">{benefit.desc}</p>
                   </CardContent>
                 </Card>
               </motion.div>
@@ -217,10 +228,10 @@ export default function SchengenDetail() {
       </section>
 
       {/* Member Countries */}
-      <section className="py-12">
+      <section className="py-16 bg-cream/40">
         <div className="container-section">
-          <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-            <MapPin className="h-6 w-6 text-primary" />
+          <h2 className="font-heading-ar text-3xl md:text-4xl font-extrabold text-navy mb-8 flex items-center gap-3">
+            <MapPin className="h-7 w-7 text-brand" />
             {direction === 'rtl' ? 'الدول المشمولة' : 'Member Countries'}
           </h2>
 
@@ -232,14 +243,14 @@ export default function SchengenDetail() {
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: i * 0.03 }}
               >
-                <Card className="hover:shadow-md transition-shadow cursor-default">
+                <Card className="rounded-2xl border-border bg-card hover:shadow-lg hover:border-brand/30 transition-all cursor-default">
                   <CardContent className="p-3 flex items-center gap-3">
                     <img
-                      src={country.flag_url || `https://flagcdn.com/w40/${country.code.toLowerCase()}.png`}
+                      src={country.flag_url || `https://flagcdn.com/w160/${country.code.toLowerCase()}.png`}
                       alt={country.name}
-                      className="w-8 h-6 rounded object-cover"
+                      className="w-9 h-7 rounded-md object-cover saturate-150 contrast-110 shadow-sm"
                     />
-                    <span className="font-medium text-sm truncate">{country.name}</span>
+                    <span className="font-heading-ar font-bold text-sm truncate text-navy">{country.name}</span>
                   </CardContent>
                 </Card>
               </motion.div>
@@ -247,8 +258,8 @@ export default function SchengenDetail() {
           </div>
 
           {schengenCountries.length === 0 && (
-            <Card>
-              <CardContent className="py-8 text-center text-muted-foreground">
+            <Card className="rounded-4xl border-border">
+              <CardContent className="py-8 text-center text-muted-foreground font-body-ar">
                 {direction === 'rtl' 
                   ? 'لم يتم إضافة دول شنغن بعد في النظام'
                   : 'Schengen countries have not been added to the system yet'
@@ -261,13 +272,13 @@ export default function SchengenDetail() {
 
       {/* Visa Types */}
       {visaTypes.length > 0 && (
-        <section className="py-12 bg-muted/30">
+        <section className="py-16">
           <div className="container-section">
-            <h2 className="text-2xl font-bold mb-6">
+            <h2 className="font-heading-ar text-3xl md:text-4xl font-extrabold text-navy mb-8">
               {direction === 'rtl' ? 'أنواع التأشيرات المتاحة' : 'Available Visa Types'}
             </h2>
 
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {visaTypes.map((visa, i) => (
                 <motion.div
                   key={visa.id}
@@ -275,23 +286,23 @@ export default function SchengenDetail() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.1 }}
                 >
-                  <Card className="h-full">
-                    <CardContent className="p-5">
+                  <Card className="h-full rounded-3xl border-border bg-card hover:shadow-2xl hover:shadow-navy/5 hover:-translate-y-1 transition-all">
+                    <CardContent className="p-6">
                       <div className="flex justify-between items-start mb-3">
-                        <h3 className="font-bold text-lg">{visa.name}</h3>
-                        <Badge variant="secondary">
+                        <h3 className="font-heading-ar font-extrabold text-xl text-navy">{visa.name}</h3>
+                        <Badge className="bg-cream text-navy hover:bg-cream border-0 rounded-xl font-jakarta text-[10px] font-bold px-3">
                           {visa.processing_days} {direction === 'rtl' ? 'يوم' : 'days'}
                         </Badge>
                       </div>
                       {visa.description && (
-                        <p className="text-sm text-muted-foreground mb-4">{visa.description}</p>
+                        <p className="text-sm text-muted-foreground mb-4 font-body-ar">{visa.description}</p>
                       )}
-                      <div className="flex items-center justify-between mt-auto pt-3 border-t">
-                        <div className="flex items-center gap-1 text-xl font-bold text-primary">
+                      <div className="flex items-center justify-between mt-auto pt-4 border-t border-border">
+                        <div className="flex items-baseline gap-1 font-display text-2xl font-bold text-brand">
                           {Number(visa.price).toLocaleString()}
-                          <SARSymbol size="sm" className="text-primary" />
+                          <SARSymbol size="sm" className="text-brand" />
                         </div>
-                        <Button size="sm" asChild>
+                        <Button size="sm" asChild className="rounded-2xl h-10 bg-navy hover:bg-navy/90 text-navy-foreground">
                           <Link to="/apply?country=SCHENGEN">
                             {direction === 'rtl' ? 'قدّم الآن' : 'Apply Now'}
                           </Link>
@@ -307,29 +318,29 @@ export default function SchengenDetail() {
       )}
 
       {/* Requirements */}
-      <section className="py-12">
+      <section className="py-16 bg-cream/40">
         <div className="container-section">
-          <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-            <CheckCircle2 className="h-6 w-6 text-success" />
+          <h2 className="font-heading-ar text-3xl md:text-4xl font-extrabold text-navy mb-8 flex items-center gap-3">
+            <CheckCircle2 className="h-7 w-7 text-brand" />
             {direction === 'rtl' ? 'متطلبات تأشيرة شنغن' : 'Schengen Visa Requirements'}
           </h2>
-          <Card>
-            <CardContent className="py-6" dir={direction === 'rtl' ? 'rtl' : 'ltr'}>
-              <ul className="grid gap-3 sm:grid-cols-2" style={{ textAlign: direction === 'rtl' ? 'right' : 'left' }}>
+          <Card className="rounded-4xl border-border bg-card">
+            <CardContent className="p-8" dir={direction === 'rtl' ? 'rtl' : 'ltr'}>
+              <ul className="grid gap-4 sm:grid-cols-2" style={{ textAlign: direction === 'rtl' ? 'right' : 'left' }}>
                 {schengenRequirements.map((req, i) => (
                   <motion.li 
                     key={i} 
-                    className="flex items-start gap-2"
+                    className="flex items-start gap-3 font-body-ar"
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: i * 0.05 }}
                   >
-                    <CheckCircle2 className="h-5 w-5 text-success flex-shrink-0 mt-0.5" />
-                    <span>{req}</span>
+                    <CheckCircle2 className="h-5 w-5 text-brand flex-shrink-0 mt-0.5" />
+                    <span className="text-foreground">{req}</span>
                   </motion.li>
                 ))}
               </ul>
-              <p className="mt-6 text-sm text-muted-foreground" style={{ textAlign: direction === 'rtl' ? 'right' : 'left' }}>
+              <p className="mt-6 text-xs text-muted-foreground font-body-ar" style={{ textAlign: direction === 'rtl' ? 'right' : 'left' }}>
                 {direction === 'rtl' 
                   ? '* قد تختلف المتطلبات حسب سفارة الدولة المختارة. تأكد من مراجعة المتطلبات الخاصة بالسفارة قبل التقديم.'
                   : '* Requirements may vary by embassy. Please verify specific embassy requirements before applying.'
@@ -341,23 +352,26 @@ export default function SchengenDetail() {
       </section>
 
       {/* CTA */}
-      <section className="py-12 bg-primary/5">
-        <div className="container-section text-center">
-          <h2 className="text-2xl font-bold mb-4">
-            {direction === 'rtl' ? 'جاهز للتقديم؟' : 'Ready to Apply?'}
-          </h2>
-          <p className="text-muted-foreground mb-6 max-w-xl mx-auto">
-            {direction === 'rtl' 
-              ? 'ابدأ طلب تأشيرة شنغن الآن واستمتع بالسفر لأكثر من 27 دولة أوروبية بتأشيرة واحدة'
-              : 'Start your Schengen visa application now and enjoy traveling to over 27 European countries with one visa'
-            }
-          </p>
-          <Button size="lg" asChild>
-            <Link to="/apply?country=SCHENGEN" className="gap-2">
-              {direction === 'rtl' ? 'ابدأ التقديم' : 'Start Application'}
-              <ArrowIcon className="h-4 w-4" />
-            </Link>
-          </Button>
+      <section className="py-20">
+        <div className="container-section">
+          <div className="relative overflow-hidden rounded-[3rem] bg-gradient-to-br from-navy via-navy/95 to-brand p-12 md:p-16 text-center">
+            <div className="absolute -top-20 -end-20 w-64 h-64 bg-white/5 rounded-full blur-3xl" />
+            <h2 className="font-heading-ar text-4xl md:text-5xl font-extrabold text-white mb-4 relative">
+              {direction === 'rtl' ? 'جاهز للتقديم؟' : 'Ready to Apply?'}
+            </h2>
+            <p className="font-body-ar text-white/75 mb-8 max-w-xl mx-auto relative">
+              {direction === 'rtl' 
+                ? 'ابدأ طلب تأشيرة شنغن الآن واستمتع بالسفر لأكثر من 27 دولة أوروبية بتأشيرة واحدة'
+                : 'Start your Schengen visa application now and enjoy traveling to over 27 European countries with one visa'
+              }
+            </p>
+            <Button size="lg" asChild className="rounded-2xl h-14 px-8 bg-white text-navy hover:bg-white/90 font-bold relative">
+              <Link to="/apply?country=SCHENGEN" className="gap-2">
+                {direction === 'rtl' ? 'ابدأ التقديم' : 'Start Application'}
+                <ArrowIcon className="h-4 w-4" />
+              </Link>
+            </Button>
+          </div>
         </div>
       </section>
     </div>
