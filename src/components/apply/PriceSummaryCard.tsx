@@ -26,15 +26,15 @@ export default function PriceSummaryCard({ className, showDetails = true }: Pric
   const totalTravelers = travelers.adults + travelers.children + travelers.infants;
 
   return (
-    <div className={cn("bg-card border rounded-xl p-4 sm:p-5 shadow-sm", className)}>
-      <h3 className="font-bold text-base sm:text-lg mb-3 sm:mb-4">{t('payment.summary')}</h3>
-      
+    <div className={cn("bg-card border border-border rounded-3xl p-5 sm:p-6 shadow-lg shadow-navy/5", className)}>
+      <h3 className="font-heading-ar font-black text-lg sm:text-xl mb-4 text-navy">{t('payment.summary')}</h3>
+
       {countryName && (
-        <div className="mb-3 sm:mb-4 p-3 bg-primary/5 rounded-lg">
+        <div className="mb-4 p-4 bg-gradient-to-br from-navy/5 to-brand/5 rounded-2xl border border-navy/10">
           <div className="text-xs sm:text-sm text-muted-foreground">{t('form.country')}</div>
-          <div className="font-semibold text-primary text-sm sm:text-base">{countryName}</div>
+          <div className="font-bold text-navy text-base sm:text-lg">{countryName}</div>
           {visaTypeName && (
-            <div className="text-xs sm:text-sm mt-1">{visaTypeName}</div>
+            <div className="text-xs sm:text-sm mt-1 text-muted-foreground">{visaTypeName}</div>
           )}
         </div>
       )}
@@ -105,11 +105,11 @@ export default function PriceSummaryCard({ className, showDetails = true }: Pric
       
       <Separator className="my-3 sm:my-4" />
       
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center bg-navy text-white -mx-1 px-4 py-3 rounded-2xl">
         <span className="font-bold text-base sm:text-lg">{t('pricing.total')}</span>
-        <span className="font-bold text-lg sm:text-xl text-primary flex items-center gap-1">
+        <span className="font-display font-black text-xl sm:text-2xl flex items-center gap-1">
           {grandTotal.toLocaleString()}
-          <SARSymbol size="md" className="text-primary" />
+          <SARSymbol size="md" className="text-white" />
         </span>
       </div>
       
