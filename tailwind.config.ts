@@ -76,14 +76,35 @@ export default {
           "4": "hsl(var(--chart-4))",
           "5": "hsl(var(--chart-5))",
         },
+        brand: {
+          DEFAULT: "hsl(var(--brand))",
+          foreground: "hsl(var(--brand-foreground))",
+        },
+        navy: {
+          DEFAULT: "hsl(var(--navy))",
+          foreground: "hsl(var(--navy-foreground))",
+        },
+        cream: {
+          DEFAULT: "hsl(var(--cream))",
+          foreground: "hsl(var(--cream-foreground))",
+        },
+        canvas: "hsl(var(--canvas))",
       },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+        "4xl": "2rem",
+        "5xl": "2.5rem",
+        "6xl": "3rem",
+        "7xl": "3.5rem",
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        display: ['Syne', 'Plus Jakarta Sans', 'system-ui', 'sans-serif'],
+        jakarta: ['Plus Jakarta Sans', 'Inter', 'system-ui', 'sans-serif'],
+        cairo: ['Cairo', 'IBM Plex Sans Arabic', 'system-ui', 'sans-serif'],
+        tajawal: ['Tajawal', 'IBM Plex Sans Arabic', 'system-ui', 'sans-serif'],
       },
       keyframes: {
         "accordion-down": {
