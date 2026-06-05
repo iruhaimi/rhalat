@@ -24,6 +24,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { VisaCard } from '@/components/visa/VisaCard';
 import SchengenDetail from './SchengenDetail';
 import SEO from '@/components/seo/SEO';
+import { getSharpFlagUrl } from '@/lib/flagUtils';
 import type { Country, VisaType } from '@/types/database';
 
 export default function CountryDetail() {
@@ -211,9 +212,9 @@ export default function CountryDetail() {
             <div className="lg:col-span-5">
               <div className="relative aspect-[4/3] rounded-4xl overflow-hidden border border-white/10 shadow-2xl bg-white/5">
                 <img
-                  src={country.flag_url || `https://flagcdn.com/w2560/${country.code.toLowerCase()}.png`}
+                  src={getSharpFlagUrl(country)}
                   alt={country.name}
-                  className="w-full h-full object-cover saturate-[1.8] contrast-125 brightness-105"
+                  className="w-full h-full object-cover image-render-auto"
                 />
                 <div className="absolute inset-0 " />
               </div>
