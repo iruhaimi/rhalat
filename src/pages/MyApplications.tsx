@@ -201,24 +201,31 @@ const MyApplications = () => {
   }
 
   return (
-    <div className="container mx-auto py-8 px-4" dir={direction}>
+    <div className="min-h-screen bg-canvas" dir={direction}>
       <NoIndex />
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-3">
-            <div className="p-3 rounded-full bg-primary/10">
-              <FileText className="h-6 w-6 text-primary" />
+      {/* Hero */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-navy via-navy/95 to-brand text-white">
+        <div className="absolute inset-0 opacity-30" style={{ backgroundImage: 'radial-gradient(circle at 80% 20%, hsl(var(--brand)/0.4), transparent 50%)' }} />
+        <div className="container mx-auto px-4 py-12 relative">
+          <div className="max-w-4xl mx-auto flex items-center justify-between flex-wrap gap-4">
+            <div className="flex items-center gap-4">
+              <div className="p-3 rounded-2xl bg-white/10 backdrop-blur-sm">
+                <FileText className="h-6 w-6 text-white" />
+              </div>
+              <h1 className="font-heading-ar text-3xl md:text-5xl font-black text-white">{labels.pageTitle}</h1>
             </div>
-            <h1 className="text-3xl font-bold">{labels.pageTitle}</h1>
+            <Button asChild className="rounded-2xl bg-white text-navy hover:bg-white/90 h-12 px-6">
+              <Link to="/destinations">
+                <Plane className={`h-4 w-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
+                {labels.startApplication}
+              </Link>
+            </Button>
           </div>
-          <Button asChild>
-            <Link to="/destinations">
-              <Plane className={`h-4 w-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
-              {labels.startApplication}
-            </Link>
-          </Button>
         </div>
+      </section>
+
+      <div className="container mx-auto px-4 -mt-8 pb-16 relative">
+        <div className="max-w-4xl mx-auto">
 
         {/* Loading State */}
         {isLoading && (
@@ -256,16 +263,18 @@ const MyApplications = () => {
 
         {/* Empty State */}
         {!isLoading && !error && applications.length === 0 && (
-          <Card>
+          <Card className="rounded-3xl border-border shadow-xl shadow-navy/5">
             <CardContent className="p-12 text-center">
-              <FileText className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
-              <h2 className="text-xl font-semibold mb-2">{labels.noApplications}</h2>
+              <div className="inline-flex p-4 rounded-3xl bg-navy/5 mb-4">
+                <FileText className="h-12 w-12 text-navy/60" />
+              </div>
+              <h2 className="font-heading-ar text-2xl font-black text-navy mb-2">{labels.noApplications}</h2>
               <p className="text-muted-foreground mb-6">
                 {isRTL 
                   ? 'ابدأ بتقديم طلب تأشيرة جديد الآن'
                   : 'Start by submitting a new visa application'}
               </p>
-              <Button asChild size="lg">
+              <Button asChild size="lg" className="rounded-2xl bg-navy hover:bg-navy/90 text-white h-12 px-8">
                 <Link to="/destinations">
                   <Plane className={`h-4 w-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
                   {labels.startApplication}
@@ -289,12 +298,12 @@ const MyApplications = () => {
               const isDraft = app.status === 'draft';
               
               return (
-                <Card key={app.id} className="hover:shadow-md transition-shadow overflow-hidden">
+                <Card key={app.id} className="rounded-3xl border-border shadow-lg shadow-navy/5 hover:shadow-2xl hover:shadow-navy/10 hover:-translate-y-1 transition-all overflow-hidden">
                   {/* Progress indicator bar at top */}
                   {isActive && (
-                    <div className="h-1 bg-muted">
+                    <div className="h-1.5 bg-muted">
                       <div 
-                        className="h-full bg-primary transition-all duration-500"
+                        className="h-full bg-gradient-to-r from-navy to-brand transition-all duration-500"
                         style={{ width: `${progress}%` }}
                       />
                     </div>
@@ -308,11 +317,11 @@ const MyApplications = () => {
                           <img
                             src={app.visa_type.country.flag_url}
                             alt={app.visa_type.country.name}
-                            className="h-12 w-16 object-cover rounded-lg shadow-sm"
+                            className="h-14 w-20 object-cover rounded-2xl shadow-md saturate-150 contrast-110"
                           />
                         )}
                         <div>
-                          <h3 className="font-semibold text-lg">
+                          <h3 className="font-heading-ar text-xl font-black text-navy">
                             {app.visa_type?.country?.name}
                           </h3>
                           <p className="text-sm text-muted-foreground">
@@ -375,14 +384,14 @@ const MyApplications = () => {
                     {/* Action Buttons */}
                     <div className="mt-4 flex justify-end gap-2">
                       {isDraft && (
-                        <Button asChild variant="default" size="sm">
+                        <Button asChild variant="default" size="sm" className="rounded-xl bg-navy hover:bg-navy/90 text-white">
                           <Link to={`/apply?draft=${app.id}`}>
                             <Edit3 className={`h-4 w-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
                             {isRTL ? 'استكمال الطلب' : 'Continue'}
                           </Link>
                         </Button>
                       )}
-                      <Button asChild variant="outline" size="sm">
+                      <Button asChild variant="outline" size="sm" className="rounded-xl border-border hover:border-navy/30">
                         <Link to={`/application?id=${app.id}`}>
                           <Eye className={`h-4 w-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
                           {labels.viewDetails}
@@ -395,6 +404,7 @@ const MyApplications = () => {
             })}
           </div>
         )}
+        </div>
       </div>
     </div>
   );
