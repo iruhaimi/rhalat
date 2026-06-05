@@ -25,6 +25,7 @@ import {
   getSchengenCountries,
   isSchengenCountry 
 } from '@/lib/schengenCountries';
+import { getSharpFlagUrl } from '@/lib/flagUtils';
 import type { Country, VisaType } from '@/types/database';
 
 export default function Destinations() {
@@ -280,7 +281,7 @@ export default function Destinations() {
                         alt={SCHENGEN_INFO.name}
                         loading="lazy"
                         decoding="async"
-                        className="w-full h-full object-cover saturate-[1.8] contrast-125 brightness-105 transition-transform duration-700 group-hover:scale-110"
+                        className="w-full h-full object-cover image-render-auto transition-transform duration-700 group-hover:scale-110"
                       />
                       <div className="absolute inset-0 " />
                       
@@ -343,11 +344,11 @@ export default function Destinations() {
                       {/* Flag Background */}
                       <div className="relative h-44 overflow-hidden bg-gradient-to-br from-navy/5 to-brand/10">
                         <img
-                          src={country.flag_url || `https://flagcdn.com/w2560/${country.code.toLowerCase()}.png`}
+                          src={getSharpFlagUrl(country)}
                           alt={country.name}
                           loading="lazy"
                           decoding="async"
-                          className="w-full h-full object-cover saturate-[1.8] contrast-125 brightness-105 transition-transform duration-700 group-hover:scale-110"
+                          className="w-full h-full object-cover image-render-auto transition-transform duration-700 group-hover:scale-110"
                         />
                         <div className="absolute inset-0 " />
                         
