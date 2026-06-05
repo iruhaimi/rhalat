@@ -122,10 +122,10 @@ export default function About() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted/30">
+    <div className="min-h-screen bg-canvas">
       <SEO title="من نحن — عطلات رحلاتكم" description="تعرّف على عطلات رحلاتكم: فريق متخصص في خدمات التأشيرات حول العالم بخبرة ودعم محلي في الرياض." path="/about" />
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-primary via-primary/95 to-primary/85 py-24 overflow-hidden">
+      <section className="relative bg-gradient-to-br from-navy via-navy/95 to-brand py-24 overflow-hidden">
         {/* Decorative Elements */}
         <div className="absolute inset-0">
           <motion.div
@@ -381,7 +381,7 @@ export default function About() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-br from-primary via-primary/95 to-primary/90 text-primary-foreground relative overflow-hidden">
+      <section className="py-20 bg-gradient-to-br from-navy via-navy/95 to-brand text-primary-foreground relative overflow-hidden">
         {/* Decorative */}
         <div className="absolute inset-0">
           <motion.div

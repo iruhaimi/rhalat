@@ -437,7 +437,7 @@ export default function VisaServices() {
                             <img
                               src={country?.flag_url || `https://flagcdn.com/w320/${country?.code.toLowerCase()}.png`}
                               alt={country?.name}
-                              className="h-10 w-14 rounded-lg object-cover shadow-sm saturate-150 contrast-110"
+                              className="h-10 w-14 rounded-lg object-cover shadow-sm saturate-[1.8] contrast-125 brightness-105"
                             />
                             <div className="flex-1 min-w-0">
                               <CardTitle className="font-heading-ar text-lg font-extrabold text-navy truncate">{visa.name}</CardTitle>
@@ -518,7 +518,7 @@ export default function VisaServices() {
                 <img
                   src={country.flag_url || `https://flagcdn.com/w160/${country.code.toLowerCase()}.png`}
                   alt={country.name}
-                  className="h-7 w-9 rounded-md object-cover shadow-sm saturate-150 contrast-110"
+                  className="h-7 w-9 rounded-md object-cover shadow-sm saturate-[1.8] contrast-125 brightness-105"
                 />
                 <span className="text-sm font-heading-ar font-bold truncate text-navy">{country.name}</span>
               </button>

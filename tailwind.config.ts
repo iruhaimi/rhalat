@@ -105,6 +105,7 @@ export default {
         jakarta: ['Plus Jakarta Sans', 'Inter', 'system-ui', 'sans-serif'],
         cairo: ['Cairo', 'IBM Plex Sans Arabic', 'system-ui', 'sans-serif'],
         tajawal: ['Tajawal', 'IBM Plex Sans Arabic', 'system-ui', 'sans-serif'],
+        'heading-ar': ['Cairo', 'IBM Plex Sans Arabic', 'system-ui', 'sans-serif'],
       },
       keyframes: {
         "accordion-down": {

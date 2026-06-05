@@ -139,7 +139,7 @@ export default function TrackRefund() {
       <SEO title="تتبع طلب الاسترداد — عطلات رحلاتكم" description="تابع حالة طلب الاسترداد الخاص بك في أي وقت." path="/track-refund" />
       <Header />
       <main className="flex-1">
-        <div className="min-h-screen bg-gradient-to-b from-background to-muted/30 py-12">
+        <div className="min-h-screen bg-canvas py-12">
           <div className="container max-w-2xl mx-auto px-4">
             {/* Header */}
             <div className="text-center mb-8">
