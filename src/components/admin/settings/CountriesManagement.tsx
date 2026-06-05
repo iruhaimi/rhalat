@@ -377,7 +377,7 @@ export function CountriesManagement({ countries, isLoading, isRTL }: CountriesMa
       ...formData,
       name: country.name,
       code: country.code,
-      flag_url: `https://flagcdn.com/w80/${country.code.toLowerCase()}.png`,
+      flag_url: `https://flagcdn.com/${country.code.toLowerCase()}.svg`,
     });
     setCountryPickerOpen(false);
   };
@@ -786,7 +786,7 @@ export function CountriesManagement({ countries, isLoading, isRTL }: CountriesMa
                   <Input
                     value={formData.flag_url}
                     onChange={(e) => setFormData({ ...formData, flag_url: e.target.value })}
-                    placeholder="https://flagcdn.com/w80/ae.png"
+                    placeholder="https://flagcdn.com/ae.svg"
                     dir="ltr"
                   />
                   {formData.code && !formData.flag_url && (
@@ -797,7 +797,7 @@ export function CountriesManagement({ countries, isLoading, isRTL }: CountriesMa
                       className="h-auto p-0 text-xs"
                       onClick={() => setFormData({
                         ...formData,
-                        flag_url: `https://flagcdn.com/w80/${formData.code.toLowerCase()}.png`
+                        flag_url: `https://flagcdn.com/${formData.code.toLowerCase()}.svg`
                       })}
                     >
                       استخدم العلم الافتراضي
