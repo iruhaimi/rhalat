@@ -11,10 +11,6 @@ export function getSharpFlagUrl(source: FlagSource, fallbackWidth = 640): string
   const code = source.code?.toLowerCase();
   const rawUrl = source.flag_url || source.flagUrl || '';
 
-  if (code && code !== 'schengen') {
-    return `https://flagcdn.com/${code}.svg`;
-  }
-
   const pngMatch = rawUrl.match(FLAGCDN_PNG_PATTERN);
   if (pngMatch?.[1]) {
     return `https://flagcdn.com/${pngMatch[1].toLowerCase()}.svg`;
@@ -23,6 +19,14 @@ export function getSharpFlagUrl(source: FlagSource, fallbackWidth = 640): string
   const svgMatch = rawUrl.match(FLAGCDN_SVG_PATTERN);
   if (svgMatch?.[1]) {
     return rawUrl;
+  }
+
+  if (rawUrl) {
+    return rawUrl;
+  }
+
+  if (code && code !== 'schengen') {
+    return `https://flagcdn.com/${code}.svg`;
   }
 
   return rawUrl || `https://flagcdn.com/w${fallbackWidth}/un.png`;
