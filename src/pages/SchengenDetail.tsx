@@ -18,6 +18,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useLanguage } from '@/contexts/LanguageContext';
 import SARSymbol from '@/components/ui/SARSymbol';
 import { SCHENGEN_INFO, SCHENGEN_COUNTRY_CODES } from '@/lib/schengenCountries';
+import { getSharpFlagUrl } from '@/lib/flagUtils';
 import SEO from '@/components/seo/SEO';
 import type { Country, VisaType } from '@/types/database';
 
@@ -192,7 +193,7 @@ export default function SchengenDetail() {
                 <img
                   src={SCHENGEN_INFO.flag_url}
                   alt="Schengen"
-                  className="w-full h-full object-cover saturate-[1.8] contrast-125 brightness-105"
+                  className="w-full h-full object-cover image-render-auto"
                 />
                 <div className="absolute inset-0 " />
               </div>
@@ -246,9 +247,9 @@ export default function SchengenDetail() {
                 <Card className="rounded-2xl border-border bg-card hover:shadow-lg hover:border-brand/30 transition-all cursor-default">
                   <CardContent className="p-3 flex items-center gap-3">
                     <img
-                      src={country.flag_url || `https://flagcdn.com/w160/${country.code.toLowerCase()}.png`}
+                      src={getSharpFlagUrl(country)}
                       alt={country.name}
-                      className="w-9 h-7 rounded-md object-cover saturate-[1.8] contrast-125 brightness-105 shadow-sm"
+                      className="w-9 h-7 rounded-md object-cover image-render-auto shadow-sm"
                     />
                     <span className="font-heading-ar font-bold text-sm truncate text-navy">{country.name}</span>
                   </CardContent>
