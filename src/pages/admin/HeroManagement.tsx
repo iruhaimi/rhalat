@@ -417,7 +417,7 @@ function DestinationsManagement({ isRTL }: { isRTL: boolean }) {
                   />
                 )}
                 <p className="text-xs text-muted-foreground">
-                  يمكن استخدام: https://flagcdn.com/w80/[code].png
+                  يمكن استخدام: https://flagcdn.com/[code].svg
                 </p>
               </div>
 
