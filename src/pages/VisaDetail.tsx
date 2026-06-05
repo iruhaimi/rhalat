@@ -184,7 +184,7 @@ export default function VisaDetail() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-canvas">
       <SEO
         title={visaTitle}
         description={visaDesc}
@@ -192,78 +192,83 @@ export default function VisaDetail() {
         jsonLd={[serviceLd, breadcrumbLd, faqLd]}
       />
       {/* Header */}
-      <section className="gradient-hero py-12">
-        <div className="container-section">
+      <section className="relative overflow-hidden bg-gradient-to-br from-navy via-navy/95 to-brand py-16">
+        <div className="absolute -top-32 -end-32 w-80 h-80 bg-white/5 rounded-full blur-3xl" />
+        <div className="container-section relative">
           <Link 
             to="/visa-services" 
-            className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-6 transition-colors"
+            className="inline-flex items-center gap-2 text-white/75 hover:text-white mb-8 transition-colors font-jakarta text-sm font-bold"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to Visa Services
           </Link>
 
-          <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-            <img
-              src={country?.flag_url || `https://flagcdn.com/w80/${country?.code.toLowerCase()}.png`}
-              alt={country?.name}
-              className="h-16 w-24 rounded-lg object-cover shadow-lg"
-            />
+          <div className="flex flex-col sm:flex-row sm:items-center gap-6">
+            <div className="relative h-24 w-32 rounded-3xl overflow-hidden border border-white/10 shadow-2xl bg-white/5 flex-shrink-0">
+              <img
+                src={country?.flag_url || `https://flagcdn.com/w640/${country?.code.toLowerCase()}.png`}
+                alt={country?.name}
+                className="w-full h-full object-cover saturate-150 contrast-110"
+              />
+            </div>
             <div>
-              <h1 className="text-3xl font-bold text-white sm:text-4xl">
+              <span className="font-jakarta text-xs font-bold tracking-[0.25em] uppercase text-white/60 mb-2 block">
+                {country?.name}
+              </span>
+              <h1 className="font-heading-ar text-4xl md:text-5xl font-extrabold text-white leading-tight">
                 {visa.name}
               </h1>
-              <p className="text-lg text-white/80 mt-1">{country?.name}</p>
             </div>
           </div>
         </div>
       </section>
 
       {/* Main Content */}
-      <section className="py-8 sm:py-12">
+      <section className="py-16">
         <div className="container-section">
           <div className="grid gap-8 lg:grid-cols-3">
             {/* Left Column - Details */}
             <div className="lg:col-span-2 space-y-6">
               {/* Overview */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Overview</CardTitle>
+              <Card className="rounded-4xl border-border bg-card">
+                <CardHeader className="pb-4">
+                  <CardTitle className="font-heading-ar text-2xl font-extrabold text-navy">Overview</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <p className="text-muted-foreground">
+                  <p className="text-muted-foreground font-body-ar leading-relaxed">
                     {visa.description || `Apply for a ${visa.name} to ${country?.name}. Our expert team will guide you through the entire application process, ensuring a smooth and hassle-free experience.`}
                   </p>
 
                   <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-                    <div className="rounded-lg bg-muted/50 p-4 text-center">
-                      <Clock className="h-6 w-6 mx-auto text-primary mb-2" />
-                      <p className="text-sm text-muted-foreground">Processing</p>
-                      <p className="font-semibold">{visa.processing_days} Days</p>
+                    <div className="rounded-2xl bg-cream/60 p-4 text-center">
+                      <Clock className="h-6 w-6 mx-auto text-brand mb-2" />
+                      <p className="font-jakarta text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Processing</p>
+                      <p className="font-display font-bold text-navy text-lg mt-1">{visa.processing_days} Days</p>
                     </div>
-                    <div className="rounded-lg bg-muted/50 p-4 text-center">
-                      <Calendar className="h-6 w-6 mx-auto text-primary mb-2" />
-                      <p className="text-sm text-muted-foreground">Validity</p>
-                      <p className="font-semibold">{visa.validity_days || 'Varies'} Days</p>
+                    <div className="rounded-2xl bg-cream/60 p-4 text-center">
+                      <Calendar className="h-6 w-6 mx-auto text-brand mb-2" />
+                      <p className="font-jakarta text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Validity</p>
+                      <p className="font-display font-bold text-navy text-lg mt-1">{visa.validity_days || 'Varies'} Days</p>
                     </div>
-                    <div className="rounded-lg bg-muted/50 p-4 text-center">
-                      <Users className="h-6 w-6 mx-auto text-primary mb-2" />
-                      <p className="text-sm text-muted-foreground">Max Stay</p>
-                      <p className="font-semibold">{visa.max_stay_days || 'Varies'} Days</p>
+                    <div className="rounded-2xl bg-cream/60 p-4 text-center">
+                      <Users className="h-6 w-6 mx-auto text-brand mb-2" />
+                      <p className="font-jakarta text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Max Stay</p>
+                      <p className="font-display font-bold text-navy text-lg mt-1">{visa.max_stay_days || 'Varies'} Days</p>
                     </div>
-                    <div className="rounded-lg bg-muted/50 p-4 text-center">
-                      <FileText className="h-6 w-6 mx-auto text-primary mb-2" />
-                      <p className="text-sm text-muted-foreground">Entry Type</p>
-                      <p className="font-semibold capitalize">{visa.entry_type}</p>
+                    <div className="rounded-2xl bg-cream/60 p-4 text-center">
+                      <FileText className="h-6 w-6 mx-auto text-brand mb-2" />
+                      <p className="font-jakarta text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Entry</p>
+                      <p className="font-display font-bold text-navy text-lg mt-1 capitalize">{visa.entry_type}</p>
                     </div>
                   </div>
                 </CardContent>
               </Card>
 
               {/* Requirements */}
-              <Card>
+              <Card className="rounded-4xl border-border bg-card">
                 <CardHeader>
-                  <CardTitle>Requirements</CardTitle>
-                  <CardDescription>
+                  <CardTitle className="font-heading-ar text-2xl font-extrabold text-navy">Requirements</CardTitle>
+                  <CardDescription className="font-body-ar">
                     Make sure you have all the required documents before applying
                   </CardDescription>
                 </CardHeader>
@@ -271,14 +276,14 @@ export default function VisaDetail() {
                   {requirements.length > 0 ? (
                     <ul className="space-y-3">
                       {requirements.map((req, index) => (
-                        <li key={index} className="flex items-start gap-3">
-                          <CheckCircle2 className="h-5 w-5 text-success mt-0.5 flex-shrink-0" />
-                          <span>{req}</span>
+                        <li key={index} className="flex items-start gap-3 font-body-ar">
+                          <CheckCircle2 className="h-5 w-5 text-brand mt-0.5 flex-shrink-0" />
+                          <span className="text-foreground">{req}</span>
                         </li>
                       ))}
                     </ul>
                   ) : (
-                    <p className="text-muted-foreground">
+                    <p className="text-muted-foreground font-body-ar">
                       Requirements will be displayed during the application process.
                     </p>
                   )}
@@ -287,19 +292,19 @@ export default function VisaDetail() {
 
               {/* Requirements by nationality */}
               {reqDetailed && (reqDetailed.citizen?.length || reqDetailed.resident?.length) && (
-                <Card>
+                <Card className="rounded-4xl border-border bg-card">
                   <CardHeader>
-                    <CardTitle>الشروط حسب الجنسية</CardTitle>
-                    <CardDescription>قائمة المستندات تختلف بحسب صفة المتقدم</CardDescription>
+                    <CardTitle className="font-heading-ar text-2xl font-extrabold text-navy">الشروط حسب الجنسية</CardTitle>
+                    <CardDescription className="font-body-ar">قائمة المستندات تختلف بحسب صفة المتقدم</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-6">
                     {reqDetailed.citizen?.length > 0 && (
                       <div>
-                        <h3 className="font-semibold mb-2 text-primary">للمواطنين السعوديين</h3>
+                        <h3 className="font-heading-ar font-bold mb-3 text-brand">للمواطنين السعوديين</h3>
                         <ul className="space-y-2">
                           {reqDetailed.citizen.map((r: string, i: number) => (
-                            <li key={i} className="flex items-start gap-2">
-                              <CheckCircle2 className="h-4 w-4 text-success mt-1 flex-shrink-0" />
+                            <li key={i} className="flex items-start gap-2 font-body-ar">
+                              <CheckCircle2 className="h-4 w-4 text-brand mt-1 flex-shrink-0" />
                               <span className="text-sm">{r}</span>
                             </li>
                           ))}
@@ -308,11 +313,11 @@ export default function VisaDetail() {
                     )}
                     {reqDetailed.resident?.length > 0 && (
                       <div>
-                        <h3 className="font-semibold mb-2 text-primary">للمقيمين في السعودية</h3>
+                        <h3 className="font-heading-ar font-bold mb-3 text-brand">للمقيمين في السعودية</h3>
                         <ul className="space-y-2">
                           {reqDetailed.resident.map((r: string, i: number) => (
-                            <li key={i} className="flex items-start gap-2">
-                              <CheckCircle2 className="h-4 w-4 text-success mt-1 flex-shrink-0" />
+                            <li key={i} className="flex items-start gap-2 font-body-ar">
+                              <CheckCircle2 className="h-4 w-4 text-brand mt-1 flex-shrink-0" />
                               <span className="text-sm">{r}</span>
                             </li>
                           ))}
@@ -325,20 +330,20 @@ export default function VisaDetail() {
 
               {/* Processing timeline */}
               {timeline.length > 0 && (
-                <Card>
+                <Card className="rounded-4xl border-border bg-card">
                   <CardHeader>
-                    <CardTitle>الجدول الزمني للمعالجة</CardTitle>
+                    <CardTitle className="font-heading-ar text-2xl font-extrabold text-navy">الجدول الزمني للمعالجة</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <ol className="space-y-3">
                       {timeline.map((t, i) => (
                         <li key={i} className="flex gap-3">
-                          <div className="h-7 w-7 rounded-full bg-primary/10 text-primary flex items-center justify-center text-sm font-bold flex-shrink-0">
+                          <div className="h-9 w-9 rounded-xl bg-navy text-white flex items-center justify-center text-sm font-display font-bold flex-shrink-0">
                             {i + 1}
                           </div>
                           <div>
-                            <p className="font-medium">{t.stage}{t.days ? ` — ${t.days}` : ''}</p>
-                            {t.description && <p className="text-sm text-muted-foreground">{t.description}</p>}
+                            <p className="font-heading-ar font-bold text-navy">{t.stage}{t.days ? ` — ${t.days}` : ''}</p>
+                            {t.description && <p className="text-sm text-muted-foreground font-body-ar mt-1">{t.description}</p>}
                           </div>
                         </li>
                       ))}
@@ -349,18 +354,18 @@ export default function VisaDetail() {
 
               {/* Common rejection reasons */}
               {rejectionReasons.length > 0 && (
-                <Card>
+                <Card className="rounded-4xl border-border bg-card">
                   <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
+                    <CardTitle className="font-heading-ar text-2xl font-extrabold text-navy flex items-center gap-2">
                       <AlertCircle className="h-5 w-5 text-destructive" />
                       أسباب الرفض الشائعة
                     </CardTitle>
-                    <CardDescription>تجنّب هذه الأخطاء لزيادة فرص القبول</CardDescription>
+                    <CardDescription className="font-body-ar">تجنّب هذه الأخطاء لزيادة فرص القبول</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <ul className="space-y-2">
                       {rejectionReasons.map((r, i) => (
-                        <li key={i} className="flex items-start gap-2 text-sm">
+                        <li key={i} className="flex items-start gap-2 text-sm font-body-ar">
                           <span className="text-destructive mt-1">•</span>
                           <span>{r}</span>
                         </li>
@@ -371,18 +376,18 @@ export default function VisaDetail() {
               )}
 
               {/* FAQs */}
-              <Card>
+              <Card className="rounded-4xl border-border bg-card">
                 <CardHeader>
-                  <CardTitle>Frequently Asked Questions</CardTitle>
+                  <CardTitle className="font-heading-ar text-2xl font-extrabold text-navy">Frequently Asked Questions</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <Accordion type="single" collapsible className="w-full">
                     {faqs.map((faq, index) => (
-                      <AccordionItem key={index} value={`faq-${index}`}>
-                        <AccordionTrigger className="text-left">
+                      <AccordionItem key={index} value={`faq-${index}`} className="border-border">
+                        <AccordionTrigger className="text-left font-heading-ar font-bold text-navy hover:no-underline">
                           {faq.question}
                         </AccordionTrigger>
-                        <AccordionContent className="text-muted-foreground">
+                        <AccordionContent className="text-muted-foreground font-body-ar leading-relaxed">
                           {faq.answer}
                         </AccordionContent>
                       </AccordionItem>
@@ -395,43 +400,45 @@ export default function VisaDetail() {
             {/* Right Column - Pricing Card */}
             <div className="lg:col-span-1">
               <div className="sticky top-24">
-                <Card className="shadow-lg">
+                <Card className="rounded-4xl border-border bg-card shadow-2xl shadow-navy/10 overflow-hidden">
+                  <div className="h-2 bg-gradient-to-r from-navy to-brand" />
                   <CardHeader>
+                    <p className="font-jakarta text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1">السعر يبدأ من</p>
                     <div className="flex items-baseline gap-2">
-                      <span className="text-4xl font-bold text-primary">{visa.price}</span>
-                      <span className="text-muted-foreground">ر.س</span>
+                      <span className="font-display text-5xl font-bold text-navy">{visa.price}</span>
+                      <span className="text-muted-foreground font-body-ar">ر.س</span>
                     </div>
-                    <CardDescription>لكل طلب</CardDescription>
+                    <CardDescription className="font-body-ar">لكل طلب</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4">
-                    <Button size="lg" className="w-full" onClick={handleApply}>
+                    <Button size="lg" className="w-full rounded-2xl h-12 bg-navy hover:bg-navy/90 text-navy-foreground font-bold" onClick={handleApply}>
                       Apply Now
                     </Button>
 
                     <Separator />
 
                     <div className="space-y-3 text-sm">
-                      <div className="flex items-center gap-2 text-muted-foreground">
-                        <Shield className="h-4 w-4 text-success" />
+                      <div className="flex items-center gap-2 text-muted-foreground font-body-ar">
+                        <Shield className="h-4 w-4 text-brand" />
                         <span>Secure payment processing</span>
                       </div>
-                      <div className="flex items-center gap-2 text-muted-foreground">
-                        <Clock className="h-4 w-4 text-success" />
+                      <div className="flex items-center gap-2 text-muted-foreground font-body-ar">
+                        <Clock className="h-4 w-4 text-brand" />
                         <span>Fast {visa.processing_days}-day processing</span>
                       </div>
-                      <div className="flex items-center gap-2 text-muted-foreground">
-                        <Star className="h-4 w-4 text-success" />
+                      <div className="flex items-center gap-2 text-muted-foreground font-body-ar">
+                        <Star className="h-4 w-4 text-brand" />
                         <span>98% approval rate</span>
                       </div>
-                      <div className="flex items-center gap-2 text-muted-foreground">
-                        <Users className="h-4 w-4 text-success" />
+                      <div className="flex items-center gap-2 text-muted-foreground font-body-ar">
+                        <Users className="h-4 w-4 text-brand" />
                         <span>Expert assistance included</span>
                       </div>
                     </div>
 
                     <Separator />
 
-                    <div className="text-xs text-muted-foreground">
+                    <div className="text-xs text-muted-foreground font-body-ar">
                       <p>
                         Price includes all processing fees. Additional embassy fees may apply 
                         and will be communicated during the application process.
@@ -442,13 +449,13 @@ export default function VisaDetail() {
 
                 {/* Trust Badges */}
                 <div className="mt-4 grid grid-cols-2 gap-2">
-                  <div className="rounded-lg border border-border bg-card p-3 text-center">
-                    <Shield className="h-6 w-6 mx-auto text-primary mb-1" />
-                    <p className="text-xs font-medium">SSL Secure</p>
+                  <div className="rounded-2xl border border-border bg-card p-3 text-center">
+                    <Shield className="h-6 w-6 mx-auto text-brand mb-1" />
+                    <p className="text-xs font-jakarta font-bold text-navy">SSL Secure</p>
                   </div>
-                  <div className="rounded-lg border border-border bg-card p-3 text-center">
-                    <Star className="h-6 w-6 mx-auto text-primary mb-1" />
-                    <p className="text-xs font-medium">Trusted Service</p>
+                  <div className="rounded-2xl border border-border bg-card p-3 text-center">
+                    <Star className="h-6 w-6 mx-auto text-brand mb-1" />
+                    <p className="text-xs font-jakarta font-bold text-navy">Trusted Service</p>
                   </div>
                 </div>
               </div>
