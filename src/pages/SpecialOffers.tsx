@@ -375,7 +375,7 @@ export default function SpecialOffers() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 sm:py-20 bg-gradient-to-r from-primary via-primary to-accent relative overflow-hidden">
+      <section className="py-16 sm:py-20 bg-gradient-to-r from-navy via-navy to-brand relative overflow-hidden">
         {/* Decorative Elements */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-0 left-0 w-40 h-40 bg-white rounded-full -translate-x-1/2 -translate-y-1/2" />
