@@ -286,10 +286,10 @@ export default function TrackApplication() {
   const currentStatusIndex = result ? getStatusIndex(result.status) : -1;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted/30">
+    <div className="min-h-screen bg-canvas">
       <SEO title="تتبع طلب التأشيرة — عطلات رحلاتكم" description="تتبع حالة طلب تأشيرتك خطوة بخطوة باستخدام رقم الطلب." path="/track" />
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-primary via-primary/95 to-primary/85 py-20 overflow-hidden">
+      <section className="relative bg-gradient-to-br from-navy via-navy/95 to-brand py-20 overflow-hidden">
         {/* Decorative Elements */}
         <div className="absolute inset-0">
           <motion.div
