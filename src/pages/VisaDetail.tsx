@@ -26,6 +26,7 @@ import {
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import SEO from '@/components/seo/SEO';
+import { getSharpFlagUrl } from '@/lib/flagUtils';
 import type { Country, VisaType } from '@/types/database';
 
 const faqs = [
@@ -206,9 +207,9 @@ export default function VisaDetail() {
           <div className="flex flex-col sm:flex-row sm:items-center gap-6">
             <div className="relative h-24 w-32 rounded-3xl overflow-hidden border border-white/10 shadow-2xl bg-white/5 flex-shrink-0">
               <img
-                src={country?.flag_url || `https://flagcdn.com/w640/${country?.code.toLowerCase()}.png`}
+                src={getSharpFlagUrl(country)}
                 alt={country?.name}
-                className="w-full h-full object-cover saturate-[1.8] contrast-125 brightness-105"
+                className="w-full h-full object-cover image-render-auto"
               />
             </div>
             <div>
