@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { Mail, Phone, Clock, Facebook, Twitter, Instagram } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useFooterSettings } from '@/hooks/useFooterSettings';
-import logo from '@/assets/logo.jpeg';
+import logo from '@/assets/logo.png.asset.json';
 
 // TikTok icon component
 const TikTokIcon = ({ className }: { className?: string }) => (
@@ -48,7 +48,7 @@ export default function FooterArabic() {
           <div>
             <Link to="/" className="flex items-center gap-2">
               <img 
-                src={logo} 
+                src={logo.url} 
                 alt={companyName}
                 className="h-14 w-auto object-contain"
               />
