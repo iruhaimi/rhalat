@@ -15,6 +15,7 @@ import { supabase } from '@/integrations/supabase/client';
 import GoogleSignInButton from '@/components/auth/GoogleSignInButton';
 import NoIndex from '@/components/seo/NoIndex';
 import { createClient } from '@supabase/supabase-js';
+import { resolvePostAuthRedirect, consumePendingRedirect, sanitizeRedirect } from '@/lib/safeRedirect';
 
 const REQUIRED_PROFILE_FIELDS = [
   'full_name', 'phone', 'date_of_birth', 'nationality',
@@ -99,6 +100,13 @@ export default function Auth() {
   const { direction } = useLanguage();
   const isRTL = direction === 'rtl';
 
+  // Where to send the user once authentication completes.
+  // Falls back to /profile when no safe redirect was provided.
+  const safeRedirect = sanitizeRedirect(
+    resolvePostAuthRedirect(searchParams) ?? undefined,
+    '/profile'
+  );
+
   // Security: staff (admin/agent) MUST authenticate via the secret staff portal,
   // never via the public /auth page. If they try, we reject and force sign-out.
   const isStaffUser = async (userId: string, _client?: EphemeralAuthClient | typeof supabase): Promise<boolean> => {
@@ -137,10 +145,13 @@ export default function Auth() {
     if (user) {
       (async () => {
         const blocked = await blockStaffOnPublicAuth(user.id);
-        if (!blocked) navigate('/profile');
+        if (!blocked) {
+          consumePendingRedirect();
+          navigate(safeRedirect);
+        }
       })();
     }
-  }, [user, navigate]);
+  }, [user, navigate, safeRedirect]);
 
   useEffect(() => {
     const mode = searchParams.get('mode');
@@ -240,13 +251,16 @@ export default function Auth() {
       }, 1000);
     }
 
-    navigate('/profile');
+    consumePendingRedirect();
+    navigate(safeRedirect);
     setIsLoading(false);
   };
 
   const handleSignUp = async (data: SignUpFormData) => {
     setIsLoading(true);
-    const { error } = await signUp(data.email, data.password, data.fullName);
+    // Carry the intended destination through the email-confirmation round trip.
+    const emailRedirectTo = `${window.location.origin}/auth?redirect=${encodeURIComponent(safeRedirect)}`;
+    const { error } = await signUp(data.email, data.password, data.fullName, { emailRedirectTo });
     setIsLoading(false);
 
     if (error) {
@@ -275,7 +289,8 @@ export default function Auth() {
         });
       }, 1500);
 
-      navigate('/profile');
+      consumePendingRedirect();
+      navigate(safeRedirect);
     }
   };
 
@@ -348,7 +363,7 @@ export default function Auth() {
             <CardContent className="px-0 sm:px-6">
               {!isForgotPassword && (
                 <div className="mb-5 space-y-4">
-                  <GoogleSignInButton className="w-full h-11" />
+                  <GoogleSignInButton className="w-full h-11" redirectPath={safeRedirect} />
                   <div className="relative">
                     <div className="absolute inset-0 flex items-center"><span className="w-full border-t" /></div>
                     <div className="relative flex justify-center text-xs uppercase">
