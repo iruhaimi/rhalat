@@ -48,7 +48,7 @@ export default function FooterArabic() {
           <div>
             <Link to="/" className="flex items-center gap-2">
               <img 
-                src={logo} 
+                src={logo.url} 
                 alt={companyName}
                 className="h-14 w-auto object-contain"
               />

@@ -76,7 +76,7 @@ export default function HeaderArabic() {
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3 group">
             <img 
-              src={logo} 
+              src={logo.url} 
               alt="عطلات رحلاتكم" 
               className="h-14 w-auto object-contain transition-transform group-hover:scale-105"
             />
