@@ -1,0 +1,1 @@
+DROP POLICY IF EXISTS "Operators can view own profile" ON public.tour_operators;
