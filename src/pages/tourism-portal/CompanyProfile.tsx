@@ -19,7 +19,10 @@ export default function TourismCompanyProfile() {
 
   useEffect(() => {
     (async () => {
-      const { data, error } = await supabase.from('tour_operators').select('*').maybeSingle();
+      const { data, error } = await (supabase as any)
+        .from('tour_operators_self')
+        .select('*')
+        .maybeSingle();
       if (error) toast.error('تعذر تحميل بيانات الشركة');
       setOp(data);
       setLoading(false);

@@ -18,7 +18,10 @@ export default function TourismDashboard() {
 
   useEffect(() => {
     (async () => {
-      const { data: op } = await supabase.from('tour_operators').select('*').maybeSingle();
+      const { data: op } = await (supabase as any)
+        .from('tour_operators_self')
+        .select('*')
+        .maybeSingle();
       setOperator(op);
       if (op) {
         const { data: programs } = await supabase
