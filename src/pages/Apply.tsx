@@ -258,6 +258,7 @@ function ApplyContent() {
   const handleStepClick = (step: number) => {
     if (step < currentStep) {
       setCurrentStep(step);
+      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
     }
   };
 
