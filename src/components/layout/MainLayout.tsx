@@ -1,10 +1,12 @@
 import { Outlet } from 'react-router-dom';
+import { lazy, Suspense } from 'react';
 import HeaderArabic from './HeaderArabic';
 import FooterArabic from './FooterArabic';
-import FloatingWhatsApp from './FloatingWhatsApp';
-import CookieConsent from './CookieConsent';
 import { useAuth } from '@/contexts/AuthContext';
 import { useDespiaDevice } from '@/hooks/useDespiaDevice';
+
+const FloatingWhatsApp = lazy(() => import('./FloatingWhatsApp'));
+const CookieConsent = lazy(() => import('./CookieConsent'));
 
 export default function MainLayout() {
   const { user } = useAuth();
@@ -17,8 +19,10 @@ export default function MainLayout() {
         <Outlet />
       </main>
       <FooterArabic />
-      <FloatingWhatsApp />
-      <CookieConsent />
+      <Suspense fallback={null}>
+        <FloatingWhatsApp />
+        <CookieConsent />
+      </Suspense>
     </div>
   );
 }

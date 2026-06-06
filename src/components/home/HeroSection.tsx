@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { Search, ArrowLeft, Globe, Sparkles, Clock, ShieldCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -47,6 +46,8 @@ export default function HeroSection() {
       if (error) throw error;
       return data as HeroDestination[];
     },
+    staleTime: 10 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
   });
 
   const { data: dbSettings } = useQuery({
@@ -59,6 +60,8 @@ export default function HeroSection() {
       if (error) throw error;
       return data as HeroSetting[];
     },
+    staleTime: 10 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
   });
 
   const settings: Record<string, { ar: string; en: string }> = {};
@@ -85,12 +88,7 @@ export default function HeroSection() {
       <div className="pointer-events-none absolute top-1/3 -end-40 h-[420px] w-[420px] rounded-full bg-navy/5 blur-[100px]" />
 
       <div className="container-section relative">
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-5"
-        >
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-5 animate-in fade-in slide-in-from-bottom-4 duration-500">
           {/* Main Brand Tile */}
           <div className="md:col-span-8 bg-card border border-border rounded-5xl p-8 md:p-12 relative overflow-hidden flex flex-col justify-center min-h-[460px]">
             <div className="relative z-10">
@@ -228,7 +226,7 @@ export default function HeroSection() {
               {isRTL ? 'دعم متواصل 24/7' : '24/7 support'}
             </p>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );
