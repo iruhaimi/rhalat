@@ -14,7 +14,12 @@ interface AuthContextType {
   isAgent: boolean;
   isCustomer: boolean;
   isTourOperator: boolean;
-  signUp: (email: string, password: string, fullName: string) => Promise<{ error: Error | null }>;
+  signUp: (
+    email: string,
+    password: string,
+    fullName: string,
+    options?: { emailRedirectTo?: string }
+  ) => Promise<{ error: Error | null }>;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
   signOut: (isStaff?: boolean) => Promise<void>;
   refreshProfile: () => Promise<void>;
@@ -114,9 +119,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => subscription.unsubscribe();
   }, []);
 
-  const signUp = async (email: string, password: string, fullName: string) => {
-    const redirectUrl = `${window.location.origin}/`;
-    
+  const signUp = async (
+    email: string,
+    password: string,
+    fullName: string,
+    options?: { emailRedirectTo?: string }
+  ) => {
+    const redirectUrl = options?.emailRedirectTo ?? `${window.location.origin}/`;
+
     const { error } = await supabase.auth.signUp({
       email,
       password,
