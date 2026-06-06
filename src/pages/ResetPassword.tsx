@@ -14,7 +14,8 @@ import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
 import NoIndex from '@/components/seo/NoIndex';
-import logo from '@/assets/logo.jpeg';
+import logoAsset from '@/assets/logo.png.asset.json';
+const logo = logoAsset.url;
 
 // Password strength checker
 const getPasswordStrength = (password: string): { score: number; label: string; color: string } => {
