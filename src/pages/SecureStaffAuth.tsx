@@ -443,7 +443,7 @@ export default function SecureStaffAuth() {
   // Check if user has recovery codes
   const checkRecoveryCodes = async (userId: string, client: any = supabase): Promise<boolean> => {
     const { data } = await client
-      .from('staff_recovery_codes')
+      .from('staff_recovery_codes_status')
       .select('id')
       .eq('user_id', userId)
       .eq('used', false)
