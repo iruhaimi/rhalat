@@ -157,6 +157,7 @@ export function ApplicationProvider({ children }: { children: React.ReactNode })
   const goToPreviousStep = useCallback(() => {
     if (currentStep > 1) {
       setCurrentStep(prev => prev - 1);
+      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
     }
   }, [currentStep]);
 
