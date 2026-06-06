@@ -359,7 +359,7 @@ export default function Step2VisaDetails() {
 
       {/* Mobile Price Summary - Bottom */}
       <div className="lg:hidden">
-        <details className="group">
+        <details className="group" open>
           <summary className="flex items-center justify-between p-4 bg-primary/5 rounded-xl cursor-pointer list-none">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
