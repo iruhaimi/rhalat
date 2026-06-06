@@ -443,7 +443,7 @@ export default function SecureStaffAuth() {
   // Check if user has recovery codes
   const checkRecoveryCodes = async (userId: string, client: any = supabase): Promise<boolean> => {
     const { data } = await client
-      .from('staff_recovery_codes')
+      .from('staff_recovery_codes_status')
       .select('id')
       .eq('user_id', userId)
       .eq('used', false)
@@ -465,29 +465,22 @@ export default function SecureStaffAuth() {
         });
       }
 
-      // Get all unused codes for user
-      const { data: codes } = await authClient
-        .from('staff_recovery_codes')
-        .select('*')
-        .eq('user_id', pendingUserId)
-        .eq('used', false);
+      // Server-side atomic verification (rate-limited + audited)
+      const { data: ok, error: rpcError } = await authClient.rpc('verify_staff_recovery_code', {
+        p_user_id: pendingUserId,
+        p_code: code,
+      });
 
-      if (!codes || codes.length === 0) return false;
+      if (rpcError) {
+        console.error('Recovery RPC error:', rpcError);
+        if ((rpcError as any).message?.includes('rate_limited')) {
+          toast.error('عدد محاولات كبير. حاول لاحقاً.');
+        }
+        return false;
+      }
+      if (!ok) return false;
 
-      // Check each code
-      for (const codeRecord of codes) {
-        const isValid = await verifyRecoveryCode(code, codeRecord.code_hash);
-        if (isValid) {
-          // Mark as used
-          await authClient
-            .from('staff_recovery_codes')
-            .update({ used: true, used_at: new Date().toISOString() })
-            .eq('id', codeRecord.id);
-
-          // Clear failed login attempts
-          await supabase.rpc('clear_failed_login_attempts', { target_email: email.trim().toLowerCase() });
-
-          const { error: activateError } = await supabase.auth.setSession({
+      const { error: activateError } = await supabase.auth.setSession({
             access_token: pendingSession.accessToken,
             refresh_token: pendingSession.refreshToken,
           });
@@ -515,10 +508,6 @@ export default function SecureStaffAuth() {
           }
 
           return true;
-        }
-      }
-
-      return false;
     } catch (err) {
       console.error('Recovery code verification error:', err);
       return false;
