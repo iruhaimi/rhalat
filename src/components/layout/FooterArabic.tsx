@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { Mail, Phone, Clock, Facebook, Twitter, Instagram } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useFooterSettings } from '@/hooks/useFooterSettings';
-import logo from '@/assets/logo.jpeg';
+import logo from '@/assets/logo.png.asset.json';
 
 // TikTok icon component
 const TikTokIcon = ({ className }: { className?: string }) => (

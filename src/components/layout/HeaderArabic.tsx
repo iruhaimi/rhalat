@@ -16,7 +16,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import MobileNavDrawer from './MobileNavDrawer';
 import { NotificationBell } from '@/components/notifications/NotificationBell';
 import GoogleSignInButton from '@/components/auth/GoogleSignInButton';
-import logo from '@/assets/logo.jpeg';
+import logo from '@/assets/logo.png.asset.json';
 
 export default function HeaderArabic() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
