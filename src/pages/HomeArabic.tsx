@@ -1,74 +1,66 @@
-import { useState, useEffect } from 'react';
+import { lazy, Suspense } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import SEO from '@/components/seo/SEO';
 import { supabase } from '@/integrations/supabase/client';
 import { useLanguage } from '@/contexts/LanguageContext';
 import type { Country, VisaType } from '@/types/database';
 
-// Import sections
+// Above-the-fold sections (eager)
 import HeroSection from '@/components/home/HeroSection';
 import CountriesSection from '@/components/home/CountriesSection';
-import HowItWorksSection from '@/components/home/HowItWorksSection';
-import FeaturesSection from '@/components/home/FeaturesSection';
-import StatsSection from '@/components/home/StatsSection';
-import PartnersSection from '@/components/home/PartnersSection';
-import TestimonialsSection from '@/components/home/TestimonialsSection';
-import FAQSection from '@/components/home/FAQSection';
-import CTASection from '@/components/home/CTASection';
+
+// Below-the-fold sections (lazy)
+const HowItWorksSection = lazy(() => import('@/components/home/HowItWorksSection'));
+const FeaturesSection = lazy(() => import('@/components/home/FeaturesSection'));
+const StatsSection = lazy(() => import('@/components/home/StatsSection'));
+const PartnersSection = lazy(() => import('@/components/home/PartnersSection'));
+const TestimonialsSection = lazy(() => import('@/components/home/TestimonialsSection'));
+const FAQSection = lazy(() => import('@/components/home/FAQSection'));
+const CTASection = lazy(() => import('@/components/home/CTASection'));
 
 export default function HomeArabic() {
   const { t } = useLanguage();
-  const [countries, setCountries] = useState<Country[]>([]);
-  const [visaTypes, setVisaTypes] = useState<VisaType[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    async function fetchData() {
-      const [countriesRes, visaTypesRes] = await Promise.all([
-        supabase.from('countries').select('*').eq('is_active', true).order('name'),
-        supabase.from('visa_types').select('*, country:countries(*)').eq('is_active', true),
-      ]);
+  const { data: countries = [] } = useQuery({
+    queryKey: ['active-countries'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('countries')
+        .select('*')
+        .eq('is_active', true)
+        .order('name');
+      if (error) throw error;
+      return (data || []) as Country[];
+    },
+  });
 
-      if (!countriesRes.error && countriesRes.data) {
-        setCountries(countriesRes.data as Country[]);
-      }
-      if (!visaTypesRes.error && visaTypesRes.data) {
-        setVisaTypes(visaTypesRes.data as VisaType[]);
-      }
-      setIsLoading(false);
-    }
-
-    fetchData();
-  }, []);
+  const { data: visaTypes = [] } = useQuery({
+    queryKey: ['active-visa-types-with-country'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('visa_types')
+        .select('*, country:countries(*)')
+        .eq('is_active', true);
+      if (error) throw error;
+      return (data || []) as VisaType[];
+    },
+  });
 
   return (
     <div className="flex flex-col">
       <SEO title="عطلات رحلاتكم — خدمات التأشيرات السياحية والأعمال" description="احصل على تأشيرتك بسرعة وأمان مع عطلات رحلاتكم. تأشيرات سياحية، أعمال، طلابية، وشنغن لجميع الجنسيات." path="/" />
-      {/* Hero Section */}
       <HeroSection />
-
-      {/* Featured Countries */}
       <CountriesSection countries={countries} visaTypes={visaTypes} t={t} />
 
-      {/* How It Works */}
-      <HowItWorksSection t={t} />
-
-      {/* Features */}
-      <FeaturesSection t={t} />
-
-      {/* Stats */}
-      <StatsSection />
-
-      {/* Partners */}
-      <PartnersSection />
-
-      {/* Testimonials */}
-      <TestimonialsSection />
-
-      {/* FAQ */}
-      <FAQSection t={t} />
-
-      {/* CTA Section */}
-      <CTASection t={t} />
+      <Suspense fallback={<div className="min-h-[200px]" />}>
+        <HowItWorksSection t={t} />
+        <FeaturesSection t={t} />
+        <StatsSection />
+        <PartnersSection />
+        <TestimonialsSection />
+        <FAQSection t={t} />
+        <CTASection t={t} />
+      </Suspense>
     </div>
   );
 }

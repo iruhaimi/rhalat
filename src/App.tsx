@@ -88,7 +88,16 @@ const TourOperatorCompanyProfile = lazy(() => import("@/pages/tourism-portal/Com
 const TourOperatorMyPrograms = lazy(() => import("@/pages/tourism-portal/MyPrograms"));
 const TourOperatorMyBookings = lazy(() => import("@/pages/tourism-portal/MyBookings"));
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000,
+      gcTime: 30 * 60 * 1000,
+      refetchOnWindowFocus: false,
+      retry: 1,
+    },
+  },
+});
 
 const RouteFallback = () => (
   <div className="min-h-[50vh] flex items-center justify-center">
