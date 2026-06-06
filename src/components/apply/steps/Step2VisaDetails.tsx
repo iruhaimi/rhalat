@@ -357,6 +357,30 @@ export default function Step2VisaDetails() {
         </div>
       </div>
 
+      {/* Mobile Price Summary - Bottom */}
+      <div className="lg:hidden">
+        <details className="group">
+          <summary className="flex items-center justify-between p-4 bg-primary/5 rounded-xl cursor-pointer list-none">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
+                <SARSymbol size="sm" className="text-primary" />
+              </div>
+              <div>
+                <span className="text-sm text-muted-foreground">{t('pricing.total')}</span>
+                <div className="font-bold text-lg text-primary flex items-center gap-1">
+                  {calculateTotal().grandTotal.toLocaleString()}
+                  <SARSymbol size="sm" className="text-primary" />
+                </div>
+              </div>
+            </div>
+            <ArrowNextIcon className="w-5 h-5 text-muted-foreground transition-transform group-open:rotate-90" />
+          </summary>
+          <div className="mt-3">
+            <PriceSummaryCard />
+          </div>
+        </details>
+      </div>
+
       {/* Navigation Buttons - Sticky on mobile */}
       <div className="flex gap-3 sm:gap-4 pt-4 sm:pt-6 sticky bottom-0 bg-background/95 backdrop-blur-sm pb-4 -mx-4 px-4 sm:mx-0 sm:px-0 sm:static sm:bg-transparent sm:backdrop-blur-none border-t sm:border-0 mt-4 sm:mt-0">
         <Button
