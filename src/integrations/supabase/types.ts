@@ -1895,6 +1895,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "tour_bookings_operator_id_fkey"
+            columns: ["operator_id"]
+            isOneToOne: false
+            referencedRelation: "tour_operators_self"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "tour_bookings_program_id_fkey"
             columns: ["program_id"]
             isOneToOne: false
@@ -2141,6 +2148,13 @@ export type Database = {
             columns: ["operator_id"]
             isOneToOne: false
             referencedRelation: "tour_operators_public"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tour_programs_operator_id_fkey"
+            columns: ["operator_id"]
+            isOneToOne: false
+            referencedRelation: "tour_operators_self"
             referencedColumns: ["id"]
           },
         ]
@@ -2475,6 +2489,69 @@ export type Database = {
           logo_url?: string | null
           updated_at?: string | null
           website?: string | null
+        }
+        Relationships: []
+      }
+      tour_operators_self: {
+        Row: {
+          address: string | null
+          city: string | null
+          company_name: string | null
+          company_name_en: string | null
+          country: string | null
+          cover_image_url: string | null
+          created_at: string | null
+          description: string | null
+          description_en: string | null
+          email: string | null
+          id: string | null
+          is_active: boolean | null
+          logo_url: string | null
+          phone: string | null
+          updated_at: string | null
+          user_id: string | null
+          website: string | null
+          whatsapp_number: string | null
+        }
+        Insert: {
+          address?: string | null
+          city?: string | null
+          company_name?: string | null
+          company_name_en?: string | null
+          country?: string | null
+          cover_image_url?: string | null
+          created_at?: string | null
+          description?: string | null
+          description_en?: string | null
+          email?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          logo_url?: string | null
+          phone?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          website?: string | null
+          whatsapp_number?: string | null
+        }
+        Update: {
+          address?: string | null
+          city?: string | null
+          company_name?: string | null
+          company_name_en?: string | null
+          country?: string | null
+          cover_image_url?: string | null
+          created_at?: string | null
+          description?: string | null
+          description_en?: string | null
+          email?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          logo_url?: string | null
+          phone?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          website?: string | null
+          whatsapp_number?: string | null
         }
         Relationships: []
       }
