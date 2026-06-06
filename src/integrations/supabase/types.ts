@@ -2441,6 +2441,30 @@ export type Database = {
         }
         Relationships: []
       }
+      staff_recovery_codes_status: {
+        Row: {
+          created_at: string | null
+          id: string | null
+          used: boolean | null
+          used_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string | null
+          used?: boolean | null
+          used_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string | null
+          used?: boolean | null
+          used_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       tour_operators_public: {
         Row: {
           city: string | null
@@ -2725,6 +2749,10 @@ export type Database = {
       }
       rotate_staff_portal_path: { Args: { p_new_path: string }; Returns: Json }
       verify_staff_2fa: {
+        Args: { p_code: string; p_user_id: string }
+        Returns: boolean
+      }
+      verify_staff_recovery_code: {
         Args: { p_code: string; p_user_id: string }
         Returns: boolean
       }
