@@ -7,6 +7,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { lovable } from '@/integrations/lovable';
 import { cn } from '@/lib/utils';
+import { sanitizeRedirect, resolvePostAuthRedirect, stashPendingRedirect } from '@/lib/safeRedirect';
 
 function GoogleIcon({ className }: { className?: string }) {
   return (
@@ -31,7 +32,7 @@ export default function GoogleSignInButton({
   disabled,
   iconOnly = false,
   label,
-  redirectPath = '/profile',
+  redirectPath,
   onStart,
   variant = 'outline',
   ...props
@@ -48,8 +49,17 @@ export default function GoogleSignInButton({
     onStart?.();
 
     try {
+      // Resolve the post-auth destination: explicit prop > ?redirect= > sessionStorage > /profile.
+      const resolved = sanitizeRedirect(
+        redirectPath ?? resolvePostAuthRedirect() ?? undefined,
+        '/profile'
+      );
+
+      // OAuth round-trip strips our query params; stash a copy so we can recover it.
+      stashPendingRedirect(resolved);
+
       const result = await lovable.auth.signInWithOAuth('google', {
-        redirect_uri: `${window.location.origin}${redirectPath}`,
+        redirect_uri: `${window.location.origin}${resolved}`,
       });
 
       if (result?.error) {
@@ -64,7 +74,7 @@ export default function GoogleSignInButton({
 
       if (result?.redirected) return;
 
-      navigate(redirectPath);
+      navigate(resolved);
     } catch (error) {
       toast({
         variant: 'destructive',

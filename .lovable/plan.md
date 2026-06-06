@@ -1,37 +1,58 @@
-## المشكلة الحالية
-الصفحة لا تزال بطيئة لأن مسار الصفحة الرئيسية يحمّل أشياء غير ضرورية مبكرًا، ويوجد خطأ فعلي في التحميل:
+## المشكلة
 
-- الصفحة تطلب حوالي 52 ملف JavaScript في وضع المعاينة.
-- يوجد خطأ 500 بسبب استيراد شعار قديم محذوف: `@/assets/logo.jpeg` داخل صفحة بوابة الموظفين.
-- صفحة بوابة الموظفين `SecureStaffAuth` يتم تحميلها مبكرًا عبر `DynamicPortalRoute` رغم أنها لا تخص الصفحة الرئيسية.
-- الصفحة الرئيسية تنفّذ عدة طلبات قاعدة بيانات مباشرة عند الفتح: الدول، أنواع التأشيرات، إعدادات الهيرو، وجهات الهيرو، الفوتر.
-- مكتبات ثقيلة مثل `framer-motion` و `lucide-react` تدخل في المسار الأول للصفحة.
+عندما يضغط المستخدم على "التقديم على فيزا" وهو غير مسجّل، يتم تحويله إلى `/auth`. بعد تسجيل الدخول بنجاح (Google أو إيميل) يتم توجيهه دائماً إلى `/profile` بدل إعادته للصفحة اللي كان فيها (مثلاً `/dashboard/apply/<visaId>`)، فيضطر يعيد كل الخطوات.
 
-## خطة التنفيذ
+## السبب التقني
 
-### 1. إصلاح الخطأ المباشر في الشعار
-- تحديث أي صفحات ما زالت تستخدم `logo.jpeg` إلى الشعار الجديد `logo.png.asset.json`.
-- هذا يمنع خطأ التحميل الذي يظهر حاليًا ويؤثر على تجربة التصفح.
+- `src/pages/VisaDetail.tsx` يرسل `?redirect=...` إلى `/auth` بشكل صحيح.
+- `src/pages/Auth.tsx` يتجاهل هذا الباراميتر ويستدعي `navigate('/profile')` في كل المسارات (إيميل، تسجيل جديد، 2FA).
+- `src/components/auth/GoogleSignInButton.tsx` يستخدم `redirectPath = '/profile'` ثابتاً.
+- تأكيد الإيميل يستخدم `emailRedirectTo: ${origin}/` فيرجع المستخدم للصفحة الرئيسية بدون ذاكرة للوجهة.
 
-### 2. منع تحميل بوابة الموظفين على الصفحة الرئيسية
-- تعديل `DynamicPortalRoute` بحيث لا يستورد `SecureStaffAuth` بشكل مباشر.
-- جعله lazy-loaded فقط عند الدخول لمسار البوابة السري.
-- النتيجة: الصفحة الرئيسية لن تحمل كود تسجيل دخول الموظفين ولا مكوناته الثقيلة.
+## الحل المقترح
 
-### 3. تخفيف الصفحة الرئيسية فوق الطيّة
-- تقليل اعتماد `HeroSection` على طلبات قاعدة البيانات عند أول فتح.
-- عرض نسخة فورية ثابتة وسريعة أولًا، ثم تحديث البيانات لاحقًا عند وصولها.
-- إبقاء تجربة المستخدم سريعة حتى لو تأخرت قاعدة البيانات.
+### 1. إنشاء helper جديد `src/lib/safeRedirect.ts`
+- `isSafeInternalPath(path)`: يقبل فقط مسارات تبدأ بـ `/` ولا تحتوي `//` أو `http`، لمنع open-redirect.
+- `stashPendingRedirect(path)` / `consumePendingRedirect()`: يخزّن في `sessionStorage` كـ fallback للتدفقات اللي تخرج من الموقع (Google OAuth، تأكيد الإيميل).
 
-### 4. تأجيل العناصر غير الضرورية
-- تأجيل/تبسيط تحميل عناصر مثل الفوتر الديناميكي، واتساب العائم، الكوكيز، وبعض الحركات إلى ما بعد ظهور الصفحة.
-- الهدف أن يرى العميل أول شاشة بسرعة بدل انتظار كل السكربتات.
+### 2. تعديل `src/pages/Auth.tsx`
+- قراءة `searchParams.get('redirect')` مع fallback إلى `sessionStorage`، والتحقق منها عبر `isSafeInternalPath`.
+- استبدال كل `navigate('/profile')` بـ `navigate(safeRedirect ?? '/profile')` في:
+  - نجاح تسجيل الدخول بالإيميل
+  - نجاح إنشاء حساب جديد
+  - نجاح 2FA
+  - حالة "مستخدم مسجل دخوله أصلاً وزار /auth"
+- تمرير الـ redirect داخل `emailRedirectTo` عند `signUp`: `${origin}/auth?redirect=<encoded>`.
+- تمرير `redirectPath={safeRedirect}` إلى `<GoogleSignInButton>`.
+- مسح `sessionStorage` بعد التوجيه الناجح.
 
-### 5. تقليل أثر مكتبات الحركة والأيقونات على البداية
-- إزالة `framer-motion` من العناصر الحرجة في الهيرو إن أمكن واستبدالها بـ CSS animation خفيفة.
-- إبقاء الحركات في الأقسام المؤجلة فقط.
+### 3. تعديل `src/components/auth/GoogleSignInButton.tsx`
+- إذا لم يُمرَّر `redirectPath` كـ prop، يقرأ من URL/sessionStorage تلقائياً.
+- قبل استدعاء `lovable.auth.signInWithOAuth` يستدعي `stashPendingRedirect(safeRedirect)` لأن OAuth يفقد query params.
 
-### 6. التحقق بعد التنفيذ
-- فحص Console للتأكد من اختفاء خطأ `logo.jpeg`.
-- تشغيل فحص أداء للصفحة الرئيسية ومقارنة عدد الموارد ووقت التحميل.
-- التأكد أن الصفحة تظهر بسرعة وأن الروابط الأساسية ما زالت تعمل.
+### 4. مراجعة نقاط الدخول للتأكد من تمرير `?redirect=`
+- `src/pages/VisaDetail.tsx` ✓ (موجود)
+- `src/pages/CountryDetail.tsx` — أزرار "ابدأ التقديم"
+- `src/components/home/HeroSection.tsx` — CTA الرئيسي
+- أي زر "ابدأ التقديم" في صفحة `/tourism` أو غيرها
+
+### 5. استثناء بوابة الموظفين
+- مسار `/portal-x7k9m2` لا يقرأ `redirect` إطلاقاً لتجنب أي خلط في صلاحيات الموظفين (يبقى على منطقه الحالي).
+
+## الحالات المغطاة
+
+- ✅ حماية من open-redirect (رفض `//evil.com`، `http://...`، أي مسار بدون `/` في البداية)
+- ✅ Google OAuth يفقد query params → sessionStorage fallback
+- ✅ تأكيد الإيميل يصل بعد ساعات → الرابط السحري يحمل الـ redirect
+- ✅ مستخدم مسجّل دخوله أصلاً ويزور `/auth?redirect=/x` → تحويل فوري إلى `/x`
+- ✅ بوابة الموظفين لا تتأثر
+
+## الملفات المعدّلة
+
+- `src/lib/safeRedirect.ts` (جديد)
+- `src/pages/Auth.tsx`
+- `src/components/auth/GoogleSignInButton.tsx`
+- `src/pages/CountryDetail.tsx` (تأكيد تمرير redirect)
+- `src/components/home/HeroSection.tsx` (تأكيد تمرير redirect)
+
+لا تغييرات على قاعدة البيانات أو edge functions.
