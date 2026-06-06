@@ -158,11 +158,11 @@ export default function HeroSection() {
             </div>
 
             <div className="relative z-10 pt-6 border-t border-white/10">
-              <div className="flex -space-x-3 rtl:space-x-reverse mb-3">
-                <div className="w-10 h-10 rounded-full border-2 border-navy bg-brand flex items-center justify-center text-[10px] font-display font-bold">+10k</div>
-                <div className="w-10 h-10 rounded-full border-2 border-navy bg-cream" />
-                <div className="w-10 h-10 rounded-full border-2 border-navy bg-cream/70" />
-                <div className="w-10 h-10 rounded-full border-2 border-navy bg-cream/50" />
+              <div className="flex -space-x-3 rtl:space-x-reverse mb-3" dir="ltr">
+                <div className="w-10 h-10 rounded-full border-2 border-navy bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-sm font-bold text-white">أ</div>
+                <div className="w-10 h-10 rounded-full border-2 border-navy bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center text-sm font-bold text-white">م</div>
+                <div className="w-10 h-10 rounded-full border-2 border-navy bg-gradient-to-br from-rose-400 to-pink-600 flex items-center justify-center text-sm font-bold text-white">س</div>
+                <div className="w-10 h-10 rounded-full border-2 border-navy bg-brand flex items-center justify-center text-[10px] font-display font-bold tabular-nums">+10k</div>
               </div>
               <p className="font-jakarta text-xs font-bold opacity-90">
                 {isRTL ? 'أكثر من 10,000 عميل سعيد' : '10,000+ happy travelers'}
