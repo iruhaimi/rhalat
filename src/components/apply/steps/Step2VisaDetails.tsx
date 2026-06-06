@@ -192,30 +192,6 @@ export default function Step2VisaDetails() {
         </p>
       </div>
 
-      {/* Mobile: Show Price Summary at top as collapsible */}
-      <div className="lg:hidden">
-        <details className="group">
-          <summary className="flex items-center justify-between p-4 bg-primary/5 rounded-xl cursor-pointer list-none">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
-                <SARSymbol size="sm" className="text-primary" />
-              </div>
-              <div>
-                <span className="text-sm text-muted-foreground">{t('pricing.total')}</span>
-                <div className="font-bold text-lg text-primary flex items-center gap-1">
-                  {calculateTotal().grandTotal.toLocaleString()}
-                  <SARSymbol size="sm" className="text-primary" />
-                </div>
-              </div>
-            </div>
-            <ArrowNextIcon className="w-5 h-5 text-muted-foreground transition-transform group-open:rotate-90" />
-          </summary>
-          <div className="mt-3">
-            <PriceSummaryCard />
-          </div>
-        </details>
-      </div>
-
       <div className="grid lg:grid-cols-3 gap-4 sm:gap-6">
         <div className="lg:col-span-2 space-y-4 sm:space-y-6">
           {/* Region/Country Selection - Hidden when user came from Schengen URL */}
