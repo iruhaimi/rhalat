@@ -191,8 +191,9 @@ export default function HeroSection() {
             <img
               src={featuredDestination.image_url}
               alt={isRTL ? featuredDestination.name : (featuredDestination.name_en || featuredDestination.name)}
-              loading="lazy"
+              loading="eager"
               decoding="async"
+              fetchPriority="high"
               className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
               onError={(e) => {
                 (e.target as HTMLImageElement).src = `https://flagcdn.com/w2560/${featuredDestination.country.toLowerCase()}.jpg`;
