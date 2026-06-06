@@ -567,7 +567,7 @@ export default function Step6Payment() {
                     variant="outline"
                     size="sm"
                     className="w-full gap-2 mt-2"
-                    onClick={() => setCurrentStep(4)}
+                    onClick={() => { setCurrentStep(4); window.scrollTo({ top: 0, left: 0, behavior: 'smooth' }); }}
                   >
                     <Upload className="w-4 h-4" />
                     {direction === 'rtl' ? 'العودة لرفع المستندات' : 'Go to upload documents'}
