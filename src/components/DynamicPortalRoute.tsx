@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
-import { useLocation, Navigate } from 'react-router-dom';
+import { useEffect, useState, lazy, Suspense } from 'react';
+import { useLocation } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
-import SecureStaffAuth from '@/pages/SecureStaffAuth';
+
+const SecureStaffAuth = lazy(() => import('@/pages/SecureStaffAuth'));
 
 /**
  * Catches any path and checks against the current secret_path in DB.
@@ -26,6 +27,12 @@ export default function DynamicPortalRoute({ fallback }: { fallback: JSX.Element
   }, [location.pathname]);
 
   if (status === 'loading') return null;
-  if (status === 'match') return <SecureStaffAuth />;
+  if (status === 'match') {
+    return (
+      <Suspense fallback={null}>
+        <SecureStaffAuth />
+      </Suspense>
+    );
+  }
   return fallback;
 }
