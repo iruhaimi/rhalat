@@ -77,7 +77,10 @@ export default function MyPrograms() {
 
   useEffect(() => {
     (async () => {
-      const { data: op } = await supabase.from('tour_operators').select('id').maybeSingle();
+      const { data: op } = await (supabase as any)
+        .from('tour_operators_self')
+        .select('id')
+        .maybeSingle();
       if (op) {
         setOperatorId(op.id);
         await refresh(op.id);
