@@ -1,16 +1,17 @@
+## Problem
 
-# تغيير شعار الموقع
+In the navy "happy travelers" tile of the hero, the small circle row shows what looks like ".ok+" instead of "+10k", and the three other circles look like empty/broken avatars.
 
-استبدال الشعار الحالي (`src/assets/logo.jpeg`) بالشعار الجديد المرفوع.
+Causes:
+1. The `+10k` text is inside an RTL container, so bidi reordering flips it visually.
+2. The 3 placeholder circles (`bg-cream`, `bg-cream/70`, `bg-cream/50`) have no content — they look like missing avatar images.
 
-## الخطوات
-1. نسخ الصورة المرفوعة إلى `src/assets/logo.png`.
-2. تحديث الاستيراد في:
-   - `src/components/layout/HeaderArabic.tsx`
-   - `src/components/layout/FooterArabic.tsx`
-   ليشير إلى `@/assets/logo.png` بدلاً من `logo.jpeg`.
-3. حذف الملف القديم `src/assets/logo.jpeg`.
+## Fix (in `src/components/home/HeroSection.tsx`, lines ~160-170)
 
-## ما لن يتغير
-- شكل الـ Header/Footer أو الأحجام.
-- الـ favicon (لم يُطلب تغييره).
+1. Force LTR on the `+10k` badge so it always reads correctly:
+   - Add `dir="ltr"` and a `tabular-nums` class to the first circle div.
+2. Replace the 3 empty cream circles with real-looking customer avatars:
+   - Use initials (Arabic letters like م، س، أ) styled with a gradient background and white text — matching the existing testimonials avatar pattern (`TestimonialsSection.tsx` already uses single-letter avatars).
+   - Keeps the visual "stack of travelers" intent without looking broken.
+
+No backend, no new assets, no layout changes outside that small badge row.
