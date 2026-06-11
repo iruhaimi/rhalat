@@ -631,20 +631,6 @@ function LoggedInUserForm() {
 export default function Step1BasicInfo() {
   const { direction } = useLanguage();
   const { user, isLoading: authLoading } = useAuth();
-  const { goToNextStep } = useApplication();
-  const [authCompleted, setAuthCompleted] = useState(false);
-
-  const handleAuthSuccess = useCallback(() => {
-    setAuthCompleted(true);
-  }, []);
-
-  // When auth is completed, the user state will update
-  useEffect(() => {
-    if (authCompleted && user) {
-      // User just logged in, the LoggedInUserForm will handle pre-fill and auto-advance
-      setAuthCompleted(false);
-    }
-  }, [authCompleted, user, goToNextStep]);
 
   if (authLoading) {
     return (
@@ -654,59 +640,20 @@ export default function Step1BasicInfo() {
     );
   }
 
-  // User is logged in - show the logged-in form
-  if (user) {
-    return (
-      <div className="space-y-6">
-        <div className="text-center mb-8">
-          <h2 className="text-2xl font-bold">
-            {direction === 'rtl' ? 'البيانات الأساسية' : 'Basic Information'}
-          </h2>
-          <p className="text-muted-foreground mt-2">
-            {direction === 'rtl' 
-              ? 'أدخل بياناتك الأساسية للتواصل معك' 
-              : 'Enter your basic information to contact you'}
-          </p>
-        </div>
-        <LoggedInUserForm />
-      </div>
-    );
-  }
-
-  // User is not logged in - show login/register tabs
+  // Guest-first: always show the basic info form. Auth gate appears later (before docs).
   return (
     <div className="space-y-6">
       <div className="text-center mb-8">
         <h2 className="text-2xl font-bold">
-          {direction === 'rtl' ? 'تسجيل الدخول للمتابعة' : 'Sign in to Continue'}
+          {direction === 'rtl' ? 'البيانات الأساسية' : 'Basic Information'}
         </h2>
         <p className="text-muted-foreground mt-2">
-          {direction === 'rtl' 
-            ? 'سجل دخولك أو أنشئ حساباً جديداً لمتابعة طلب التأشيرة' 
-            : 'Sign in or create an account to continue your visa application'}
+          {direction === 'rtl'
+            ? 'أدخل بياناتك للتواصل معك — لا حاجة للتسجيل الآن'
+            : "Enter your contact info — no account needed yet"}
         </p>
       </div>
-
-      <Tabs defaultValue="signin" className="w-full">
-        <TabsList className="grid w-full grid-cols-2 mb-6">
-          <TabsTrigger value="signin" className="gap-2">
-            <LogIn className="w-4 h-4" />
-            {direction === 'rtl' ? 'تسجيل الدخول' : 'Sign In'}
-          </TabsTrigger>
-          <TabsTrigger value="signup" className="gap-2">
-            <UserPlus className="w-4 h-4" />
-            {direction === 'rtl' ? 'حساب جديد' : 'Sign Up'}
-          </TabsTrigger>
-        </TabsList>
-        
-        <TabsContent value="signin">
-          <SignInForm onSuccess={handleAuthSuccess} />
-        </TabsContent>
-        
-        <TabsContent value="signup">
-          <SignUpForm onSuccess={handleAuthSuccess} />
-        </TabsContent>
-      </Tabs>
+      <LoggedInUserForm />
     </div>
   );
 }
