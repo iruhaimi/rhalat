@@ -11,7 +11,6 @@ import Step1BasicInfo from '@/components/apply/steps/Step1BasicInfo';
 import Step2VisaDetails from '@/components/apply/steps/Step2VisaDetails';
 import Step3Requirements from '@/components/apply/steps/Step3Requirements';
 import Step4Documents from '@/components/apply/steps/Step4Documents';
-import Step5Terms from '@/components/apply/steps/Step5Terms';
 import Step6Payment from '@/components/apply/steps/Step6Payment';
 import AuthGateModal from '@/components/apply/AuthGateModal';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -306,8 +305,6 @@ function ApplyContent() {
       case 4:
         return <Step4Documents />;
       case 5:
-        return <Step5Terms />;
-      case 6:
         return <Step6Payment />;
       default:
         return <Step1BasicInfo />;
@@ -362,7 +359,7 @@ function ApplyContent() {
         <div className="max-w-4xl mx-auto bg-card border border-border rounded-3xl shadow-xl shadow-navy/5 px-4 sm:px-6 py-2 sm:py-3">
           <WizardStepper
             currentStep={currentStep}
-            totalSteps={6}
+            totalSteps={5}
             onStepClick={handleStepClick}
           />
         </div>
