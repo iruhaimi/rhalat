@@ -59,7 +59,7 @@ export default function FooterArabic() {
             <div className="mt-4 rounded-lg border border-primary/20 bg-primary/5 p-3">
               <div className="flex items-center gap-2 mb-2">
                 <BadgeCheck className="h-4 w-4 text-primary flex-shrink-0" />
-                <span className="text-xs font-semibold text-primary">مرخّصون من وزارة السياحة</span>
+                <span className="text-xs font-semibold text-primary">مرخصون من وزارة السياحة والتجارة</span>
               </div>
               <div className="space-y-1 text-xs text-foreground">
                 <div className="flex items-center justify-between gap-2">
