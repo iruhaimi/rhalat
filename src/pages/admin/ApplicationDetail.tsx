@@ -778,6 +778,40 @@ export default function ApplicationDetail() {
             </Card>
           </div>
 
+          {/* Legal Consent Proof */}
+          {(application as any).terms_accepted_at && (
+            <Card className="border-green-300 bg-green-50/40 dark:bg-green-950/20">
+              <CardHeader className="pb-4">
+                <CardTitle className="flex items-center gap-2 text-lg text-green-900 dark:text-green-100">
+                  📜 إثبات الموافقة القانونية
+                  <span className="inline-flex items-center gap-1 text-xs font-medium bg-green-600 text-white px-2 py-0.5 rounded-full">✅ موثّقة</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid gap-3 sm:grid-cols-2 text-sm">
+                  <div>
+                    <p className="text-xs text-muted-foreground">إصدار الشروط</p>
+                    <p className="font-mono font-medium">{(application as any).terms_version || '—'}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-muted-foreground">وقت الموافقة</p>
+                    <p className="font-medium">
+                      {format(new Date((application as any).terms_accepted_at), 'dd MMM yyyy - HH:mm:ss', { locale: ar })}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-muted-foreground">عنوان IP</p>
+                    <p className="font-mono text-xs">{(application as any).terms_ip_address || '—'}</p>
+                  </div>
+                  <div className="sm:col-span-2">
+                    <p className="text-xs text-muted-foreground">معلومات الجهاز</p>
+                    <p className="font-mono text-[11px] break-all text-muted-foreground">{(application as any).terms_user_agent || '—'}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
           {/* Work Submissions Section */}
           <WorkSubmissionsSection applicationId={application.id} />
 
