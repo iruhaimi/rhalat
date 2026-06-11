@@ -173,9 +173,22 @@ export default function Step6Payment() {
       return;
     }
 
+    if (!applicationData.termsAccepted) {
+      toast({
+        title: direction === 'rtl' ? 'الموافقة على الشروط مطلوبة' : 'Terms acceptance required',
+        description: direction === 'rtl' ? 'يرجى الموافقة على الشروط والأحكام قبل المتابعة' : 'Please accept the Terms & Conditions to continue',
+        variant: 'destructive',
+      });
+      return;
+    }
+
     setIsSubmittingWhatsApp(true);
 
     try {
+      const consentIp = await getClientIP();
+      const consentUA = typeof navigator !== 'undefined' ? navigator.userAgent : null;
+      const consentAt = new Date().toISOString();
+
       const draftPayload = {
         user_id: profile.id,
         visa_type_id: applicationData.visaTypeId,
@@ -214,6 +227,10 @@ export default function Step6Payment() {
           status: 'whatsapp_pending',
           submission_method: 'whatsapp',
           purpose_of_travel: draftPayload.purpose_of_travel,
+          terms_accepted_at: consentAt,
+          terms_version: TERMS_VERSION,
+          terms_ip_address: consentIp,
+          terms_user_agent: consentUA,
           updated_at: new Date().toISOString(),
         })
         .eq('id', appId)
