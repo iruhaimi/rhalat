@@ -744,6 +744,53 @@ export default function Step6Payment() {
               {direction === 'rtl' ? 'اختر طريقة الإكمال أعلاه للمتابعة' : 'Choose a completion method above to continue'}
             </div>
           )}
+
+          {/* Terms & Conditions consent — required for both paths */}
+          {submissionMethod && (
+            <div
+              className={cn(
+                'p-3 sm:p-4 rounded-xl border-2 transition-colors cursor-pointer',
+                applicationData.termsAccepted
+                  ? 'border-primary bg-primary/5'
+                  : 'border-muted hover:border-primary/50'
+              )}
+              onClick={() => updateApplicationData({ termsAccepted: !applicationData.termsAccepted })}
+            >
+              <div className="flex items-start gap-3">
+                <Checkbox
+                  id="terms-consent"
+                  checked={applicationData.termsAccepted}
+                  onCheckedChange={(checked) => updateApplicationData({ termsAccepted: checked as boolean })}
+                  className="mt-0.5"
+                />
+                <Label htmlFor="terms-consent" className="cursor-pointer text-xs sm:text-sm leading-relaxed flex-1">
+                  {direction === 'rtl' ? (
+                    <>
+                      أوافق على{' '}
+                      <Link to="/terms" target="_blank" onClick={(e) => e.stopPropagation()} className="text-primary underline font-medium">الشروط والأحكام</Link>
+                      {' '}و{' '}
+                      <Link to="/privacy" target="_blank" onClick={(e) => e.stopPropagation()} className="text-primary underline font-medium">سياسة الخصوصية</Link>
+                      {' '}و{' '}
+                      <Link to="/refund" target="_blank" onClick={(e) => e.stopPropagation()} className="text-primary underline font-medium">سياسة الاسترجاع</Link>
+                      {'. '}
+                      <span className="text-muted-foreground">سيتم تسجيل موافقتك مع الوقت والجهاز كدليل قانوني.</span>
+                    </>
+                  ) : (
+                    <>
+                      I agree to the{' '}
+                      <Link to="/terms" target="_blank" onClick={(e) => e.stopPropagation()} className="text-primary underline font-medium">Terms & Conditions</Link>
+                      {', '}
+                      <Link to="/privacy" target="_blank" onClick={(e) => e.stopPropagation()} className="text-primary underline font-medium">Privacy Policy</Link>
+                      {', and '}
+                      <Link to="/refund" target="_blank" onClick={(e) => e.stopPropagation()} className="text-primary underline font-medium">Refund Policy</Link>
+                      {'. '}
+                      <span className="text-muted-foreground">Your consent (timestamp + device) will be recorded as a legal record.</span>
+                    </>
+                  )}
+                </Label>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
