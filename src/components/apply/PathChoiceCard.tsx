@@ -97,26 +97,28 @@ export default function PathChoiceCard({ onBack }: Props) {
     try {
       const ip = await getClientIP();
       const ua = typeof navigator !== 'undefined' ? navigator.userAgent : null;
+      const guestData = JSON.parse(JSON.stringify({
+        fullName: applicationData.fullName,
+        email: applicationData.email,
+        phone: applicationData.phone,
+        countryCode: applicationData.countryCode,
+        travelers: applicationData.travelers,
+        countryName: applicationData.countryName,
+        visaTypeName: applicationData.visaTypeName,
+        checkedRequirements: applicationData.checkedRequirements,
+        totalAmount: calculateTotal().grandTotal,
+      }));
+      const termsPayload = JSON.parse(JSON.stringify({
+        accepted: true,
+        version: TERMS_VERSION,
+        ip,
+        userAgent: ua,
+      }));
       const { data, error } = await supabase.rpc('create_whatsapp_order', {
         p_visa_type_id: applicationData.visaTypeId,
         p_travel_date: applicationData.travelDate ? applicationData.travelDate.toISOString().split('T')[0] : null,
-        p_guest_data: {
-          fullName: applicationData.fullName,
-          email: applicationData.email,
-          phone: applicationData.phone,
-          countryCode: applicationData.countryCode,
-          travelers: applicationData.travelers,
-          countryName: applicationData.countryName,
-          visaTypeName: applicationData.visaTypeName,
-          checkedRequirements: applicationData.checkedRequirements,
-          totalAmount: calculateTotal().grandTotal,
-        },
-        p_terms: {
-          accepted: true,
-          version: TERMS_VERSION,
-          ip,
-          userAgent: ua,
-        },
+        p_guest_data: guestData,
+        p_terms: termsPayload,
       });
       if (error) throw error;
       const row = Array.isArray(data) ? data[0] : data;
