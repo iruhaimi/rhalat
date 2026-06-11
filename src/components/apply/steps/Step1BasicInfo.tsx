@@ -431,7 +431,14 @@ function LoggedInUserForm() {
 
   const watchedValues = watch();
 
-  // Pre-fill and check for auto-advance
+  // Mark guests as "pre-filled" immediately so input changes sync to applicationData
+  useEffect(() => {
+    if (!hasPreFilled && !authLoading && !user) {
+      setHasPreFilled(true);
+    }
+  }, [hasPreFilled, authLoading, user]);
+
+  // Pre-fill and check for auto-advance (logged-in only)
   useEffect(() => {
     if (!hasPreFilled && !authLoading && user && profile) {
       const profilePhone = extractPhoneNumber(profile.phone);
