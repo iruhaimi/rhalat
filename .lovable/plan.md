@@ -1,24 +1,21 @@
-## الهدف
-إظهار رقمَي ترخيص وزارة السياحة بشكل بارز بجانب وصف الشركة في تذييل الصفحة (FooterArabic).
+## Plan: Update Tourism License Text in Footer
 
-## الأرقام المطلوبة
-- ترخيص وزارة السياحة: **73100234**
-- ترخيص وزارة السياحة: **7010581259**
+### Goal
+Update the tourism ministry license card text in the Arabic footer from "مرخّصون من وزارة السياحة" to "مرخصون من وزارة السياحة والتجارة".
 
-## التنفيذ
+### Change
+**File:** `src/components/layout/FooterArabic.tsx`
 
-### 1. تعديل `src/components/layout/FooterArabic.tsx`
-تحت فقرة الوصف مباشرة (`{description}`) في عمود البراند، إضافة بطاقة بارزة تعرض الترخيصين:
+- Remove the diacritic from "مرخّصون" → "مرخصون"
+- Append "والتجارة" to the ministry name
 
-- حاوية بخلفية `bg-primary/5` وحدود `border-primary/20` و`rounded-lg` و`p-3`.
-- عنوان صغير "مرخّصون من وزارة السياحة" مع أيقونة `BadgeCheck` من lucide-react.
-- صفّان لرقمَي الترخيص بخط واضح (`font-semibold`) واتجاه `dir="ltr"` للأرقام.
+### Why
+The company is licensed by both the Ministry of Tourism and the Ministry of Commerce, so the footer should accurately reflect both ministries.
 
-### 2. لا حاجة لتغييرات في قاعدة البيانات
-الترخيصان نصّان ثابتان قانونيان، يُعرضان مباشرة من المكوّن (ليسا مرتبطين بـ CMS).
+---
 
-## الملفات المعدّلة
-- `src/components/layout/FooterArabic.tsx` (تعديل فقط)
-
-## التحقق
-- مراجعة الفوتر في المعاينة على الديسكتوب والجوال للتأكد من ظهور الترخيصين بشكل بارز ومقروء.
+### Technical Details
+- Single-line text change in the license card component
+- No database or backend changes required
+- No new dependencies
+- No impact on other components or functionality
