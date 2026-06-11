@@ -9,9 +9,12 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { Globe, MessageCircle, ArrowRight, ArrowLeft, Loader2, ShieldCheck, Zap, Phone } from 'lucide-react';
+import { Globe, MessageCircle, ArrowRight, ArrowLeft, Loader2, ShieldCheck, Zap, Phone, AlertCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { filterNonNumeric } from '@/lib/inputFilters';
 
 const TERMS_VERSION = 'v2026.1';
 
@@ -32,12 +35,49 @@ interface Props {
 export default function PathChoiceCard({ onBack }: Props) {
   const { direction } = useLanguage();
   const { applicationData, updateApplicationData, goToNextStep, setShowAuthGate, calculateTotal, resetApplication } = useApplication();
-  const { user, profile } = useAuth();
+  const { user, profile, refreshProfile } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
   const isRTL = direction === 'rtl';
   const [submittingWA, setSubmittingWA] = useState(false);
+  const [phoneInput, setPhoneInput] = useState('');
+  const [savingPhone, setSavingPhone] = useState(false);
   const ArrowBack = isRTL ? ArrowRight : ArrowLeft;
+
+  const needsPhone = !!user && !profile?.phone;
+
+  const handleSavePhone = async () => {
+    if (phoneInput.length !== 9) {
+      toast({
+        title: isRTL ? 'رقم غير صحيح' : 'Invalid phone',
+        description: isRTL ? 'يجب أن يتكون الرقم من 9 أرقام' : 'Phone must be exactly 9 digits',
+        variant: 'destructive',
+      });
+      return;
+    }
+    if (!profile?.id) return;
+    setSavingPhone(true);
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update({ phone: phoneInput })
+        .eq('id', profile.id);
+      if (error) throw error;
+      updateApplicationData({ phone: phoneInput, countryCode: '+966' });
+      await refreshProfile();
+      toast({
+        title: isRTL ? '✅ تم حفظ الرقم' : '✅ Phone saved',
+      });
+    } catch (err: any) {
+      toast({
+        title: 'خطأ',
+        description: err.message || 'فشل حفظ الرقم',
+        variant: 'destructive',
+      });
+    } finally {
+      setSavingPhone(false);
+    }
+  };
 
   const buildWhatsAppMessage = (appNumber: string) => {
     const { grandTotal } = calculateTotal();
@@ -72,6 +112,14 @@ export default function PathChoiceCard({ onBack }: Props) {
   };
 
   const handleElectronic = () => {
+    if (needsPhone) {
+      toast({
+        title: isRTL ? 'رقم الجوال مطلوب' : 'Phone required',
+        description: isRTL ? 'يرجى إدخال رقم جوالك أولاً' : 'Please enter your phone first',
+        variant: 'destructive',
+      });
+      return;
+    }
     if (!applicationData.termsAccepted) {
       toast({
         title: isRTL ? 'الموافقة على الشروط مطلوبة' : 'Terms required',
@@ -88,6 +136,14 @@ export default function PathChoiceCard({ onBack }: Props) {
   };
 
   const handleWhatsApp = async () => {
+    if (needsPhone) {
+      toast({
+        title: isRTL ? 'رقم الجوال مطلوب' : 'Phone required',
+        description: isRTL ? 'يرجى إدخال رقم جوالك أولاً' : 'Please enter your phone first',
+        variant: 'destructive',
+      });
+      return;
+    }
     if (!applicationData.termsAccepted) {
       toast({
         title: isRTL ? 'الموافقة على الشروط مطلوبة' : 'Terms required',
