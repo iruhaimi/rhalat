@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
+import PathChoiceCard from '@/components/apply/PathChoiceCard';
 import { 
   ArrowLeft, 
   ArrowRight, 
@@ -45,6 +46,7 @@ export default function Step3Requirements() {
   const { t, direction } = useLanguage();
   const { applicationData, updateApplicationData, goToNextStep, goToPreviousStep, setShowAuthGate } = useApplication();
   const { user } = useAuth();
+  const [showPathChoice, setShowPathChoice] = useState(false);
   
   const ArrowNextIcon = direction === 'rtl' ? ArrowLeft : ArrowRight;
   const ArrowPrevIcon = direction === 'rtl' ? ArrowRight : ArrowLeft;
@@ -135,6 +137,10 @@ export default function Step3Requirements() {
   };
 
   const canProceed = true;
+
+  if (showPathChoice) {
+    return <PathChoiceCard onBack={() => setShowPathChoice(false)} />;
+  }
 
   return (
     <div className="space-y-6">
@@ -255,13 +261,7 @@ export default function Step3Requirements() {
           type="button"
           size="lg"
           className="flex-1 h-12 gap-2"
-          onClick={() => {
-            if (!user) {
-              setShowAuthGate(true);
-            } else {
-              goToNextStep();
-            }
-          }}
+          onClick={() => setShowPathChoice(true)}
           disabled={!canProceed}
         >
           {t('wizard.next')}
