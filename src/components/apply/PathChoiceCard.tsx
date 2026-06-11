@@ -32,7 +32,7 @@ interface Props {
 export default function PathChoiceCard({ onBack }: Props) {
   const { direction } = useLanguage();
   const { applicationData, updateApplicationData, goToNextStep, setShowAuthGate, calculateTotal, resetApplication } = useApplication();
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
   const isRTL = direction === 'rtl';
@@ -50,12 +50,15 @@ export default function PathChoiceCard({ onBack }: Props) {
     const travelDateStr = applicationData.travelDate
       ? format(applicationData.travelDate, 'PPP', { locale: ar })
       : 'غير محدد';
+    const fullName = profile?.full_name || '';
+    const email = user?.email || '';
+    const phone = profile?.phone || '';
     return `مرحباً، أرغب بإكمال طلب التأشيرة عبر واتساب
 
 📋 رقم الطلب: ${appNumber}
-👤 الاسم: ${applicationData.fullName}
-📧 البريد: ${applicationData.email}
-📱 الجوال: ${applicationData.countryCode} ${applicationData.phone}
+👤 الاسم: ${fullName}
+📧 البريد: ${email}
+📱 الجوال: ${phone}
 
 🌍 الدولة: ${applicationData.countryName}
 📄 نوع التأشيرة: ${applicationData.visaTypeName}
@@ -93,15 +96,15 @@ export default function PathChoiceCard({ onBack }: Props) {
       });
       return;
     }
+    if (!user) {
+      setShowAuthGate(true);
+      return;
+    }
     setSubmittingWA(true);
     try {
       const ip = await getClientIP();
       const ua = typeof navigator !== 'undefined' ? navigator.userAgent : null;
-      const guestData = JSON.parse(JSON.stringify({
-        fullName: applicationData.fullName,
-        email: applicationData.email,
-        phone: applicationData.phone,
-        countryCode: applicationData.countryCode,
+      const meta = JSON.parse(JSON.stringify({
         travelers: applicationData.travelers,
         countryName: applicationData.countryName,
         visaTypeName: applicationData.visaTypeName,
@@ -117,7 +120,7 @@ export default function PathChoiceCard({ onBack }: Props) {
       const { data, error } = await supabase.rpc('create_whatsapp_order', {
         p_visa_type_id: applicationData.visaTypeId,
         p_travel_date: applicationData.travelDate ? applicationData.travelDate.toISOString().split('T')[0] : null,
-        p_guest_data: guestData,
+        p_meta: meta,
         p_terms: termsPayload,
       });
       if (error) throw error;

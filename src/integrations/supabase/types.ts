@@ -569,10 +569,6 @@ export type Database = {
           draft_data: Json | null
           emergency_contact_name: string | null
           emergency_contact_phone: string | null
-          guest_country_code: string | null
-          guest_email: string | null
-          guest_full_name: string | null
-          guest_phone: string | null
           id: string
           purpose_of_travel: string | null
           rejection_reason: string | null
@@ -586,7 +582,7 @@ export type Database = {
           terms_version: string | null
           travel_date: string | null
           updated_at: string
-          user_id: string | null
+          user_id: string
           visa_type_id: string
         }
         Insert: {
@@ -600,10 +596,6 @@ export type Database = {
           draft_data?: Json | null
           emergency_contact_name?: string | null
           emergency_contact_phone?: string | null
-          guest_country_code?: string | null
-          guest_email?: string | null
-          guest_full_name?: string | null
-          guest_phone?: string | null
           id?: string
           purpose_of_travel?: string | null
           rejection_reason?: string | null
@@ -617,7 +609,7 @@ export type Database = {
           terms_version?: string | null
           travel_date?: string | null
           updated_at?: string
-          user_id?: string | null
+          user_id: string
           visa_type_id: string
         }
         Update: {
@@ -631,10 +623,6 @@ export type Database = {
           draft_data?: Json | null
           emergency_contact_name?: string | null
           emergency_contact_phone?: string | null
-          guest_country_code?: string | null
-          guest_email?: string | null
-          guest_full_name?: string | null
-          guest_phone?: string | null
           id?: string
           purpose_of_travel?: string | null
           rejection_reason?: string | null
@@ -648,7 +636,7 @@ export type Database = {
           terms_version?: string | null
           travel_date?: string | null
           updated_at?: string
-          user_id?: string | null
+          user_id?: string
           visa_type_id?: string
         }
         Relationships: [
@@ -2664,7 +2652,7 @@ export type Database = {
       }
       create_whatsapp_order: {
         Args: {
-          p_guest_data: Json
+          p_meta: Json
           p_terms: Json
           p_travel_date: string
           p_visa_type_id: string

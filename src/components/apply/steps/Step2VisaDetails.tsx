@@ -27,13 +27,12 @@ import { getSharpFlagUrl } from '@/lib/flagUtils';
 
 export default function Step2VisaDetails() {
   const { t, direction, language } = useLanguage();
-  const { applicationData, updateApplicationData, goToNextStep, goToPreviousStep, calculateTotal } = useApplication();
+  const { applicationData, updateApplicationData, goToNextStep, calculateTotal } = useApplication();
   const [selectedRegion, setSelectedRegion] = useState<string>('');
   const [initialized, setInitialized] = useState(false);
   const [isSchengenFromUrl, setIsSchengenFromUrl] = useState(false);
   
   const ArrowNextIcon = direction === 'rtl' ? ArrowLeft : ArrowRight;
-  const ArrowPrevIcon = direction === 'rtl' ? ArrowRight : ArrowLeft;
 
   // Fetch countries
   const { data: countries } = useQuery({
@@ -383,17 +382,6 @@ export default function Step2VisaDetails() {
 
       {/* Navigation Buttons - Sticky on mobile */}
       <div className="flex gap-3 sm:gap-4 pt-4 sm:pt-6 sticky bottom-0 bg-background/95 backdrop-blur-sm pb-4 -mx-4 px-4 sm:mx-0 sm:px-0 sm:static sm:bg-transparent sm:backdrop-blur-none border-t sm:border-0 mt-4 sm:mt-0">
-        <Button
-          type="button"
-          variant="outline"
-          size="lg"
-          className="flex-1 h-12 sm:h-12 gap-2 text-sm sm:text-base"
-          onClick={goToPreviousStep}
-        >
-          <ArrowPrevIcon className="w-4 h-4" />
-          <span className="hidden xs:inline">{t('wizard.previous')}</span>
-          <span className="xs:hidden">{direction === 'rtl' ? 'السابق' : 'Back'}</span>
-        </Button>
         <Button
           type="button"
           size="lg"

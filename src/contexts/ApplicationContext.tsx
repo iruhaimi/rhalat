@@ -257,18 +257,14 @@ export function ApplicationProvider({ children }: { children: React.ReactNode })
     switch (step) {
       case 1:
         return !!(
-          applicationData.fullName.trim() &&
-          applicationData.email.includes('@') &&
-          applicationData.phone.length >= 9
-        );
-      case 2:
-        return !!(
           applicationData.visaTypeId &&
           applicationData.travelDate &&
           (applicationData.travelers.adults + applicationData.travelers.children + applicationData.travelers.infants) > 0
         );
-      case 3:
+      case 2:
         return applicationData.checkedRequirements.length > 0;
+      case 3:
+        return applicationData.termsAccepted;
       case 4:
         return applicationData.uploadedDocuments.some(doc => doc.uploaded);
       case 5:
