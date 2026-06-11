@@ -553,54 +553,10 @@ export default function Step6Payment() {
           </Card>
         </div>
 
-        {/* Right column: path selector + conditional content */}
+        {/* Right column: payment */}
         <div className="space-y-3 sm:space-y-4 order-1 lg:order-2">
-          {/* Path Selector */}
-          <h3 className="font-bold text-base sm:text-lg">
-            {direction === 'rtl' ? 'كيف تريد إكمال طلبك؟' : 'How would you like to complete your application?'}
-          </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <button
-              type="button"
-              onClick={() => updateApplicationData({ submissionMethod: 'online' })}
-              className={cn(
-                'p-4 rounded-xl border-2 text-right transition-all',
-                submissionMethod === 'online'
-                  ? 'border-primary bg-primary/5 shadow-md'
-                  : 'border-muted hover:border-primary/40'
-              )}
-            >
-              <CreditCard className="w-6 h-6 text-primary mb-2" />
-              <div className="font-bold text-sm sm:text-base">
-                {direction === 'rtl' ? 'الدفع عبر الموقع' : 'Pay Online'}
-              </div>
-              <div className="text-xs text-muted-foreground mt-1">
-                {direction === 'rtl' ? 'يتطلب رفع المستندات قبل الدفع' : 'Requires uploading documents before payment'}
-              </div>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => updateApplicationData({ submissionMethod: 'whatsapp' })}
-              className={cn(
-                'p-4 rounded-xl border-2 text-right transition-all',
-                submissionMethod === 'whatsapp'
-                  ? 'border-green-500 bg-green-50 dark:bg-green-950/30 shadow-md'
-                  : 'border-muted hover:border-green-400'
-              )}
-            >
-              <MessageCircle className="w-6 h-6 text-green-600 mb-2" />
-              <div className="font-bold text-sm sm:text-base">
-                {direction === 'rtl' ? 'الإكمال عبر واتساب' : 'Complete via WhatsApp'}
-              </div>
-              <div className="text-xs text-muted-foreground mt-1">
-                {direction === 'rtl' ? 'سيتواصل معك موظفنا لإكمال الإجراءات' : 'Our staff will contact you'}
-              </div>
-            </button>
-          </div>
-
-          {/* PATH A: Online Payment */}
-          {submissionMethod === 'online' && (
+          {/* Online payment only — WhatsApp path branches off after step 3 */}
+          {true && (
             <>
               {!docsComplete && (
                 <div className="p-4 rounded-xl border-2 border-amber-300 bg-amber-50 dark:bg-amber-950/30">
