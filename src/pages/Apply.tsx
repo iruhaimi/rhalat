@@ -7,11 +7,11 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import WizardStepper from '@/components/apply/WizardStepper';
-import Step1BasicInfo from '@/components/apply/steps/Step1BasicInfo';
 import Step2VisaDetails from '@/components/apply/steps/Step2VisaDetails';
 import Step3Requirements from '@/components/apply/steps/Step3Requirements';
 import Step4Documents from '@/components/apply/steps/Step4Documents';
 import Step6Payment from '@/components/apply/steps/Step6Payment';
+import PathChoiceCard from '@/components/apply/PathChoiceCard';
 import AuthGateModal from '@/components/apply/AuthGateModal';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
@@ -179,10 +179,6 @@ function ApplyContent() {
         travel_date: applicationData.travelDate ? applicationData.travelDate.toISOString().split('T')[0] : null,
         status: 'draft' as const,
         purpose_of_travel: JSON.stringify({
-          fullName: applicationData.fullName,
-          email: applicationData.email,
-          phone: applicationData.phone,
-          countryCode: applicationData.countryCode,
           travelers: applicationData.travelers,
           checkedRequirements: applicationData.checkedRequirements,
           currentStep,
@@ -224,7 +220,7 @@ function ApplyContent() {
     }
   }, [profile, applicationData, currentStep, draftId, setDraftId]);
 
-  // Trigger DB save on step change (only when authenticated; guests use localStorage via context)
+  // Trigger DB save on step change (requires auth — gate enforces it before step 3)
   useEffect(() => {
     if (currentStep >= 2 && profile && applicationData.visaTypeId) {
       const timer = setTimeout(() => {
@@ -234,12 +230,12 @@ function ApplyContent() {
     }
   }, [currentStep, saveDraft, profile, applicationData.visaTypeId]);
 
-  // Guest-first auth gate: block transition to step 4 (documents) for guests.
-  // When the user authenticates inside the gate modal, migrate guest draft to DB and continue.
+  // Auth gate: block transition to step 3 (path choice) and beyond for guests.
+  // When the user authenticates inside the gate modal, advance to step 3.
   useEffect(() => {
-    if (currentStep >= 4 && !user) {
-      // Force user back to step 3 and open the gate
-      setCurrentStep(3);
+    if (currentStep >= 3 && !user) {
+      // Force user back to step 2 (requirements) and open the gate
+      setCurrentStep(2);
       setShowAuthGate(true);
     }
   }, [currentStep, user, setCurrentStep, setShowAuthGate]);
@@ -248,14 +244,14 @@ function ApplyContent() {
   useEffect(() => {
     if (user && showAuthGate) {
       setShowAuthGate(false);
-      // Allow profile to load + save effect to fire, then advance to documents
+      // Allow profile to load + save effect to fire, then advance to path choice
       const timer = setTimeout(() => {
-        setCurrentStep(4);
+        setCurrentStep(3);
         // Clear local guest copy now that DB will own the draft
         clearGuestDraft();
         toast({
           title: language === 'ar' ? 'مرحباً بك!' : 'Welcome!',
-          description: language === 'ar' ? 'تم حفظ تقدمك. تابع رفع المستندات.' : 'Your progress is saved. Continue with documents.',
+          description: language === 'ar' ? 'تم حفظ تقدمك. اختر طريقة الإكمال.' : 'Your progress is saved. Choose how to continue.',
         });
       }, 400);
       return () => clearTimeout(timer);
@@ -297,17 +293,17 @@ function ApplyContent() {
   const renderStep = () => {
     switch (currentStep) {
       case 1:
-        return <Step1BasicInfo />;
-      case 2:
         return <Step2VisaDetails />;
-      case 3:
+      case 2:
         return <Step3Requirements />;
+      case 3:
+        return <PathChoiceCard onBack={() => setCurrentStep(2)} />;
       case 4:
         return <Step4Documents />;
       case 5:
         return <Step6Payment />;
       default:
-        return <Step1BasicInfo />;
+        return <Step2VisaDetails />;
     }
   };
 
