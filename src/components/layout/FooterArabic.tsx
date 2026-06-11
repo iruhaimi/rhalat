@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Mail, Phone, Clock, Facebook, Twitter, Instagram } from 'lucide-react';
+import { Mail, Phone, Clock, Facebook, Twitter, Instagram, BadgeCheck } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useFooterSettings } from '@/hooks/useFooterSettings';
 import logo from '@/assets/logo.png.asset.json';
@@ -56,6 +56,22 @@ export default function FooterArabic() {
             <p className="mt-4 text-sm text-muted-foreground">
               {description}
             </p>
+            <div className="mt-4 rounded-lg border border-primary/20 bg-primary/5 p-3">
+              <div className="flex items-center gap-2 mb-2">
+                <BadgeCheck className="h-4 w-4 text-primary flex-shrink-0" />
+                <span className="text-xs font-semibold text-primary">مرخّصون من وزارة السياحة</span>
+              </div>
+              <div className="space-y-1 text-xs text-foreground">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-muted-foreground">ترخيص</span>
+                  <span className="font-semibold tabular-nums" dir="ltr">73100234</span>
+                </div>
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-muted-foreground">ترخيص</span>
+                  <span className="font-semibold tabular-nums" dir="ltr">7010581259</span>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Quick Links */}
