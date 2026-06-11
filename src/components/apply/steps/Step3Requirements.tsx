@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useApplication } from '@/contexts/ApplicationContext';
+import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -42,7 +43,8 @@ const defaultRequirements = [
 
 export default function Step3Requirements() {
   const { t, direction } = useLanguage();
-  const { applicationData, updateApplicationData, goToNextStep, goToPreviousStep } = useApplication();
+  const { applicationData, updateApplicationData, goToNextStep, goToPreviousStep, setShowAuthGate } = useApplication();
+  const { user } = useAuth();
   
   const ArrowNextIcon = direction === 'rtl' ? ArrowLeft : ArrowRight;
   const ArrowPrevIcon = direction === 'rtl' ? ArrowRight : ArrowLeft;
@@ -253,7 +255,13 @@ export default function Step3Requirements() {
           type="button"
           size="lg"
           className="flex-1 h-12 gap-2"
-          onClick={goToNextStep}
+          onClick={() => {
+            if (!user) {
+              setShowAuthGate(true);
+            } else {
+              goToNextStep();
+            }
+          }}
           disabled={!canProceed}
         >
           {t('wizard.next')}

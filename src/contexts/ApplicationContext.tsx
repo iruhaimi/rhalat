@@ -1,4 +1,6 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
+
+const GUEST_DRAFT_KEY = 'vf_guest_draft_v1';
 
 export interface TravelerCounts {
   adults: number;
@@ -75,6 +77,10 @@ interface ApplicationContextType {
   setDraftId: (id: string | null) => void;
   isDraftLoading: boolean;
   setIsDraftLoading: (loading: boolean) => void;
+  // Guest auth gate
+  showAuthGate: boolean;
+  setShowAuthGate: (show: boolean) => void;
+  clearGuestDraft: () => void;
 }
 
 const initialApplicationData: ApplicationData = {
@@ -113,6 +119,87 @@ export function ApplicationProvider({ children }: { children: React.ReactNode })
   const [applicationData, setApplicationData] = useState<ApplicationData>(initialApplicationData);
   const [draftId, setDraftId] = useState<string | null>(null);
   const [isDraftLoading, setIsDraftLoading] = useState(false);
+  const [showAuthGate, setShowAuthGate] = useState(false);
+  const [hydrated, setHydrated] = useState(false);
+
+  // Load guest draft from localStorage on mount
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(GUEST_DRAFT_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed?.applicationData) {
+          setApplicationData((prev) => ({ ...prev, ...parsed.applicationData }));
+        }
+        if (parsed?.currentStep && typeof parsed.currentStep === 'number') {
+          setCurrentStep(Math.min(parsed.currentStep, 3));
+        }
+      }
+    } catch {
+      // ignore
+    } finally {
+      setHydrated(true);
+    }
+  }, []);
+
+  // Persist guest draft to localStorage (only steps 1-3, lightweight)
+  useEffect(() => {
+    if (!hydrated) return;
+    try {
+      const payload = {
+        currentStep,
+        applicationData: {
+          fullName: applicationData.fullName,
+          email: applicationData.email,
+          phone: applicationData.phone,
+          countryCode: applicationData.countryCode,
+          countryId: applicationData.countryId,
+          countryName: applicationData.countryName,
+          visaTypeId: applicationData.visaTypeId,
+          visaTypeName: applicationData.visaTypeName,
+          travelDate: applicationData.travelDate ? applicationData.travelDate.toISOString() : null,
+          travelers: applicationData.travelers,
+          adultPrice: applicationData.adultPrice,
+          childPrice: applicationData.childPrice,
+          infantPrice: applicationData.infantPrice,
+          visaFeesIncluded: applicationData.visaFeesIncluded,
+          governmentFees: applicationData.governmentFees,
+          priceNotes: applicationData.priceNotes,
+          priceNotesEn: applicationData.priceNotesEn,
+          checkedRequirements: applicationData.checkedRequirements,
+        },
+        savedAt: Date.now(),
+      };
+      // Re-hydrate dates correctly on load
+      const dataForStorage = { ...payload.applicationData };
+      localStorage.setItem(GUEST_DRAFT_KEY, JSON.stringify({ ...payload, applicationData: dataForStorage }));
+    } catch {
+      // ignore quota / privacy errors
+    }
+  }, [applicationData, currentStep, hydrated]);
+
+  // After load, re-parse travelDate from ISO string
+  useEffect(() => {
+    if (!hydrated) return;
+    if (applicationData.travelDate && !(applicationData.travelDate instanceof Date)) {
+      try {
+        setApplicationData((prev) => ({
+          ...prev,
+          travelDate: new Date(prev.travelDate as any),
+        }));
+      } catch {
+        // ignore
+      }
+    }
+  }, [hydrated]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const clearGuestDraft = useCallback(() => {
+    try {
+      localStorage.removeItem(GUEST_DRAFT_KEY);
+    } catch {
+      // ignore
+    }
+  }, []);
 
   const updateApplicationData = useCallback((data: Partial<ApplicationData>) => {
     setApplicationData(prev => ({ ...prev, ...data }));
@@ -122,6 +209,11 @@ export function ApplicationProvider({ children }: { children: React.ReactNode })
     setApplicationData(initialApplicationData);
     setCurrentStep(1);
     setDraftId(null);
+    try {
+      localStorage.removeItem(GUEST_DRAFT_KEY);
+    } catch {
+      // ignore
+    }
   }, []);
 
   const calculateTotal = useCallback(() => {
@@ -204,6 +296,9 @@ export function ApplicationProvider({ children }: { children: React.ReactNode })
         setDraftId,
         isDraftLoading,
         setIsDraftLoading,
+        showAuthGate,
+        setShowAuthGate,
+        clearGuestDraft,
       }}
     >
       {children}
