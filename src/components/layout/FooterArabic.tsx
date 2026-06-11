@@ -35,6 +35,21 @@ export default function FooterArabic() {
    const quickLinksSettings = footerSettings?.filter(s => s.category === 'quick_links') || [];
    const policiesSettings = footerSettings?.filter(s => s.category === 'policies') || [];
 
+  // Essential links moved from the header to keep the top nav clean.
+  // Merged with DB-driven quick links, deduplicated by URL.
+  const movedFromHeader: Array<{ id: string; value: string; url: string }> = [
+    { id: 'mv-tourism', value: 'برامج سياحية', url: '/tourism' },
+    { id: 'mv-blog', value: 'المدونة', url: '/blog' },
+    { id: 'mv-faq', value: 'الأسئلة الشائعة', url: '/faq' },
+    { id: 'mv-about', value: 'من نحن', url: '/about' },
+    { id: 'mv-contact', value: 'تواصل معنا', url: '/contact' },
+  ];
+  const existingUrls = new Set(quickLinksSettings.map((l: any) => l.url));
+  const mergedQuickLinks = [
+    ...quickLinksSettings,
+    ...movedFromHeader.filter((l) => !existingUrls.has(l.url)),
+  ];
+
   // Get specific general settings
   const companyName = generalSettings.find(s => s.key === 'company_name')?.value || 'عطلات رحلاتكم للسياحة والسفر';
   const description = generalSettings.find(s => s.key === 'description')?.value || t('footer.about');
@@ -78,7 +93,7 @@ export default function FooterArabic() {
           <div>
             <h3 className="font-semibold text-foreground">{t('footer.quickLinks')}</h3>
             <ul className="mt-4 space-y-3">
-               {quickLinksSettings.map((link) => (
+               {mergedQuickLinks.map((link: any) => (
                  <li key={link.id}>
                   <Link
                      to={link.url || '/'}
