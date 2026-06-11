@@ -227,6 +227,63 @@ export default function PathChoiceCard({ onBack }: Props) {
         </p>
       </div>
 
+      {/* Identity summary — shows what we have from the authenticated account */}
+      {user && (
+        <div className="bg-muted/30 border border-border rounded-xl p-4 text-sm space-y-1">
+          <div className="font-bold mb-1">{isRTL ? 'بياناتك:' : 'Your details:'}</div>
+          <div><span className="text-muted-foreground">{isRTL ? 'الاسم:' : 'Name:'}</span> <span className="font-medium">{profile?.full_name || (user.user_metadata as any)?.full_name || '—'}</span></div>
+          <div><span className="text-muted-foreground">{isRTL ? 'البريد:' : 'Email:'}</span> <span className="font-medium" dir="ltr">{user.email}</span></div>
+          {profile?.phone && (
+            <div><span className="text-muted-foreground">{isRTL ? 'الجوال:' : 'Phone:'}</span> <span className="font-medium" dir="ltr">+966 {profile.phone}</span></div>
+          )}
+        </div>
+      )}
+
+      {/* Phone required — Google login doesn't return phone number */}
+      {needsPhone && (
+        <div className="bg-amber-50 dark:bg-amber-950/30 border-2 border-amber-300 dark:border-amber-700 rounded-xl p-4 space-y-3">
+          <div className="flex items-start gap-2">
+            <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+            <div className="text-sm">
+              <div className="font-bold text-amber-900 dark:text-amber-200 mb-1">
+                {isRTL ? 'أكمل بياناتك للمتابعة' : 'Complete your details to continue'}
+              </div>
+              <div className="text-amber-800 dark:text-amber-300">
+                {isRTL
+                  ? 'نحتاج رقم جوالك للتواصل بخصوص طلبك. يُحفظ مرة واحدة لكل طلباتك القادمة.'
+                  : "We need your phone to contact you. Saved once for all your future applications."}
+              </div>
+            </div>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="phone-required">{isRTL ? 'رقم الجوال' : 'Phone number'}</Label>
+            <div className="flex gap-2">
+              <div className="flex items-center px-3 rounded-md bg-muted border border-input text-sm font-medium" dir="ltr">
+                +966
+              </div>
+              <Input
+                id="phone-required"
+                type="tel"
+                inputMode="numeric"
+                maxLength={9}
+                dir="ltr"
+                placeholder="5xxxxxxxx"
+                value={phoneInput}
+                onChange={(e) => setPhoneInput(filterNonNumeric(e.target.value).slice(0, 9))}
+                className="flex-1"
+              />
+              <Button
+                type="button"
+                onClick={handleSavePhone}
+                disabled={savingPhone || phoneInput.length !== 9}
+              >
+                {savingPhone ? <Loader2 className="w-4 h-4 animate-spin" /> : (isRTL ? 'حفظ' : 'Save')}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Electronic path */}
         <motion.button
