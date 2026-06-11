@@ -679,7 +679,7 @@ export default function Step6Payment() {
             size="lg"
             className="w-full h-12 sm:h-14 text-base sm:text-lg gap-2"
             onClick={handlePayment}
-            disabled={!applicationData.paymentMethod || isProcessing}
+            disabled={!applicationData.paymentMethod || isProcessing || !applicationData.termsAccepted}
           >
             {isProcessing ? (
               <>
@@ -722,7 +722,7 @@ export default function Step6Payment() {
                 size="lg"
                 className="w-full h-12 sm:h-14 text-base sm:text-lg gap-2 bg-[#25D366] hover:bg-[#20BD5A] text-white"
                 onClick={handleSubmitViaWhatsApp}
-                disabled={isSubmittingWhatsApp}
+                disabled={isSubmittingWhatsApp || !applicationData.termsAccepted}
               >
                 {isSubmittingWhatsApp ? (
                   <>
