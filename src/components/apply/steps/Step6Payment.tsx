@@ -12,7 +12,9 @@ import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
 import SARSymbol from '@/components/ui/SARSymbol';
+import { Link } from 'react-router-dom';
 import { 
   ArrowLeft, 
   ArrowRight, 
@@ -36,6 +38,18 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
+
+const TERMS_VERSION = 'v2026.1';
+
+async function getClientIP(): Promise<string | null> {
+  try {
+    const res = await fetch('https://api.ipify.org?format=json', { cache: 'no-store' });
+    const json = await res.json();
+    return json.ip || null;
+  } catch {
+    return null;
+  }
+}
 
 const paymentMethods = [
   { 
