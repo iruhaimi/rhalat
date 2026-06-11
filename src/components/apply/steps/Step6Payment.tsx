@@ -75,7 +75,17 @@ const paymentMethods = [
 export default function Step6Payment() {
   const { t, direction, language } = useLanguage();
   const { applicationData, updateApplicationData, calculateTotal, goToPreviousStep, resetApplication, setCurrentStep, draftId } = useApplication();
-  const { profile } = useAuth();
+  const { profile, user } = useAuth();
+
+  // Resolve customer identity from authenticated account (single source of truth)
+  const customerName =
+    profile?.full_name ||
+    (user?.user_metadata as any)?.full_name ||
+    (user?.user_metadata as any)?.name ||
+    '';
+  const customerEmail = user?.email || '';
+  const customerPhone = profile?.phone || '';
+  const customerCountryCode = '+966';
   const [isProcessing, setIsProcessing] = useState(false);
   const [isSubmittingWhatsApp, setIsSubmittingWhatsApp] = useState(false);
   const navigate = useNavigate();
@@ -106,7 +116,7 @@ export default function Step6Payment() {
     method: 'online' | 'whatsapp',
     paymentMethodLabel?: string,
   ) => {
-    if (!applicationData.email) return;
+    if (!customerEmail) return;
     try {
       const travelDateStr = applicationData.travelDate
         ? format(applicationData.travelDate, 'PPP', { locale: ar })
@@ -114,13 +124,13 @@ export default function Step6Payment() {
       await supabase.functions.invoke('send-transactional-email', {
         body: {
           templateName: 'application-confirmation',
-          recipientEmail: applicationData.email,
+          recipientEmail: customerEmail,
           idempotencyKey: `app-confirm-${appNumber}-${method}`,
           templateData: {
             applicationNumber: appNumber,
-            fullName: applicationData.fullName,
-            email: applicationData.email,
-            phone: `${applicationData.countryCode || ''} ${applicationData.phone || ''}`.trim(),
+            fullName: customerName,
+            email: customerEmail,
+            phone: `${customerCountryCode} ${customerPhone}`.trim(),
             countryName: applicationData.countryName,
             visaTypeName: applicationData.visaTypeName,
             travelDate: travelDateStr,
@@ -156,9 +166,9 @@ export default function Step6Payment() {
     return `مرحباً، أرغب بإكمال طلب التأشيرة عبر واتساب
 
 📋 رقم الطلب: ${appNumber}
-👤 الاسم: ${applicationData.fullName}
-📧 البريد: ${applicationData.email}
-📱 الجوال: ${applicationData.countryCode} ${applicationData.phone}
+👤 الاسم: ${customerName}
+📧 البريد: ${customerEmail}
+📱 الجوال: ${customerCountryCode} ${customerPhone}
 
 🌍 الدولة: ${applicationData.countryName}
 📄 نوع التأشيرة: ${applicationData.visaTypeName}
@@ -204,10 +214,10 @@ export default function Step6Payment() {
         status: 'whatsapp_pending' as const,
         submission_method: 'whatsapp',
         purpose_of_travel: JSON.stringify({
-          fullName: applicationData.fullName,
-          email: applicationData.email,
-          phone: applicationData.phone,
-          countryCode: applicationData.countryCode,
+          fullName: customerName,
+          email: customerEmail,
+          phone: customerPhone,
+          countryCode: customerCountryCode,
           travelers: applicationData.travelers,
           checkedRequirements: applicationData.checkedRequirements,
           totalAmount: grandTotal,
@@ -349,10 +359,10 @@ export default function Step6Payment() {
             submission_method: 'online',
             submitted_at: new Date().toISOString(),
             purpose_of_travel: JSON.stringify({
-              fullName: applicationData.fullName,
-              email: applicationData.email,
-              phone: applicationData.phone,
-              countryCode: applicationData.countryCode,
+              fullName: customerName,
+              email: customerEmail,
+              phone: customerPhone,
+              countryCode: customerCountryCode,
               travelers: applicationData.travelers,
               checkedRequirements: applicationData.checkedRequirements,
               totalAmount: grandTotal,
@@ -418,17 +428,17 @@ export default function Step6Payment() {
                 <div className="flex items-center gap-2 text-sm">
                   <User className="w-4 h-4 text-muted-foreground" />
                   <span className="text-muted-foreground">{t('form.fullName')}:</span>
-                  <span className="font-medium">{applicationData.fullName}</span>
+                  <span className="font-medium">{customerName || '—'}</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm">
                   <Mail className="w-4 h-4 text-muted-foreground" />
                   <span className="text-muted-foreground">{t('form.email')}:</span>
-                  <span className="font-medium" dir="ltr">{applicationData.email}</span>
+                  <span className="font-medium" dir="ltr">{customerEmail || '—'}</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm">
                   <Phone className="w-4 h-4 text-muted-foreground" />
                   <span className="text-muted-foreground">{t('form.phone')}:</span>
-                  <span className="font-medium" dir="ltr">{applicationData.countryCode} {applicationData.phone}</span>
+                  <span className="font-medium" dir="ltr">{customerCountryCode} {customerPhone || '—'}</span>
                 </div>
               </div>
               
