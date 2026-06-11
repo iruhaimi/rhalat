@@ -33,7 +33,6 @@ export default function Step2VisaDetails() {
   const [isSchengenFromUrl, setIsSchengenFromUrl] = useState(false);
   
   const ArrowNextIcon = direction === 'rtl' ? ArrowLeft : ArrowRight;
-  const ArrowPrevIcon = direction === 'rtl' ? ArrowRight : ArrowLeft;
 
   // Fetch countries
   const { data: countries } = useQuery({
