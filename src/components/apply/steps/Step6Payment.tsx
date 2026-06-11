@@ -301,10 +301,22 @@ export default function Step6Payment() {
       });
       return;
     }
+    if (!applicationData.termsAccepted) {
+      toast({
+        title: direction === 'rtl' ? 'الموافقة على الشروط مطلوبة' : 'Terms acceptance required',
+        description: direction === 'rtl' ? 'يرجى الموافقة على الشروط والأحكام قبل الدفع' : 'Please accept the Terms & Conditions before paying',
+        variant: 'destructive',
+      });
+      return;
+    }
 
     setIsProcessing(true);
 
     try {
+      const consentIp = await getClientIP();
+      const consentUA = typeof navigator !== 'undefined' ? navigator.userAgent : null;
+      const consentAt = new Date().toISOString();
+
       // Simulate payment gateway processing
       await new Promise(resolve => setTimeout(resolve, 2500));
 
@@ -339,6 +351,10 @@ export default function Step6Payment() {
               paymentMethod: applicationData.paymentMethod,
               termsAccepted: applicationData.termsAccepted,
             }),
+            terms_accepted_at: consentAt,
+            terms_version: TERMS_VERSION,
+            terms_ip_address: consentIp,
+            terms_user_agent: consentUA,
             updated_at: new Date().toISOString(),
           })
           .eq('id', appId)
