@@ -43,6 +43,24 @@ function ApplyContent() {
   const lastSavedStep = useRef(0);
   const isSaving = useRef(false);
 
+  // Hydrate applicant info from the authenticated user / profile.
+  // After removing the basic-info step, these fields are populated from auth instead of a form.
+  useEffect(() => {
+    if (!user) return;
+    const fullNameFromAuth =
+      profile?.full_name ||
+      (user.user_metadata as any)?.full_name ||
+      (user.user_metadata as any)?.name ||
+      '';
+    updateApplicationData({
+      fullName: applicationData.fullName || fullNameFromAuth,
+      email: applicationData.email || user.email || '',
+      phone: applicationData.phone || profile?.phone || '',
+      countryCode: applicationData.countryCode || '+966',
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, profile?.full_name, profile?.phone]);
+
   // Pre-fill country if coming from country page
   const { data: country, isLoading: countryLoading } = useQuery({
     queryKey: ['country-prefill', countryCode],

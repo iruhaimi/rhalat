@@ -9,9 +9,12 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { Globe, MessageCircle, ArrowRight, ArrowLeft, Loader2, ShieldCheck, Zap, Phone } from 'lucide-react';
+import { Globe, MessageCircle, ArrowRight, ArrowLeft, Loader2, ShieldCheck, Zap, Phone, AlertCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { filterNonNumeric } from '@/lib/inputFilters';
 
 const TERMS_VERSION = 'v2026.1';
 
@@ -32,12 +35,49 @@ interface Props {
 export default function PathChoiceCard({ onBack }: Props) {
   const { direction } = useLanguage();
   const { applicationData, updateApplicationData, goToNextStep, setShowAuthGate, calculateTotal, resetApplication } = useApplication();
-  const { user, profile } = useAuth();
+  const { user, profile, refreshProfile } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
   const isRTL = direction === 'rtl';
   const [submittingWA, setSubmittingWA] = useState(false);
+  const [phoneInput, setPhoneInput] = useState('');
+  const [savingPhone, setSavingPhone] = useState(false);
   const ArrowBack = isRTL ? ArrowRight : ArrowLeft;
+
+  const needsPhone = !!user && !profile?.phone;
+
+  const handleSavePhone = async () => {
+    if (phoneInput.length !== 9) {
+      toast({
+        title: isRTL ? 'رقم غير صحيح' : 'Invalid phone',
+        description: isRTL ? 'يجب أن يتكون الرقم من 9 أرقام' : 'Phone must be exactly 9 digits',
+        variant: 'destructive',
+      });
+      return;
+    }
+    if (!profile?.id) return;
+    setSavingPhone(true);
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update({ phone: phoneInput })
+        .eq('id', profile.id);
+      if (error) throw error;
+      updateApplicationData({ phone: phoneInput, countryCode: '+966' });
+      await refreshProfile();
+      toast({
+        title: isRTL ? '✅ تم حفظ الرقم' : '✅ Phone saved',
+      });
+    } catch (err: any) {
+      toast({
+        title: 'خطأ',
+        description: err.message || 'فشل حفظ الرقم',
+        variant: 'destructive',
+      });
+    } finally {
+      setSavingPhone(false);
+    }
+  };
 
   const buildWhatsAppMessage = (appNumber: string) => {
     const { grandTotal } = calculateTotal();
@@ -72,6 +112,14 @@ export default function PathChoiceCard({ onBack }: Props) {
   };
 
   const handleElectronic = () => {
+    if (needsPhone) {
+      toast({
+        title: isRTL ? 'رقم الجوال مطلوب' : 'Phone required',
+        description: isRTL ? 'يرجى إدخال رقم جوالك أولاً' : 'Please enter your phone first',
+        variant: 'destructive',
+      });
+      return;
+    }
     if (!applicationData.termsAccepted) {
       toast({
         title: isRTL ? 'الموافقة على الشروط مطلوبة' : 'Terms required',
@@ -88,6 +136,14 @@ export default function PathChoiceCard({ onBack }: Props) {
   };
 
   const handleWhatsApp = async () => {
+    if (needsPhone) {
+      toast({
+        title: isRTL ? 'رقم الجوال مطلوب' : 'Phone required',
+        description: isRTL ? 'يرجى إدخال رقم جوالك أولاً' : 'Please enter your phone first',
+        variant: 'destructive',
+      });
+      return;
+    }
     if (!applicationData.termsAccepted) {
       toast({
         title: isRTL ? 'الموافقة على الشروط مطلوبة' : 'Terms required',
@@ -170,6 +226,63 @@ export default function PathChoiceCard({ onBack }: Props) {
             : 'Pick the method that suits you — both create an official order number'}
         </p>
       </div>
+
+      {/* Identity summary — shows what we have from the authenticated account */}
+      {user && (
+        <div className="bg-muted/30 border border-border rounded-xl p-4 text-sm space-y-1">
+          <div className="font-bold mb-1">{isRTL ? 'بياناتك:' : 'Your details:'}</div>
+          <div><span className="text-muted-foreground">{isRTL ? 'الاسم:' : 'Name:'}</span> <span className="font-medium">{profile?.full_name || (user.user_metadata as any)?.full_name || '—'}</span></div>
+          <div><span className="text-muted-foreground">{isRTL ? 'البريد:' : 'Email:'}</span> <span className="font-medium" dir="ltr">{user.email}</span></div>
+          {profile?.phone && (
+            <div><span className="text-muted-foreground">{isRTL ? 'الجوال:' : 'Phone:'}</span> <span className="font-medium" dir="ltr">+966 {profile.phone}</span></div>
+          )}
+        </div>
+      )}
+
+      {/* Phone required — Google login doesn't return phone number */}
+      {needsPhone && (
+        <div className="bg-amber-50 dark:bg-amber-950/30 border-2 border-amber-300 dark:border-amber-700 rounded-xl p-4 space-y-3">
+          <div className="flex items-start gap-2">
+            <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+            <div className="text-sm">
+              <div className="font-bold text-amber-900 dark:text-amber-200 mb-1">
+                {isRTL ? 'أكمل بياناتك للمتابعة' : 'Complete your details to continue'}
+              </div>
+              <div className="text-amber-800 dark:text-amber-300">
+                {isRTL
+                  ? 'نحتاج رقم جوالك للتواصل بخصوص طلبك. يُحفظ مرة واحدة لكل طلباتك القادمة.'
+                  : "We need your phone to contact you. Saved once for all your future applications."}
+              </div>
+            </div>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="phone-required">{isRTL ? 'رقم الجوال' : 'Phone number'}</Label>
+            <div className="flex gap-2">
+              <div className="flex items-center px-3 rounded-md bg-muted border border-input text-sm font-medium" dir="ltr">
+                +966
+              </div>
+              <Input
+                id="phone-required"
+                type="tel"
+                inputMode="numeric"
+                maxLength={9}
+                dir="ltr"
+                placeholder="5xxxxxxxx"
+                value={phoneInput}
+                onChange={(e) => setPhoneInput(filterNonNumeric(e.target.value).slice(0, 9))}
+                className="flex-1"
+              />
+              <Button
+                type="button"
+                onClick={handleSavePhone}
+                disabled={savingPhone || phoneInput.length !== 9}
+              >
+                {savingPhone ? <Loader2 className="w-4 h-4 animate-spin" /> : (isRTL ? 'حفظ' : 'Save')}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Electronic path */}
