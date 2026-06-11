@@ -1,33 +1,28 @@
-## Plan: إصلاح اختفاء محتوى الفوتر على الموقع المنشور
+# خطة: إعادة تصميم اللوقو
 
-### السبب
-محتوى الفوتر (روابط سريعة، السياسات، تواصل معنا، الوصف) يُقرأ من جدول `footer_settings` في قاعدة البيانات. في البريفيو أنت مسجّل دخول كمسؤول، لذا تظهر البيانات. أما الزوّار غير المسجّلين على الموقع الرسمي فيحصلون على خطأ:
+## الهدف
+استبدال اللوقو الحالي بنسخة جديدة أنظف وأوضح، مع الحفاظ على هوية "عطلات رحلاتكم" (الأزرق/الرمادي، طابع السفر).
 
-```
-permission denied for function is_super_admin
-```
+## الخطوات
+1. **توليد لوقو جديد** عبر أداة توليد الصور بجودة `premium` (لضمان وضوح النص العربي):
+   - تصميم مسطح حديث (flat modern) بخلفية شفافة PNG
+   - رمز: طائرة ورقية / جواز سفر مبسط بألوان أزرق متدرج
+   - نص "عطلات رحلاتكم" بخط عربي واضح وأنيق
+   - أبعاد مربعة (1024×1024) للاستخدام في الهيدر والفوتر والـ favicon
+   - حفظه في `src/assets/logo-new.png`
 
-السبب: سياسة RLS `"Super admins can manage footer settings"` معرّفة كـ `FOR ALL`، وهذا يجعلها تُستدعى حتى عند الـ SELECT للزائر العام، فتفشل لأن `anon` لا يملك صلاحية تنفيذ الدالة `is_super_admin`. كما أن جدول `footer_settings` لا يملك `GRANT SELECT` للأدوار `anon` و `authenticated`.
+2. **رفعه كـ Lovable Asset** للحصول على رابط CDN ثابت.
 
-### الحل (Migration واحد)
+3. **تحديث المراجع في الكود**:
+   - `src/components/layout/HeaderArabic.tsx`
+   - `src/components/layout/FooterArabic.tsx`
+   - أي مكان آخر يستخدم `src/assets/logo.png`
 
-1. حذف سياسة `"Super admins can manage footer settings"` (التي تستخدم `FOR ALL`).
-2. إنشاء ثلاث سياسات منفصلة بديلة للمشرفين فقط:
-   - `FOR INSERT` بشرط `is_super_admin(auth.uid())`
-   - `FOR UPDATE` بنفس الشرط
-   - `FOR DELETE` بنفس الشرط
-3. إبقاء سياسة `"Anyone can view active footer settings"` كما هي (SELECT للجميع عندما `is_active = true`).
-4. إضافة الصلاحيات الناقصة:
-   ```
-   GRANT SELECT ON public.footer_settings TO anon, authenticated;
-   GRANT INSERT, UPDATE, DELETE ON public.footer_settings TO authenticated;
-   GRANT ALL ON public.footer_settings TO service_role;
-   ```
+4. **تحديث الـ favicon** في `index.html` ليطابق اللوقو الجديد.
 
-### النتيجة
-- الزوّار غير المسجّلين سيشاهدون نفس الفوتر الكامل الذي يظهر في البريفيو.
-- الإدارة (Super Admin) ستبقى قادرة على التعديل من لوحة `/admin/footer`.
-- لا تغييرات في الكود الأمامي مطلوبة.
+## ملاحظات
+- لن يتم تغيير اسم العلامة التجارية أو الألوان الأساسية.
+- النسخة القديمة `logo.png` تبقى محفوظة كنسخة احتياطية حتى يتم التأكيد.
+- لن تُمَس أي منطق backend/RLS.
 
-### الملفات
-- ملف Migration جديد ضمن `supabase/migrations/`.
+هل توافق على البدء؟ أو هل تفضّل أسلوباً معيناً (مثلاً: أيقونة فقط بدون نص، أو نص فقط، أو دمج رمز معيّن كالطائرة/الكرة الأرضية/الجواز)؟
