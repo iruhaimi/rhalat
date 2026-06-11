@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { format } from 'date-fns';
 import { ar, enUS } from 'date-fns/locale';
 import { useNavigate } from 'react-router-dom';
@@ -80,6 +80,14 @@ export default function Step6Payment() {
   const [isSubmittingWhatsApp, setIsSubmittingWhatsApp] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
+
+  // Reaching the payment step always means the electronic path was chosen earlier
+  useEffect(() => {
+    if (applicationData.submissionMethod !== 'online') {
+      updateApplicationData({ submissionMethod: 'online' });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   
   const { serviceTotal, governmentTotal, grandTotal, breakdown } = calculateTotal();
   
