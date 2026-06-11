@@ -665,52 +665,8 @@ export default function Step6Payment() {
             </>
           )}
 
-          {/* PATH B: WhatsApp */}
-          {submissionMethod === 'whatsapp' && (
-            <div className="p-4 sm:p-5 rounded-xl border-2 border-green-300 bg-green-50 dark:bg-green-950/30 space-y-3">
-              <h4 className="font-bold text-green-900 dark:text-green-100 flex items-center gap-2 text-sm sm:text-base">
-                <MessageCircle className="w-5 h-5" />
-                {direction === 'rtl' ? 'إكمال الطلب عبر واتساب' : 'Complete via WhatsApp'}
-              </h4>
-              <p className="text-xs sm:text-sm text-green-900 dark:text-green-100">
-                {direction === 'rtl'
-                  ? 'سنقوم بإنشاء رقم طلب فريد لك وإرسال جميع بياناتك (الاسم، الجوال، الدولة، نوع التأشيرة، عدد المسافرين، المبلغ، وموافقتك على الشروط) إلى موظفنا تلقائياً ليتواصل معك ويكمل الإجراءات.'
-                  : 'We will generate a unique application number and auto-send all your details to our staff to contact you and complete the process.'}
-              </p>
-              <ul className="text-xs sm:text-sm text-green-900 dark:text-green-100 space-y-1 list-disc list-inside">
-                <li>{direction === 'rtl' ? 'لا حاجة لرفع المستندات الآن' : 'No need to upload documents now'}</li>
-                <li>{direction === 'rtl' ? 'الموظف سيرشدك خطوة بخطوة' : 'Our staff will guide you step by step'}</li>
-                <li>{direction === 'rtl' ? `سيتم تحويلك إلى: +966 56 252 5665` : 'You will be redirected to: +966 56 252 5665'}</li>
-              </ul>
-              <Button
-                size="lg"
-                className="w-full h-12 sm:h-14 text-base sm:text-lg gap-2 bg-[#25D366] hover:bg-[#20BD5A] text-white"
-                onClick={handleSubmitViaWhatsApp}
-                disabled={isSubmittingWhatsApp || !applicationData.termsAccepted}
-              >
-                {isSubmittingWhatsApp ? (
-                  <>
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                    <span>{direction === 'rtl' ? 'جاري التسجيل...' : 'Registering...'}</span>
-                  </>
-                ) : (
-                  <>
-                    <MessageCircle className="w-5 h-5" />
-                    <span>{direction === 'rtl' ? 'إرسال طلبي عبر واتساب' : 'Send via WhatsApp'}</span>
-                  </>
-                )}
-              </Button>
-            </div>
-          )}
-
-          {!submissionMethod && (
-            <div className="p-4 rounded-xl bg-muted/30 text-center text-sm text-muted-foreground">
-              {direction === 'rtl' ? 'اختر طريقة الإكمال أعلاه للمتابعة' : 'Choose a completion method above to continue'}
-            </div>
-          )}
-
-          {/* Terms & Conditions consent — required for both paths */}
-          {submissionMethod && (
+          {/* Terms & Conditions consent */}
+          {true && (
             <div
               className={cn(
                 'p-3 sm:p-4 rounded-xl border-2 transition-colors cursor-pointer',
