@@ -13,6 +13,7 @@ import Step3Requirements from '@/components/apply/steps/Step3Requirements';
 import Step4Documents from '@/components/apply/steps/Step4Documents';
 import Step5Terms from '@/components/apply/steps/Step5Terms';
 import Step6Payment from '@/components/apply/steps/Step6Payment';
+import AuthGateModal from '@/components/apply/AuthGateModal';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
 import { Save, Loader2 } from 'lucide-react';
@@ -33,8 +34,12 @@ function ApplyContent() {
     draftId,
     setDraftId,
     isDraftLoading,
-    setIsDraftLoading
+    setIsDraftLoading,
+    showAuthGate,
+    setShowAuthGate,
+    clearGuestDraft,
   } = useApplication();
+  const { user } = useAuth();
   
   const lastSavedStep = useRef(0);
   const isSaving = useRef(false);
@@ -220,7 +225,7 @@ function ApplyContent() {
     }
   }, [profile, applicationData, currentStep, draftId, setDraftId]);
 
-  // Trigger save on step change (after step 2)
+  // Trigger DB save on step change (only when authenticated; guests use localStorage via context)
   useEffect(() => {
     if (currentStep >= 2 && profile && applicationData.visaTypeId) {
       const timer = setTimeout(() => {
@@ -229,6 +234,34 @@ function ApplyContent() {
       return () => clearTimeout(timer);
     }
   }, [currentStep, saveDraft, profile, applicationData.visaTypeId]);
+
+  // Guest-first auth gate: block transition to step 4 (documents) for guests.
+  // When the user authenticates inside the gate modal, migrate guest draft to DB and continue.
+  useEffect(() => {
+    if (currentStep >= 4 && !user) {
+      // Force user back to step 3 and open the gate
+      setCurrentStep(3);
+      setShowAuthGate(true);
+    }
+  }, [currentStep, user, setCurrentStep, setShowAuthGate]);
+
+  // When a previously-guest user signs in/up while the gate is open, migrate draft and advance.
+  useEffect(() => {
+    if (user && showAuthGate) {
+      setShowAuthGate(false);
+      // Allow profile to load + save effect to fire, then advance to documents
+      const timer = setTimeout(() => {
+        setCurrentStep(4);
+        // Clear local guest copy now that DB will own the draft
+        clearGuestDraft();
+        toast({
+          title: language === 'ar' ? 'مرحباً بك!' : 'Welcome!',
+          description: language === 'ar' ? 'تم حفظ تقدمك. تابع رفع المستندات.' : 'Your progress is saved. Continue with documents.',
+        });
+      }, 400);
+      return () => clearTimeout(timer);
+    }
+  }, [user, showAuthGate, setShowAuthGate, setCurrentStep, clearGuestDraft, toast, language]);
 
   // Update application data when country/visa is loaded
   useEffect(() => {
@@ -292,6 +325,7 @@ function ApplyContent() {
 
   return (
     <div className="min-h-screen bg-canvas">
+      <AuthGateModal />
       {/* Hero — Navy/Cream wizard header */}
       <div className="relative overflow-hidden bg-gradient-to-br from-navy via-navy/95 to-brand text-white">
         <div className="absolute inset-0 opacity-[0.07] pointer-events-none"
