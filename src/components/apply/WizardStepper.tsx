@@ -17,7 +17,6 @@ export default function WizardStepper({ currentStep, totalSteps, onStepClick }: 
     { number: 3, label: t('wizard.step3') },
     { number: 4, label: t('wizard.step4') },
     { number: 5, label: t('wizard.step5') },
-    { number: 6, label: t('wizard.step6') },
   ];
 
   return (

@@ -576,6 +576,10 @@ export type Database = {
           status: Database["public"]["Enums"]["application_status"]
           submission_method: string | null
           submitted_at: string | null
+          terms_accepted_at: string | null
+          terms_ip_address: string | null
+          terms_user_agent: string | null
+          terms_version: string | null
           travel_date: string | null
           updated_at: string
           user_id: string
@@ -599,6 +603,10 @@ export type Database = {
           status?: Database["public"]["Enums"]["application_status"]
           submission_method?: string | null
           submitted_at?: string | null
+          terms_accepted_at?: string | null
+          terms_ip_address?: string | null
+          terms_user_agent?: string | null
+          terms_version?: string | null
           travel_date?: string | null
           updated_at?: string
           user_id: string
@@ -622,6 +630,10 @@ export type Database = {
           status?: Database["public"]["Enums"]["application_status"]
           submission_method?: string | null
           submitted_at?: string | null
+          terms_accepted_at?: string | null
+          terms_ip_address?: string | null
+          terms_user_agent?: string | null
+          terms_version?: string | null
           travel_date?: string | null
           updated_at?: string
           user_id?: string

@@ -240,7 +240,7 @@ export function ApplicationProvider({ children }: { children: React.ReactNode })
   }, [applicationData]);
 
   const goToNextStep = useCallback(() => {
-    if (currentStep < 6) {
+    if (currentStep < 5) {
       setCurrentStep(prev => prev + 1);
       window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
     }
@@ -272,9 +272,7 @@ export function ApplicationProvider({ children }: { children: React.ReactNode })
       case 4:
         return applicationData.uploadedDocuments.some(doc => doc.uploaded);
       case 5:
-        return applicationData.termsAccepted;
-      case 6:
-        return !!applicationData.paymentMethod;
+        return applicationData.termsAccepted && !!applicationData.paymentMethod;
       default:
         return false;
     }

@@ -12,7 +12,9 @@ import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
 import SARSymbol from '@/components/ui/SARSymbol';
+import { Link } from 'react-router-dom';
 import { 
   ArrowLeft, 
   ArrowRight, 
@@ -36,6 +38,18 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
+
+const TERMS_VERSION = 'v2026.1';
+
+async function getClientIP(): Promise<string | null> {
+  try {
+    const res = await fetch('https://api.ipify.org?format=json', { cache: 'no-store' });
+    const json = await res.json();
+    return json.ip || null;
+  } catch {
+    return null;
+  }
+}
 
 const paymentMethods = [
   { 
@@ -159,9 +173,22 @@ export default function Step6Payment() {
       return;
     }
 
+    if (!applicationData.termsAccepted) {
+      toast({
+        title: direction === 'rtl' ? 'الموافقة على الشروط مطلوبة' : 'Terms acceptance required',
+        description: direction === 'rtl' ? 'يرجى الموافقة على الشروط والأحكام قبل المتابعة' : 'Please accept the Terms & Conditions to continue',
+        variant: 'destructive',
+      });
+      return;
+    }
+
     setIsSubmittingWhatsApp(true);
 
     try {
+      const consentIp = await getClientIP();
+      const consentUA = typeof navigator !== 'undefined' ? navigator.userAgent : null;
+      const consentAt = new Date().toISOString();
+
       const draftPayload = {
         user_id: profile.id,
         visa_type_id: applicationData.visaTypeId,
@@ -200,6 +227,10 @@ export default function Step6Payment() {
           status: 'whatsapp_pending',
           submission_method: 'whatsapp',
           purpose_of_travel: draftPayload.purpose_of_travel,
+          terms_accepted_at: consentAt,
+          terms_version: TERMS_VERSION,
+          terms_ip_address: consentIp,
+          terms_user_agent: consentUA,
           updated_at: new Date().toISOString(),
         })
         .eq('id', appId)
@@ -270,10 +301,22 @@ export default function Step6Payment() {
       });
       return;
     }
+    if (!applicationData.termsAccepted) {
+      toast({
+        title: direction === 'rtl' ? 'الموافقة على الشروط مطلوبة' : 'Terms acceptance required',
+        description: direction === 'rtl' ? 'يرجى الموافقة على الشروط والأحكام قبل الدفع' : 'Please accept the Terms & Conditions before paying',
+        variant: 'destructive',
+      });
+      return;
+    }
 
     setIsProcessing(true);
 
     try {
+      const consentIp = await getClientIP();
+      const consentUA = typeof navigator !== 'undefined' ? navigator.userAgent : null;
+      const consentAt = new Date().toISOString();
+
       // Simulate payment gateway processing
       await new Promise(resolve => setTimeout(resolve, 2500));
 
@@ -308,6 +351,10 @@ export default function Step6Payment() {
               paymentMethod: applicationData.paymentMethod,
               termsAccepted: applicationData.termsAccepted,
             }),
+            terms_accepted_at: consentAt,
+            terms_version: TERMS_VERSION,
+            terms_ip_address: consentIp,
+            terms_user_agent: consentUA,
             updated_at: new Date().toISOString(),
           })
           .eq('id', appId)
@@ -339,7 +386,7 @@ export default function Step6Payment() {
   return (
     <div className="space-y-4 sm:space-y-6">
       <div className="text-center mb-4 sm:mb-8">
-        <h2 className="text-xl sm:text-2xl font-bold">{t('wizard.step6')}</h2>
+        <h2 className="text-xl sm:text-2xl font-bold">{t('wizard.step5')}</h2>
         <p className="text-sm sm:text-base text-muted-foreground mt-2">
           {direction === 'rtl' 
             ? 'راجع طلبك وأكمل عملية الدفع' 
@@ -632,7 +679,7 @@ export default function Step6Payment() {
             size="lg"
             className="w-full h-12 sm:h-14 text-base sm:text-lg gap-2"
             onClick={handlePayment}
-            disabled={!applicationData.paymentMethod || isProcessing}
+            disabled={!applicationData.paymentMethod || isProcessing || !applicationData.termsAccepted}
           >
             {isProcessing ? (
               <>
@@ -675,7 +722,7 @@ export default function Step6Payment() {
                 size="lg"
                 className="w-full h-12 sm:h-14 text-base sm:text-lg gap-2 bg-[#25D366] hover:bg-[#20BD5A] text-white"
                 onClick={handleSubmitViaWhatsApp}
-                disabled={isSubmittingWhatsApp}
+                disabled={isSubmittingWhatsApp || !applicationData.termsAccepted}
               >
                 {isSubmittingWhatsApp ? (
                   <>
@@ -695,6 +742,53 @@ export default function Step6Payment() {
           {!submissionMethod && (
             <div className="p-4 rounded-xl bg-muted/30 text-center text-sm text-muted-foreground">
               {direction === 'rtl' ? 'اختر طريقة الإكمال أعلاه للمتابعة' : 'Choose a completion method above to continue'}
+            </div>
+          )}
+
+          {/* Terms & Conditions consent — required for both paths */}
+          {submissionMethod && (
+            <div
+              className={cn(
+                'p-3 sm:p-4 rounded-xl border-2 transition-colors cursor-pointer',
+                applicationData.termsAccepted
+                  ? 'border-primary bg-primary/5'
+                  : 'border-muted hover:border-primary/50'
+              )}
+              onClick={() => updateApplicationData({ termsAccepted: !applicationData.termsAccepted })}
+            >
+              <div className="flex items-start gap-3">
+                <Checkbox
+                  id="terms-consent"
+                  checked={applicationData.termsAccepted}
+                  onCheckedChange={(checked) => updateApplicationData({ termsAccepted: checked as boolean })}
+                  className="mt-0.5"
+                />
+                <Label htmlFor="terms-consent" className="cursor-pointer text-xs sm:text-sm leading-relaxed flex-1">
+                  {direction === 'rtl' ? (
+                    <>
+                      أوافق على{' '}
+                      <Link to="/terms" target="_blank" onClick={(e) => e.stopPropagation()} className="text-primary underline font-medium">الشروط والأحكام</Link>
+                      {' '}و{' '}
+                      <Link to="/privacy" target="_blank" onClick={(e) => e.stopPropagation()} className="text-primary underline font-medium">سياسة الخصوصية</Link>
+                      {' '}و{' '}
+                      <Link to="/refund" target="_blank" onClick={(e) => e.stopPropagation()} className="text-primary underline font-medium">سياسة الاسترجاع</Link>
+                      {'. '}
+                      <span className="text-muted-foreground">سيتم تسجيل موافقتك مع الوقت والجهاز كدليل قانوني.</span>
+                    </>
+                  ) : (
+                    <>
+                      I agree to the{' '}
+                      <Link to="/terms" target="_blank" onClick={(e) => e.stopPropagation()} className="text-primary underline font-medium">Terms & Conditions</Link>
+                      {', '}
+                      <Link to="/privacy" target="_blank" onClick={(e) => e.stopPropagation()} className="text-primary underline font-medium">Privacy Policy</Link>
+                      {', and '}
+                      <Link to="/refund" target="_blank" onClick={(e) => e.stopPropagation()} className="text-primary underline font-medium">Refund Policy</Link>
+                      {'. '}
+                      <span className="text-muted-foreground">Your consent (timestamp + device) will be recorded as a legal record.</span>
+                    </>
+                  )}
+                </Label>
+              </div>
             </div>
           )}
         </div>
