@@ -386,7 +386,7 @@ export default function Step6Payment() {
   return (
     <div className="space-y-4 sm:space-y-6">
       <div className="text-center mb-4 sm:mb-8">
-        <h2 className="text-xl sm:text-2xl font-bold">{t('wizard.step6')}</h2>
+        <h2 className="text-xl sm:text-2xl font-bold">{t('wizard.step5')}</h2>
         <p className="text-sm sm:text-base text-muted-foreground mt-2">
           {direction === 'rtl' 
             ? 'راجع طلبك وأكمل عملية الدفع' 
