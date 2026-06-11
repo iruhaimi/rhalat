@@ -261,13 +261,7 @@ export default function Step3Requirements() {
           type="button"
           size="lg"
           className="flex-1 h-12 gap-2"
-          onClick={() => {
-            if (!user) {
-              setShowAuthGate(true);
-            } else {
-              goToNextStep();
-            }
-          }}
+          onClick={() => setShowPathChoice(true)}
           disabled={!canProceed}
         >
           {t('wizard.next')}
