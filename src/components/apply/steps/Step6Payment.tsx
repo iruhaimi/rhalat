@@ -38,6 +38,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
+import { normalizeSaudiPhone, formatSaudiPhoneSpaced } from '@/lib/phone';
 
 const TERMS_VERSION = 'v2026.1';
 
@@ -84,8 +85,9 @@ export default function Step6Payment() {
     (user?.user_metadata as any)?.name ||
     '';
   const customerEmail = user?.email || '';
-  const customerPhone = profile?.phone || '';
+  const customerPhone = normalizeSaudiPhone(profile?.phone);
   const customerCountryCode = '+966';
+  const customerPhoneDisplay = formatSaudiPhoneSpaced(profile?.phone);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isSubmittingWhatsApp, setIsSubmittingWhatsApp] = useState(false);
   const navigate = useNavigate();
@@ -130,7 +132,7 @@ export default function Step6Payment() {
             applicationNumber: appNumber,
             fullName: customerName,
             email: customerEmail,
-            phone: `${customerCountryCode} ${customerPhone}`.trim(),
+            phone: customerPhoneDisplay,
             countryName: applicationData.countryName,
             visaTypeName: applicationData.visaTypeName,
             travelDate: travelDateStr,
@@ -168,7 +170,7 @@ export default function Step6Payment() {
 📋 رقم الطلب: ${appNumber}
 👤 الاسم: ${customerName}
 📧 البريد: ${customerEmail}
-📱 الجوال: ${customerCountryCode} ${customerPhone}
+📱 الجوال: ${customerPhoneDisplay}
 
 🌍 الدولة: ${applicationData.countryName}
 📄 نوع التأشيرة: ${applicationData.visaTypeName}
@@ -438,7 +440,7 @@ export default function Step6Payment() {
                 <div className="flex items-center gap-2 text-sm">
                   <Phone className="w-4 h-4 text-muted-foreground" />
                   <span className="text-muted-foreground">{t('form.phone')}:</span>
-                  <span className="font-medium" dir="ltr">{customerCountryCode} {customerPhone || '—'}</span>
+                  <span className="font-medium" dir="ltr">{customerPhoneDisplay || '—'}</span>
                 </div>
               </div>
               
