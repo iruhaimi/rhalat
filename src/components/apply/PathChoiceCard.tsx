@@ -15,6 +15,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Globe, MessageCircle, ArrowRight, ArrowLeft, Loader2, ShieldCheck, Zap, Phone, AlertCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { filterNonNumeric } from '@/lib/inputFilters';
+import { normalizeSaudiPhone, formatSaudiPhoneSpaced } from '@/lib/phone';
 
 const TERMS_VERSION = 'v2026.1';
 
@@ -44,10 +45,12 @@ export default function PathChoiceCard({ onBack }: Props) {
   const [savingPhone, setSavingPhone] = useState(false);
   const ArrowBack = isRTL ? ArrowRight : ArrowLeft;
 
-  const needsPhone = !!user && !profile?.phone;
+  const normalizedProfilePhone = normalizeSaudiPhone(profile?.phone);
+  const needsPhone = !!user && !normalizedProfilePhone;
 
   const handleSavePhone = async () => {
-    if (phoneInput.length !== 9) {
+    const normalized = normalizeSaudiPhone(phoneInput);
+    if (normalized.length !== 9) {
       toast({
         title: isRTL ? 'رقم غير صحيح' : 'Invalid phone',
         description: isRTL ? 'يجب أن يتكون الرقم من 9 أرقام' : 'Phone must be exactly 9 digits',
@@ -60,10 +63,10 @@ export default function PathChoiceCard({ onBack }: Props) {
     try {
       const { error } = await supabase
         .from('profiles')
-        .update({ phone: phoneInput })
+        .update({ phone: normalized })
         .eq('id', profile.id);
       if (error) throw error;
-      updateApplicationData({ phone: phoneInput, countryCode: '+966' });
+      updateApplicationData({ phone: normalized, countryCode: '+966' });
       await refreshProfile();
       toast({
         title: isRTL ? '✅ تم حفظ الرقم' : '✅ Phone saved',
@@ -92,7 +95,7 @@ export default function PathChoiceCard({ onBack }: Props) {
       : 'غير محدد';
     const fullName = profile?.full_name || '';
     const email = user?.email || '';
-    const phone = profile?.phone || '';
+    const phone = formatSaudiPhoneSpaced(profile?.phone);
     return `مرحباً، أرغب بإكمال طلب التأشيرة عبر واتساب
 
 📋 رقم الطلب: ${appNumber}
@@ -233,8 +236,8 @@ export default function PathChoiceCard({ onBack }: Props) {
           <div className="font-bold mb-1">{isRTL ? 'بياناتك:' : 'Your details:'}</div>
           <div><span className="text-muted-foreground">{isRTL ? 'الاسم:' : 'Name:'}</span> <span className="font-medium">{profile?.full_name || (user.user_metadata as any)?.full_name || '—'}</span></div>
           <div><span className="text-muted-foreground">{isRTL ? 'البريد:' : 'Email:'}</span> <span className="font-medium" dir="ltr">{user.email}</span></div>
-          {profile?.phone && (
-            <div><span className="text-muted-foreground">{isRTL ? 'الجوال:' : 'Phone:'}</span> <span className="font-medium" dir="ltr">+966 {profile.phone}</span></div>
+          {normalizedProfilePhone && (
+            <div><span className="text-muted-foreground">{isRTL ? 'الجوال:' : 'Phone:'}</span> <span className="font-medium" dir="ltr">{formatSaudiPhoneSpaced(profile?.phone)}</span></div>
           )}
         </div>
       )}
