@@ -15,6 +15,7 @@ import {
   LogOut,
   Menu,
   ChevronLeft,
+  ChevronDown,
   Gift,
   RotateCcw,
   Image,
