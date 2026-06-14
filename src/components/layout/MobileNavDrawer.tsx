@@ -14,7 +14,8 @@ import {
   LayoutDashboard,
   FileText,
   LogOut,
-  Percent
+  Percent,
+  Plane
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -36,6 +37,7 @@ const navIcons: Record<string, React.ElementType> = {
   '/about': Info,
   '/contact': Phone,
   '/offers': Percent,
+  '/tourism': Plane,
 };
 
 export default function MobileNavDrawer({ isOpen, onClose }: MobileNavDrawerProps) {
@@ -64,6 +66,7 @@ export default function MobileNavDrawer({ isOpen, onClose }: MobileNavDrawerProp
     { name: t('nav.home'), href: '/' },
     { name: t('nav.destinations'), href: '/destinations' },
     { name: 'العروض الخاصة', href: '/offers' },
+    { name: 'البرامج السياحية', href: '/tourism' },
     { name: t('nav.pricing'), href: '/pricing' },
     { name: t('nav.track'), href: '/track' },
     { name: t('nav.faq'), href: '/faq' },

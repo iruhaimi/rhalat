@@ -28,6 +28,7 @@ export default function HeaderArabic() {
     { name: t('nav.home'), href: '/' },
     { name: t('nav.destinations'), href: '/destinations' },
     { name: 'العروض', href: '/offers', badge: 'جديد' },
+    { name: 'البرامج السياحية', href: '/tourism' },
     { name: t('nav.pricing'), href: '/pricing' },
     { name: t('nav.track'), href: '/track' },
   ];
