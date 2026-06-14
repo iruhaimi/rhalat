@@ -31,13 +31,50 @@ function generateToken(): string {
 }
 
 // Auth note: this function uses verify_jwt = true in config.toml, so Supabase's
-// gateway validates the caller's JWT (anon or service_role) before the request
-// reaches this code. No in-function auth check is needed.
+// gateway validates the caller's JWT signature. We additionally enforce role-based
+// access here because the gateway accepts BOTH the public anon key and the
+// service_role key. Without this check, anyone with the publishable anon key
+// (which is embedded in client code) could send arbitrary platform-branded emails.
+//
+// Policy:
+//   - service_role: full access (server-to-server callers).
+//   - authenticated users: limited to USER_ALLOWED_TEMPLATES, and recipient is
+//     forced to the authenticated user's own email address.
+//   - anon / missing JWT: rejected with 401.
+const USER_ALLOWED_TEMPLATES = new Set<string>(['application-confirmation'])
+
+function decodeJwtRole(token: string): { role: string | null; email: string | null; sub: string | null } {
+  try {
+    const payload = token.split('.')[1]
+    if (!payload) return { role: null, email: null, sub: null }
+    const padded = payload + '='.repeat((4 - (payload.length % 4)) % 4)
+    const json = JSON.parse(atob(padded.replace(/-/g, '+').replace(/_/g, '/')))
+    return {
+      role: typeof json.role === 'string' ? json.role : null,
+      email: typeof json.email === 'string' ? json.email : null,
+      sub: typeof json.sub === 'string' ? json.sub : null,
+    }
+  } catch {
+    return { role: null, email: null, sub: null }
+  }
+}
 
 Deno.serve(async (req) => {
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders })
+  }
+
+  // ---- Role-based auth gate ----
+  const authHeader = req.headers.get('Authorization') || ''
+  const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : ''
+  const { role: callerRole, email: callerEmail, sub: callerSub } = decodeJwtRole(token)
+
+  if (callerRole !== 'service_role' && callerRole !== 'authenticated') {
+    return new Response(
+      JSON.stringify({ error: 'Unauthorized: authentication required' }),
+      { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+    )
   }
 
   const supabaseUrl = Deno.env.get('SUPABASE_URL')
@@ -87,6 +124,30 @@ Deno.serve(async (req) => {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       }
     )
+  }
+
+  // Enforce per-template access for non-service callers.
+  if (callerRole !== 'service_role') {
+    if (!USER_ALLOWED_TEMPLATES.has(templateName)) {
+      console.warn('Authenticated user attempted restricted template', {
+        templateName,
+        callerSub,
+      })
+      return new Response(
+        JSON.stringify({ error: 'Forbidden: template not allowed for this caller' }),
+        { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+      )
+    }
+    // Force recipient to the authenticated user's own email. Prevents
+    // logged-in attackers from spraying emails at arbitrary addresses.
+    if (callerEmail) {
+      recipientEmail = callerEmail
+    } else {
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized: caller has no email' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+      )
+    }
   }
 
   // 1. Look up template from registry (early — needed to resolve recipient)
