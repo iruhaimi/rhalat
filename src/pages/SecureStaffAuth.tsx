@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import { Eye, EyeOff, Shield, Loader2, Lock, Mail, AlertTriangle, Key } from 'lucide-react';
 import { filterArabicChars } from '@/lib/inputFilters';
+import { motion } from 'framer-motion';
 import logoAsset from '@/assets/logo.png.asset.json';
 const logo = logoAsset.url;
 import AdvancedCaptcha from '@/components/auth/AdvancedCaptcha';
@@ -550,19 +551,27 @@ export default function SecureStaffAuth() {
     }
   };
 
-  // Background pattern component
+  // Soft light background with subtle grid + blue glows
   const BackgroundPattern = () => (
-    <div className="absolute inset-0 opacity-10">
-      <div className="absolute inset-0" style={{
-        backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-      }} />
-    </div>
+    <>
+      <div
+        className="absolute inset-0 opacity-[0.35] pointer-events-none"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg stroke='%23bfdbfe' stroke-width='1'%3E%3Cpath d='M0 .5H40M.5 0V40'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+        }}
+      />
+      <div className="absolute -top-32 -right-32 w-96 h-96 bg-sky-300/30 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-blue-400/20 rounded-full blur-3xl pointer-events-none" />
+    </>
   );
+
+  const pageWrapper =
+    'min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-sky-100 p-4 relative overflow-hidden';
 
   // Show recovery codes display
   if (showRecoveryCodes && generatedCodes.length > 0) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4">
+      <div className={pageWrapper}>
         <BackgroundPattern />
         <div className="w-full max-w-lg relative z-10">
           <RecoveryCodesDisplay
@@ -577,7 +586,7 @@ export default function SecureStaffAuth() {
   // Show recovery code verification
   if (showRecoveryVerification && pendingUserId) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4">
+      <div className={pageWrapper}>
         <BackgroundPattern />
         <div className="w-full max-w-md relative z-10">
           <RecoveryCodeVerification
@@ -594,7 +603,7 @@ export default function SecureStaffAuth() {
   // Show unlock request form
   if (showUnlockRequest && pendingUserId) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4">
+      <div className={pageWrapper}>
         <BackgroundPattern />
         <div className="w-full max-w-md relative z-10">
           <UnlockRequestForm
@@ -611,7 +620,7 @@ export default function SecureStaffAuth() {
   // Show 2FA verification screen
   if (show2FA) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4">
+      <div className={pageWrapper}>
         <BackgroundPattern />
         <div className="w-full max-w-md relative z-10">
           <TwoFactorVerification
@@ -624,7 +633,7 @@ export default function SecureStaffAuth() {
           <div className="mt-4 text-center">
             <Button
               variant="ghost"
-              className="text-slate-400 hover:text-white"
+              className="text-slate-600 hover:text-blue-700 hover:bg-blue-50"
               onClick={() => {
                 setShow2FA(false);
                 setShowRecoveryVerification(true);
@@ -640,36 +649,48 @@ export default function SecureStaffAuth() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4">
+    <div className={pageWrapper}>
       <NoIndex />
       <BackgroundPattern />
 
-      <Card className="w-full max-w-md relative z-10 border-slate-700 bg-slate-800/90 backdrop-blur-sm shadow-2xl">
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: 'easeOut' }}
+        className="w-full max-w-md relative z-10"
+      >
+      <Card className="border border-blue-100 bg-white/80 backdrop-blur-xl shadow-[0_20px_60px_-15px_rgba(59,130,246,0.25)] rounded-2xl">
         <CardHeader className="text-center space-y-4 pb-2">
           {/* Logo */}
           <div className="flex justify-center">
             <div className="relative">
-              <div className="absolute inset-0 bg-primary/20 blur-xl rounded-full" />
+              <div className="absolute inset-0 bg-blue-400/30 blur-2xl rounded-full" />
               <img
                 src={logo}
                 alt="عطلات رحلاتكم"
-                className="h-20 w-20 rounded-full object-cover relative z-10 border-2 border-slate-600"
+                className="h-20 w-20 rounded-full object-cover relative z-10 ring-4 ring-white shadow-lg"
               />
             </div>
           </div>
-          
-          {/* Shield icon */}
+
+          {/* Security badge */}
           <div className="flex justify-center">
-            <div className="p-3 rounded-full bg-primary/10 border border-primary/20">
-              <Shield className="h-6 w-6 text-primary" />
-            </div>
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.15 }}
+              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-50 border border-blue-100 text-blue-700"
+            >
+              <Shield className="h-3.5 w-3.5" />
+              <span className="text-xs font-medium">دخول آمن مُشفّر</span>
+            </motion.div>
           </div>
 
           <div>
-            <CardTitle className="text-2xl font-bold text-white">
+            <CardTitle className="text-2xl font-bold text-slate-900">
               بوابة الموظفين
             </CardTitle>
-            <CardDescription className="text-slate-400 mt-2">
+            <CardDescription className="text-slate-500 mt-2">
               تسجيل الدخول للمشرفين والوكلاء فقط
             </CardDescription>
           </div>
@@ -679,7 +700,7 @@ export default function SecureStaffAuth() {
           <form onSubmit={handleLogin} className="space-y-5" dir="rtl">
             {/* Lockout Warning */}
             {isLockedOut && (
-              <div className="p-3 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-400 text-sm flex items-center gap-2">
+              <div className="p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-sm flex items-center gap-2">
                 <AlertTriangle className="h-4 w-4 flex-shrink-0" />
                 <span>
                   الحساب مقفل مؤقتاً. يرجى المحاولة بعد 15 دقيقة.
@@ -688,15 +709,15 @@ export default function SecureStaffAuth() {
             )}
 
             {error && !isLockedOut && (
-              <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-sm text-center">
+              <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm text-center">
                 {error}
               </div>
             )}
 
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-slate-300">البريد الإلكتروني</Label>
+              <Label htmlFor="email" className="text-slate-700 font-medium">البريد الإلكتروني</Label>
               <div className="relative">
-                <Mail className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
+                <Mail className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-blue-500" />
                 <Input
                   id="email"
                   type="email"
@@ -707,7 +728,7 @@ export default function SecureStaffAuth() {
                     input.value = filterArabicChars(input.value);
                   }}
                   placeholder="admin@example.com"
-                  className="pr-10 bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-500 focus:border-primary"
+                  className="pr-10 h-12 rounded-xl bg-white/70 border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-blue-400 focus-visible:ring-2 focus-visible:ring-blue-500/30 transition"
                   dir="ltr"
                   required
                   disabled={loading || isLockedOut}
@@ -716,9 +737,9 @@ export default function SecureStaffAuth() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password" className="text-slate-300">كلمة المرور</Label>
+              <Label htmlFor="password" className="text-slate-700 font-medium">كلمة المرور</Label>
               <div className="relative">
-                <Lock className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
+                <Lock className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-blue-500" />
                 <Input
                   id="password"
                   type={showPassword ? 'text' : 'password'}
@@ -729,7 +750,7 @@ export default function SecureStaffAuth() {
                     input.value = filterArabicChars(input.value);
                   }}
                   placeholder="••••••••"
-                  className="pr-10 pl-10 bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-500 focus:border-primary"
+                  className="pr-10 pl-10 h-12 rounded-xl bg-white/70 border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-blue-400 focus-visible:ring-2 focus-visible:ring-blue-500/30 transition"
                   dir="ltr"
                   required
                   disabled={loading || isLockedOut}
@@ -737,7 +758,7 @@ export default function SecureStaffAuth() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors"
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-blue-600 transition-colors"
                 >
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
@@ -751,7 +772,7 @@ export default function SecureStaffAuth() {
 
             <Button
               type="submit"
-              className="w-full bg-primary hover:bg-primary/90 text-white font-medium py-5"
+              className="w-full h-12 rounded-xl bg-gradient-to-l from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white font-semibold shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 hover:-translate-y-0.5 transition-all"
               disabled={loading || isLockedOut || (showCaptcha && !captchaVerified)}
             >
               {loading ? (
@@ -761,7 +782,7 @@ export default function SecureStaffAuth() {
                 </>
               ) : (
                 <>
-                  <Shield className="h-4 w-4 ml-2" />
+                  <Lock className="h-4 w-4 ml-2" />
                   تسجيل الدخول
                 </>
               )}
@@ -771,7 +792,7 @@ export default function SecureStaffAuth() {
             <div className="text-center">
               <a
                 href="/auth?reset=true"
-                className="text-sm text-slate-400 hover:text-primary transition-colors"
+                className="text-sm text-slate-500 hover:text-blue-600 transition-colors"
               >
                 نسيت كلمة المرور؟
               </a>
@@ -779,8 +800,8 @@ export default function SecureStaffAuth() {
           </form>
 
           {/* Security notice */}
-          <div className="mt-6 pt-4 border-t border-slate-700">
-            <p className="text-xs text-slate-500 text-center">
+          <div className="mt-6 pt-4 border-t border-slate-200">
+            <p className="text-xs text-slate-500 text-center leading-relaxed">
               🔒 هذه البوابة مخصصة للموظفين المعتمدين فقط. جميع محاولات الدخول مسجلة ومراقبة.
             </p>
           </div>
@@ -789,13 +810,14 @@ export default function SecureStaffAuth() {
           <div className="mt-4 text-center">
             <a
               href="/"
-              className="text-sm text-primary hover:text-primary/80 transition-colors"
+              className="text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors"
             >
               العودة للموقع الرئيسي ←
             </a>
           </div>
         </CardContent>
       </Card>
+      </motion.div>
     </div>
   );
 }
