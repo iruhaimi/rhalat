@@ -71,19 +71,19 @@ export default function FooterArabic() {
             <p className="mt-4 text-sm text-muted-foreground">
               {description}
             </p>
-            <div className="mt-4 rounded-lg border border-primary/20 bg-primary/5 p-3">
-              <div className="flex items-center gap-2 mb-2">
-                <BadgeCheck className="h-4 w-4 text-primary flex-shrink-0" />
-                <span className="text-xs font-semibold text-primary">مرخصون من وزارة السياحة والتجارة</span>
+            <div className="mt-4 rounded-xl border-2 border-primary/30 bg-primary/10 p-4 shadow-sm">
+              <div className="flex items-center gap-2 mb-3">
+                <BadgeCheck className="h-5 w-5 text-primary flex-shrink-0" />
+                <span className="text-sm font-bold text-primary">مرخصون من وزارة السياحة والتجارة</span>
               </div>
-              <div className="space-y-1 text-xs text-foreground">
+              <div className="space-y-1.5 text-sm text-foreground">
                 <div className="flex items-center justify-between gap-2">
                   <span className="text-muted-foreground">ترخيص</span>
-                  <span className="font-semibold tabular-nums" dir="ltr">73100234</span>
+                  <span className="font-bold tabular-nums text-slate-900" dir="ltr">73100234</span>
                 </div>
                 <div className="flex items-center justify-between gap-2">
                   <span className="text-muted-foreground">ترخيص</span>
-                  <span className="font-semibold tabular-nums" dir="ltr">7010581259</span>
+                  <span className="font-bold tabular-nums text-slate-900" dir="ltr">7010581259</span>
                 </div>
               </div>
             </div>

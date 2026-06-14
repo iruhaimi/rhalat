@@ -1,41 +1,27 @@
-# تحديث تصميم التحقق الأمني (AdvancedCaptcha)
+## الهدف
+تحسين ظهور شارة "مرخصون من وزارة السياحة والتجارة" في الفوتر لكل الأجهزة ولا سيما الجوال، بحيث تكون أكثر وضوحاً وتأثيراً بصرياً.
 
-المشكلة: مكوّن التحقق الأمني لا يزال بألوان داكنة (slate-700/800)، وبعض الأزرار (مثل زر "الإجابة" و"تحقق") لا تظهر إلا عند تمرير الماوس بسبب تباين ضعيف.
+## التعديلات المقترحة على `src/components/layout/FooterArabic.tsx`
 
-## التغييرات في `src/components/auth/AdvancedCaptcha.tsx` فقط
+### 1. حاوية الشارة
+- تكبير `p-3` إلى `p-4`
+- استبدال `bg-primary/5` بـ `bg-primary/10` أو `bg-blue-50` لتكون أوضح
+- إضافة ظل ناعم: `shadow-sm`
+- إضافة حد أقوى: `border-primary/30` بدلاً من `border-primary/20`
 
-### 1) الحاوية الرئيسية
-- استبدال `bg-slate-700/50 border-slate-600` بـ `bg-white/70 border-blue-100 rounded-xl shadow-sm`
-- تسمية الترويسة: `text-slate-700` بدل `text-slate-300`، أيقونة amber → `text-amber-500`
+### 2. العنوان
+- `BadgeCheck` من `h-4` إلى `h-5 w-5`
+- النص من `text-xs` إلى `text-sm` مع `text-primary`
+- زيادة `mb-2` إلى `mb-3`
 
-### 2) تحدّي الرياضيات (math)
-- الصندوق: `bg-white border border-blue-100 text-slate-800` بدل `bg-slate-800 text-white`
-- المعاملات: `text-blue-600`، الأرقام `text-slate-800`، علامة `=` و`?` بـ `text-slate-400`
-- نص "احسب من اليسار لليمين": `text-slate-500`
+### 3. أرقام الترخيص
+- زيادة الحجم من `text-xs` إلى `text-sm`
+- تمييز الأرقام بـ `font-bold text-slate-900`
 
-### 3) تحدّي النص (canvas)
-- خلفية الكانفس: لون فاتح `#eff6ff` (blue-50) بدل `#1e293b`
-- خطوط التشويش: درجات أزرق/سماوي شفافة بدل ألوان عشوائية فاتحة
-- نص الكابتشا: استبدال ألوان الفلوريسنت بـ `#1e40af, #1d4ed8, #0369a1, #0c4a6e` (تباين عالٍ على الفاتح)
-- الإطار: `border-blue-200`
+### 4. ترتيب على الجوال
+- على الجوال (`sm:`) إعادة ترتيب الشارة لتكون أول عنصر في عمود العلامة التجارية والأكثر بروزاً، أو تحويلها إلى صف مستقل عبر الأعمدة على الشاشات الصغيرة.
 
-### 4) حقل الإجابة والأزرار (أهم نقطة — حلّ مشكلة الظهور بالـ hover)
-- `Input`: `bg-white border-blue-200 text-slate-800 placeholder:text-slate-400 h-11 rounded-xl focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20` — بدلاً من `bg-slate-700/50 text-white`
-- زر "تحقق": لون واضح ثابت `bg-blue-600 hover:bg-blue-700 text-white rounded-xl h-11` (حالياً يستخدم الـ default variant بدون لون صريح، لذلك يبدو شاحباً)
-- زر التحديث (RefreshCw): `text-slate-500 hover:text-blue-600 hover:bg-blue-50`
-- حالة التحقق الناجح: `bg-emerald-500 hover:bg-emerald-600` بدل `bg-green-600`
-
-### 5) شاشة القفل (lockout)
-- الخلفية: `bg-red-50 border-red-200`
-- النص: `text-red-700` / `text-slate-600` بدل `text-red-400`/`text-slate-300`
-- دائرة الأيقونة: `bg-red-100 border-red-200`
-- العدّاد: `text-red-600`
-
-### 6) رسالة الخطأ والنجاح
-- خطأ: `text-red-600`
-- نجاح: `text-emerald-600`
-
-## خارج النطاق
-- لا تغيير على المنطق (lockout, attempts, RPC, canvas distortion math)
-- لا تغيير على `SecureStaffAuth.tsx`
-- لا تغيير على باقي صفحات التحقق الأخرى
+## تفاصيل تقنية
+- الملف الوحيد المعدل: `src/components/layout/FooterArabic.tsx`
+- لا تغييرات منطقية، فقط CSS/Tailwind
+- لا تأثير على قاعدة البيانات أو الـ Backend
