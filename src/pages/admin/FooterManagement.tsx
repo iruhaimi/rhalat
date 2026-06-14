@@ -12,6 +12,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from 'sonner';
+import WorkingHoursEditor from '@/components/admin/WorkingHoursEditor';
+import { parseWorkingHours, formatWorkingHours } from '@/lib/workingHours';
 import { 
   Phone, 
   Mail, 
@@ -86,6 +88,7 @@ const iconOptions = [
 export default function FooterManagement() {
   const queryClient = useQueryClient();
   const [editingItem, setEditingItem] = useState<FooterSetting | null>(null);
+  const [hoursItem, setHoursItem] = useState<FooterSetting | null>(null);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>('contact');
   const [newItem, setNewItem] = useState({
@@ -402,7 +405,15 @@ export default function FooterManagement() {
                               </Badge>
                             )}
                           </div>
-                          <p className="text-sm text-muted-foreground">{item.value}</p>
+                          <p className="text-sm text-muted-foreground whitespace-pre-line">
+                            {(() => {
+                              if (item.key === 'working_hours') {
+                                const parsed = parseWorkingHours(item.value);
+                                if (parsed) return formatWorkingHours(parsed, 'ar').join('\n');
+                              }
+                              return item.value;
+                            })()}
+                          </p>
                           {item.url && (
                             <a 
                               href={item.url} 
@@ -426,7 +437,13 @@ export default function FooterManagement() {
                         <Button
                           variant="ghost"
                           size="icon"
-                          onClick={() => setEditingItem(item)}
+                          onClick={() => {
+                            if (item.key === 'working_hours') {
+                              setHoursItem(item);
+                            } else {
+                              setEditingItem(item);
+                            }
+                          }}
                         >
                           <Pencil className="h-4 w-4" />
                         </Button>
@@ -558,6 +575,20 @@ export default function FooterManagement() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <WorkingHoursEditor
+        open={!!hoursItem}
+        initialValue={hoursItem?.value}
+        saving={updateMutation.isPending}
+        onClose={() => setHoursItem(null)}
+        onSave={(value, value_en) => {
+          if (!hoursItem) return;
+          updateMutation.mutate(
+            { ...hoursItem, value, value_en },
+            { onSuccess: () => setHoursItem(null) },
+          );
+        }}
+      />
     </div>
   );
 }
