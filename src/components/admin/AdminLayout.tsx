@@ -278,6 +278,12 @@ export default function AdminLayout() {
           show: isAdmin && isSuperAdmin,
         },
         {
+          title: 'إدارة الشركاء',
+          icon: Building2,
+          href: '/admin/partners',
+          show: isAdmin && isSuperAdmin,
+        },
+        {
           title: 'إعدادات المالك',
           icon: Crown,
           href: '/admin/owner-settings',
