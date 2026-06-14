@@ -405,7 +405,15 @@ export default function FooterManagement() {
                               </Badge>
                             )}
                           </div>
-                          <p className="text-sm text-muted-foreground">{item.value}</p>
+                          <p className="text-sm text-muted-foreground whitespace-pre-line">
+                            {(() => {
+                              if (item.key === 'working_hours') {
+                                const parsed = parseWorkingHours(item.value);
+                                if (parsed) return formatWorkingHours(parsed, 'ar').join('\n');
+                              }
+                              return item.value;
+                            })()}
+                          </p>
                           {item.url && (
                             <a 
                               href={item.url} 
