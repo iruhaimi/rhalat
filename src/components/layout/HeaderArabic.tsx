@@ -27,7 +27,7 @@ export default function HeaderArabic() {
   const navigation = [
     { name: t('nav.home'), href: '/' },
     { name: t('nav.destinations'), href: '/destinations' },
-    { name: 'العروض', href: '/offers', badge: 'جديد' },
+    { name: 'العروض', href: '/offers' },
     { name: 'البرامج السياحية', href: '/tourism' },
     { name: t('nav.pricing'), href: '/pricing' },
     { name: t('nav.track'), href: '/track' },
