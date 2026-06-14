@@ -82,11 +82,11 @@ export default function FooterArabic() {
                   <span className="font-bold text-slate-900">وكالة سفر وسياحة</span>
                 </div>
                 <div className="flex items-center justify-between gap-2">
-                  <span className="text-muted-foreground">ترخيص</span>
+                  <span className="text-muted-foreground">ترخيص وزارة السياحة</span>
                   <span className="font-bold tabular-nums text-slate-900" dir="ltr">73100234</span>
                 </div>
                 <div className="flex items-center justify-between gap-2">
-                  <span className="text-muted-foreground">ترخيص</span>
+                  <span className="text-muted-foreground">ترخيص وزارة التجارة</span>
                   <span className="font-bold tabular-nums text-slate-900" dir="ltr">7010581259</span>
                 </div>
               </div>
