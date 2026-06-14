@@ -61,6 +61,23 @@ export default function AdminLayout() {
   const idle = useIdleTimeout();
   const [pendingOperators, setPendingOperators] = useState(0);
 
+  const GROUPS_STORAGE_KEY = 'admin-sidebar-groups';
+  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() => {
+    try {
+      const raw = localStorage.getItem(GROUPS_STORAGE_KEY);
+      if (raw) return JSON.parse(raw);
+    } catch {}
+    return {};
+  });
+
+  const toggleGroup = (label: string) => {
+    setOpenGroups(prev => {
+      const next = { ...prev, [label]: !prev[label] };
+      try { localStorage.setItem(GROUPS_STORAGE_KEY, JSON.stringify(next)); } catch {}
+      return next;
+    });
+  };
+
   useEffect(() => {
     if (!isAdmin) return;
     let active = true;
