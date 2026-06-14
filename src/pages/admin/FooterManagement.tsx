@@ -575,6 +575,20 @@ export default function FooterManagement() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <WorkingHoursEditor
+        open={!!hoursItem}
+        initialValue={hoursItem?.value}
+        saving={updateMutation.isPending}
+        onClose={() => setHoursItem(null)}
+        onSave={(value, value_en) => {
+          if (!hoursItem) return;
+          updateMutation.mutate(
+            { ...hoursItem, value, value_en },
+            { onSuccess: () => setHoursItem(null) },
+          );
+        }}
+      />
     </div>
   );
 }
