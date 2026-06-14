@@ -27,6 +27,23 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+// Staff (admin/agent/tour_operator) must complete the 2FA step every browser
+// session. The marker lives in sessionStorage and is cleared on tab close. If a
+// staff JWT is restored from localStorage without that marker (e.g., attacker
+// extracted the token, or the user just reopened the browser), force a sign-out
+// so backend APIs cannot be called with a token that bypassed 2FA enforcement.
+const STAFF_ROLES: AppRole[] = ['admin', 'agent', 'tour_operator'];
+function enforceStaff2FAOnRestore(event: string, userId: string, nextRoles: AppRole[]) {
+  // Only act on session restore / token refresh, not on a fresh password sign-in
+  // (the SecureStaffAuth flow sets the marker right after the 2FA step).
+  if (event !== 'INITIAL_SESSION' && event !== 'TOKEN_REFRESHED') return;
+  const isStaff = nextRoles.some((r) => STAFF_ROLES.includes(r));
+  if (!isStaff) return;
+  if (sessionStorage.getItem('staff_2fa_verified_user_id') === userId) return;
+  console.warn('Staff session restored without 2FA marker — signing out');
+  supabase.auth.signOut();
+}
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
@@ -85,7 +102,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (currentSession?.user) {
           setIsLoading(true);
           setTimeout(() => {
-            fetchProfile(currentSession.user.id).finally(() => setIsLoading(false));
+            fetchProfile(currentSession.user.id).then((nextRoles) => {
+              enforceStaff2FAOnRestore(event, currentSession.user.id, nextRoles);
+            }).finally(() => setIsLoading(false));
           }, 0);
         } else {
           setProfile(null);
@@ -108,7 +127,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser(existingSession?.user ?? null);
 
       if (existingSession?.user) {
-        fetchProfile(existingSession.user.id).finally(() => {
+        fetchProfile(existingSession.user.id).then((nextRoles) => {
+          enforceStaff2FAOnRestore('INITIAL_SESSION', existingSession.user.id, nextRoles);
+        }).finally(() => {
           setIsLoading(false);
         });
       } else {
