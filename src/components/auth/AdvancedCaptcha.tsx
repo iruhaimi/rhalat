@@ -75,12 +75,12 @@ export default function AdvancedCaptcha({ onVerified }: AdvancedCaptchaProps) {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    ctx.fillStyle = '#1e293b';
+    ctx.fillStyle = '#eff6ff';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // Add aggressive noise lines
     for (let i = 0; i < 8; i++) {
-      ctx.strokeStyle = `rgba(${Math.random() * 150 + 100}, ${Math.random() * 150 + 100}, ${Math.random() * 150 + 100}, 0.7)`;
+      ctx.strokeStyle = `rgba(${Math.random() * 80 + 30}, ${Math.random() * 120 + 80}, ${Math.random() * 100 + 150}, 0.35)`;
       ctx.lineWidth = Math.random() * 2 + 1;
       ctx.beginPath();
       ctx.moveTo(Math.random() * canvas.width, Math.random() * canvas.height);
@@ -97,7 +97,7 @@ export default function AdvancedCaptcha({ onVerified }: AdvancedCaptchaProps) {
 
     // Add noise dots
     for (let i = 0; i < 80; i++) {
-      ctx.fillStyle = `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 0.4)`;
+      ctx.fillStyle = `rgba(${Math.random() * 80 + 30}, ${Math.random() * 120 + 80}, ${Math.random() * 100 + 150}, 0.35)`;
       ctx.beginPath();
       ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, Math.random() * 2 + 1, 0, Math.PI * 2);
       ctx.fill();
@@ -120,10 +120,10 @@ export default function AdvancedCaptcha({ onVerified }: AdvancedCaptchaProps) {
       ctx.rotate(rotation);
       ctx.transform(1, Math.random() * 0.3 - 0.15, Math.random() * 0.3 - 0.15, 1, 0, 0);
 
-      const colors = ['#3b82f6', '#22c55e', '#eab308', '#f97316', '#a855f7', '#ec4899'];
+      const colors = ['#1e40af', '#1d4ed8', '#0369a1', '#0c4a6e', '#1e3a8a'];
       ctx.fillStyle = colors[Math.floor(Math.random() * colors.length)];
       
-      ctx.shadowColor = 'rgba(0,0,0,0.5)';
+      ctx.shadowColor = 'rgba(0,0,0,0.15)';
       ctx.shadowBlur = 2;
       ctx.shadowOffsetX = 1;
       ctx.shadowOffsetY = 1;
@@ -134,7 +134,7 @@ export default function AdvancedCaptcha({ onVerified }: AdvancedCaptchaProps) {
 
     // Add overlay noise
     for (let i = 0; i < 4; i++) {
-      ctx.strokeStyle = `rgba(${Math.random() * 200 + 50}, ${Math.random() * 200 + 50}, ${Math.random() * 200 + 50}, 0.3)`;
+      ctx.strokeStyle = `rgba(${Math.random() * 80 + 30}, ${Math.random() * 120 + 80}, ${Math.random() * 100 + 150}, 0.25)`;
       ctx.lineWidth = 1;
       ctx.beginPath();
       ctx.moveTo(0, Math.random() * canvas.height);
@@ -279,20 +279,20 @@ export default function AdvancedCaptcha({ onVerified }: AdvancedCaptchaProps) {
   // Show lockout screen
   if (isLockedOut) {
     return (
-      <div className="p-4 rounded-lg bg-red-900/30 border border-red-500/50 space-y-3">
-        <Label className="text-red-400 text-sm flex items-center gap-2">
+      <div className="p-4 rounded-xl bg-red-50 border border-red-200 space-y-3">
+        <Label className="text-red-700 text-sm flex items-center gap-2">
           <Lock className="h-4 w-4" />
           🔒 تم قفل التحقق الأمني مؤقتاً
         </Label>
         
         <div className="flex flex-col items-center gap-3 py-4">
-          <div className="p-4 rounded-full bg-red-500/20 border border-red-500/30">
-            <Clock className="h-8 w-8 text-red-400 animate-pulse" />
+          <div className="p-4 rounded-full bg-red-100 border border-red-200">
+            <Clock className="h-8 w-8 text-red-600 animate-pulse" />
           </div>
-          <p className="text-slate-300 text-center">
+          <p className="text-slate-700 text-center">
             تم تجاوز الحد الأقصى للمحاولات ({MAX_ATTEMPTS} محاولات)
           </p>
-          <p className="text-2xl font-mono text-red-400">
+          <p className="text-2xl font-mono text-red-600">
             {formatTime(lockoutRemaining)}
           </p>
           <p className="text-xs text-slate-500 text-center">
@@ -308,11 +308,11 @@ export default function AdvancedCaptcha({ onVerified }: AdvancedCaptchaProps) {
       case 'math':
         return (
           <div className="flex flex-col items-center gap-2">
-            <div className="flex items-center justify-center gap-2 py-4 px-4 rounded-lg bg-slate-800 text-white text-lg font-mono">
+            <div className="flex items-center justify-center gap-2 py-4 px-4 rounded-xl bg-white border border-blue-100 text-slate-800 text-lg font-mono shadow-sm">
               <span className="text-xl">({num1}</span>
-              <span className="text-primary text-xl">{operator1}</span>
+              <span className="text-blue-600 text-xl font-bold">{operator1}</span>
               <span className="text-xl">{num2})</span>
-              <span className="text-primary text-xl">{operator2}</span>
+              <span className="text-blue-600 text-xl font-bold">{operator2}</span>
               <span className="text-xl">{num3}</span>
               <span className="text-slate-400">=</span>
               <span className="text-slate-400">?</span>
@@ -327,7 +327,7 @@ export default function AdvancedCaptcha({ onVerified }: AdvancedCaptchaProps) {
               ref={canvasRef}
               width={250}
               height={70}
-              className="rounded-lg border border-slate-600"
+              className="rounded-xl border border-blue-200"
             />
             <p className="text-xs text-slate-500">أدخل الحروف والأرقام كما تظهر (حساس لحالة الأحرف)</p>
           </div>
@@ -336,18 +336,18 @@ export default function AdvancedCaptcha({ onVerified }: AdvancedCaptchaProps) {
   };
 
   return (
-    <div className="p-4 rounded-lg bg-slate-700/50 border border-slate-600 space-y-3">
-      <Label className="text-slate-300 text-sm flex items-center gap-2 justify-between">
+    <div className="p-4 rounded-xl bg-white/70 border border-blue-100 shadow-sm space-y-3">
+      <Label className="text-slate-700 text-sm flex items-center gap-2 justify-between">
         <span className="flex items-center gap-2">
           {isVerified ? (
-            <ShieldCheck className="h-4 w-4 text-green-500" />
+            <ShieldCheck className="h-4 w-4 text-emerald-600" />
           ) : (
             <ShieldAlert className="h-4 w-4 text-amber-500" />
           )}
           🔐 التحقق الأمني - أثبت أنك إنسان
         </span>
         {attempts > 0 && !isVerified && (
-          <span className="text-xs text-amber-400">
+          <span className="text-xs text-amber-600">
             ({MAX_ATTEMPTS - attempts} محاولات متبقية)
           </span>
         )}
@@ -363,7 +363,7 @@ export default function AdvancedCaptcha({ onVerified }: AdvancedCaptchaProps) {
           variant="ghost"
           size="icon"
           onClick={generateChallenge}
-          className="text-slate-400 hover:text-white"
+          className="text-slate-500 hover:text-blue-600 hover:bg-blue-50"
           title="تحديث السؤال"
           disabled={isVerified}
         >
@@ -372,7 +372,7 @@ export default function AdvancedCaptcha({ onVerified }: AdvancedCaptchaProps) {
       </div>
 
       {showError && (
-        <p className="text-xs text-red-400 text-center animate-pulse">
+        <p className="text-xs text-red-600 text-center animate-pulse">
           ❌ إجابة خاطئة - سيتم تغيير السؤال تلقائياً
         </p>
       )}
@@ -387,7 +387,7 @@ export default function AdvancedCaptcha({ onVerified }: AdvancedCaptchaProps) {
           }}
           onKeyPress={handleKeyPress}
           placeholder={challengeType === 'math' ? 'الإجابة' : 'أدخل النص'}
-          className="flex-1 bg-slate-700/50 border-slate-600 text-white text-center font-mono"
+          className="flex-1 h-11 rounded-xl bg-white border-blue-200 text-slate-800 placeholder:text-slate-400 text-center font-mono focus:border-blue-400 focus-visible:ring-2 focus-visible:ring-blue-500/20"
           dir="ltr"
           disabled={isVerified}
           autoComplete="off"
@@ -396,7 +396,7 @@ export default function AdvancedCaptcha({ onVerified }: AdvancedCaptchaProps) {
           type="button"
           onClick={handleVerify}
           disabled={!userAnswer || isVerified}
-          className={`min-w-[100px] ${isVerified ? 'bg-green-600 hover:bg-green-600' : ''}`}
+          className={`min-w-[100px] h-11 rounded-xl text-white shadow-sm ${isVerified ? 'bg-emerald-500 hover:bg-emerald-600' : 'bg-blue-600 hover:bg-blue-700'}`}
         >
           {isVerified ? (
             <>
@@ -410,7 +410,7 @@ export default function AdvancedCaptcha({ onVerified }: AdvancedCaptchaProps) {
       </div>
 
       {isVerified && (
-        <p className="text-xs text-green-400 text-center flex items-center justify-center gap-1">
+        <p className="text-xs text-emerald-600 text-center flex items-center justify-center gap-1">
           <ShieldCheck className="h-3 w-3" />
           ✓ تم التحقق بنجاح - أنت إنسان
         </p>
