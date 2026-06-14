@@ -15,7 +15,6 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import MobileNavDrawer from './MobileNavDrawer';
 import { NotificationBell } from '@/components/notifications/NotificationBell';
-import GoogleSignInButton from '@/components/auth/GoogleSignInButton';
 import logo from '@/assets/logo.png.asset.json';
 
 export default function HeaderArabic() {
@@ -184,7 +183,6 @@ export default function HeaderArabic() {
               </DropdownMenu>
             ) : (
               <>
-                <GoogleSignInButton iconOnly className="border-border/50 hover:border-primary/30" />
                 <Button variant="ghost" asChild className="rounded-full">
                   <Link to="/auth">{t('nav.signIn')}</Link>
                 </Button>

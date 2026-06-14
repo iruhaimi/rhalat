@@ -1,14 +1,11 @@
-## الهدف
-إزالة الشارة الحمراء (badge) التي تظهر "جديد" بجانب رابط "العروض" من الهيدر الرئيسي ومن قائمة التنقل الموبايل.
+Plan: إزالة زر Google Sign-In من الهيدر
 
-## التعديلات المطلوبة
+**Goal:** Remove the Google sign-in icon/button that appears beside the "تسجيل الدخول" (Login) button in the Arabic header.
 
-### 1. `src/components/layout/HeaderArabic.tsx`
-- السطر 30: إزالة خاصية `badge: 'جديد'` من عنصر التنقل "العروض"
-- قبل: `{ name: 'العروض', href: '/offers', badge: 'جديد' }`
-- بعد: `{ name: 'العروض', href: '/offers' }`
+**Changes:**
+1. **src/components/layout/HeaderArabic.tsx**
+   - Remove line 187: `<GoogleSignInButton iconOnly ... />`
+   - Remove line 18: `import GoogleSignInButton from '@/components/auth/GoogleSignInButton';` (if unused after removal)
+   - No other logic or UI changes.
 
-### 2. `src/components/layout/MobileNavDrawer.tsx`
-- الأسطر 186–190: حذف الشرط الذي يرسم الشارة الحمراء عند `item.href === '/offers'`
-
-لا توجد تعديلات على قاعدة البيانات أو الباك-اند.
+**Impact:** The "G" Google icon will no longer appear to the left of the "تسجيل الدخول" button on desktop. Mobile nav retains its own Google sign-in button inside the drawer, which is unaffected. All other header elements remain unchanged.
