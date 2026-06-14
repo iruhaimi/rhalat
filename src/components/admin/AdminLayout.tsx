@@ -15,6 +15,7 @@ import {
   LogOut,
   Menu,
   ChevronLeft,
+  ChevronDown,
   Gift,
   RotateCcw,
   Image,
@@ -59,6 +60,23 @@ export default function AdminLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(!prefs.sidebarCollapsedDefault);
   const idle = useIdleTimeout();
   const [pendingOperators, setPendingOperators] = useState(0);
+
+  const GROUPS_STORAGE_KEY = 'admin-sidebar-groups';
+  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() => {
+    try {
+      const raw = localStorage.getItem(GROUPS_STORAGE_KEY);
+      if (raw) return JSON.parse(raw);
+    } catch {}
+    return {};
+  });
+
+  const toggleGroup = (label: string) => {
+    setOpenGroups(prev => {
+      const next = { ...prev, [label]: !prev[label] };
+      try { localStorage.setItem(GROUPS_STORAGE_KEY, JSON.stringify(next)); } catch {}
+      return next;
+    });
+  };
 
   useEffect(() => {
     if (!isAdmin) return;
@@ -318,16 +336,47 @@ export default function AdminLayout() {
             {menuGroups.map((group, gi) => {
               const visible = group.items.filter(i => i.show);
               if (visible.length === 0) return null;
+              const containsActive = visible.some(i => location.pathname === i.href);
+              const isOpen = sidebarOpen
+                ? (openGroups[group.label] ?? containsActive)
+                : true;
+              const badgeSum = visible.reduce((s, i) => s + (i.badge || 0), 0);
               return (
                 <div key={group.label} className={cn(gi > 0 && "mt-3")}>
                   {sidebarOpen ? (
-                    <p className="px-3 pb-1 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground/70">
-                      {group.label}
-                    </p>
+                    <button
+                      type="button"
+                      onClick={() => toggleGroup(group.label)}
+                      aria-expanded={isOpen}
+                      className="w-full flex items-center justify-between gap-2 px-3 py-1.5 rounded-md text-[11px] font-semibold uppercase tracking-wide text-muted-foreground/70 hover:bg-muted hover:text-foreground transition-colors"
+                    >
+                      <span className="flex items-center gap-2 truncate">
+                        {group.label}
+                        {!isOpen && containsActive && (
+                          <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+                        )}
+                        {!isOpen && badgeSum > 0 && (
+                          <Badge variant="destructive" className="h-4 px-1.5 text-[10px]">
+                            {badgeSum}
+                          </Badge>
+                        )}
+                      </span>
+                      <ChevronDown
+                        className={cn(
+                          "h-3.5 w-3.5 shrink-0 transition-transform",
+                          isOpen ? "rotate-0" : "-rotate-90"
+                        )}
+                      />
+                    </button>
                   ) : (
                     gi > 0 && <div className="mx-2 my-2 border-t border-border/60" />
                   )}
-                  <div className="flex flex-col gap-1">
+                  <div
+                    className={cn(
+                      "flex flex-col gap-1 overflow-hidden transition-all duration-200",
+                      sidebarOpen && !isOpen ? "max-h-0 opacity-0 mt-0" : "max-h-[2000px] opacity-100 mt-1"
+                    )}
+                  >
                     {visible.map((item) => {
                       const isActive = location.pathname === item.href;
                       const linkContent = (
