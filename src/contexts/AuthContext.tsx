@@ -85,7 +85,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (currentSession?.user) {
           setIsLoading(true);
           setTimeout(() => {
-            fetchProfile(currentSession.user.id).finally(() => setIsLoading(false));
+            fetchProfile(currentSession.user.id).then((nextRoles) => {
+              enforceStaff2FAOnRestore(event, currentSession.user.id, nextRoles);
+            }).finally(() => setIsLoading(false));
           }, 0);
         } else {
           setProfile(null);
@@ -108,7 +110,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser(existingSession?.user ?? null);
 
       if (existingSession?.user) {
-        fetchProfile(existingSession.user.id).finally(() => {
+        fetchProfile(existingSession.user.id).then((nextRoles) => {
+          enforceStaff2FAOnRestore('INITIAL_SESSION', existingSession.user.id, nextRoles);
+        }).finally(() => {
           setIsLoading(false);
         });
       } else {
