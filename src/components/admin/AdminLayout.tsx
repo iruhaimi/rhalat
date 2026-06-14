@@ -36,7 +36,8 @@ import {
       History,
       ClipboardList,
       Globe,
-      BookOpen
+      BookOpen,
+      Building2
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
