@@ -1,11 +1,44 @@
-Plan: إزالة زر Google Sign-In من الهيدر
+## تحسين تصميم بوابة دخول الموظفين
 
-**Goal:** Remove the Google sign-in icon/button that appears beside the "تسجيل الدخول" (Login) button in the Arabic header.
+إعادة تصميم صفحة `/portal-x7k9m2` (ملف `src/pages/SecureStaffAuth.tsx`) بهوية أزرق فاتح أنيقة مع تأثيرات متوسطة، مع الحفاظ الكامل على المنطق الأمني (CAPTCHA، 2FA، Recovery، Unlock، Lockout).
 
-**Changes:**
-1. **src/components/layout/HeaderArabic.tsx**
-   - Remove line 187: `<GoogleSignInButton iconOnly ... />`
-   - Remove line 18: `import GoogleSignInButton from '@/components/auth/GoogleSignInButton';` (if unused after removal)
-   - No other logic or UI changes.
+### الاتجاه البصري
+- خلفية فاتحة متدرجة: من `slate-50` إلى `blue-50` مع لمسة `sky-100`، بدلاً من الأسود الداكن الحالي.
+- شبكة ناعمة (grid pattern) خفيفة جداً + كرتان ضوئيتان متوهجتان (blur orbs) باللون الأزرق السماوي في الزوايا.
+- البطاقة: زجاجية (glassmorphism) — `bg-white/80 backdrop-blur-xl`، حواف `rounded-2xl`، ظل ناعم متعدد الطبقات، وحد رفيع `border-blue-100`.
 
-**Impact:** The "G" Google icon will no longer appear to the left of the "تسجيل الدخول" button on desktop. Mobile nav retains its own Google sign-in button inside the drawer, which is unaffected. All other header elements remain unchanged.
+### رأس البطاقة
+- شعار الموقع داخل دائرة بيضاء مع توهج أزرق خفيف.
+- شارة أمان صغيرة (Shield + "دخول آمن") بخلفية `bg-blue-50` ونص `text-blue-700`.
+- العنوان "بوابة الموظفين" بخط عريض داكن، والوصف بلون `slate-500`.
+
+### الحقول
+- تسميات واضحة بمحاذاة يمين (RTL).
+- حقول مع أيقونات Mail/Lock داخلية، ارتفاع مريح `h-12`، حواف `rounded-xl`، تركيز بحلقة زرقاء `focus:ring-2 ring-blue-500/30`.
+- زر إظهار/إخفاء كلمة المرور أنيق.
+
+### الأزرار والحالات
+- زر الدخول الرئيسي: تدرّج `from-blue-600 to-blue-500`، نص أبيض، أيقونة قفل، حالة تحميل بـ Loader2، تأثير hover خفيف (رفع + ظل أزرق).
+- روابط ثانوية (نسيت كلمة المرور / طلب إلغاء قفل / رمز استرداد) بشكل أنيق تحت الزر مفصولة بفواصل عمودية.
+- تنبيهات (خطأ/قفل) بألوان دلالية حديثة: أحمر/كهرماني ناعم على خلفية فاتحة مع أيقونة.
+
+### الحركة (framer-motion، شدة متوسطة)
+- ظهور البطاقة بحركة `fade + slide-up` لمرة واحدة عند التحميل.
+- نبض خفيف جداً على أيقونة الدرع.
+- انتقال سلس عند التبديل بين شاشات (2FA / Recovery / Unlock / Recovery Codes).
+
+### التطبيق على الشاشات الفرعية الأربعة
+نفس نظام الخلفية والبطاقة الزجاجية يُطبّق على:
+1. شاشة 2FA (`TwoFactorVerification` wrapper).
+2. شاشة عرض رموز الاسترداد.
+3. شاشة التحقق برمز الاسترداد.
+4. شاشة طلب إلغاء القفل + زر الرجوع.
+
+### تفاصيل تقنية
+- التعديل محصور في `src/pages/SecureStaffAuth.tsx` فقط (طبقة العرض).
+- لا تغيير على: استدعاءات RPC، منطق lockout، CAPTCHA، إنشاء/حفظ recovery codes، أو أي مسار أمني.
+- الحفاظ على `NoIndex` والمكوّن `AdvancedCaptcha` كما هما.
+- استخدام رموز التصميم الموجودة قدر الإمكان (primary, muted, ring) بدلاً من ألوان حرفية حين يتوافق ذلك مع الأزرق الفاتح المطلوب.
+
+### مخرجات النتيجة
+بوابة دخول موظفين بمظهر فاتح، احترافي، حديث ومريح للعين، مع إبراز الإحساس الأمني عبر شارات ولمسات زرقاء دون الإفراط في التأثيرات.
