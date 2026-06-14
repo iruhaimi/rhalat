@@ -78,6 +78,10 @@ export default function FooterArabic() {
               </div>
               <div className="space-y-1.5 text-sm text-foreground">
                 <div className="flex items-center justify-between gap-2">
+                  <span className="text-muted-foreground">فئة الترخيص</span>
+                  <span className="font-bold text-slate-900">وكالة سفر وسياحة</span>
+                </div>
+                <div className="flex items-center justify-between gap-2">
                   <span className="text-muted-foreground">ترخيص</span>
                   <span className="font-bold tabular-nums text-slate-900" dir="ltr">73100234</span>
                 </div>
