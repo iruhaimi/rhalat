@@ -183,7 +183,6 @@ export default function HeaderArabic() {
               </DropdownMenu>
             ) : (
               <>
-                <GoogleSignInButton iconOnly className="border-border/50 hover:border-primary/30" />
                 <Button variant="ghost" asChild className="rounded-full">
                   <Link to="/auth">{t('nav.signIn')}</Link>
                 </Button>
