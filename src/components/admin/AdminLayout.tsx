@@ -36,7 +36,8 @@ import {
       History,
       ClipboardList,
       Globe,
-      BookOpen
+      BookOpen,
+      Building2
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -274,6 +275,12 @@ export default function AdminLayout() {
           title: 'إدارة الـ Footer',
           icon: PanelBottom,
           href: '/admin/footer',
+          show: isAdmin && isSuperAdmin,
+        },
+        {
+          title: 'إدارة الشركاء',
+          icon: Building2,
+          href: '/admin/partners',
           show: isAdmin && isSuperAdmin,
         },
         {
