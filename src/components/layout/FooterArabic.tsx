@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { Mail, Phone, Clock, Facebook, Twitter, Instagram, BadgeCheck } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useFooterSettings } from '@/hooks/useFooterSettings';
+import { parseWorkingHours, formatWorkingHours } from '@/lib/workingHours';
 import logo from '@/assets/logo.png.asset.json';
 
 // TikTok icon component
@@ -133,7 +134,25 @@ export default function FooterArabic() {
             <div className="mt-4 space-y-3">
               {contactSettings.map((item) => {
                 const icon = getIconComponent(item.icon, "h-4 w-4 flex-shrink-0");
-                
+
+                if (item.key === 'working_hours') {
+                  const parsed = parseWorkingHours(item.value);
+                  const lines = parsed ? formatWorkingHours(parsed, 'ar') : [item.value];
+                  return (
+                    <div
+                      key={item.id}
+                      className="flex items-start gap-2 text-sm text-muted-foreground"
+                    >
+                      <span className="mt-0.5">{icon}</span>
+                      <div className="space-y-0.5">
+                        {lines.map((line, idx) => (
+                          <div key={idx}>{line}</div>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                }
+
                 if (item.url) {
                   return (
                     <a 
