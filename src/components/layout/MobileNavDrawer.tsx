@@ -183,11 +183,6 @@ export default function MobileNavDrawer({ isOpen, onClose }: MobileNavDrawerProp
                         >
                           <Icon className="h-5 w-5 flex-shrink-0" />
                           <span>{item.name}</span>
-                          {item.href === '/offers' && (
-                            <span className="mr-auto bg-destructive text-white text-xs px-2 py-0.5 rounded-full">
-                              جديد
-                            </span>
-                          )}
                         </Link>
                       </motion.li>
                     );
