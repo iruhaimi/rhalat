@@ -61,6 +61,7 @@ const SensitiveOperations = lazy(() => import("@/pages/admin/SensitiveOperations
 const OwnerSettings = lazy(() => import("@/pages/admin/OwnerSettings"));
 const DocumentAccessLogs = lazy(() => import("@/pages/admin/DocumentAccessLogs"));
 const FooterManagement = lazy(() => import("@/pages/admin/FooterManagement"));
+const PartnersManagement = lazy(() => import("@/pages/admin/PartnersManagement"));
 const StaffAuditLog = lazy(() => import("@/pages/admin/StaffAuditLog"));
 const EmailLogsManagement = lazy(() => import("@/pages/admin/EmailLogsManagement"));
 const PortalSecurity = lazy(() => import("@/pages/admin/PortalSecurity"));
