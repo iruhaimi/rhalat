@@ -165,12 +165,13 @@ const handler = async (req: Request): Promise<Response> => {
     };
 
     try {
-      const functionInvokeKey = isJwtLike(supabaseAnonKey) ? supabaseAnonKey : PUBLIC_ANON_JWT;
+      // Use service_role for server-to-server invocation. The send-transactional-email
+      // function's JWT gate allows service_role to send any template to any recipient.
       const emailResponse = await fetch(`${supabaseUrl}/functions/v1/send-transactional-email`, {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${functionInvokeKey}`,
-          apikey: functionInvokeKey,
+          Authorization: `Bearer ${supabaseServiceKey}`,
+          apikey: supabaseServiceKey,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
