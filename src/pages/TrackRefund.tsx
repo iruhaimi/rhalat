@@ -6,9 +6,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
-import FloatingWhatsApp from '@/components/layout/FloatingWhatsApp';
 import { filterArabicChars } from '@/lib/inputFilters';
 import {
   Search,
@@ -137,7 +134,6 @@ export default function TrackRefund() {
   return (
     <div className="flex min-h-screen flex-col">
       <SEO title="تتبع طلب الاسترداد — عطلات رحلاتكم" description="تابع حالة طلب الاسترداد الخاص بك في أي وقت." path="/track-refund" />
-      <Header />
       <main className="flex-1">
         <div className="min-h-screen bg-canvas py-12">
           <div className="container max-w-2xl mx-auto px-4">
@@ -340,8 +336,6 @@ export default function TrackRefund() {
           </div>
         </div>
       </main>
-      <Footer />
-      <FloatingWhatsApp />
     </div>
   );
 }
