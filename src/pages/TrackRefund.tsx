@@ -6,8 +6,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import Footer from '@/components/layout/Footer';
-import FloatingWhatsApp from '@/components/layout/FloatingWhatsApp';
 import { filterArabicChars } from '@/lib/inputFilters';
 import {
   Search,
