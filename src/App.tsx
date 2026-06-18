@@ -17,6 +17,7 @@ import HomeArabic from "@/pages/HomeArabic";
 import Auth from "@/pages/Auth";
 import NotFound from "@/pages/NotFound";
 import DynamicPortalRoute from "@/components/DynamicPortalRoute";
+import GTagMonitor from "@/components/analytics/GTagMonitor";
 
 // Public Pages — lazy
 const Destinations = lazy(() => import("@/pages/Destinations"));
@@ -44,6 +45,7 @@ const BlogPost = lazy(() => import("@/pages/BlogPost"));
 const Tourism = lazy(() => import("@/pages/Tourism"));
 const TourismDetail = lazy(() => import("@/pages/TourismDetail"));
 const OfficialEmbassies = lazy(() => import("@/pages/OfficialEmbassies"));
+const GTagCheck = lazy(() => import("@/pages/GTagCheck"));
 
 // Admin — lazy
 const AdminLayout = lazy(() => import("@/components/admin/AdminLayout"));
@@ -115,6 +117,7 @@ const App = () => (
           <Toaster />
           <Sonner />
           <BrowserRouter>
+            <GTagMonitor />
             <Suspense fallback={<RouteFallback />}>
             <Routes>
               {/* Public Routes with Main Layout */}
@@ -150,6 +153,7 @@ const App = () => (
               <Route path="/auth" element={<Auth />} />
               <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/install" element={<Install />} />
+              <Route path="/__gtag-check" element={<GTagCheck />} />
 
               {/* Admin Routes */}
               <Route 
