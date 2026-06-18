@@ -101,6 +101,27 @@ export default function Step6Payment() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Fire begin_checkout once when the customer reaches the payment step
+  useEffect(() => {
+    trackConversion('begin_checkout', {
+      value: grandTotal,
+      currency: 'SAR',
+      items: [
+        {
+          item_id: applicationData.visaTypeId || 'visa',
+          item_name: applicationData.visaTypeName || 'Visa Application',
+          item_category: applicationData.countryName || undefined,
+          quantity:
+            applicationData.travelers.adults +
+            applicationData.travelers.children +
+            applicationData.travelers.infants,
+          price: grandTotal,
+        },
+      ],
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   
   const { serviceTotal, governmentTotal, grandTotal, breakdown } = calculateTotal();
   
