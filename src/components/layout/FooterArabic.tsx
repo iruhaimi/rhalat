@@ -4,6 +4,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { useFooterSettings } from '@/hooks/useFooterSettings';
 import { parseWorkingHours, formatWorkingHours } from '@/lib/workingHours';
 import logo from '@/assets/logo.png.asset.json';
+import ComplianceDisclaimer from '@/components/layout/ComplianceDisclaimer';
 
 // TikTok icon component
 const TikTokIcon = ({ className }: { className?: string }) => (
@@ -214,6 +215,9 @@ export default function FooterArabic() {
             </p>
           </div>
         )}
+
+        {/* Google Ads compliance disclaimer — required, do not remove */}
+        <ComplianceDisclaimer variant="footer" />
       </div>
     </footer>
   );
