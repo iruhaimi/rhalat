@@ -10,18 +10,15 @@
  */
 export const LEGAL = {
   /** Legal name of the operating company (Arabic). */
-  companyNameAr: 'شركة عطلات رحلاتكم للسياحة والسفر',
+  companyNameAr: 'وكالة عطلات رحلاتكم للسفر والسياحة',
   /** Legal name of the operating company (English). */
   companyNameEn: 'Rahalatukum Travel & Tourism Co.',
   /** Saudi Ministry of Tourism license number. */
   tourismLicense: '73100234',
   /** Saudi Ministry of Commerce — Commercial Registration. */
   commercialRegistration: '7010581259',
-  /**
-   * Saudi VAT (ZATCA) registration number — 15 digits.
-   * TODO: replace placeholder with the real VAT number from ZATCA.
-   */
-  vatNumber: '300000000000003',
+  /** Saudi VAT (ZATCA) registration number — 15 digits. */
+  vatNumber: '302009616300003',
   /** Brand domain shown in legal text. */
   domain: 'visafaster.com',
   /** Saudi MoFA official consular services page (used in disclaimers). */
