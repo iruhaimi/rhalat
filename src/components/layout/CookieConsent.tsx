@@ -7,6 +7,17 @@ import { Link } from 'react-router-dom';
 
 const COOKIE_CONSENT_KEY = 'cookie-consent-accepted';
 
+function updateConsentMode(opts: { analytics: boolean; marketing: boolean }) {
+  const w = window as any;
+  if (typeof w.gtag !== 'function') return;
+  w.gtag('consent', 'update', {
+    ad_storage: opts.marketing ? 'granted' : 'denied',
+    ad_user_data: opts.marketing ? 'granted' : 'denied',
+    ad_personalization: opts.marketing ? 'granted' : 'denied',
+    analytics_storage: opts.analytics ? 'granted' : 'denied',
+  });
+}
+
 export default function CookieConsent() {
   const { language } = useLanguage();
   const isRTL = language === 'ar';
@@ -25,6 +36,11 @@ export default function CookieConsent() {
       // Show banner after a short delay for better UX
       const timer = setTimeout(() => setIsVisible(true), 1000);
       return () => clearTimeout(timer);
+    } else {
+      try {
+        const saved = JSON.parse(hasConsented);
+        updateConsentMode({ analytics: !!saved.analytics, marketing: !!saved.marketing });
+      } catch {}
     }
   }, []);
 
@@ -36,6 +52,7 @@ export default function CookieConsent() {
       timestamp: new Date().toISOString(),
     };
     localStorage.setItem(COOKIE_CONSENT_KEY, JSON.stringify(consent));
+    updateConsentMode({ analytics: true, marketing: true });
     setIsVisible(false);
   };
 
@@ -46,6 +63,7 @@ export default function CookieConsent() {
       timestamp: new Date().toISOString(),
     };
     localStorage.setItem(COOKIE_CONSENT_KEY, JSON.stringify(consent));
+    updateConsentMode({ analytics: preferences.analytics, marketing: preferences.marketing });
     setIsVisible(false);
   };
 
@@ -57,6 +75,7 @@ export default function CookieConsent() {
       timestamp: new Date().toISOString(),
     };
     localStorage.setItem(COOKIE_CONSENT_KEY, JSON.stringify(consent));
+    updateConsentMode({ analytics: false, marketing: false });
     setIsVisible(false);
   };
 
