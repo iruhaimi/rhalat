@@ -150,8 +150,8 @@ export default function HeroSection() {
               </div>
               <p className="font-body-ar text-sm opacity-75 leading-relaxed max-w-[260px]">
                 {isRTL
-                  ? 'نلتزم بتقديم أسرع خدمة إصدار تأشيرات في المنطقة بضمان كامل.'
-                  : 'The fastest visa processing in the region — guaranteed.'}
+                  ? 'نسعى لتقديم خدمة سريعة عالية الجودة لتجهيز ملفات التأشيرات في المنطقة.'
+                  : 'We strive to deliver fast, high-quality visa file preparation in the region.'}
               </p>
             </div>
 
@@ -192,10 +192,10 @@ export default function HeroSection() {
               {getSetting('stat_success_rate', '98%', '98%')}
             </div>
             <h4 className="font-heading-ar font-extrabold text-navy">
-              {isRTL ? 'نسبة النجاح' : 'Success rate'}
+              {isRTL ? 'معدل قبول الملفات' : 'File approval rate'}
             </h4>
             <p className="font-body-ar text-xs text-navy/60 mt-2 max-w-[180px]">
-              {isRTL ? 'أعلى معدل قبول للتأشيرات في السوق' : 'Highest approval rate in the market'}
+              {isRTL ? 'إحصائية تاريخية للملفات المؤهلة (لا يُعد ضماناً)' : 'Historical stat for eligible files (not a guarantee)'}
             </p>
           </div>
 

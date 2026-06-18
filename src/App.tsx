@@ -43,6 +43,7 @@ const Blog = lazy(() => import("@/pages/Blog"));
 const BlogPost = lazy(() => import("@/pages/BlogPost"));
 const Tourism = lazy(() => import("@/pages/Tourism"));
 const TourismDetail = lazy(() => import("@/pages/TourismDetail"));
+const OfficialEmbassies = lazy(() => import("@/pages/OfficialEmbassies"));
 
 // Admin — lazy
 const AdminLayout = lazy(() => import("@/components/admin/AdminLayout"));
@@ -142,6 +143,7 @@ const App = () => (
                 <Route path="/tourism/:id" element={<TourismDetail />} />
                 <Route path="/blog" element={<Blog />} />
                 <Route path="/blog/:slug" element={<BlogPost />} />
+                <Route path="/official-embassies" element={<OfficialEmbassies />} />
               </Route>
 
               {/* Auth Routes */}
