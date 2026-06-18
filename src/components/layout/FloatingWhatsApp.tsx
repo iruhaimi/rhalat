@@ -1,5 +1,6 @@
 import { MessageCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { trackConversion } from '@/lib/gtagEvents';
 
 export default function FloatingWhatsApp() {
   const phoneNumber = '966562525665';
@@ -7,11 +8,16 @@ export default function FloatingWhatsApp() {
   
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
 
+  const handleClick = () => {
+    trackConversion('generate_lead', { source: 'floating_whatsapp' });
+  };
+
   return (
     <motion.a
       href={whatsappUrl}
       target="_blank"
       rel="noopener noreferrer"
+      onClick={handleClick}
       className="fixed z-50 flex items-center gap-2 bg-[#25D366] text-white px-4 py-3 rounded-full shadow-lg hover:bg-[#20BD5A] transition-all hover:scale-105 group"
       style={{ bottom: 'calc(1.5rem + var(--safe-area-bottom, 0px))', left: '1.5rem' }}
       initial={{ scale: 0, opacity: 0 }}

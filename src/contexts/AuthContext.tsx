@@ -159,6 +159,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       },
     });
 
+    if (!error) {
+      try {
+        const { trackConversion } = await import('@/lib/gtagEvents');
+        trackConversion('sign_up', { method: 'email' });
+      } catch {}
+    }
+
     return { error };
   };
 
