@@ -39,6 +39,7 @@ import {
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { normalizeSaudiPhone, formatSaudiPhoneSpaced } from '@/lib/phone';
+import { trackConversion, setEnhancedConversionUserData } from '@/lib/gtagEvents';
 
 const TERMS_VERSION = 'v2026.1';
 
@@ -98,6 +99,27 @@ export default function Step6Payment() {
     if (applicationData.submissionMethod !== 'online') {
       updateApplicationData({ submissionMethod: 'online' });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Fire begin_checkout once when the customer reaches the payment step
+  useEffect(() => {
+    trackConversion('begin_checkout', {
+      value: grandTotal,
+      currency: 'SAR',
+      items: [
+        {
+          item_id: applicationData.visaTypeId || 'visa',
+          item_name: applicationData.visaTypeName || 'Visa Application',
+          item_category: applicationData.countryName || undefined,
+          quantity:
+            applicationData.travelers.adults +
+            applicationData.travelers.children +
+            applicationData.travelers.infants,
+          price: grandTotal,
+        },
+      ],
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   
@@ -288,6 +310,19 @@ export default function Step6Payment() {
         description: `رقم طلبك: ${appNumber}. سيتواصل معك موظفنا عبر واتساب`,
       });
 
+      // Conversion: lead via WhatsApp (no payment captured online)
+      trackConversion('submit_application', {
+        value: grandTotal,
+        currency: 'SAR',
+        transaction_id: appNumber,
+        method: 'whatsapp',
+      });
+      trackConversion('generate_lead', {
+        value: grandTotal,
+        currency: 'SAR',
+        transaction_id: appNumber,
+      });
+
       setTimeout(() => {
         resetApplication();
         navigate(`/payment-success?app=${appNumber}&via=whatsapp`);
@@ -388,6 +423,46 @@ export default function Step6Payment() {
 
       // Send confirmation email (non-blocking)
       await sendConfirmationEmail(appNumber, 'online', methodLabel);
+
+      // Enhanced Conversions: attach hashed identifiers before purchase fires
+      setEnhancedConversionUserData({
+        email: customerEmail || undefined,
+        phone_number: customerPhone
+          ? `+966${customerPhone.replace(/^0+/, '')}`
+          : undefined,
+        address: customerName
+          ? {
+              first_name: customerName.split(' ')[0],
+              last_name: customerName.split(' ').slice(1).join(' ') || undefined,
+              country: 'SA',
+            }
+          : undefined,
+      });
+      // Primary conversion: paid purchase
+      trackConversion('purchase', {
+        value: grandTotal,
+        currency: 'SAR',
+        transaction_id: appNumber,
+        payment_type: applicationData.paymentMethod,
+        items: [
+          {
+            item_id: applicationData.visaTypeId || 'visa',
+            item_name: applicationData.visaTypeName || 'Visa Application',
+            item_category: applicationData.countryName || undefined,
+            quantity:
+              applicationData.travelers.adults +
+              applicationData.travelers.children +
+              applicationData.travelers.infants,
+            price: grandTotal,
+          },
+        ],
+      });
+      trackConversion('submit_application', {
+        value: grandTotal,
+        currency: 'SAR',
+        transaction_id: appNumber,
+        method: 'online',
+      });
 
       navigate(`/payment-success?app=${appNumber}`);
       setTimeout(() => resetApplication(), 1000);
