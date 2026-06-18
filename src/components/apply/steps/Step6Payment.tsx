@@ -563,6 +563,39 @@ export default function Step6Payment() {
               </Badge>
             </CardContent>
           </Card>
+
+          {/* Fee transparency notice — required by Google Ads "Government Documents" policy */}
+          <div className="rounded-xl border border-amber-200 bg-amber-50/70 dark:bg-amber-950/20 dark:border-amber-900/40 p-4 text-xs sm:text-sm text-amber-900 dark:text-amber-100 leading-relaxed">
+            <div className="font-bold mb-1.5 flex items-center gap-1.5">
+              <AlertCircle className="w-4 h-4" />
+              {direction === 'rtl' ? 'إفصاح الرسوم' : 'Fee transparency'}
+            </div>
+            {direction === 'rtl' ? (
+              <p>
+                المبلغ أعلاه يشمل <strong>رسوم خدمة Visafaster</strong> فقط (تنسيق واستشارة وتجهيز الملف).
+                {governmentTotal > 0 && !applicationData.visaFeesIncluded && (
+                  <> رسوم التأشيرة الحكومية الرسمية تُدفع بشكل منفصل للسفارة وليست إيراداً لنا.</>
+                )}
+                {' '}يمكنك التقديم على التأشيرة مباشرة عبر{' '}
+                <Link to="/official-embassies" className="font-semibold underline">
+                  المواقع الحكومية الرسمية
+                </Link>{' '}
+                بتكلفة أقل أو مجاناً.
+              </p>
+            ) : (
+              <p>
+                The amount above covers <strong>Visafaster service fees only</strong> (coordination, consultancy, file preparation).
+                {governmentTotal > 0 && !applicationData.visaFeesIncluded && (
+                  <> Official government visa fees are paid separately to the embassy and are not revenue to us.</>
+                )}
+                {' '}You may apply directly through the{' '}
+                <Link to="/official-embassies" className="font-semibold underline">
+                  official government websites
+                </Link>{' '}
+                at a lower cost or free.
+              </p>
+            )}
+          </div>
         </div>
 
         {/* Right column: payment */}
