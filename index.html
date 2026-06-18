@@ -15,17 +15,38 @@
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       window.gtag = window.gtag || gtag;
-      gtag('consent', 'default', {
-        ad_storage: 'denied',
-        ad_user_data: 'denied',
-        ad_personalization: 'denied',
-        analytics_storage: 'denied',
-        functionality_storage: 'granted',
-        security_storage: 'granted',
-        wait_for_update: 500
-      });
-      gtag('set', 'ads_data_redaction', true);
-      gtag('set', 'url_passthrough', true);
+      // Tag Assistant debug override: ?ta_debug=1 grants consent so Tag Assistant
+      // can detect the tag fully. Persisted in localStorage. ?ta_debug=0 clears it.
+      // Production users are unaffected — defaults remain 'denied'.
+      var __taDebug = false;
+      try {
+        var __p = new URLSearchParams(window.location.search);
+        if (__p.get('ta_debug') === '1') localStorage.setItem('ta_debug', '1');
+        if (__p.get('ta_debug') === '0') localStorage.removeItem('ta_debug');
+        __taDebug = localStorage.getItem('ta_debug') === '1';
+      } catch (e) {}
+      if (__taDebug) {
+        gtag('consent', 'default', {
+          ad_storage: 'granted',
+          ad_user_data: 'granted',
+          ad_personalization: 'granted',
+          analytics_storage: 'granted',
+          functionality_storage: 'granted',
+          security_storage: 'granted'
+        });
+      } else {
+        gtag('consent', 'default', {
+          ad_storage: 'denied',
+          ad_user_data: 'denied',
+          ad_personalization: 'denied',
+          analytics_storage: 'denied',
+          functionality_storage: 'granted',
+          security_storage: 'granted',
+          wait_for_update: 500
+        });
+        gtag('set', 'ads_data_redaction', true);
+        gtag('set', 'url_passthrough', true);
+      }
     </script>
 
     <!-- Google tag (gtag.js) — Google Ads AW-16509107883 -->
