@@ -39,6 +39,7 @@ import {
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { normalizeSaudiPhone, formatSaudiPhoneSpaced } from '@/lib/phone';
+import { trackConversion, setEnhancedConversionUserData } from '@/lib/gtagEvents';
 
 const TERMS_VERSION = 'v2026.1';
 
