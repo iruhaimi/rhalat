@@ -2,14 +2,16 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import SEO from '@/components/seo/SEO';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { Link } from 'react-router-dom';
+import { LEGAL } from '@/config/legal';
 import { 
   FileText, 
   Scale, 
   AlertTriangle,
   CheckCircle2,
   XCircle,
-  Info
+  Info,
+  ExternalLink
 } from 'lucide-react';
 
 export default function Terms() {
@@ -178,13 +180,13 @@ Last updated: January 2025`
       titleEn: 'Contact Us',
       contentAr: `إذا كان لديك أي أسئلة حول هذه الشروط والأحكام، يرجى الاتصال بنا:
 
-البريد الإلكتروني: info@rhalat.com
-الهاتف: 562525665
+البريد الإلكتروني: info@visafaster.com
+الهاتف: +966 56 252 5665
 العنوان: الرياض - حي الربيع - شارع أبي بن معاذ الأنصاري`,
       contentEn: `If you have any questions about these terms and conditions, please contact us:
 
-Email: info@rhalat.com
-Phone: 562525665
+Email: info@visafaster.com
+Phone: +966 56 252 5665
 Address: Riyadh - Al-Rabi' neighborhood - Ubay Bin Moaath Alansari Rd`
     },
   ];
@@ -192,6 +194,53 @@ Address: Riyadh - Al-Rabi' neighborhood - Ubay Bin Moaath Alansari Rd`
   return (
     <div className="min-h-screen">
       <SEO title="الشروط والأحكام — عطلات رحلاتكم" description="اطّلع على الشروط والأحكام الخاصة باستخدام خدمات منصة عطلات رحلاتكم للتأشيرات." path="/terms" />
+
+      {/* PROMINENT DISCLAIMER — Above the fold (Google compliance 2026) */}
+      <section
+        className="border-y-2 border-amber-500 bg-amber-50 dark:bg-amber-950/40"
+        dir={isRTL ? 'rtl' : 'ltr'}
+        aria-label={isRTL ? 'إخلاء مسؤولية' : 'Disclaimer'}
+      >
+        <div className="container-section py-5 md:py-6">
+          <div className="flex items-start gap-3 md:gap-4">
+            <AlertTriangle className="w-6 h-6 md:w-7 md:h-7 flex-shrink-0 text-amber-600 dark:text-amber-400 mt-0.5" aria-hidden="true" />
+            <div className="space-y-2 text-amber-950 dark:text-amber-100">
+              <h2 className="text-base md:text-lg font-bold leading-snug">
+                {isRTL
+                  ? 'إخلاء مسؤولية مهم — اقرأ قبل الاستمرار'
+                  : 'Important Disclaimer — Read Before Continuing'}
+              </h2>
+              <ul className="space-y-1.5 text-sm md:text-base font-medium leading-relaxed">
+                <li>
+                  {isRTL
+                    ? 'نحن وكالة سفر خاصة مرخّصة، ولسنا جهة حكومية ولا تابعين لأي سفارة أو قنصلية.'
+                    : 'We are a privately-owned licensed travel agency. We are NOT a government entity or affiliated with any embassy or consulate.'}
+                </li>
+                <li>
+                  {isRTL
+                    ? 'الرسوم المدفوعة لنا هي رسوم خدمة (استشارة + تجهيز ملف) إضافة إلى رسوم التأشيرة الحكومية الرسمية.'
+                    : 'Fees paid to us are service fees (consultancy + file preparation) in addition to the official government visa fees.'}
+                </li>
+                <li>
+                  {isRTL
+                    ? 'يمكنك الحصول على التأشيرة مباشرة عبر المواقع الحكومية الرسمية بتكلفة أقل أو مجاناً.'
+                    : 'You may obtain the visa directly via official government websites, typically at a lower cost or for free.'}
+                </li>
+              </ul>
+              <div className="pt-1">
+                <Link
+                  to="/official-embassies"
+                  className="inline-flex items-center gap-1.5 text-sm md:text-base font-bold text-amber-900 dark:text-amber-200 underline underline-offset-4 hover:no-underline"
+                >
+                  {isRTL ? 'روابط المواقع الرسمية للسفارات' : 'Official embassy links'}
+                  <ExternalLink className="w-4 h-4" aria-hidden="true" />
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground py-16">
         <div className="container-section text-center">
@@ -203,8 +252,8 @@ Address: Riyadh - Al-Rabi' neighborhood - Ubay Bin Moaath Alansari Rd`
           </h1>
           <p className="text-lg opacity-90">
             {isRTL 
-              ? 'آخر تحديث: يناير 2025'
-              : 'Last updated: January 2025'
+              ? 'آخر تحديث: يونيو 2026'
+              : 'Last updated: June 2026'
             }
           </p>
         </div>
@@ -212,6 +261,52 @@ Address: Riyadh - Al-Rabi' neighborhood - Ubay Bin Moaath Alansari Rd`
 
       <div className="container-section py-12">
         <div className="max-w-4xl mx-auto">
+          {/* Regulatory Disclosure */}
+          <Card className="mb-8 border-2 border-primary/30 bg-card" dir={isRTL ? 'rtl' : 'ltr'}>
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center gap-3 text-base md:text-lg" style={{ textAlign: isRTL ? 'right' : 'left' }}>
+                <FileText className="w-5 h-5 text-primary" />
+                {isRTL ? 'الإفصاح التنظيمي' : 'Regulatory Disclosure'}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <dl className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                <div>
+                  <dt className="font-semibold text-foreground">
+                    {isRTL ? 'الاسم القانوني' : 'Legal Name'}
+                  </dt>
+                  <dd className="text-muted-foreground mt-0.5">
+                    {isRTL ? LEGAL.companyNameAr : LEGAL.companyNameEn}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="font-semibold text-foreground">
+                    {isRTL ? 'رخصة وزارة السياحة' : 'Tourism License'}
+                  </dt>
+                  <dd className="text-muted-foreground mt-0.5 tabular-nums" dir="ltr">
+                    #{LEGAL.tourismLicense}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="font-semibold text-foreground">
+                    {isRTL ? 'السجل التجاري' : 'Commercial Registration'}
+                  </dt>
+                  <dd className="text-muted-foreground mt-0.5 tabular-nums" dir="ltr">
+                    #{LEGAL.commercialRegistration}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="font-semibold text-foreground">
+                    {isRTL ? 'الرقم الضريبي (VAT)' : 'VAT Registration'}
+                  </dt>
+                  <dd className="text-muted-foreground mt-0.5 tabular-nums" dir="ltr">
+                    {LEGAL.vatNumber}
+                  </dd>
+                </div>
+              </dl>
+            </CardContent>
+          </Card>
+
           {/* Quick Summary */}
           <Card className="mb-8 border-primary/20 bg-primary/5">
             <CardContent className="py-6" dir={isRTL ? 'rtl' : 'ltr'}>
