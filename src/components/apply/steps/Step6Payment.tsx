@@ -424,6 +424,46 @@ export default function Step6Payment() {
       // Send confirmation email (non-blocking)
       await sendConfirmationEmail(appNumber, 'online', methodLabel);
 
+      // Enhanced Conversions: attach hashed identifiers before purchase fires
+      setEnhancedConversionUserData({
+        email: customerEmail || undefined,
+        phone_number: customerPhone
+          ? `+966${customerPhone.replace(/^0+/, '')}`
+          : undefined,
+        address: customerName
+          ? {
+              first_name: customerName.split(' ')[0],
+              last_name: customerName.split(' ').slice(1).join(' ') || undefined,
+              country: 'SA',
+            }
+          : undefined,
+      });
+      // Primary conversion: paid purchase
+      trackConversion('purchase', {
+        value: grandTotal,
+        currency: 'SAR',
+        transaction_id: appNumber,
+        payment_type: applicationData.paymentMethod,
+        items: [
+          {
+            item_id: applicationData.visaTypeId || 'visa',
+            item_name: applicationData.visaTypeName || 'Visa Application',
+            item_category: applicationData.countryName || undefined,
+            quantity:
+              applicationData.travelers.adults +
+              applicationData.travelers.children +
+              applicationData.travelers.infants,
+            price: grandTotal,
+          },
+        ],
+      });
+      trackConversion('submit_application', {
+        value: grandTotal,
+        currency: 'SAR',
+        transaction_id: appNumber,
+        method: 'online',
+      });
+
       navigate(`/payment-success?app=${appNumber}`);
       setTimeout(() => resetApplication(), 1000);
     } catch (error: any) {
