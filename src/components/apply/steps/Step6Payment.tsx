@@ -310,6 +310,19 @@ export default function Step6Payment() {
         description: `رقم طلبك: ${appNumber}. سيتواصل معك موظفنا عبر واتساب`,
       });
 
+      // Conversion: lead via WhatsApp (no payment captured online)
+      trackConversion('submit_application', {
+        value: grandTotal,
+        currency: 'SAR',
+        transaction_id: appNumber,
+        method: 'whatsapp',
+      });
+      trackConversion('generate_lead', {
+        value: grandTotal,
+        currency: 'SAR',
+        transaction_id: appNumber,
+      });
+
       setTimeout(() => {
         resetApplication();
         navigate(`/payment-success?app=${appNumber}&via=whatsapp`);
