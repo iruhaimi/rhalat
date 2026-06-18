@@ -8,7 +8,6 @@ interface CountryRow {
   id: string;
   code: string;
   name: string;
-  name_en?: string | null;
 }
 
 // Curated mapping of country code → official visa/embassy portal.
@@ -51,7 +50,7 @@ export default function OfficialEmbassies() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('countries')
-        .select('id, code, name, name_en')
+        .select('id, code, name')
         .eq('is_active', true)
         .order('name');
       if (error) throw error;
@@ -95,11 +94,11 @@ export default function OfficialEmbassies() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
           {countries.map((c) => {
             const url = OFFICIAL_PORTALS[c.code?.toUpperCase()];
-            const displayName = isRTL ? c.name : (c.name_en || c.name);
+            const displayName = c.name;
             return (
               <a
                 key={c.id}
-                href={url || `https://www.google.com/search?q=${encodeURIComponent((c.name_en || c.name) + ' official visa government website')}`}
+                href={url || `https://www.google.com/search?q=${encodeURIComponent(c.name + ' official visa government website')}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-between gap-3 rounded-lg border border-border bg-card p-4 hover:border-brand hover:shadow-sm transition-all min-h-[60px]"
