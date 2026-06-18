@@ -5,6 +5,7 @@ import { useFooterSettings } from '@/hooks/useFooterSettings';
 import { parseWorkingHours, formatWorkingHours } from '@/lib/workingHours';
 import logo from '@/assets/logo.png.asset.json';
 import ComplianceDisclaimer from '@/components/layout/ComplianceDisclaimer';
+import { LEGAL } from '@/config/legal';
 
 // TikTok icon component
 const TikTokIcon = ({ className }: { className?: string }) => (
@@ -90,6 +91,10 @@ export default function FooterArabic() {
                 <div className="flex items-center justify-between gap-2">
                   <span className="text-muted-foreground">ترخيص وزارة التجارة</span>
                   <span className="font-bold tabular-nums text-slate-900" dir="ltr">7010581259</span>
+                </div>
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-muted-foreground">الرقم الضريبي (VAT)</span>
+                  <span className="font-bold tabular-nums text-slate-900" dir="ltr">{LEGAL.vatNumber}</span>
                 </div>
               </div>
             </div>
@@ -218,6 +223,14 @@ export default function FooterArabic() {
 
         {/* Google Ads compliance disclaimer — required, do not remove */}
         <ComplianceDisclaimer variant="footer" />
+
+        {/* Permanent compact legal line — visible even without expanding the disclaimer */}
+        <div className="mt-4 text-center text-[11px] text-muted-foreground leading-relaxed" dir="rtl">
+          {LEGAL.companyNameAr} · ترخيص سياحة:{' '}
+          <span dir="ltr" className="tabular-nums">{LEGAL.tourismLicense}</span> · س.ت:{' '}
+          <span dir="ltr" className="tabular-nums">{LEGAL.commercialRegistration}</span> · VAT:{' '}
+          <span dir="ltr" className="tabular-nums">{LEGAL.vatNumber}</span>
+        </div>
       </div>
     </footer>
   );

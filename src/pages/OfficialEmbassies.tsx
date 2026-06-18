@@ -3,6 +3,7 @@ import { ExternalLink, Info } from 'lucide-react';
 import SEO from '@/components/seo/SEO';
 import { supabase } from '@/integrations/supabase/client';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { LEGAL } from '@/config/legal';
 
 interface CountryRow {
   id: string;
@@ -87,6 +88,26 @@ export default function OfficialEmbassies() {
             : 'These are external official embassy and ministry websites. Visafaster is not responsible for their content.'}
         </p>
       </div>
+
+      {/* Saudi MoFA highlight — required reference link for KSA users */}
+      <a
+        href={LEGAL.mofaUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="mb-8 flex items-center justify-between gap-3 rounded-xl border-2 border-primary/40 bg-primary/5 p-5 hover:bg-primary/10 transition-colors"
+      >
+        <div>
+          <div className="font-bold text-foreground text-base mb-1">
+            {isRTL ? 'وزارة الخارجية السعودية — الخدمات القنصلية' : 'Saudi Ministry of Foreign Affairs — Consular Services'}
+          </div>
+          <div className="text-xs text-muted-foreground">
+            {isRTL
+              ? 'البوابة الرسمية للمواطنين والمقيمين السعوديين'
+              : 'Official portal for Saudi citizens and residents'}
+          </div>
+        </div>
+        <ExternalLink className="h-5 w-5 text-primary flex-shrink-0" />
+      </a>
 
       {isLoading ? (
         <div className="text-muted-foreground">{isRTL ? 'جارٍ التحميل...' : 'Loading...'}</div>

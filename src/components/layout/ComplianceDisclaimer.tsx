@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Info } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { LEGAL } from '@/config/legal';
 
 /**
  * Google Ads compliance disclaimer banner.
@@ -47,29 +48,55 @@ export default function ComplianceDisclaimer({ variant = 'banner' }: { variant?:
           {isRTL ? (
             <>
               <p>
-                <strong className="text-foreground">إخلاء مسؤولية:</strong> Visafaster (عطلات رحلاتكم) موقع خاص يقدم خدمات استشارية ومساعدة في تجهيز ملفات التأشيرات مقابل رسوم إضافية. نحن لسنا جهة حكومية ولا نتبع لأي سفارة أو وزارة.
+                <strong className="text-foreground">إخلاء مسؤولية:</strong> موقع <span dir="ltr">{LEGAL.domain}</span> هو منصة تابعة لـ {LEGAL.companyNameAr}، مرخصة من وزارة السياحة السعودية برقم <span dir="ltr" className="tabular-nums">{LEGAL.tourismLicense}</span> وسجل تجاري رقم <span dir="ltr" className="tabular-nums">{LEGAL.commercialRegistration}</span>. نحن وكالة سفر خاصة تقدم خدمات استشارية ومساعدة في تجهيز ملفات التأشيرة مقابل رسوم إضافية، ولسنا جهة حكومية أو تابعة لأي سفارة.
               </p>
               <p>
-                <strong className="text-foreground">شفافية الرسوم:</strong> الرسوم المدفوعة لنا هي مقابل خدمة التنسيق والاستشارة وتجهيز الملف، وليست رسوم التأشيرة الحكومية الرسمية. يمكن للعميل الحصول على التأشيرة مباشرة من خلال الموقع الحكومي الرسمي بتكلفة أقل أو مجاناً.
+                <strong className="text-foreground">شفافية الرسوم:</strong> الرسوم المدفوعة لنا هي مقابل خدمة التنسيق والاستشارة وتجهيز الملف، وليست رسوم التأشيرة الحكومية الرسمية. يمكنك الحصول على التأشيرة مباشرة عبر المواقع الحكومية الرسمية بتكلفة أقل أو مجاناً.
+              </p>
+              <p>
+                <strong className="text-foreground">الرقم الضريبي (VAT):</strong>{' '}
+                <span dir="ltr" className="tabular-nums">{LEGAL.vatNumber}</span>
               </p>
               <p>
                 <Link to="/official-embassies" className="font-semibold text-brand hover:underline">
-                  اطّلع على روابط المواقع الرسمية للسفارات والوزارات →
+                  روابط المواقع الرسمية للسفارات
                 </Link>
+                <span className="mx-2">·</span>
+                <a
+                  href={LEGAL.mofaUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-semibold text-brand hover:underline"
+                >
+                  وزارة الخارجية السعودية ↗
+                </a>
               </p>
             </>
           ) : (
             <>
               <p>
-                <strong className="text-foreground">Disclaimer:</strong> Visafaster is a private agency providing consultancy and visa file preparation services for a fee. We are not a government entity or affiliated with any embassy or ministry.
+                <strong className="text-foreground">Disclaimer:</strong> {LEGAL.domain} is operated by {LEGAL.companyNameEn}, a private agency licensed by the Saudi Ministry of Tourism (License #<span className="tabular-nums">{LEGAL.tourismLicense}</span>) and Commercial Registration #<span className="tabular-nums">{LEGAL.commercialRegistration}</span>. We provide third-party consultancy and visa application assistance for a fee and are not affiliated with any government or embassy.
               </p>
               <p>
-                <strong className="text-foreground">Fee transparency:</strong> Fees paid to us are for coordination, consultancy and file preparation services — not the official government visa fees. Visas can be obtained directly through the official government website at a lower cost or for free.
+                <strong className="text-foreground">Fee transparency:</strong> Fees paid to us are for coordination, consultancy and file preparation — not the official government visa fees. Official services are available directly from government websites, typically at a lower cost or free.
+              </p>
+              <p>
+                <strong className="text-foreground">VAT Registration:</strong>{' '}
+                <span className="tabular-nums">{LEGAL.vatNumber}</span>
               </p>
               <p>
                 <Link to="/official-embassies" className="font-semibold text-brand hover:underline">
-                  View official embassy and ministry links →
+                  Official embassy links
                 </Link>
+                <span className="mx-2">·</span>
+                <a
+                  href={LEGAL.mofaUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-semibold text-brand hover:underline"
+                >
+                  Saudi MoFA ↗
+                </a>
               </p>
             </>
           )}
