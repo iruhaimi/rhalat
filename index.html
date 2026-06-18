@@ -10,6 +10,24 @@
     <meta name="author" content="عطلات رحلاتكم" />
     <meta name="google-site-verification" content="_VrNO8ya-g2i4T7L3X2a_oEFdbehc7ZQayUc9Kmj6KY" />
 
+    <!-- Google Consent Mode v2 — default DENIED until user choice (CookieConsent.tsx updates) -->
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      window.gtag = window.gtag || gtag;
+      gtag('consent', 'default', {
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied',
+        analytics_storage: 'denied',
+        functionality_storage: 'granted',
+        security_storage: 'granted',
+        wait_for_update: 500
+      });
+      gtag('set', 'ads_data_redaction', true);
+      gtag('set', 'url_passthrough', true);
+    </script>
+
     <!-- Performance: preconnect & dns-prefetch -->
     <link rel="preconnect" href="https://hgxvwziiumjxifpgpjce.supabase.co" crossorigin />
     <link rel="dns-prefetch" href="https://hgxvwziiumjxifpgpjce.supabase.co" />
