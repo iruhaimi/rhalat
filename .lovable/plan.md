@@ -1,41 +1,59 @@
-## Why Tag Assistant reports "not found"
 
-The Google Ads tag **is** installed and **is** firing on `visafaster.com` — I verified the live HTML contains both `gtag/js?id=AW-16509107883` and `gtag('config', 'AW-16509107883', { debug_mode: true })`, and the network panel shows live `google.com/ccm/collect` and `rmkt/collect` hits for the AW ID.
+# خطة: تتبع التحويلات في Google Ads وفق أفضل الممارسات
 
-The reason Tag Assistant still says "not found" is the Consent Mode v2 setup:
+الهدف: قياس الأحداث الحقيقية المؤثرة على الإيراد (وليس مجرد Page View) لتمكين Google Ads من تحسين الحملات تلقائياً (Smart Bidding) وحساب ROAS.
 
-- `ad_storage`, `ad_user_data`, `ad_personalization`, `analytics_storage` all default to **denied**
-- `ads_data_redaction: true` strips identifiers from outgoing pings
+## الأحداث المقترحة (Conversion Events)
 
-Under these defaults the tag fires in **cookieless / redacted mode** and does not set the `_gcl_*` cookies or send the full hit Tag Assistant looks for. Tag Assistant also can't probe through the cookie banner overlay covering the page. Result: "Tag not found", even though the tag is correctly installed.
+| الحدث | متى يُطلق | القيمة | الأولوية |
+|---|---|---|---|
+| `sign_up` | عند إكمال تسجيل حساب جديد | 0 | ثانوي |
+| `begin_checkout` | عند بدء طلب تأشيرة (الدخول لمعالج التقديم) | تقديري | ثانوي |
+| `generate_lead` | عند فتح WhatsApp / إرسال نموذج تواصل | 0 | ثانوي |
+| `submit_application` | عند تقديم طلب تأشيرة بنجاح | سعر التأشيرة | **رئيسي** |
+| `purchase` | عند نجاح الدفع | المبلغ المدفوع الفعلي | **رئيسي (Primary Conversion)** |
 
-We must NOT permanently grant consent by default (that would break Consent Mode compliance for EU/PDPL). Instead, add an explicit, opt-in debug path so Tag Assistant can verify whenever needed.
+## ما سيتم تنفيذه في الكود
 
-## Plan
+1. **Helper مركزي** `src/lib/gtagEvents.ts`:
+   - `trackConversion(eventName, { value, currency, transaction_id, send_to })`
+   - يتحقق من وجود `window.gtag` ومن حالة Consent (`ad_storage = granted`)
+   - يدعم Enhanced Conversions (تمرير email/phone مشفّر تلقائياً عبر gtag)
 
-### 1. Add a Tag Assistant debug override in `index.html`
-Before the existing `gtag('consent', 'default', ...)` block, check the URL/localStorage for a debug flag. When present, set defaults to **granted** instead of denied so Tag Assistant sees the full tag fire.
+2. **ربط الأحداث بنقاط حقيقية في التطبيق**:
+   - `purchase` → بعد نجاح الدفع (callback نجاح Stripe/Paddle)
+   - `submit_application` → بعد إنشاء الطلب بحالة `pending_payment`
+   - `sign_up` → بعد تأكيد البريد الإلكتروني
+   - `generate_lead` → عند الضغط على WhatsApp / إرسال نموذج
+   - `begin_checkout` → عند الدخول لمعالج التقديم
 
-Activation methods (any one works):
-- Visit `https://visafaster.com/?ta_debug=1` once — stores `ta_debug=1` in `localStorage` for the session
-- Or set `localStorage.ta_debug = '1'` manually in DevTools
-- Clear with `?ta_debug=0` or `localStorage.removeItem('ta_debug')`
+3. **Enhanced Conversions** (موصى به من Google):
+   - تمرير `user_data` (email/phone) مع حدث `purchase` — يرفع دقة المطابقة 5-10%
+   - Google يقوم بالـ hashing تلقائياً عند استخدام gtag.js
 
-This keeps production behavior unchanged for real users (defaults remain denied) while giving us a reliable verification path.
+4. **احترام Consent Mode v2**:
+   - الأحداث لا تُرسل إلا بعد `ad_storage = granted`
+   - في وضع denied: يُرسل ping بدون بيانات شخصية (سلوك Google الافتراضي)
 
-### 2. Keep `debug_mode: true` for now
-Already in place. Leave it until Tag Assistant confirms detection, then we'll remove it in a follow-up.
+## ما يحتاجه منك بعد الموافقة
 
-### 3. Update `/__gtag-check` diagnostic page
-Show the current consent state and a one-click button to toggle `ta_debug` on/off, plus a copy-to-clipboard of the Tag Assistant URL (`https://visafaster.com/?ta_debug=1`).
+من حساب Google Ads → Tools → Conversions، أنشئ تحويلين وارسل لي:
+- **Conversion Label للـ Purchase** (شكل: `AW-16509107883/AbCdEfGhIj`)
+- **Conversion Label للـ Submit Application** (اختياري لكن مهم)
 
-### 4. Republish to visafaster.com and re-verify
-After deploy, curl the live HTML to confirm the debug override script is present, then instruct the user to:
-1. Open `https://visafaster.com/?ta_debug=1` in a fresh tab
-2. Connect Tag Assistant to that URL — it should now detect `AW-16509107883`
+بدون الـ Labels لن تظهر التحويلات في Google Ads حتى لو أُرسلت من الموقع.
 
-### Technical notes
-- Files touched: `index.html` (add ~15 lines before the consent default block), `src/pages/GTagCheck.tsx` (add toggle UI). No other code changes.
-- No impact on real users: the override only activates when the explicit flag is set.
-- Consent Mode v2 compliance remains intact for all normal traffic.
-- After Tag Assistant verifies, we'll do a small cleanup pass to remove `debug_mode: true` (one-line revert).
+## ملاحظات تقنية
+
+- لن أضيف Google Tag Manager (GTM) — نستخدم gtag.js المثبّت حالياً مباشرة، أبسط وأخف.
+- لن أكرر إرسال نفس `purchase` (نستخدم `transaction_id` لمنع التكرار من Google).
+- لن أُرسل قيماً وهمية — الأحداث بدون قيمة فعلية تأخذ `value: 0`.
+
+## ملفات ستتغيّر تقريبياً
+
+- جديد: `src/lib/gtagEvents.ts`
+- تعديل: ملفات نجاح الدفع، تقديم الطلب، التسجيل، أزرار WhatsApp، بداية معالج التقديم
+- لا تغييرات على `index.html` (gtag موجود)
+- لا تغييرات على UI
+
+هل أبدأ التنفيذ؟ وإن كانت الـ Conversion Labels جاهزة الآن أرسلها لأضعها مباشرة، وإلا سأضع placeholder واضح لاستبدالها لاحقاً.
