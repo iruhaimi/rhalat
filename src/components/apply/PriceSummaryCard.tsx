@@ -2,19 +2,24 @@ import { cn } from '@/lib/utils';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useApplication } from '@/contexts/ApplicationContext';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { Info, CheckCircle2 } from 'lucide-react';
+import { Info, CheckCircle2, ArrowLeft, ArrowRight } from 'lucide-react';
 import SARSymbol from '@/components/ui/SARSymbol';
 
 interface PriceSummaryCardProps {
   className?: string;
   showDetails?: boolean;
+  onNext?: () => void;
+  canProceed?: boolean;
+  nextLabel?: string;
 }
 
-export default function PriceSummaryCard({ className, showDetails = true }: PriceSummaryCardProps) {
+export default function PriceSummaryCard({ className, showDetails = true, onNext, canProceed, nextLabel }: PriceSummaryCardProps) {
   const { t, direction } = useLanguage();
   const { applicationData, calculateTotal } = useApplication();
   const { serviceTotal, governmentTotal, grandTotal, breakdown } = calculateTotal();
+  const ArrowNextIcon = direction === 'rtl' ? ArrowLeft : ArrowRight;
   
   const { travelers, visaFeesIncluded, visaTypeName, countryName, priceNotes, priceNotesEn } = applicationData;
   
@@ -127,13 +132,26 @@ export default function PriceSummaryCard({ className, showDetails = true }: Pric
         )}
       </div>
       
-      {totalTravelers > 0 && (
+      {totalTravelers > 0 && !onNext && (
         <div className="mt-2 sm:mt-3 text-center text-xs sm:text-sm text-muted-foreground">
           {direction === 'rtl' 
             ? `${totalTravelers} مسافر`
             : `${totalTravelers} traveler${totalTravelers > 1 ? 's' : ''}`
           }
         </div>
+      )}
+
+      {onNext && (
+        <Button
+          type="button"
+          size="lg"
+          className="w-full h-10 mt-3 gap-2 text-sm sm:text-base"
+          onClick={onNext}
+          disabled={!canProceed}
+        >
+          <span>{nextLabel || (direction === 'rtl' ? 'التالي' : 'Next')}</span>
+          <ArrowNextIcon className="w-4 h-4" />
+        </Button>
       )}
     </div>
   );

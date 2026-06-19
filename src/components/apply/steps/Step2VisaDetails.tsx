@@ -374,7 +374,11 @@ export default function Step2VisaDetails() {
         {/* Price Summary Sidebar - Desktop Only */}
         <div className="hidden lg:block lg:col-span-1">
           <div className="sticky top-24">
-            <PriceSummaryCard />
+            <PriceSummaryCard
+              onNext={goToNextStep}
+              canProceed={!!canProceed}
+              nextLabel={t('wizard.next')}
+            />
           </div>
         </div>
       </div>
@@ -403,8 +407,8 @@ export default function Step2VisaDetails() {
         </details>
       </div>
 
-      {/* Navigation Buttons - Sticky on mobile */}
-      <div className="flex gap-3 sm:gap-4 pt-1 sm:pt-2 sticky bottom-0 bg-background/95 backdrop-blur-sm pb-3 -mx-4 px-4 sm:mx-0 sm:px-0 sm:static sm:bg-transparent sm:backdrop-blur-none border-t sm:border-0 mt-2 sm:mt-0">
+      {/* Navigation Buttons - Sticky on mobile only (desktop has next in price card) */}
+      <div className="lg:hidden flex gap-3 pt-1 sticky bottom-0 bg-background/95 backdrop-blur-sm pb-3 -mx-4 px-4 border-t mt-2">
         <Button
           type="button"
           size="lg"
