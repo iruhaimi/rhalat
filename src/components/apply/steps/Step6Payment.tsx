@@ -501,40 +501,40 @@ export default function Step6Payment() {
   };
 
   return (
-    <div className="space-y-4 sm:space-y-6">
-      <div className="text-center mb-4 sm:mb-8">
-        <h2 className="text-xl sm:text-2xl font-bold">{t('wizard.step5')}</h2>
-        <p className="text-sm sm:text-base text-muted-foreground mt-2">
+    <div className="space-y-3">
+      <div className="text-center mb-2">
+        <h2 className="text-lg sm:text-xl font-bold">{t('wizard.step5')}</h2>
+        <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
           {direction === 'rtl' 
             ? 'راجع طلبك وأكمل عملية الدفع' 
             : 'Review your application and complete payment'}
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
         {/* Order Summary */}
-        <div className="space-y-3 sm:space-y-4 order-2 lg:order-1">
-          <h3 className="font-bold text-base sm:text-lg flex items-center gap-2">
-            <FileText className="w-4 h-4 sm:w-5 sm:h-5" />
+        <div className="space-y-2.5 order-2 lg:order-1">
+          <h3 className="font-bold text-sm sm:text-base flex items-center gap-2">
+            <FileText className="w-4 h-4" />
             {t('payment.summary')}
           </h3>
           
           {/* Application Details */}
           <Card>
-            <CardContent className="p-4 space-y-4">
+            <CardContent className="p-3 space-y-2.5">
               {/* Customer Info */}
-              <div className="space-y-2">
-                <div className="flex items-center gap-2 text-sm">
+              <div className="space-y-1.5">
+                <div className="flex items-center gap-2 text-xs sm:text-sm">
                   <User className="w-4 h-4 text-muted-foreground" />
                   <span className="text-muted-foreground">{t('form.fullName')}:</span>
                   <span className="font-medium">{customerName || '—'}</span>
                 </div>
-                <div className="flex items-center gap-2 text-sm">
+                <div className="flex items-center gap-2 text-xs sm:text-sm">
                   <Mail className="w-4 h-4 text-muted-foreground" />
                   <span className="text-muted-foreground">{t('form.email')}:</span>
                   <span className="font-medium" dir="ltr">{customerEmail || '—'}</span>
                 </div>
-                <div className="flex items-center gap-2 text-sm">
+                <div className="flex items-center gap-2 text-xs sm:text-sm">
                   <Phone className="w-4 h-4 text-muted-foreground" />
                   <span className="text-muted-foreground">{t('form.phone')}:</span>
                   <span className="font-medium" dir="ltr">{customerPhoneDisplay || '—'}</span>
@@ -544,19 +544,19 @@ export default function Step6Payment() {
               <Separator />
               
               {/* Visa Info */}
-              <div className="space-y-2">
-                <div className="flex items-center gap-2 text-sm">
+              <div className="space-y-1.5">
+                <div className="flex items-center gap-2 text-xs sm:text-sm">
                   <MapPin className="w-4 h-4 text-muted-foreground" />
                   <span className="text-muted-foreground">{t('form.country')}:</span>
                   <span className="font-medium">{applicationData.countryName}</span>
                 </div>
-                <div className="flex items-center gap-2 text-sm">
+                <div className="flex items-center gap-2 text-xs sm:text-sm">
                   <FileText className="w-4 h-4 text-muted-foreground" />
                   <span className="text-muted-foreground">{t('form.visaType')}:</span>
                   <span className="font-medium">{applicationData.visaTypeName}</span>
                 </div>
                 {applicationData.travelDate && (
-                  <div className="flex items-center gap-2 text-sm">
+                  <div className="flex items-center gap-2 text-xs sm:text-sm">
                     <Calendar className="w-4 h-4 text-muted-foreground" />
                     <span className="text-muted-foreground">{t('form.travelDate')}:</span>
                     <span className="font-medium">
@@ -564,7 +564,7 @@ export default function Step6Payment() {
                     </span>
                   </div>
                 )}
-                <div className="flex items-center gap-2 text-sm">
+                <div className="flex items-center gap-2 text-xs sm:text-sm">
                   <Users className="w-4 h-4 text-muted-foreground" />
                   <span className="text-muted-foreground">{t('form.travelers')}:</span>
                   <span className="font-medium">
@@ -578,9 +578,9 @@ export default function Step6Payment() {
               <Separator />
               
               {/* Price Breakdown */}
-              <div className="space-y-2">
+              <div className="space-y-1.5">
                 {applicationData.travelers.adults > 0 && (
-                  <div className="flex justify-between text-sm">
+                  <div className="flex justify-between text-xs sm:text-sm">
                     <span className="text-muted-foreground">
                       {t('pricing.adult')} × {applicationData.travelers.adults}
                     </span>
@@ -591,7 +591,7 @@ export default function Step6Payment() {
                   </div>
                 )}
                 {applicationData.travelers.children > 0 && (
-                  <div className="flex justify-between text-sm">
+                  <div className="flex justify-between text-xs sm:text-sm">
                     <span className="text-muted-foreground">
                       {t('pricing.child')} × {applicationData.travelers.children}
                     </span>
@@ -602,7 +602,7 @@ export default function Step6Payment() {
                   </div>
                 )}
                 {applicationData.travelers.infants > 0 && (
-                  <div className="flex justify-between text-sm">
+                  <div className="flex justify-between text-xs sm:text-sm">
                     <span className="text-muted-foreground">
                       {t('pricing.infant')} × {applicationData.travelers.infants}
                     </span>
@@ -613,9 +613,9 @@ export default function Step6Payment() {
                   </div>
                 )}
                 
-                <Separator className="my-2" />
+                <Separator className="my-1.5" />
                 
-                <div className="flex justify-between text-sm">
+                <div className="flex justify-between text-xs sm:text-sm">
                   <span>{direction === 'rtl' ? 'رسوم الخدمة' : 'Service Fees'}</span>
                   <span className="flex items-center gap-1">
                     {serviceTotal.toLocaleString()}
@@ -624,7 +624,7 @@ export default function Step6Payment() {
                 </div>
                 
                 {!applicationData.visaFeesIncluded && governmentTotal > 0 && (
-                  <div className="flex justify-between text-sm text-muted-foreground">
+                  <div className="flex justify-between text-xs sm:text-sm text-muted-foreground">
                     <span>{direction === 'rtl' ? 'رسوم التأشيرة (تُدفع لاحقاً)' : 'Visa Fees (to be paid later)'}</span>
                     <span className="flex items-center gap-1">
                       {governmentTotal.toLocaleString()}
@@ -633,9 +633,9 @@ export default function Step6Payment() {
                   </div>
                 )}
                 
-                <Separator className="my-2" />
+                <Separator className="my-1.5" />
                 
-                <div className="flex justify-between font-bold text-lg">
+                <div className="flex justify-between font-bold text-base sm:text-lg">
                   <span>{t('pricing.total')}</span>
                   <span className="text-primary flex items-center gap-1">
                     {grandTotal.toLocaleString()}
@@ -647,7 +647,7 @@ export default function Step6Payment() {
               <Badge 
                 variant="secondary" 
                 className={cn(
-                  "w-full justify-center py-2",
+                  "w-full justify-center py-1.5 text-xs",
                   applicationData.visaFeesIncluded 
                     ? "bg-accent/20 text-accent-foreground" 
                     : "bg-warning/20 text-warning-foreground"
@@ -662,9 +662,9 @@ export default function Step6Payment() {
           </Card>
 
           {/* Fee transparency notice — required by Google Ads "Government Documents" policy */}
-          <div className="rounded-xl border border-amber-200 bg-amber-50/70 dark:bg-amber-950/20 dark:border-amber-900/40 p-4 text-xs sm:text-sm text-amber-900 dark:text-amber-100 leading-relaxed">
-            <div className="font-bold mb-1.5 flex items-center gap-1.5">
-              <AlertCircle className="w-4 h-4" />
+          <div className="rounded-xl border border-amber-200 bg-amber-50/70 dark:bg-amber-950/20 dark:border-amber-900/40 p-2.5 text-xs text-amber-900 dark:text-amber-100 leading-snug">
+            <div className="font-bold mb-1 flex items-center gap-1.5">
+              <AlertCircle className="w-3.5 h-3.5" />
               {direction === 'rtl' ? 'إفصاح الرسوم' : 'Fee transparency'}
             </div>
             {direction === 'rtl' ? (
@@ -696,19 +696,19 @@ export default function Step6Payment() {
         </div>
 
         {/* Right column: payment */}
-        <div className="space-y-3 sm:space-y-4 order-1 lg:order-2">
+        <div className="space-y-2.5 order-1 lg:order-2">
           {/* Online payment only — WhatsApp path branches off after step 3 */}
           {true && (
             <>
               {!docsComplete && (
-                <div className="p-4 rounded-xl border-2 border-amber-300 bg-amber-50 dark:bg-amber-950/30">
-                  <div className="flex items-start gap-2 mb-2">
-                    <AlertCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+                <div className="p-2.5 rounded-xl border-2 border-amber-300 bg-amber-50 dark:bg-amber-950/30">
+                  <div className="flex items-start gap-2 mb-1.5">
+                    <AlertCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
                     <div>
-                      <h4 className="font-semibold text-amber-900 dark:text-amber-100 text-sm">
+                      <h4 className="font-semibold text-amber-900 dark:text-amber-100 text-xs sm:text-sm">
                         {direction === 'rtl' ? 'يجب رفع المستندات قبل الدفع' : 'Documents required before payment'}
                       </h4>
-                      <p className="text-xs text-amber-800 dark:text-amber-200 mt-1">
+                      <p className="text-[11px] text-amber-800 dark:text-amber-200 mt-0.5">
                         {direction === 'rtl'
                           ? 'المستندات الإجبارية: جواز السفر + الصورة الشخصية'
                           : 'Required: Passport + Personal Photo'}
@@ -719,10 +719,10 @@ export default function Step6Payment() {
                     type="button"
                     variant="outline"
                     size="sm"
-                    className="w-full gap-2 mt-2"
+                    className="w-full gap-2 mt-1.5 h-8 text-xs"
                     onClick={() => { setCurrentStep(4); window.scrollTo({ top: 0, left: 0, behavior: 'smooth' }); }}
                   >
-                    <Upload className="w-4 h-4" />
+                    <Upload className="w-3.5 h-3.5" />
                     {direction === 'rtl' ? 'العودة لرفع المستندات' : 'Go to upload documents'}
                   </Button>
                 </div>
@@ -730,20 +730,20 @@ export default function Step6Payment() {
 
               {docsComplete && (
                 <>
-                  <h3 className="font-bold text-base sm:text-lg flex items-center gap-2 pt-2">
-                    <CreditCard className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <h3 className="font-bold text-sm sm:text-base flex items-center gap-2">
+                    <CreditCard className="w-4 h-4" />
                     {t('payment.selectMethod')}
                   </h3>
                   <RadioGroup
             value={applicationData.paymentMethod}
             onValueChange={(value) => updateApplicationData({ paymentMethod: value })}
-            className="space-y-2 sm:space-y-3"
+            className="space-y-1.5"
           >
             {paymentMethods.map((method) => (
               <div
                 key={method.id}
                 className={cn(
-                  "flex items-center space-x-3 rtl:space-x-reverse p-3 sm:p-4 rounded-xl border-2 cursor-pointer transition-colors",
+                  "flex items-center space-x-2.5 rtl:space-x-reverse p-2.5 rounded-xl border-2 cursor-pointer transition-colors",
                   applicationData.paymentMethod === method.id 
                     ? "border-primary bg-primary/5" 
                     : "border-muted hover:border-primary/50"
@@ -751,30 +751,30 @@ export default function Step6Payment() {
                 onClick={() => updateApplicationData({ paymentMethod: method.id })}
               >
                 <RadioGroupItem value={method.id} id={method.id} />
-                <method.icon className="w-5 h-5 sm:w-6 sm:h-6 text-muted-foreground shrink-0" />
+                <method.icon className="w-5 h-5 text-muted-foreground shrink-0" />
                 <Label htmlFor={method.id} className="flex-1 cursor-pointer">
-                  <div className="font-medium text-sm sm:text-base">{method.label[language]}</div>
-                  <div className="text-xs sm:text-sm text-muted-foreground">{method.description[language]}</div>
+                  <div className="font-medium text-sm">{method.label[language]}</div>
+                  <div className="text-[11px] text-muted-foreground">{method.description[language]}</div>
                 </Label>
               </div>
             ))}
           </RadioGroup>
 
                   {/* Security Badges */}
-                  <div className="p-3 sm:p-4 bg-muted/30 rounded-xl">
-            <div className="flex items-center gap-2 mb-2 sm:mb-3">
-              <Shield className="w-4 h-4 sm:w-5 sm:h-5 text-accent" />
-              <span className="font-medium text-xs sm:text-sm">
+                  <div className="p-2.5 bg-muted/30 rounded-xl">
+            <div className="flex items-center gap-2 mb-1.5">
+              <Shield className="w-4 h-4 text-accent" />
+              <span className="font-medium text-xs">
                 {direction === 'rtl' ? 'دفع آمن ومشفر' : 'Secure & Encrypted Payment'}
               </span>
             </div>
-            <div className="flex items-center gap-3 sm:gap-4 text-[10px] sm:text-xs text-muted-foreground">
+            <div className="flex items-center gap-3 text-[10px] text-muted-foreground">
               <div className="flex items-center gap-1">
-                <Lock className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
+                <Lock className="w-2.5 h-2.5" />
                 <span>SSL Secured</span>
               </div>
               <div className="flex items-center gap-1">
-                <CheckCircle2 className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
+                <CheckCircle2 className="w-2.5 h-2.5" />
                 <span>PCI Compliant</span>
               </div>
             </div>
@@ -783,18 +783,18 @@ export default function Step6Payment() {
                   {/* Pay Button */}
                   <Button
             size="lg"
-            className="w-full h-12 sm:h-14 text-base sm:text-lg gap-2"
+            className="w-full h-11 sm:h-12 text-sm sm:text-base gap-2"
             onClick={handlePayment}
             disabled={!applicationData.paymentMethod || isProcessing || !applicationData.termsAccepted}
           >
             {isProcessing ? (
               <>
-                <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
-                <span className="text-sm sm:text-base">{direction === 'rtl' ? 'جاري المعالجة...' : 'Processing...'}</span>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                <span className="text-sm">{direction === 'rtl' ? 'جاري المعالجة...' : 'Processing...'}</span>
               </>
             ) : (
               <>
-                <Lock className="w-4 h-4 sm:w-5 sm:h-5" />
+                <Lock className="w-4 h-4" />
                 <span className="flex items-center gap-1 text-sm sm:text-base">
                   {t('wizard.pay')} - {grandTotal.toLocaleString()}
                   <SARSymbol size="sm" />
@@ -811,21 +811,21 @@ export default function Step6Payment() {
           {true && (
             <div
               className={cn(
-                'p-3 sm:p-4 rounded-xl border-2 transition-colors cursor-pointer',
+                'p-2.5 rounded-xl border-2 transition-colors cursor-pointer',
                 applicationData.termsAccepted
                   ? 'border-primary bg-primary/5'
                   : 'border-muted hover:border-primary/50'
               )}
               onClick={() => updateApplicationData({ termsAccepted: !applicationData.termsAccepted })}
             >
-              <div className="flex items-start gap-3">
+              <div className="flex items-start gap-2">
                 <Checkbox
                   id="terms-consent"
                   checked={applicationData.termsAccepted}
                   onCheckedChange={(checked) => updateApplicationData({ termsAccepted: checked as boolean })}
                   className="mt-0.5"
                 />
-                <Label htmlFor="terms-consent" className="cursor-pointer text-xs sm:text-sm leading-relaxed flex-1">
+                <Label htmlFor="terms-consent" className="cursor-pointer text-xs leading-snug flex-1">
                   {direction === 'rtl' ? (
                     <>
                       أوافق على{' '}

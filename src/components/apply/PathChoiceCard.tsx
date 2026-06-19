@@ -218,12 +218,12 @@ export default function PathChoiceCard({ onBack }: Props) {
   };
 
   return (
-    <div className="space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
-      <div className="text-center mb-6">
-        <h2 className="text-2xl font-bold mb-2">
+    <div className="space-y-3" dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className="text-center mb-2">
+        <h2 className="text-lg sm:text-xl font-bold mb-1">
           {isRTL ? 'كيف تريد إكمال طلبك؟' : 'How would you like to continue?'}
         </h2>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-xs sm:text-sm text-muted-foreground">
           {isRTL
             ? 'اختر الطريقة الأنسب لك — كلا الخيارين سيُنشئان رقم طلب رسمي'
             : 'Pick the method that suits you — both create an official order number'}
@@ -232,8 +232,8 @@ export default function PathChoiceCard({ onBack }: Props) {
 
       {/* Identity summary — shows what we have from the authenticated account */}
       {user && (
-        <div className="bg-muted/30 border border-border rounded-xl p-4 text-sm space-y-1">
-          <div className="font-bold mb-1">{isRTL ? 'بياناتك:' : 'Your details:'}</div>
+        <div className="bg-muted/30 border border-border rounded-xl p-2.5 text-xs space-y-0.5">
+          <div className="font-bold mb-0.5">{isRTL ? 'بياناتك:' : 'Your details:'}</div>
           <div><span className="text-muted-foreground">{isRTL ? 'الاسم:' : 'Name:'}</span> <span className="font-medium">{profile?.full_name || (user.user_metadata as any)?.full_name || '—'}</span></div>
           <div><span className="text-muted-foreground">{isRTL ? 'البريد:' : 'Email:'}</span> <span className="font-medium" dir="ltr">{user.email}</span></div>
           {normalizedProfilePhone && (
@@ -244,11 +244,11 @@ export default function PathChoiceCard({ onBack }: Props) {
 
       {/* Phone required — Google login doesn't return phone number */}
       {needsPhone && (
-        <div className="bg-amber-50 dark:bg-amber-950/30 border-2 border-amber-300 dark:border-amber-700 rounded-xl p-4 space-y-3">
+        <div className="bg-amber-50 dark:bg-amber-950/30 border-2 border-amber-300 dark:border-amber-700 rounded-xl p-2.5 space-y-2">
           <div className="flex items-start gap-2">
-            <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
-            <div className="text-sm">
-              <div className="font-bold text-amber-900 dark:text-amber-200 mb-1">
+            <AlertCircle className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
+            <div className="text-xs sm:text-sm">
+              <div className="font-bold text-amber-900 dark:text-amber-200 mb-0.5">
                 {isRTL ? 'أكمل بياناتك للمتابعة' : 'Complete your details to continue'}
               </div>
               <div className="text-amber-800 dark:text-amber-300">
@@ -258,10 +258,10 @@ export default function PathChoiceCard({ onBack }: Props) {
               </div>
             </div>
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="phone-required">{isRTL ? 'رقم الجوال' : 'Phone number'}</Label>
+          <div className="space-y-1.5">
+            <Label htmlFor="phone-required" className="text-xs sm:text-sm">{isRTL ? 'رقم الجوال' : 'Phone number'}</Label>
             <div className="flex gap-2">
-              <div className="flex items-center px-3 rounded-md bg-muted border border-input text-sm font-medium" dir="ltr">
+              <div className="flex items-center px-3 rounded-md bg-muted border border-input text-sm font-medium h-9" dir="ltr">
                 +966
               </div>
               <Input
@@ -273,10 +273,12 @@ export default function PathChoiceCard({ onBack }: Props) {
                 placeholder="5xxxxxxxx"
                 value={phoneInput}
                 onChange={(e) => setPhoneInput(filterNonNumeric(e.target.value).slice(0, 9))}
-                className="flex-1"
+                className="flex-1 h-9 text-sm"
               />
               <Button
                 type="button"
+                size="sm"
+                className="h-9"
                 onClick={handleSavePhone}
                 disabled={savingPhone || phoneInput.length !== 9}
               >
@@ -287,30 +289,30 @@ export default function PathChoiceCard({ onBack }: Props) {
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         {/* Electronic path */}
         <motion.button
           type="button"
           whileHover={{ y: -4 }}
           onClick={handleElectronic}
           disabled={submittingWA}
-          className="group relative text-start p-6 rounded-2xl border-2 border-primary/40 bg-gradient-to-br from-primary/5 to-primary/0 hover:border-primary hover:shadow-lg transition-all"
+          className="group relative text-start p-3 sm:p-4 rounded-2xl border-2 border-primary/40 bg-gradient-to-br from-primary/5 to-primary/0 hover:border-primary hover:shadow-lg transition-all"
         >
-          <div className="absolute top-3 left-3 rtl:left-auto rtl:right-3 px-2 py-0.5 text-[10px] font-bold bg-primary text-primary-foreground rounded-full">
+          <div className="absolute top-2 left-2 rtl:left-auto rtl:right-2 px-2 py-0.5 text-[10px] font-bold bg-primary text-primary-foreground rounded-full">
             {isRTL ? 'موصى به' : 'Recommended'}
           </div>
-          <div className="w-12 h-12 rounded-xl bg-primary/15 flex items-center justify-center mb-3">
-            <Globe className="w-6 h-6 text-primary" />
+          <div className="w-10 h-10 rounded-xl bg-primary/15 flex items-center justify-center mb-2">
+            <Globe className="w-5 h-5 text-primary" />
           </div>
-          <h3 className="font-bold text-lg mb-1">
+          <h3 className="font-bold text-base mb-1">
             {isRTL ? 'إكمال إلكتروني' : 'Complete Online'}
           </h3>
-          <p className="text-sm text-muted-foreground mb-3">
+          <p className="text-xs sm:text-sm text-muted-foreground mb-2">
             {isRTL
               ? 'ارفع المستندات وادفع الآن خلال دقيقتين'
               : 'Upload documents & pay now in 2 minutes'}
           </p>
-          <ul className="text-xs space-y-1.5 text-muted-foreground">
+          <ul className="text-xs space-y-1 text-muted-foreground">
             <li className="flex items-center gap-2"><Zap className="w-3.5 h-3.5 text-primary" /> {isRTL ? 'معالجة فورية' : 'Instant processing'}</li>
             <li className="flex items-center gap-2"><ShieldCheck className="w-3.5 h-3.5 text-primary" /> {isRTL ? 'حساب آمن وتتبع للطلب' : 'Secure account & tracking'}</li>
           </ul>
@@ -322,20 +324,20 @@ export default function PathChoiceCard({ onBack }: Props) {
           whileHover={{ y: -4 }}
           onClick={handleWhatsApp}
           disabled={submittingWA}
-          className="group text-start p-6 rounded-2xl border-2 border-green-500/40 bg-gradient-to-br from-green-500/5 to-green-500/0 hover:border-green-500 hover:shadow-lg transition-all"
+          className="group text-start p-3 sm:p-4 rounded-2xl border-2 border-green-500/40 bg-gradient-to-br from-green-500/5 to-green-500/0 hover:border-green-500 hover:shadow-lg transition-all"
         >
-          <div className="w-12 h-12 rounded-xl bg-green-500/15 flex items-center justify-center mb-3">
-            {submittingWA ? <Loader2 className="w-6 h-6 text-green-600 animate-spin" /> : <MessageCircle className="w-6 h-6 text-green-600" />}
+          <div className="w-10 h-10 rounded-xl bg-green-500/15 flex items-center justify-center mb-2">
+            {submittingWA ? <Loader2 className="w-5 h-5 text-green-600 animate-spin" /> : <MessageCircle className="w-5 h-5 text-green-600" />}
           </div>
-          <h3 className="font-bold text-lg mb-1">
+          <h3 className="font-bold text-base mb-1">
             {isRTL ? 'إكمال عبر الواتساب' : 'Continue via WhatsApp'}
           </h3>
-          <p className="text-sm text-muted-foreground mb-3">
+          <p className="text-xs sm:text-sm text-muted-foreground mb-2">
             {isRTL
               ? 'بدون تسجيل — موظفنا يكمل معك خطوة بخطوة'
               : 'No sign-up — our agent helps you step by step'}
           </p>
-          <ul className="text-xs space-y-1.5 text-muted-foreground">
+          <ul className="text-xs space-y-1 text-muted-foreground">
             <li className="flex items-center gap-2"><Phone className="w-3.5 h-3.5 text-green-600" /> {isRTL ? 'تواصل مباشر مع موظف' : 'Direct contact with agent'}</li>
             <li className="flex items-center gap-2"><ShieldCheck className="w-3.5 h-3.5 text-green-600" /> {isRTL ? 'رقم طلب فوري للمتابعة' : 'Instant order number'}</li>
           </ul>
@@ -343,15 +345,15 @@ export default function PathChoiceCard({ onBack }: Props) {
       </div>
 
       {/* Terms checkbox */}
-      <div className="bg-muted/40 border border-border rounded-xl p-4">
-        <div className="flex items-start gap-3">
+      <div className="bg-muted/40 border border-border rounded-xl p-2.5">
+        <div className="flex items-start gap-2">
           <Checkbox
             id="path-terms"
             checked={applicationData.termsAccepted}
             onCheckedChange={(checked) => updateApplicationData({ termsAccepted: !!checked })}
             className="mt-0.5"
           />
-          <label htmlFor="path-terms" className="text-sm leading-relaxed cursor-pointer flex-1">
+          <label htmlFor="path-terms" className="text-xs sm:text-sm leading-snug cursor-pointer flex-1">
             {isRTL ? 'أوافق على ' : 'I agree to the '}
             <Link to="/terms" target="_blank" className="text-primary font-medium underline underline-offset-2">
               {isRTL ? 'الشروط والأحكام' : 'Terms & Conditions'}
@@ -371,9 +373,10 @@ export default function PathChoiceCard({ onBack }: Props) {
       <Button
         type="button"
         variant="ghost"
+        size="sm"
         onClick={onBack}
         disabled={submittingWA}
-        className="gap-2"
+        className="gap-2 h-9 text-sm"
       >
         <ArrowBack className="w-4 h-4" />
         {isRTL ? 'رجوع لتعديل المتطلبات' : 'Back to requirements'}
