@@ -38,7 +38,7 @@ export default function TravelerCounter({
   };
 
   return (
-    <div className="flex flex-col items-center text-center p-2.5 bg-card rounded-2xl border border-border gap-2 hover:border-navy/30 hover:shadow-md hover:shadow-navy/5 transition-all">
+    <div className="flex flex-col items-center text-center p-2 bg-card rounded-xl border border-border gap-1 hover:border-navy/30 hover:shadow-md hover:shadow-navy/5 transition-all">
       <div className="w-full">
         <div className="font-bold text-sm text-navy">{label}</div>
         <div className="text-[10px] font-numeric font-semibold tabular-nums text-brand mt-0.5 flex items-center justify-center gap-1">
@@ -51,13 +51,13 @@ export default function TravelerCounter({
       </div>
 
       {/* Counter Controls */}
-      <div className="flex items-center justify-center gap-2">
+      <div className="flex items-center justify-center gap-1.5">
         <Button
           type="button"
           variant="outline"
           size="icon"
           className={cn(
-            "h-9 w-9 rounded-full text-lg font-bold border-2 border-border hover:bg-navy hover:text-white hover:border-navy",
+            "h-8 w-8 rounded-full text-lg font-bold border-2 border-border hover:bg-navy hover:text-white hover:border-navy",
             value <= min && "opacity-50 cursor-not-allowed"
           )}
           onClick={handleDecrement}
@@ -66,14 +66,14 @@ export default function TravelerCounter({
           <Minus className="h-4 w-4" />
         </Button>
 
-        <span className="w-12 text-center text-2xl font-numeric font-extrabold tabular-nums text-navy">{value}</span>
+        <span className="w-10 text-center text-xl font-numeric font-extrabold tabular-nums text-navy">{value}</span>
 
         <Button
           type="button"
           variant="outline"
           size="icon"
           className={cn(
-            "h-9 w-9 rounded-full text-lg font-bold border-2 border-border hover:bg-navy hover:text-white hover:border-navy",
+            "h-8 w-8 rounded-full text-lg font-bold border-2 border-border hover:bg-navy hover:text-white hover:border-navy",
             value >= max && "opacity-50 cursor-not-allowed"
           )}
           onClick={handleIncrement}

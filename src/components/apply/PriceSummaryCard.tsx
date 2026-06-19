@@ -26,11 +26,11 @@ export default function PriceSummaryCard({ className, showDetails = true }: Pric
   const totalTravelers = travelers.adults + travelers.children + travelers.infants;
 
   return (
-    <div className={cn("bg-card border border-border rounded-3xl p-5 sm:p-6 shadow-lg shadow-navy/5", className)}>
-      <h3 className="font-heading-ar font-black text-lg sm:text-xl mb-4 text-navy">{t('payment.summary')}</h3>
+    <div className={cn("bg-card border border-border rounded-3xl p-3 sm:p-4 shadow-lg shadow-navy/5", className)}>
+      <h3 className="font-heading-ar font-black text-base sm:text-lg mb-2 text-navy">{t('payment.summary')}</h3>
 
       {countryName && (
-        <div className="mb-4 p-4 bg-gradient-to-br from-navy/5 to-brand/5 rounded-2xl border border-navy/10">
+        <div className="mb-2 p-2.5 bg-gradient-to-br from-navy/5 to-brand/5 rounded-2xl border border-navy/10">
           <div className="text-xs sm:text-sm text-muted-foreground">{t('form.country')}</div>
           <div className="font-bold text-navy text-base sm:text-lg">{countryName}</div>
           {visaTypeName && (
@@ -41,7 +41,7 @@ export default function PriceSummaryCard({ className, showDetails = true }: Pric
       
       {showDetails && (
         <>
-          <div className="space-y-2 sm:space-y-3 mb-3 sm:mb-4">
+          <div className="space-y-1.5 sm:space-y-2 mb-2 sm:mb-3">
             {travelers.adults > 0 && (
               <div className="flex justify-between text-xs sm:text-sm">
                 <span className="text-muted-foreground">
@@ -77,7 +77,7 @@ export default function PriceSummaryCard({ className, showDetails = true }: Pric
             )}
           </div>
           
-          <Separator className="my-3 sm:my-4" />
+          <Separator className="my-2 sm:my-3" />
           
           <div className="flex justify-between text-xs sm:text-sm mb-2">
             <span className="text-muted-foreground">
@@ -103,17 +103,17 @@ export default function PriceSummaryCard({ className, showDetails = true }: Pric
         </>
       )}
       
-      <Separator className="my-3 sm:my-4" />
+      <Separator className="my-2 sm:my-3" />
       
-      <div className="flex justify-between items-center bg-navy text-white -mx-1 px-4 py-3 rounded-2xl">
+      <div className="flex justify-between items-center bg-navy text-white -mx-1 px-3 py-2 rounded-2xl">
         <span className="font-bold text-base sm:text-lg">{t('pricing.total')}</span>
-        <span className="font-numeric font-extrabold text-xl sm:text-2xl tabular-nums flex items-center gap-1">
+        <span className="font-numeric font-extrabold text-lg sm:text-xl tabular-nums flex items-center gap-1">
           {grandTotal.toLocaleString()}
           <SARSymbol size="md" className="text-white" />
         </span>
       </div>
       
-      <div className="mt-3 sm:mt-4">
+      <div className="mt-2 sm:mt-3">
         {visaFeesIncluded ? (
           <Badge variant="secondary" className="w-full justify-center py-1.5 sm:py-2 text-xs sm:text-sm bg-accent/20 text-accent-foreground">
             <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 me-1.5 sm:me-2" />
@@ -128,7 +128,7 @@ export default function PriceSummaryCard({ className, showDetails = true }: Pric
       </div>
       
       {totalTravelers > 0 && (
-        <div className="mt-3 sm:mt-4 text-center text-xs sm:text-sm text-muted-foreground">
+        <div className="mt-2 sm:mt-3 text-center text-xs sm:text-sm text-muted-foreground">
           {direction === 'rtl' 
             ? `${totalTravelers} مسافر`
             : `${totalTravelers} traveler${totalTravelers > 1 ? 's' : ''}`

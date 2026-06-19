@@ -1,41 +1,40 @@
-## الهدف
-صفحة `/apply` تظهر كاملة (Hero + Stepper + محتوى الخطوة + ملخص السعر + زر التالي) في الشاشة بدون تمرير على الديسكتوب.
+إعادة تصميم صفحة `/apply` لتكون أكثر إحكاماً (compact) وبدون حاجة للتمرير للأسفل على الشاشات العادية.
 
-## التغييرات
+## الملفات والتغييرات
 
-### 1. `src/pages/Apply.tsx` — تقليص الـ chrome
-- Hero `py-8 sm:py-12` → `py-4 sm:py-5`
-- العنوان `text-2xl sm:text-4xl` → `text-lg sm:text-2xl`
-- وصف الدولة `mt-2 text-sm sm:text-base` → `mt-1 text-xs sm:text-sm`
-- Stepper container `-mt-6 sm:-mt-8` → `-mt-3 sm:-mt-4`، `py-2 sm:py-3` → `py-1.5 sm:py-2`
-- Content `py-6 sm:py-10 pb-24 sm:pb-12` → `py-3 sm:py-4 pb-20 sm:pb-6`
-- بطاقة المحتوى `p-5 sm:p-8 md:p-10` → `p-4 sm:p-5 md:p-6`
-- `rounded-4xl` → `rounded-3xl`
+### 1. `src/pages/Apply.tsx`
+- تقليل `py-4 sm:py-5` → `py-2 sm:py-3` في الهيرو
+- تقليل `-mt-3 sm:-mt-4` → `-mt-2 sm:-mt-3`
+- تقليل `py-1.5 sm:py-2` → `py-1 sm:py-1` في بطاقة الـ stepper
+- تقليل `py-3 sm:py-4 pb-20 sm:pb-6` → `py-2 sm:py-3 pb-16 sm:pb-4`
+- تقليل `p-4 sm:p-5 md:p-6` → `p-3 sm:p-4 md:p-5`
 
-### 2. `WizardStepper.tsx` — تكثيف
-- Desktop wrapper `py-4 sm:py-5` → `py-2`
-- التسميات تحت الدوائر `mt-2` → `mt-1`
+### 2. `src/components/apply/steps/Step2VisaDetails.tsx`
+- تقليل `space-y-3` → `space-y-2`
+- تقليل `mb-2` → `mb-1` في العنوان
+- تقليل `p-3 sm:p-4 space-y-3` → `p-2.5 sm:p-3 space-y-2` في البطاقة الموحدة
+- تقليل `gap-3` → `gap-2` في شبكة الحقول
+- تقليل ارتفاع `SelectTrigger` و `DatePicker` من `h-10` → `h-9`
+- إخفاء/تقليل disclaimer ملاحظة السفر (`p-2` → `p-1.5`, `text-xs` فقط)
+- عدادات المسافرين: `space-y-3` → `space-y-2`, البطاقات `gap-2` → `gap-1.5`
+- إزالة/تقليل `pt-2 sm:pt-3` قبل أزرار التنقل
+- تقليل ارتفاع زر التالي `h-12` → `h-10`
 
-### 3. `Step2VisaDetails.tsx` — تقليل المسافات الرأسية
-- `space-y-4 sm:space-y-6` → `space-y-3`
-- رأس الخطوة: إخفاء العنوان والوصف على الديسكتوب (موجود في Stepper) أو تقليل `mb-4 sm:mb-8` → `mb-2`، حجم `text-xl sm:text-2xl` → `text-lg sm:text-xl`، الوصف `mt-2` → `mt-0.5`
-- البطاقة الموحدة `p-4 sm:p-5 space-y-4` → `p-3 sm:p-4 space-y-3`
-- ارتفاع الـ Select/DatePicker `h-12` → `h-10`
-- disclaimer `p-3` → `p-2`، `text-xs sm:text-sm` يبقى لكن `leading-relaxed` → `leading-snug`
-- شبكة العدّادات `gap-3` → `gap-2`
-- زر التالي pt-4 sm:pt-6 → pt-2 sm:pt-3
+### 3. `src/components/apply/TravelerCounter.tsx`
+- تقليل `p-2.5` → `p-2`
+- تقليل `gap-2` → `gap-1`
+- تقليل `h-9 w-9` → `h-8 w-8` للأزرار
+- تقليل `text-2xl` → `text-xl` للرقم
+- تقليل `rounded-2xl` → `rounded-xl`
 
-### 4. `TravelerCounter.tsx` — بطاقة مدمجة
-- `p-4` → `p-2.5`، `gap-3` → `gap-2`
-- اسم `text-base` → `text-sm`، إخفاء الـ description (`hidden`) للتوفير
-- سعر الشخص يبقى `text-xs`
-- العدّاد: الرقم `text-3xl` → `text-2xl`، الأزرار `h-11 w-11` → `h-9 w-9`، الأيقونات `h-5 w-5` → `h-4 w-4`
+### 4. `src/components/apply/PriceSummaryCard.tsx`
+- تقليل `p-5 sm:p-6` → `p-3 sm:p-4`
+- تقليل `mb-4` → `mb-2`, `p-4` → `p-2.5` في بطاقة الدولة
+- تقليل `text-lg sm:text-xl` → `text-base sm:text-lg` في العنوان
+- تقليل `my-3 sm:my-4` → `my-2 sm:my-3` في الفواصل
+- تقليل `px-4 py-3` → `px-3 py-2` في شريط المجموع
+- تقليل `text-xl sm:text-2xl` → `text-lg sm:text-xl` للمبلغ الإجمالي
+- تقليل `mt-3 sm:mt-4` → `mt-2 sm:mt-3`
 
-## الملفات
-- `src/pages/Apply.tsx`
-- `src/components/apply/WizardStepper.tsx`
-- `src/components/apply/steps/Step2VisaDetails.tsx`
-- `src/components/apply/TravelerCounter.tsx`
-
-## ملاحظة
-الخطوات الأخرى (Requirements/Documents/Payment) تحتوي بطبيعتها على قوائم طويلة قد تحتاج تمرير. التغيير يستهدف خطوة "تفاصيل التأشيرة" الافتراضية لتلائم الشاشة، والـ chrome العام يستفيد منه باقي الخطوات.
+## النتيجة المتوقعة
+جميع عناصر الصفحة (الدولة، نوع التأشيرة، التاريخ، عدادات المسافرين، ملخص السعر، وزر التالي) تظهر ضمن إطار الشاشة الواحد بدون scroll.
