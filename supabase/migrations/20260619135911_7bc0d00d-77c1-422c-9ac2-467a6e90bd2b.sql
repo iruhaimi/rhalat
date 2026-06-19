@@ -1,0 +1,1 @@
+ALTER TABLE public.tour_bookings ALTER COLUMN user_id SET NOT NULL;
