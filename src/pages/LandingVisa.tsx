@@ -12,7 +12,9 @@ import passportImg from "@/assets/ads/ad-square-passport.jpg";
 import ukImg from "@/assets/ads/ad-square-uk.jpg";
 import teamImg from "@/assets/ads/ad-square-team.jpg";
 
-const WHATSAPP = "https://wa.me/966500000000";
+const WHATSAPP_PHONE = "966562525665";
+const WHATSAPP_MESSAGE = "مرحباً، أرغب في الاستفسار عن خدمات التأشيرات";
+const WHATSAPP = `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`;
 
 const destinations = [
   { name: "تأشيرة شنغن", img: heroImg, to: "/destinations" },
@@ -46,7 +48,16 @@ export default function LandingVisa() {
 
   const handleWhatsApp = () => {
     trackConversion("generate_lead", { value: 0, channel: "whatsapp" } as any);
-    window.open(WHATSAPP, "_blank");
+    // Escape iframe (preview / Despia wrapper) so the WhatsApp deep-link actually opens
+    try {
+      if (window.top && window.top !== window.self) {
+        window.top.location.href = WHATSAPP;
+        return;
+      }
+    } catch {
+      // cross-origin top — fall through to window.open
+    }
+    window.open(WHATSAPP, "_blank", "noopener,noreferrer");
   };
 
   return (
