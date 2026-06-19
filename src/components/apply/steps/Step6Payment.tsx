@@ -310,22 +310,32 @@ export default function Step6Payment() {
         description: `رقم طلبك: ${appNumber}. سيتواصل معك موظفنا عبر واتساب`,
       });
 
-      // Conversion: lead via WhatsApp (no payment captured online)
+      // Conversion: lead via WhatsApp (no payment captured online).
+      // Dedup so the success page (which also fires generate_lead as a
+      // safety net) doesn't double-count.
       trackConversion('submit_application', {
         value: grandTotal,
         currency: 'SAR',
         transaction_id: appNumber,
         method: 'whatsapp',
       });
-      trackConversion('generate_lead', {
-        value: grandTotal,
-        currency: 'SAR',
-        transaction_id: appNumber,
-      });
+      if (!wasConversionFired(appNumber)) {
+        trackConversion('generate_lead', {
+          value: grandTotal,
+          currency: 'SAR',
+          transaction_id: appNumber,
+        });
+        markConversionFired(appNumber);
+      }
 
       setTimeout(() => {
         resetApplication();
-        navigate(`/payment-success?app=${appNumber}&via=whatsapp`);
+        navigate(
+          `/payment-success?app=${encodeURIComponent(appNumber)}` +
+            `&via=whatsapp` +
+            `&amount=${encodeURIComponent(grandTotal)}` +
+            `&currency=SAR`
+        );
       }, 1500);
     } catch (error: any) {
       console.error('WhatsApp submission error:', error);
