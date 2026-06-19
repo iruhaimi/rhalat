@@ -16,7 +16,7 @@ import {
 import TravelerCounter from '../TravelerCounter';
 import PriceSummaryCard from '../PriceSummaryCard';
 import SARSymbol from '@/components/ui/SARSymbol';
-import { ArrowLeft, ArrowRight, Info } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Info, Globe, FileText, Calendar } from 'lucide-react';
 import { 
   SCHENGEN_INFO, 
   filterOutSchengenCountries, 
@@ -192,11 +192,17 @@ export default function Step2VisaDetails() {
       </div>
 
       <div className="grid lg:grid-cols-3 gap-4 sm:gap-6">
-        <div className="lg:col-span-2 space-y-4 sm:space-y-6">
-          {/* Region/Country Selection - Hidden when user came from Schengen URL */}
-          {!isSchengenFromUrl && (
-            <div className="space-y-2">
-              <Label className="text-sm sm:text-base">{t('form.country')}</Label>
+        <div className="lg:col-span-2 space-y-4">
+          {/* Unified card: Country + Visa Type + Travel Date in one row on desktop */}
+          <div className="bg-card rounded-2xl border border-border p-4 sm:p-5 space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {/* Region/Country Selection - Hidden when user came from Schengen URL */}
+              {!isSchengenFromUrl && (
+                <div className="space-y-2">
+                  <Label className="text-sm font-semibold flex items-center gap-1.5">
+                    <Globe className="w-4 h-4 text-primary" />
+                    {t('form.country')}
+                  </Label>
               <Select
                 value={selectedRegion || (applicationData.countryId && !isSchengenCountry(countries?.find(c => c.id === applicationData.countryId)?.code || '') ? applicationData.countryId : '')}
                 onValueChange={(value) => {
@@ -209,7 +215,7 @@ export default function Step2VisaDetails() {
                   }
                 }}
               >
-                <SelectTrigger className="h-12 sm:h-12 text-sm sm:text-base">
+                <SelectTrigger className="h-12 text-sm sm:text-base">
                   <SelectValue placeholder={direction === 'rtl' ? 'اختر الوجهة' : 'Select destination'} />
                 </SelectTrigger>
                 <SelectContent>
@@ -242,41 +248,15 @@ export default function Step2VisaDetails() {
                   ))}
                 </SelectContent>
               </Select>
-            </div>
-          )}
+                </div>
+              )}
 
-          {/* Schengen Country Selection - Shows when Schengen is selected or user came from Schengen URL */}
-          {selectedRegion === 'schengen' && (
-            <div className="space-y-2">
-              <Label className="text-sm sm:text-base">{direction === 'rtl' ? 'اختر الدولة من شنغن' : 'Select Schengen country'}</Label>
-              <Select
-                value={applicationData.countryId}
-                onValueChange={handleCountryChange}
-              >
-                <SelectTrigger className="h-12 text-sm sm:text-base">
-                  <SelectValue placeholder={direction === 'rtl' ? 'اختر الدولة' : 'Select country'} />
-                </SelectTrigger>
-                <SelectContent>
-                  {schengenCountries.map((country) => (
-                    <SelectItem key={country.id} value={country.id}>
-                      <div className="flex items-center gap-2">
-                        <img 
-                          src={getSharpFlagUrl(country)}
-                          alt={country.name}
-                          className="w-5 h-4 object-cover rounded"
-                        />
-                        <span>{country.name}</span>
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          )}
-
-          {/* Visa Type Selection */}
-          <div className="space-y-2">
-            <Label className="text-sm sm:text-base">{t('form.visaType')}</Label>
+              {/* Visa Type Selection */}
+              <div className="space-y-2">
+                <Label className="text-sm font-semibold flex items-center gap-1.5">
+                  <FileText className="w-4 h-4 text-primary" />
+                  {t('form.visaType')}
+                </Label>
             <Select
               value={applicationData.visaTypeId}
               onValueChange={handleVisaTypeChange}
@@ -303,11 +283,14 @@ export default function Step2VisaDetails() {
                 ))}
               </SelectContent>
             </Select>
-          </div>
+              </div>
 
-          {/* Travel Date */}
-          <div className="space-y-2">
-            <Label className="text-sm sm:text-base">{t('form.travelDate')}</Label>
+              {/* Travel Date */}
+              <div className="space-y-2">
+                <Label className="text-sm font-semibold flex items-center gap-1.5">
+                  <Calendar className="w-4 h-4 text-primary" />
+                  {t('form.travelDate')}
+                </Label>
             <DatePicker
               value={applicationData.travelDate}
               onChange={handleDateChange}
@@ -315,6 +298,42 @@ export default function Step2VisaDetails() {
               isRTL={direction === 'rtl'}
               minDate={new Date()}
             />
+              </div>
+            </div>
+
+            {/* Schengen Country Selection - Shows when Schengen is selected */}
+            {selectedRegion === 'schengen' && (
+              <div className="space-y-2 pt-2 border-t border-border">
+                <Label className="text-sm font-semibold flex items-center gap-1.5">
+                  <Globe className="w-4 h-4 text-primary" />
+                  {direction === 'rtl' ? 'اختر الدولة من شنغن' : 'Select Schengen country'}
+                </Label>
+                <Select
+                  value={applicationData.countryId}
+                  onValueChange={handleCountryChange}
+                >
+                  <SelectTrigger className="h-12 text-sm sm:text-base">
+                    <SelectValue placeholder={direction === 'rtl' ? 'اختر الدولة' : 'Select country'} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {schengenCountries.map((country) => (
+                      <SelectItem key={country.id} value={country.id}>
+                        <div className="flex items-center gap-2">
+                          <img 
+                            src={getSharpFlagUrl(country)}
+                            alt={country.name}
+                            className="w-5 h-4 object-cover rounded"
+                          />
+                          <span>{country.name}</span>
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
+
+            {/* Travel date disclaimer */}
             <div className="flex items-start gap-2 p-3 rounded-lg bg-primary/5 border border-primary/10">
               <Info className="w-4 h-4 text-primary shrink-0 mt-0.5" />
               <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
@@ -326,33 +345,32 @@ export default function Step2VisaDetails() {
           </div>
 
           {/* Traveler Counters */}
-          <div className="space-y-3 sm:space-y-4">
-            <Label className="text-sm sm:text-base font-semibold">{t('form.travelers')}</Label>
-            
-            <TravelerCounter
-              label={t('form.adults')}
-              description={t('pricing.adult')}
-              value={applicationData.travelers.adults}
-              price={applicationData.adultPrice}
-              min={1}
-              onChange={(val) => updateTravelers('adults', val)}
-            />
-            
-            <TravelerCounter
-              label={t('form.children')}
-              description={t('pricing.child')}
-              value={applicationData.travelers.children}
-              price={applicationData.childPrice}
-              onChange={(val) => updateTravelers('children', val)}
-            />
-            
-            <TravelerCounter
-              label={t('form.infants')}
-              description={t('pricing.infant')}
-              value={applicationData.travelers.infants}
-              price={applicationData.infantPrice}
-              onChange={(val) => updateTravelers('infants', val)}
-            />
+          <div className="space-y-3">
+            <Label className="text-sm sm:text-base font-bold text-navy">{t('form.travelers')}</Label>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <TravelerCounter
+                label={t('form.adults')}
+                description={t('pricing.adult')}
+                value={applicationData.travelers.adults}
+                price={applicationData.adultPrice}
+                min={1}
+                onChange={(val) => updateTravelers('adults', val)}
+              />
+              <TravelerCounter
+                label={t('form.children')}
+                description={t('pricing.child')}
+                value={applicationData.travelers.children}
+                price={applicationData.childPrice}
+                onChange={(val) => updateTravelers('children', val)}
+              />
+              <TravelerCounter
+                label={t('form.infants')}
+                description={t('pricing.infant')}
+                value={applicationData.travelers.infants}
+                price={applicationData.infantPrice}
+                onChange={(val) => updateTravelers('infants', val)}
+              />
+            </div>
           </div>
         </div>
 
