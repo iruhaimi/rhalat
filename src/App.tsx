@@ -156,6 +156,9 @@ const App = () => (
               <Route path="/install" element={<Install />} />
               <Route path="/__gtag-check" element={<GTagCheck />} />
 
+              {/* Landing Pages (no main layout, for Google Ads campaigns) */}
+              <Route path="/lp/visa" element={<LandingVisa />} />
+
               {/* Admin Routes */}
               <Route 
                 path="/admin" 
