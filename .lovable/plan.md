@@ -1,21 +1,20 @@
-Fix the hero badge separator in LandingVisa.tsx.
+## الهدف
+استبدال صورة الجواز الرديئة في صفحة الهبوط `/lp/visa` بصور معالم سياحية بارزة لكل دولة في قسم "الوجهات الأكثر طلباً".
 
-In the hero section of `src/pages/LandingVisa.tsx`, the badge text currently reads:
-```
-معتمدون · أكثر من 10,000 طلب ناجح
-```
-In RTL/Arabic rendering, the middle dot (U+00B7) displays as an Arabic zero (٠).
+## التغييرات
 
-Replace the single inline span with an inline-flex container containing three children: left text, a pipe separator, right text. Use `|` as the separator character, which renders correctly in all font/RTL combinations.
+### 1. توليد 3 صور معالم سياحية جديدة (premium quality)
+- `src/assets/ads/landmark-eiffel.jpg` — برج إيفل في باريس (لبطاقة شنغن)
+- `src/assets/ads/landmark-bigben.jpg` — ساعة بيغ بن في لندن (لبطاقة بريطانيا)
+- `src/assets/ads/landmark-liberty.jpg` — تمثال الحرية في نيويورك (لبطاقة أمريكا)
 
-### Files
-- `src/pages/LandingVisa.tsx` (lines 103-105)
+كل صورة بنسبة 4:3 احترافية، إضاءة ذهبية، جودة عالية.
 
-### After fix
-```tsx
-<span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
-  <span>معتمدون</span>
-  <span className="text-muted-foreground" aria-hidden="true">|</span>
-  <span>أكثر من 10,000 طلب ناجح</span>
-</span>
-```
+### 2. تعديل `src/pages/LandingVisa.tsx`
+- استبدال imports الصور القديمة (`passportImg`, `ukImg`) بالصور الجديدة
+- تحديث مصفوفة `destinations` لاستخدام الصور المناسبة لكل وجهة
+- صورة الهيرو (`heroImg`) وصورة الفريق (`teamImg`) تبقى كما هي
+
+### تفاصيل تقنية
+- لن يتم لمس أي ملف آخر، فقط صفحة الهبوط
+- الصور القديمة `ad-square-passport.jpg` و `ad-square-uk.jpg` تبقى في المشروع لأنها قد تُستخدم في أماكن أخرى
