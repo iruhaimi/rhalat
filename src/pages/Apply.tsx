@@ -369,8 +369,8 @@ function ApplyContent() {
       </div>
 
       {/* Wizard Stepper card — lifted over hero */}
-      <div className="container-section px-4 sm:px-6 -mt-2 sm:-mt-3 relative z-10">
-        <div className="max-w-4xl mx-auto bg-card border border-border rounded-3xl shadow-xl shadow-navy/5 px-4 sm:px-6 py-1">
+      <div className="container-section px-3 sm:px-4 -mt-2 sm:-mt-3 relative z-10">
+        <div className="max-w-5xl mx-auto bg-card border border-border rounded-2xl shadow-md shadow-navy/5 px-3 sm:px-4 py-1">
           <WizardStepper
             currentStep={currentStep}
             totalSteps={5}
@@ -380,8 +380,8 @@ function ApplyContent() {
       </div>
 
       {/* Step Content */}
-      <div className="container-section px-4 sm:px-6 py-2 sm:py-3 pb-16 sm:pb-4">
-        <div className="max-w-4xl mx-auto bg-card rounded-3xl shadow-lg shadow-navy/5 border border-border p-3 sm:p-4 md:p-5">
+      <div className="container-section px-3 sm:px-4 py-2 pb-12 sm:pb-4">
+        <div className="max-w-5xl mx-auto bg-card rounded-2xl shadow-sm border border-border p-2.5 sm:p-3">
           {renderStep()}
         </div>
       </div>
