@@ -20,7 +20,7 @@ export default function WizardStepper({ currentStep, totalSteps, onStepClick }: 
   ];
 
   return (
-    <div className="w-full py-4 sm:py-5">
+    <div className="w-full py-2">
       {/* Desktop Stepper */}
       <div className="hidden lg:flex items-center justify-between">
         {steps.map((step, index) => (
@@ -43,7 +43,7 @@ export default function WizardStepper({ currentStep, totalSteps, onStepClick }: 
                 )}
               </button>
               <span className={cn(
-                "mt-2 text-xs font-semibold text-center max-w-[90px]",
+                "mt-1 text-xs font-semibold text-center max-w-[90px]",
                 step.number === currentStep ? "text-navy" : "text-muted-foreground"
               )}>
                 {step.label}

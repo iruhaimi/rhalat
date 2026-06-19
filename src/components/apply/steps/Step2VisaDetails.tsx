@@ -181,21 +181,21 @@ export default function Step2VisaDetails() {
   }, [selectedRegion, schengenCountries]);
 
   return (
-    <div className="space-y-4 sm:space-y-6">
-      <div className="text-center mb-4 sm:mb-8">
-        <h2 className="text-xl sm:text-2xl font-bold">{t('wizard.step2')}</h2>
-        <p className="text-sm sm:text-base text-muted-foreground mt-2">
+    <div className="space-y-3">
+      <div className="text-center mb-2">
+        <h2 className="text-lg sm:text-xl font-bold">{t('wizard.step2')}</h2>
+        <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
           {direction === 'rtl' 
             ? 'حدد نوع التأشيرة وتاريخ السفر وعدد المسافرين' 
             : 'Select visa type, travel date and number of travelers'}
         </p>
       </div>
 
-      <div className="grid lg:grid-cols-3 gap-4 sm:gap-6">
-        <div className="lg:col-span-2 space-y-4">
+      <div className="grid lg:grid-cols-3 gap-3 sm:gap-4">
+        <div className="lg:col-span-2 space-y-3">
           {/* Unified card: Country + Visa Type + Travel Date in one row on desktop */}
-          <div className="bg-card rounded-2xl border border-border p-4 sm:p-5 space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="bg-card rounded-2xl border border-border p-3 sm:p-4 space-y-3">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               {/* Region/Country Selection - swaps to Schengen country picker when relevant */}
               {isSchengenFromUrl || selectedRegion === 'schengen' ? (
                 <div className="space-y-2">
@@ -207,7 +207,7 @@ export default function Step2VisaDetails() {
                     value={applicationData.countryId}
                     onValueChange={handleCountryChange}
                   >
-                    <SelectTrigger className="h-12 text-sm sm:text-base">
+                    <SelectTrigger className="h-10 text-sm">
                       <SelectValue placeholder={direction === 'rtl' ? 'اختر الدولة' : 'Select country'} />
                     </SelectTrigger>
                     <SelectContent>
@@ -244,7 +244,7 @@ export default function Step2VisaDetails() {
                   }
                 }}
               >
-                <SelectTrigger className="h-12 text-sm sm:text-base">
+                <SelectTrigger className="h-10 text-sm">
                   <SelectValue placeholder={direction === 'rtl' ? 'اختر الوجهة' : 'Select destination'} />
                 </SelectTrigger>
                 <SelectContent>
@@ -291,7 +291,7 @@ export default function Step2VisaDetails() {
               onValueChange={handleVisaTypeChange}
               disabled={!applicationData.countryId || visaTypesLoading}
             >
-              <SelectTrigger className="h-12 text-sm sm:text-base">
+              <SelectTrigger className="h-10 text-sm">
                 <SelectValue placeholder={
                   visaTypesLoading 
                     ? (direction === 'rtl' ? 'جاري التحميل...' : 'Loading...') 
@@ -331,9 +331,9 @@ export default function Step2VisaDetails() {
             </div>
 
             {/* Travel date disclaimer */}
-            <div className="flex items-start gap-2 p-3 rounded-lg bg-primary/5 border border-primary/10">
+            <div className="flex items-start gap-2 p-2 rounded-lg bg-primary/5 border border-primary/10">
               <Info className="w-4 h-4 text-primary shrink-0 mt-0.5" />
-              <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+              <p className="text-xs sm:text-sm text-muted-foreground leading-snug">
                 {direction === 'rtl'
                   ? 'ملاحظة: اختيارك لتاريخ السفر المتوقع ليس بالضرورة التزاماً بتوفير موعد يتناسب معه، حيث نقوم بحجز أقرب موعد متاح لدى السفارة.'
                   : 'Note: Your selected expected travel date does not guarantee an appointment on that exact date. We will book the nearest available appointment at the embassy.'}
@@ -344,7 +344,7 @@ export default function Step2VisaDetails() {
           {/* Traveler Counters */}
           <div className="space-y-3">
             <Label className="text-sm sm:text-base font-bold text-navy">{t('form.travelers')}</Label>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
               <TravelerCounter
                 label={t('form.adults')}
                 description={t('pricing.adult')}
@@ -404,7 +404,7 @@ export default function Step2VisaDetails() {
       </div>
 
       {/* Navigation Buttons - Sticky on mobile */}
-      <div className="flex gap-3 sm:gap-4 pt-4 sm:pt-6 sticky bottom-0 bg-background/95 backdrop-blur-sm pb-4 -mx-4 px-4 sm:mx-0 sm:px-0 sm:static sm:bg-transparent sm:backdrop-blur-none border-t sm:border-0 mt-4 sm:mt-0">
+      <div className="flex gap-3 sm:gap-4 pt-2 sm:pt-3 sticky bottom-0 bg-background/95 backdrop-blur-sm pb-4 -mx-4 px-4 sm:mx-0 sm:px-0 sm:static sm:bg-transparent sm:backdrop-blur-none border-t sm:border-0 mt-4 sm:mt-0">
         <Button
           type="button"
           size="lg"
