@@ -1,29 +1,25 @@
-## المشكلة
+## السبب
 
-السبب أن الحقول لا تظهر في صف واحد على `/apply?country=SCHENGEN`:
-
-عندما يأتي المستخدم من صفحة شنغن، يتم إخفاء حقل اختيار الدولة (`isSchengenFromUrl=true`)، فيتبقى عمودان فقط (نوع التأشيرة + تاريخ السفر). ثم يظهر اختيار "دولة شنغن" كصف منفصل تحت الكل (border-t).
-
-الخط الحالي للأرقام يستخدم `font-display font-black` لكن المستخدم يريد تمييزاً أوضح.
+الأرقام تستخدم حالياً `font-display` (خط **Syne** — خط عرض زخرفي/هندسي مزخرف غير مناسب للأرقام، يجعلها غير واضحة).
 
 ## الخطة
 
-### 1. `Step2VisaDetails.tsx` — إصلاح صف الحقول الثلاثة
-- استبدال `Select` المخفي (عند `isSchengenFromUrl`) بحقل اختيار دولة شنغن **داخل نفس الـ grid** بدلاً من أسفله
-- إزالة كتلة "Schengen Country Selection" المنفصلة (السطور 304–334)
-- النتيجة: عند الدخول من شنغن، الصف يحتوي: [دولة شنغن] [نوع التأشيرة] [تاريخ السفر]
-- عند الدخول العادي: [الوجهة] [نوع التأشيرة] [تاريخ السفر]، وإذا اختار شنغن يتحول العمود الأول لاختيار دولة الشنغن
+### 1. إضافة خط رقمي واضح
+في `tailwind.config.ts`: إضافة عائلة جديدة
+```ts
+numeric: ['Plus Jakarta Sans', 'Inter', 'system-ui', 'sans-serif']
+```
+(Plus Jakarta Sans محمّل أصلاً، أرقامه نظيفة وواضحة جداً)
 
-### 2. تحسين خط الأرقام
-- **WizardStepper (Desktop)**: حجم الدوائر `w-11 h-11` → `w-12 h-12`، خط الرقم `text-sm` → `text-lg`، إضافة `tabular-nums`
-- **WizardStepper (Mobile)**: الرقم الكبير `text-xl` → `text-2xl tabular-nums`
-- **TravelerCounter**: الرقم من `text-3xl font-display font-black` → `text-4xl font-display font-black tabular-nums` مع `tracking-tight`
-- **PriceSummaryCard**: التحقق من الأرقام وإضافة `tabular-nums font-display` للمبالغ
+### 2. استبدال `font-display` بـ `font-numeric` في مواضع الأرقام فقط
+- `WizardStepper.tsx`: أرقام الخطوات (Desktop + Mobile) + إرجاع الأحجام للسابق (`w-11 h-11 text-sm` و `text-xl`)
+- `TravelerCounter.tsx`: رقم العداد + إرجاع الحجم للسابق (`text-3xl` بدل `text-4xl`)
+- `PriceSummaryCard.tsx`: المبالغ (breakdown + serviceTotal + governmentTotal + grandTotal) + إرجاع الإجمالي للحجم السابق (`text-xl sm:text-2xl`)
 
-### الملفات المتأثرة
-- `src/components/apply/steps/Step2VisaDetails.tsx`
+### الملفات
+- `tailwind.config.ts`
 - `src/components/apply/WizardStepper.tsx`
 - `src/components/apply/TravelerCounter.tsx`
-- `src/components/apply/PriceSummaryCard.tsx` (فحص فقط)
+- `src/components/apply/PriceSummaryCard.tsx`
 
-هل تعتمد الخطة؟
+النتيجة: نفس الأحجام السابقة، لكن بخط أرقام نظيف وواضح بدلاً من خط Syne المزخرف.

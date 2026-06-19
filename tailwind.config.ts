@@ -102,6 +102,7 @@ export default {
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
         display: ['Syne', 'Plus Jakarta Sans', 'system-ui', 'sans-serif'],
+        numeric: ['Plus Jakarta Sans', 'Inter', 'system-ui', 'sans-serif'],
         jakarta: ['Plus Jakarta Sans', 'Inter', 'system-ui', 'sans-serif'],
         cairo: ['Cairo', 'IBM Plex Sans Arabic', 'system-ui', 'sans-serif'],
         tajawal: ['Tajawal', 'IBM Plex Sans Arabic', 'system-ui', 'sans-serif'],

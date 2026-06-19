@@ -42,7 +42,7 @@ export default function TravelerCounter({
       <div className="w-full">
         <div className="font-bold text-base text-navy">{label}</div>
         <div className="text-xs text-muted-foreground">{description}</div>
-        <div className="text-xs font-display font-semibold text-brand mt-1 flex items-center justify-center gap-1">
+        <div className="text-xs font-numeric font-semibold tabular-nums text-brand mt-1 flex items-center justify-center gap-1">
           {price.toLocaleString()}
           <SARSymbol size="xs" className="text-brand" />
           <span className="text-muted-foreground font-normal">
@@ -67,7 +67,7 @@ export default function TravelerCounter({
           <Minus className="h-5 w-5" />
         </Button>
 
-        <span className="w-16 text-center text-4xl font-display font-black tabular-nums tracking-tight text-navy">{value}</span>
+        <span className="w-14 text-center text-3xl font-numeric font-extrabold tabular-nums text-navy">{value}</span>
 
         <Button
           type="button"
