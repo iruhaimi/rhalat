@@ -271,11 +271,11 @@ export default function Destinations() {
                     key="schengen"
                     variants={itemVariants}
                     layout
-                    whileHover={{ y: -6, transition: { duration: 0.3 } }}
-                    className="group relative overflow-hidden rounded-4xl bg-card border border-border hover:shadow-2xl hover:shadow-navy/5 hover:border-brand/30 transition-all duration-300"
+                    whileHover={{ y: -4, transition: { duration: 0.3 } }}
+                    className="group relative overflow-hidden rounded-2xl bg-card border border-border hover:shadow-xl hover:shadow-navy/5 hover:border-brand/30 transition-all duration-300"
                   >
                     {/* Flag Background */}
-                    <div className="relative h-44 overflow-hidden bg-gradient-to-br from-navy/5 to-brand/10">
+                    <div className="relative h-28 overflow-hidden bg-gradient-to-br from-navy/5 to-brand/10">
                       <img
                         src={SCHENGEN_INFO.flag_url}
                         alt={SCHENGEN_INFO.name}
@@ -286,9 +286,9 @@ export default function Destinations() {
                       <div className="absolute inset-0 " />
                       
                       {/* Processing Days Badge */}
-                      <div className="absolute top-4 end-4 flex items-center gap-2">
+                      <div className="absolute top-2 end-2 flex items-center gap-2">
                         {schengenProcessingDays && (
-                          <Badge className="bg-navy/90 backdrop-blur-md text-white border-0 rounded-xl px-3 py-1.5 font-jakarta text-[10px] font-bold gap-1">
+                          <Badge className="bg-navy/90 backdrop-blur-md text-white border-0 rounded-lg px-2 py-0.5 font-jakarta text-[10px] font-bold gap-1">
                             <Clock className="h-3 w-3" />
                             {schengenProcessingDays} أيام
                           </Badge>
@@ -297,29 +297,29 @@ export default function Destinations() {
                     </div>
 
                     {/* Content */}
-                    <div className="p-6">
-                      <h3 className="font-heading-ar text-xl font-extrabold text-navy mb-3">{SCHENGEN_INFO.name}</h3>
+                    <div className="p-3">
+                      <h3 className="font-heading-ar text-base font-extrabold text-navy mb-1.5 truncate">{SCHENGEN_INFO.name}</h3>
                       
                       {schengenMinPrice && (
-                        <div className="flex items-baseline gap-2 mb-4">
+                        <div className="flex items-baseline gap-1.5 mb-2">
                           <span className="font-jakarta text-[10px] font-bold tracking-wider uppercase text-muted-foreground">يبدأ من</span>
-                          <span className="font-display text-2xl font-bold text-brand flex items-center gap-1">
+                          <span className="font-numeric text-lg font-extrabold tabular-nums text-brand flex items-center gap-1">
                             {schengenMinPrice}
-                            <SARSymbol size="sm" className="text-brand" />
+                            <SARSymbol size="xs" className="text-brand" />
                           </span>
                         </div>
                       )}
 
-                      <div className="flex gap-2">
-                        <Button variant="outline" size="sm" className="flex-1 rounded-2xl h-10 border-border" asChild>
+                      <div className="flex gap-1.5">
+                        <Button variant="outline" size="sm" className="flex-1 rounded-xl h-8 text-xs border-border" asChild>
                           <Link to="/country/SCHENGEN">
                             التفاصيل
                           </Link>
                         </Button>
-                        <Button size="sm" className="flex-1 rounded-2xl h-10 gap-1 bg-navy hover:bg-navy/90 text-navy-foreground" asChild>
+                        <Button size="sm" className="flex-1 rounded-xl h-8 text-xs gap-1 bg-navy hover:bg-navy/90 text-navy-foreground" asChild>
                           <Link to="/apply?country=SCHENGEN">
                             قدّم الآن
-                            <ArrowIcon className="h-4 w-4" />
+                            <ArrowIcon className="h-3 w-3" />
                           </Link>
                         </Button>
                       </div>
@@ -338,11 +338,11 @@ export default function Destinations() {
                       key={country.id}
                       variants={itemVariants}
                       layout
-                      whileHover={{ y: -6, transition: { duration: 0.3 } }}
-                      className="group relative overflow-hidden rounded-4xl bg-card border border-border hover:shadow-2xl hover:shadow-navy/5 hover:border-brand/30 transition-all duration-300"
+                      whileHover={{ y: -4, transition: { duration: 0.3 } }}
+                      className="group relative overflow-hidden rounded-2xl bg-card border border-border hover:shadow-xl hover:shadow-navy/5 hover:border-brand/30 transition-all duration-300"
                     >
                       {/* Flag Background */}
-                      <div className="relative h-44 overflow-hidden bg-gradient-to-br from-navy/5 to-brand/10">
+                      <div className="relative h-28 overflow-hidden bg-gradient-to-br from-navy/5 to-brand/10">
                         <img
                           src={getSharpFlagUrl(country)}
                           alt={country.name}
@@ -353,9 +353,9 @@ export default function Destinations() {
                         <div className="absolute inset-0 " />
                         
                         {/* Badges */}
-                        <div className="absolute top-4 end-4 flex items-center gap-2">
+                        <div className="absolute top-2 end-2 flex items-center gap-2">
                           {processingDays && (
-                            <Badge className="bg-navy/90 backdrop-blur-md text-white border-0 rounded-xl px-3 py-1.5 font-jakarta text-[10px] font-bold gap-1">
+                            <Badge className="bg-navy/90 backdrop-blur-md text-white border-0 rounded-lg px-2 py-0.5 font-jakarta text-[10px] font-bold gap-1">
                               <Clock className="h-3 w-3" />
                               {processingDays} أيام
                             </Badge>
@@ -363,36 +363,36 @@ export default function Destinations() {
                         </div>
                         
                         {visaCount > 0 && (
-                          <Badge className="absolute top-4 start-4 bg-white/95 text-navy backdrop-blur-md rounded-xl px-3 py-1.5 font-jakarta text-[10px] font-bold">
-                            {visaCount} نوع تأشيرة
+                          <Badge className="absolute top-2 start-2 bg-white/95 text-navy backdrop-blur-md rounded-lg px-2 py-0.5 font-jakarta text-[10px] font-bold">
+                            {visaCount} تأشيرة
                           </Badge>
                         )}
                       </div>
 
                       {/* Content */}
-                      <div className="p-6">
-                        <h3 className="font-heading-ar text-xl font-extrabold text-navy mb-3">{country.name}</h3>
+                      <div className="p-3">
+                        <h3 className="font-heading-ar text-base font-extrabold text-navy mb-1.5 truncate">{country.name}</h3>
                         
                         {minPrice && (
-                          <div className="flex items-baseline gap-2 mb-4">
+                          <div className="flex items-baseline gap-1.5 mb-2">
                             <span className="font-jakarta text-[10px] font-bold tracking-wider uppercase text-muted-foreground">يبدأ من</span>
-                            <span className="font-display text-2xl font-bold text-brand flex items-center gap-1">
+                            <span className="font-numeric text-lg font-extrabold tabular-nums text-brand flex items-center gap-1">
                               {minPrice}
-                              <SARSymbol size="sm" className="text-brand" />
+                              <SARSymbol size="xs" className="text-brand" />
                             </span>
                           </div>
                         )}
 
-                        <div className="flex gap-2">
-                          <Button variant="outline" size="sm" className="flex-1 rounded-2xl h-10 border-border" asChild>
+                        <div className="flex gap-1.5">
+                          <Button variant="outline" size="sm" className="flex-1 rounded-xl h-8 text-xs border-border" asChild>
                             <Link to={`/country/${country.code}`}>
                               التفاصيل
                             </Link>
                           </Button>
-                          <Button size="sm" className="flex-1 rounded-2xl h-10 gap-1 bg-navy hover:bg-navy/90 text-navy-foreground" asChild>
+                          <Button size="sm" className="flex-1 rounded-xl h-8 text-xs gap-1 bg-navy hover:bg-navy/90 text-navy-foreground" asChild>
                             <Link to={`/apply?country=${country.code}`}>
                               قدّم الآن
-                              <ArrowIcon className="h-4 w-4" />
+                              <ArrowIcon className="h-3 w-3" />
                             </Link>
                           </Button>
                         </div>
