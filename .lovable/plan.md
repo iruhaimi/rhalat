@@ -1,59 +1,32 @@
+## الوضع الحالي
+- الكود يستخدم **gtag.js مباشرة** (AW-16509107883) وليس GTM.
+- أحداث التحويل مبرمجة بالفعل: `purchase`, `submit_application`, `sign_up`, `generate_lead`, `begin_checkout`.
+- الـ **Conversion Labels** فارغة في الكود لأنها لم تُنشأ بعد في Google Ads.
 
-# خطة: تتبع التحويلات في Google Ads وفق أفضل الممارسات
+## الخطة
 
-الهدف: قياس الأحداث الحقيقية المؤثرة على الإيراد (وليس مجرد Page View) لتمكين Google Ads من تحسين الحملات تلقائياً (Smart Bidding) وحساب ROAS.
+### المرحلة 1: تخطي Cloudflare Gateway (الآن)
+نظرا لاختيارك **gtag.js المباشر**، فإن Google Tag Gateway عبر Cloudflare (في الصورة) خاص بـ GTM Containers فقط ولا حاجة له حاليا. يمكنك إغلاق هذه الواجهة.
 
-## الأحداث المقترحة (Conversion Events)
+### المرحلة 2: إنشاء Conversion Actions في Google Ads (عليك القيام به)
+1. افتح **Google Ads** ← **Tools** ← **Conversions** ← **+ New conversion action**.
+2. اختر **Website** وأدخل نطاقك (visafaster.com).
+3. أنشئ الأحداث التالية بالترتيب:
+   - **purchase** — Primary, Value = dynamic, Category = Purchase
+   - **submit_application** — Primary, Value = dynamic (سعر التأشيرة), Category = Submit lead form
+   - **sign_up** — Secondary, Category = Sign-up
+   - **generate_lead** — Secondary, Category = Submit lead form
+4. افتح كل حدث وانسخ الـ **Conversion Label** (الجزء بعد `/` مثال: `XxXxXxXxXx`).
+5. أرسل لي هذه القيم.
 
-| الحدث | متى يُطلق | القيمة | الأولوية |
-|---|---|---|---|
-| `sign_up` | عند إكمال تسجيل حساب جديد | 0 | ثانوي |
-| `begin_checkout` | عند بدء طلب تأشيرة (الدخول لمعالج التقديم) | تقديري | ثانوي |
-| `generate_lead` | عند فتح WhatsApp / إرسال نموذج تواصل | 0 | ثانوي |
-| `submit_application` | عند تقديم طلب تأشيرة بنجاح | سعر التأشيرة | **رئيسي** |
-| `purchase` | عند نجاح الدفع | المبلغ المدفوع الفعلي | **رئيسي (Primary Conversion)** |
+### المرحلة 3: تحديث الكود (أقوم به)
+- أدخل الـ Conversion Labels في `src/lib/gtagEvents.ts` بدلا من القيم الفارغة.
+- أُفعّل `trackConversion()` ليرسل إلى Google Ads (وليس GA4 فقط).
 
-## ما سيتم تنفيذه في الكود
+### المرحلة 4: تفعيل Enhanced Conversions (اختياري لاحقا)
+- بعد تفعيل `purchase` في Google Ads، اذهب إلى إعداداته وفعّل **Enhanced Conversions**.
+- الكود جاهز لإرسال `user_data` (email/phone hashed) مع حدث الشراء.
 
-1. **Helper مركزي** `src/lib/gtagEvents.ts`:
-   - `trackConversion(eventName, { value, currency, transaction_id, send_to })`
-   - يتحقق من وجود `window.gtag` ومن حالة Consent (`ad_storage = granted`)
-   - يدعم Enhanced Conversions (تمرير email/phone مشفّر تلقائياً عبر gtag)
+---
 
-2. **ربط الأحداث بنقاط حقيقية في التطبيق**:
-   - `purchase` → بعد نجاح الدفع (callback نجاح Stripe/Paddle)
-   - `submit_application` → بعد إنشاء الطلب بحالة `pending_payment`
-   - `sign_up` → بعد تأكيد البريد الإلكتروني
-   - `generate_lead` → عند الضغط على WhatsApp / إرسال نموذج
-   - `begin_checkout` → عند الدخول لمعالج التقديم
-
-3. **Enhanced Conversions** (موصى به من Google):
-   - تمرير `user_data` (email/phone) مع حدث `purchase` — يرفع دقة المطابقة 5-10%
-   - Google يقوم بالـ hashing تلقائياً عند استخدام gtag.js
-
-4. **احترام Consent Mode v2**:
-   - الأحداث لا تُرسل إلا بعد `ad_storage = granted`
-   - في وضع denied: يُرسل ping بدون بيانات شخصية (سلوك Google الافتراضي)
-
-## ما يحتاجه منك بعد الموافقة
-
-من حساب Google Ads → Tools → Conversions، أنشئ تحويلين وارسل لي:
-- **Conversion Label للـ Purchase** (شكل: `AW-16509107883/AbCdEfGhIj`)
-- **Conversion Label للـ Submit Application** (اختياري لكن مهم)
-
-بدون الـ Labels لن تظهر التحويلات في Google Ads حتى لو أُرسلت من الموقع.
-
-## ملاحظات تقنية
-
-- لن أضيف Google Tag Manager (GTM) — نستخدم gtag.js المثبّت حالياً مباشرة، أبسط وأخف.
-- لن أكرر إرسال نفس `purchase` (نستخدم `transaction_id` لمنع التكرار من Google).
-- لن أُرسل قيماً وهمية — الأحداث بدون قيمة فعلية تأخذ `value: 0`.
-
-## ملفات ستتغيّر تقريبياً
-
-- جديد: `src/lib/gtagEvents.ts`
-- تعديل: ملفات نجاح الدفع، تقديم الطلب، التسجيل، أزرار WhatsApp، بداية معالج التقديم
-- لا تغييرات على `index.html` (gtag موجود)
-- لا تغييرات على UI
-
-هل أبدأ التنفيذ؟ وإن كانت الـ Conversion Labels جاهزة الآن أرسلها لأضعها مباشرة، وإلا سأضع placeholder واضح لاستبدالها لاحقاً.
+**الخطوة الوحيدة المطلوبة منك الآن:** إنشاء Conversion Actions في Google Ads وإرسال الـ Labels.
