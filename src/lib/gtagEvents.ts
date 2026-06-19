@@ -18,12 +18,15 @@ const GOOGLE_ADS_ID = 'AW-16509107883';
  * still sent as standard GA4 events (useful for GA4 + Audiences) but they
  * will not register as Google Ads conversions.
  */
+// ⚠️ TODO: استبدل REPLACE_ME بـ Conversion Label من Google Ads
+// Tools → Conversions → افتح كل تحويل → انسخ Conversion ID/Label
+// مثال نهائي: 'AW-16509107883/abCdEfGhIjK'
 const CONVERSION_LABELS: Partial<Record<ConversionEvent, string>> = {
-  // purchase: 'AW-16509107883/REPLACE_WITH_PURCHASE_LABEL',
-  // submit_application: 'AW-16509107883/REPLACE_WITH_SUBMIT_LABEL',
-  // sign_up: 'AW-16509107883/REPLACE_WITH_SIGNUP_LABEL',
-  // generate_lead: 'AW-16509107883/REPLACE_WITH_LEAD_LABEL',
-  // begin_checkout: 'AW-16509107883/REPLACE_WITH_CHECKOUT_LABEL',
+  // purchase: `${GOOGLE_ADS_ID}/REPLACE_ME_PURCHASE`,
+  // submit_application: `${GOOGLE_ADS_ID}/REPLACE_ME_SUBMIT`,
+  // sign_up: `${GOOGLE_ADS_ID}/REPLACE_ME_SIGNUP`,
+  // generate_lead: `${GOOGLE_ADS_ID}/REPLACE_ME_LEAD`,
+  // begin_checkout: `${GOOGLE_ADS_ID}/REPLACE_ME_CHECKOUT`,
 };
 
 export type ConversionEvent =

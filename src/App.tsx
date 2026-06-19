@@ -46,6 +46,7 @@ const Tourism = lazy(() => import("@/pages/Tourism"));
 const TourismDetail = lazy(() => import("@/pages/TourismDetail"));
 const OfficialEmbassies = lazy(() => import("@/pages/OfficialEmbassies"));
 const GTagCheck = lazy(() => import("@/pages/GTagCheck"));
+const LandingVisa = lazy(() => import("@/pages/LandingVisa"));
 
 // Admin — lazy
 const AdminLayout = lazy(() => import("@/components/admin/AdminLayout"));
@@ -154,6 +155,9 @@ const App = () => (
               <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/install" element={<Install />} />
               <Route path="/__gtag-check" element={<GTagCheck />} />
+
+              {/* Landing Pages (no main layout, for Google Ads campaigns) */}
+              <Route path="/lp/visa" element={<LandingVisa />} />
 
               {/* Admin Routes */}
               <Route 
