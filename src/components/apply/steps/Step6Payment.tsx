@@ -39,7 +39,7 @@ import {
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { normalizeSaudiPhone, formatSaudiPhoneSpaced } from '@/lib/phone';
-import { trackConversion, setEnhancedConversionUserData } from '@/lib/gtagEvents';
+import { trackConversion, setEnhancedConversionUserData, markConversionFired, wasConversionFired } from '@/lib/gtagEvents';
 
 const TERMS_VERSION = 'v2026.1';
 
@@ -438,25 +438,30 @@ export default function Step6Payment() {
             }
           : undefined,
       });
-      // Primary conversion: paid purchase
-      trackConversion('purchase', {
-        value: grandTotal,
-        currency: 'SAR',
-        transaction_id: appNumber,
-        payment_type: applicationData.paymentMethod,
-        items: [
-          {
-            item_id: applicationData.visaTypeId || 'visa',
-            item_name: applicationData.visaTypeName || 'Visa Application',
-            item_category: applicationData.countryName || undefined,
-            quantity:
-              applicationData.travelers.adults +
-              applicationData.travelers.children +
-              applicationData.travelers.infants,
-            price: grandTotal,
-          },
-        ],
-      });
+      // Primary conversion: paid purchase (with dedupe so a refresh on
+      // /payment-success doesn't double-fire — the success page also
+      // fires as a safety net)
+      if (!wasConversionFired(appNumber)) {
+        trackConversion('purchase', {
+          value: grandTotal,
+          currency: 'SAR',
+          transaction_id: appNumber,
+          payment_type: applicationData.paymentMethod,
+          items: [
+            {
+              item_id: applicationData.visaTypeId || 'visa',
+              item_name: applicationData.visaTypeName || 'Visa Application',
+              item_category: applicationData.countryName || undefined,
+              quantity:
+                applicationData.travelers.adults +
+                applicationData.travelers.children +
+                applicationData.travelers.infants,
+              price: grandTotal,
+            },
+          ],
+        });
+        markConversionFired(appNumber);
+      }
       trackConversion('submit_application', {
         value: grandTotal,
         currency: 'SAR',
@@ -464,7 +469,14 @@ export default function Step6Payment() {
         method: 'online',
       });
 
-      navigate(`/payment-success?app=${appNumber}`);
+      // Pass the order value to the success page so it can re-assert the
+      // purchase event (Google Tag Assistant expects the event on the
+      // confirmation page).
+      navigate(
+        `/payment-success?app=${encodeURIComponent(appNumber)}` +
+          `&amount=${encodeURIComponent(grandTotal)}` +
+          `&currency=SAR`
+      );
       setTimeout(() => resetApplication(), 1000);
     } catch (error: any) {
       console.error('Payment error:', error);
