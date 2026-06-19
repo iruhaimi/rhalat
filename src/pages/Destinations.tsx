@@ -146,7 +146,7 @@ export default function Destinations() {
     <div className="min-h-screen bg-canvas">
       <SEO title="الوجهات والدول — عطلات رحلاتكم" description="تصفح جميع الدول وأنواع التأشيرات المتاحة مع رسوم وتفاصيل التقديم لكل وجهة." path="/destinations" />
       {/* Hero */}
-      <section className="relative bg-gradient-to-br from-navy via-navy/95 to-brand py-24 overflow-hidden">
+      <section className="relative bg-gradient-to-br from-navy via-navy/95 to-brand py-10 sm:py-12 overflow-hidden">
         {/* Decorative Elements */}
         <div className="absolute inset-0 overflow-hidden">
           <motion.div
@@ -172,15 +172,15 @@ export default function Destinations() {
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-              className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-white/15 backdrop-blur-md mb-6"
+              className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-white/15 backdrop-blur-md mb-3"
             >
-              <Globe className="w-10 h-10 text-white" />
+              <Globe className="w-7 h-7 text-white" />
             </motion.div>
-            
-            <h1 className="font-heading-ar text-5xl md:text-6xl font-extrabold tracking-tight text-white mb-4 leading-[1.1]">
+
+            <h1 className="font-heading-ar text-3xl md:text-4xl font-extrabold tracking-tight text-white mb-2 leading-[1.1]">
               {t('countries.title')}
             </h1>
-            <p className="font-body-ar text-lg text-white/75 mb-8 max-w-xl mx-auto">
+            <p className="font-body-ar text-sm text-white/75 mb-4 max-w-xl mx-auto">
               {t('countries.subtitle')}
             </p>
 
@@ -190,19 +190,19 @@ export default function Destinations() {
               transition={{ delay: 0.4 }}
               className="max-w-lg mx-auto"
             >
-              <div className="flex gap-2 bg-white rounded-3xl p-2 shadow-2xl shadow-navy/30">
+              <div className="flex gap-2 bg-white rounded-2xl p-1.5 shadow-2xl shadow-navy/30">
                 <div className="relative flex-1">
-                  <Search className="absolute start-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
+                  <Search className="absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                   <Input
                     type="text"
                     placeholder={t('hero.searchPlaceholder')}
-                    className="border-0 ps-12 py-6 text-base focus-visible:ring-0 rounded-2xl font-body-ar"
+                    className="border-0 ps-10 py-3 text-sm focus-visible:ring-0 rounded-xl font-body-ar h-10"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                   />
                 </div>
-                <Button size="lg" className="rounded-2xl px-6 bg-navy hover:bg-navy/90 text-navy-foreground">
-                  <Search className="h-5 w-5" />
+                <Button size="sm" className="rounded-xl px-4 h-10 bg-navy hover:bg-navy/90 text-navy-foreground">
+                  <Search className="h-4 w-4" />
                 </Button>
               </div>
             </motion.div>
@@ -211,12 +211,12 @@ export default function Destinations() {
       </section>
 
       {/* Countries Grid */}
-      <section className="py-16">
+      <section className="py-6">
         <div className="container-section">
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="flex items-center justify-between mb-8"
+            className="flex items-center justify-between mb-4"
           >
             <div className="flex items-center gap-3">
               <MapPin className="h-5 w-5 text-primary" />
@@ -233,14 +233,14 @@ export default function Destinations() {
           </motion.div>
 
           {isLoading ? (
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {Array.from({ length: 8 }).map((_, i) => (
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+              {Array.from({ length: 10 }).map((_, i) => (
                 <div key={i} className="rounded-2xl overflow-hidden border bg-card">
-                  <Skeleton className="h-32 w-full" />
-                  <div className="p-4 space-y-3">
-                    <Skeleton className="h-6 w-32" />
+                  <Skeleton className="h-28 w-full" />
+                  <div className="p-3 space-y-2">
                     <Skeleton className="h-4 w-24" />
-                    <Skeleton className="h-10 w-full" />
+                    <Skeleton className="h-4 w-16" />
+                    <Skeleton className="h-8 w-full" />
                   </div>
                 </div>
               ))}
@@ -259,7 +259,7 @@ export default function Destinations() {
             </motion.div>
           ) : (
             <motion.div 
-              className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+              className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5"
               variants={containerVariants}
               initial="hidden"
               animate="visible"
