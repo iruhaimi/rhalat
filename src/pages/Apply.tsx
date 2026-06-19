@@ -342,9 +342,9 @@ function ApplyContent() {
         <div className="absolute inset-0 opacity-[0.07] pointer-events-none"
           style={{ backgroundImage: 'radial-gradient(circle at 20% 20%, white 1px, transparent 1px)', backgroundSize: '32px 32px' }}
         />
-        <div className="container-section px-4 sm:px-6 py-8 sm:py-12 relative">
+        <div className="container-section px-4 sm:px-6 py-4 sm:py-5 relative">
           <div className="flex flex-wrap items-center justify-center gap-3">
-            <h1 className="font-heading-ar text-2xl sm:text-4xl font-black text-center">
+            <h1 className="font-heading-ar text-lg sm:text-2xl font-black text-center">
               {direction === 'rtl' ? 'تقديم طلب التأشيرة' : 'Visa Application'}
             </h1>
             {draftId && profile && (
@@ -359,7 +359,7 @@ function ApplyContent() {
             )}
           </div>
           {(country || applicationData.countryName) && (
-            <p className="text-center text-sm sm:text-base text-white/75 mt-2">
+            <p className="text-center text-xs sm:text-sm text-white/75 mt-1">
               {direction === 'rtl'
                 ? `التأشيرة إلى ${country?.name || applicationData.countryName}`
                 : `Visa to ${country?.name || applicationData.countryName}`}
@@ -369,8 +369,8 @@ function ApplyContent() {
       </div>
 
       {/* Wizard Stepper card — lifted over hero */}
-      <div className="container-section px-4 sm:px-6 -mt-6 sm:-mt-8 relative z-10">
-        <div className="max-w-4xl mx-auto bg-card border border-border rounded-3xl shadow-xl shadow-navy/5 px-4 sm:px-6 py-2 sm:py-3">
+      <div className="container-section px-4 sm:px-6 -mt-3 sm:-mt-4 relative z-10">
+        <div className="max-w-4xl mx-auto bg-card border border-border rounded-3xl shadow-xl shadow-navy/5 px-4 sm:px-6 py-1.5 sm:py-2">
           <WizardStepper
             currentStep={currentStep}
             totalSteps={5}
@@ -380,8 +380,8 @@ function ApplyContent() {
       </div>
 
       {/* Step Content */}
-      <div className="container-section px-4 sm:px-6 py-6 sm:py-10 pb-24 sm:pb-12">
-        <div className="max-w-4xl mx-auto bg-card rounded-4xl shadow-lg shadow-navy/5 border border-border p-5 sm:p-8 md:p-10">
+      <div className="container-section px-4 sm:px-6 py-3 sm:py-4 pb-20 sm:pb-6">
+        <div className="max-w-4xl mx-auto bg-card rounded-3xl shadow-lg shadow-navy/5 border border-border p-4 sm:p-5 md:p-6">
           {renderStep()}
         </div>
       </div>

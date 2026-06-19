@@ -181,21 +181,21 @@ export default function Step2VisaDetails() {
   }, [selectedRegion, schengenCountries]);
 
   return (
-    <div className="space-y-4 sm:space-y-6">
-      <div className="text-center mb-4 sm:mb-8">
-        <h2 className="text-xl sm:text-2xl font-bold">{t('wizard.step2')}</h2>
-        <p className="text-sm sm:text-base text-muted-foreground mt-2">
+    <div className="space-y-3">
+      <div className="text-center mb-2">
+        <h2 className="text-lg sm:text-xl font-bold">{t('wizard.step2')}</h2>
+        <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
           {direction === 'rtl' 
             ? 'حدد نوع التأشيرة وتاريخ السفر وعدد المسافرين' 
             : 'Select visa type, travel date and number of travelers'}
         </p>
       </div>
 
-      <div className="grid lg:grid-cols-3 gap-4 sm:gap-6">
-        <div className="lg:col-span-2 space-y-4">
+      <div className="grid lg:grid-cols-3 gap-3 sm:gap-4">
+        <div className="lg:col-span-2 space-y-3">
           {/* Unified card: Country + Visa Type + Travel Date in one row on desktop */}
-          <div className="bg-card rounded-2xl border border-border p-4 sm:p-5 space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="bg-card rounded-2xl border border-border p-3 sm:p-4 space-y-3">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               {/* Region/Country Selection - swaps to Schengen country picker when relevant */}
               {isSchengenFromUrl || selectedRegion === 'schengen' ? (
                 <div className="space-y-2">
