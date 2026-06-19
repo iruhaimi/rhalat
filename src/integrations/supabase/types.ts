@@ -2527,7 +2527,6 @@ export type Database = {
           is_active: boolean | null
           is_verified: boolean | null
           logo_url: string | null
-          updated_at: string | null
           website: string | null
         }
         Insert: {
@@ -2543,7 +2542,6 @@ export type Database = {
           is_active?: boolean | null
           is_verified?: boolean | null
           logo_url?: string | null
-          updated_at?: string | null
           website?: string | null
         }
         Update: {
@@ -2559,7 +2557,6 @@ export type Database = {
           is_active?: boolean | null
           is_verified?: boolean | null
           logo_url?: string | null
-          updated_at?: string | null
           website?: string | null
         }
         Relationships: []
