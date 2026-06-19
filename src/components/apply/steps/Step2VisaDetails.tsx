@@ -196,8 +196,37 @@ export default function Step2VisaDetails() {
           {/* Unified card: Country + Visa Type + Travel Date in one row on desktop */}
           <div className="bg-card rounded-2xl border border-border p-4 sm:p-5 space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {/* Region/Country Selection - Hidden when user came from Schengen URL */}
-              {!isSchengenFromUrl && (
+              {/* Region/Country Selection - swaps to Schengen country picker when relevant */}
+              {isSchengenFromUrl || selectedRegion === 'schengen' ? (
+                <div className="space-y-2">
+                  <Label className="text-sm font-semibold flex items-center gap-1.5">
+                    <Globe className="w-4 h-4 text-primary" />
+                    {direction === 'rtl' ? 'اختر الدولة من شنغن' : 'Select Schengen country'}
+                  </Label>
+                  <Select
+                    value={applicationData.countryId}
+                    onValueChange={handleCountryChange}
+                  >
+                    <SelectTrigger className="h-12 text-sm sm:text-base">
+                      <SelectValue placeholder={direction === 'rtl' ? 'اختر الدولة' : 'Select country'} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {schengenCountries.map((country) => (
+                        <SelectItem key={country.id} value={country.id}>
+                          <div className="flex items-center gap-2">
+                            <img
+                              src={getSharpFlagUrl(country)}
+                              alt={country.name}
+                              className="w-5 h-4 object-cover rounded"
+                            />
+                            <span>{country.name}</span>
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              ) : (
                 <div className="space-y-2">
                   <Label className="text-sm font-semibold flex items-center gap-1.5">
                     <Globe className="w-4 h-4 text-primary" />
@@ -300,38 +329,6 @@ export default function Step2VisaDetails() {
             />
               </div>
             </div>
-
-            {/* Schengen Country Selection - Shows when Schengen is selected */}
-            {selectedRegion === 'schengen' && (
-              <div className="space-y-2 pt-2 border-t border-border">
-                <Label className="text-sm font-semibold flex items-center gap-1.5">
-                  <Globe className="w-4 h-4 text-primary" />
-                  {direction === 'rtl' ? 'اختر الدولة من شنغن' : 'Select Schengen country'}
-                </Label>
-                <Select
-                  value={applicationData.countryId}
-                  onValueChange={handleCountryChange}
-                >
-                  <SelectTrigger className="h-12 text-sm sm:text-base">
-                    <SelectValue placeholder={direction === 'rtl' ? 'اختر الدولة' : 'Select country'} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {schengenCountries.map((country) => (
-                      <SelectItem key={country.id} value={country.id}>
-                        <div className="flex items-center gap-2">
-                          <img 
-                            src={getSharpFlagUrl(country)}
-                            alt={country.name}
-                            className="w-5 h-4 object-cover rounded"
-                          />
-                          <span>{country.name}</span>
-                        </div>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            )}
 
             {/* Travel date disclaimer */}
             <div className="flex items-start gap-2 p-3 rounded-lg bg-primary/5 border border-primary/10">

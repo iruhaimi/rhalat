@@ -47,7 +47,7 @@ export default function PriceSummaryCard({ className, showDetails = true }: Pric
                 <span className="text-muted-foreground">
                   {t('pricing.adult')} × {travelers.adults}
                 </span>
-                <span className="font-medium flex items-center gap-1">
+                <span className="font-display font-bold tabular-nums flex items-center gap-1">
                   {breakdown.adults.toLocaleString()}
                   <SARSymbol size="xs" />
                 </span>
@@ -58,7 +58,7 @@ export default function PriceSummaryCard({ className, showDetails = true }: Pric
                 <span className="text-muted-foreground">
                   {t('pricing.child')} × {travelers.children}
                 </span>
-                <span className="font-medium flex items-center gap-1">
+                <span className="font-display font-bold tabular-nums flex items-center gap-1">
                   {breakdown.children.toLocaleString()}
                   <SARSymbol size="xs" />
                 </span>
@@ -69,7 +69,7 @@ export default function PriceSummaryCard({ className, showDetails = true }: Pric
                 <span className="text-muted-foreground">
                   {t('pricing.infant')} × {travelers.infants}
                 </span>
-                <span className="font-medium flex items-center gap-1">
+                <span className="font-display font-bold tabular-nums flex items-center gap-1">
                   {breakdown.infants.toLocaleString()}
                   <SARSymbol size="xs" />
                 </span>
@@ -83,7 +83,7 @@ export default function PriceSummaryCard({ className, showDetails = true }: Pric
             <span className="text-muted-foreground">
               {direction === 'rtl' ? 'رسوم الخدمة' : 'Service Fees'}
             </span>
-            <span className="font-medium flex items-center gap-1">
+            <span className="font-display font-bold tabular-nums flex items-center gap-1">
               {serviceTotal.toLocaleString()}
               <SARSymbol size="xs" />
             </span>
@@ -94,7 +94,7 @@ export default function PriceSummaryCard({ className, showDetails = true }: Pric
               <span className="text-muted-foreground">
                 {direction === 'rtl' ? 'رسوم التأشيرة (تقديرية)' : 'Visa Fees (estimated)'}
               </span>
-              <span className="font-medium flex items-center gap-1">
+              <span className="font-display font-bold tabular-nums flex items-center gap-1">
                 {governmentTotal.toLocaleString()}
                 <SARSymbol size="xs" />
               </span>
@@ -107,7 +107,7 @@ export default function PriceSummaryCard({ className, showDetails = true }: Pric
       
       <div className="flex justify-between items-center bg-navy text-white -mx-1 px-4 py-3 rounded-2xl">
         <span className="font-bold text-base sm:text-lg">{t('pricing.total')}</span>
-        <span className="font-display font-black text-xl sm:text-2xl flex items-center gap-1">
+        <span className="font-display font-black text-2xl sm:text-3xl tabular-nums tracking-tight flex items-center gap-1">
           {grandTotal.toLocaleString()}
           <SARSymbol size="md" className="text-white" />
         </span>
