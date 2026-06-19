@@ -135,10 +135,10 @@ export default function Step3Requirements() {
   const canProceed = true;
 
   return (
-    <div className="space-y-6">
-      <div className="text-center mb-8">
-        <h2 className="text-2xl font-bold">{t('wizard.step3')}</h2>
-        <p className="text-muted-foreground mt-2">
+    <div className="space-y-3">
+      <div className="text-center mb-2">
+        <h2 className="text-lg sm:text-xl font-bold">{t('wizard.step2')}</h2>
+        <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
           {direction === 'rtl' 
             ? 'تأكد من توفر المتطلبات التالية قبل المتابعة' 
             : 'Make sure you have the following requirements before proceeding'}
@@ -146,21 +146,21 @@ export default function Step3Requirements() {
       </div>
 
       {/* Progress */}
-      <div className="flex items-center justify-between p-4 bg-muted/30 rounded-lg">
+      <div className="flex items-center justify-between p-2.5 bg-muted/30 rounded-lg">
         <div className="flex items-center gap-2">
           {allChecked ? (
-            <CheckCircle2 className="w-5 h-5 text-green-600" />
+            <CheckCircle2 className="w-4 h-4 text-green-600" />
           ) : (
-            <AlertCircle className="w-5 h-5 text-amber-600" />
+            <AlertCircle className="w-4 h-4 text-amber-600" />
           )}
-          <span className="font-medium">
+          <span className="font-medium text-xs sm:text-sm">
             {direction === 'rtl' 
               ? `${checkedCount} من ${totalCount} متطلب`
               : `${checkedCount} of ${totalCount} requirements`
             }
           </span>
         </div>
-        <Button variant="outline" size="sm" onClick={toggleAll}>
+        <Button variant="outline" size="sm" className="h-7 text-xs" onClick={toggleAll}>
           {allChecked 
             ? (direction === 'rtl' ? 'إلغاء تحديد الكل' : 'Uncheck All')
             : (direction === 'rtl' ? 'تحديد الكل' : 'Check All')
@@ -169,7 +169,7 @@ export default function Step3Requirements() {
       </div>
 
       {/* Requirements List */}
-      <div className="space-y-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
         {requirements.map((req) => {
           const isChecked = applicationData.checkedRequirements.includes(req.id);
           const iconKey = req.id.split('_')[0];
@@ -179,7 +179,7 @@ export default function Step3Requirements() {
             <div
               key={req.id}
               className={cn(
-                "flex items-center gap-4 p-4 rounded-lg border transition-colors cursor-pointer",
+                "flex items-center gap-2 p-2 rounded-lg border transition-colors cursor-pointer",
                 isChecked 
                   ? "bg-primary/5 border-primary/30" 
                   : "bg-card hover:bg-muted/50"
@@ -192,19 +192,12 @@ export default function Step3Requirements() {
                 onCheckedChange={() => toggleRequirement(req.id)}
               />
               <IconComponent className={cn(
-                "w-5 h-5",
+                "w-4 h-4 shrink-0",
                 isChecked ? "text-primary" : "text-muted-foreground"
               )} />
-              <Label htmlFor={req.id} className="flex-1 cursor-pointer">
+              <Label htmlFor={req.id} className="flex-1 cursor-pointer text-xs sm:text-sm truncate">
                 {req.label}
               </Label>
-              {req.forCategory && (
-                <Badge variant="secondary" className="text-xs">
-                  {req.forCategory === 'adult' && (direction === 'rtl' ? 'بالغ' : 'Adult')}
-                  {req.forCategory === 'child' && (direction === 'rtl' ? 'طفل' : 'Child')}
-                  {req.forCategory === 'infant' && (direction === 'rtl' ? 'رضيع' : 'Infant')}
-                </Badge>
-              )}
             </div>
           );
         })}
@@ -212,13 +205,13 @@ export default function Step3Requirements() {
 
       {/* Tips */}
       <div 
-        className="p-4 bg-blue-50 dark:bg-blue-950/30 rounded-lg border border-blue-200 dark:border-blue-800"
+        className="p-2.5 bg-blue-50 dark:bg-blue-950/30 rounded-lg border border-blue-200 dark:border-blue-800"
         dir={direction === 'rtl' ? 'rtl' : 'ltr'}
       >
-        <h4 className={`font-semibold text-blue-900 dark:text-blue-100 mb-2 ${direction === 'rtl' ? 'text-right' : 'text-left'}`}>
+        <h4 className={`font-semibold text-xs sm:text-sm text-blue-900 dark:text-blue-100 mb-1 ${direction === 'rtl' ? 'text-right' : 'text-left'}`}>
           {direction === 'rtl' ? 'نصائح مهمة' : 'Important Tips'}
         </h4>
-        <ul className={`text-sm text-blue-800 dark:text-blue-200 space-y-1 ${direction === 'rtl' ? 'list-disc list-inside text-right' : 'list-disc list-inside text-left'}`}>
+        <ul className={`text-xs text-blue-800 dark:text-blue-200 space-y-0.5 ${direction === 'rtl' ? 'list-disc list-inside text-right' : 'list-disc list-inside text-left'}`}>
           <li>
             {direction === 'rtl' 
               ? 'تأكد من صلاحية جواز السفر لمدة 6 أشهر على الأقل'
@@ -238,12 +231,12 @@ export default function Step3Requirements() {
       </div>
 
       {/* Navigation Buttons */}
-      <div className="flex gap-4 pt-6">
+      <div className="flex gap-3 pt-2">
         <Button
           type="button"
           variant="outline"
           size="lg"
-          className="flex-1 h-12 gap-2"
+          className="flex-1 h-10 gap-2 text-sm"
           onClick={goToPreviousStep}
         >
           <ArrowPrevIcon className="w-4 h-4" />
@@ -252,7 +245,7 @@ export default function Step3Requirements() {
         <Button
           type="button"
           size="lg"
-          className="flex-1 h-12 gap-2"
+          className="flex-1 h-10 gap-2 text-sm"
           onClick={goToNextStep}
           disabled={!canProceed}
         >
