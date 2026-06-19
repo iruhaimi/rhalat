@@ -100,8 +100,10 @@ export default function LandingVisa() {
             transition={{ duration: 0.6 }}
             className="max-w-2xl"
           >
-            <span className="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
-              معتمدون · أكثر من 10,000 طلب ناجح
+            <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
+              <span>معتمدون</span>
+              <span className="text-muted-foreground" aria-hidden="true">|</span>
+              <span>أكثر من 10,000 طلب ناجح</span>
             </span>
             <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">
               تأشيرتك القادمة <span className="text-primary">بأيدٍ أمينة</span>
