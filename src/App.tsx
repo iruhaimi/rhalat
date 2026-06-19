@@ -46,6 +46,7 @@ const Tourism = lazy(() => import("@/pages/Tourism"));
 const TourismDetail = lazy(() => import("@/pages/TourismDetail"));
 const OfficialEmbassies = lazy(() => import("@/pages/OfficialEmbassies"));
 const GTagCheck = lazy(() => import("@/pages/GTagCheck"));
+const LandingVisa = lazy(() => import("@/pages/LandingVisa"));
 
 // Admin — lazy
 const AdminLayout = lazy(() => import("@/components/admin/AdminLayout"));
