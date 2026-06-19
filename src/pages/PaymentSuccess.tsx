@@ -1,6 +1,11 @@
 import { useSearchParams, Link } from 'react-router-dom';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import {
+  trackConversion,
+  markConversionFired,
+  wasConversionFired,
+} from '@/lib/gtagEvents';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { 
@@ -20,7 +25,36 @@ export default function PaymentSuccess() {
   const [searchParams] = useSearchParams();
   const applicationNumber = searchParams.get('app') || 'VISA-XXXXXX';
   const isWhatsApp = searchParams.get('via') === 'whatsapp';
+  const amountParam = searchParams.get('amount');
+  const currencyParam = searchParams.get('currency') || 'SAR';
   const { direction } = useLanguage();
+
+  // Fire the conversion on the order confirmation page so Google Tag
+  // Assistant detects it exactly where it expects it. Deduplicated by
+  // transaction_id (the application number) so a refresh — or the
+  // earlier fire from Step6Payment — does not double-count.
+  useEffect(() => {
+    if (!applicationNumber || applicationNumber === 'VISA-XXXXXX') return;
+    if (wasConversionFired(applicationNumber)) return;
+
+    const value = amountParam ? Number(amountParam) : 0;
+
+    if (isWhatsApp) {
+      trackConversion('generate_lead', {
+        value: Number.isFinite(value) ? value : 0,
+        currency: currencyParam,
+        transaction_id: applicationNumber,
+      });
+    } else {
+      trackConversion('purchase', {
+        value: Number.isFinite(value) ? value : 0,
+        currency: currencyParam,
+        transaction_id: applicationNumber,
+      });
+    }
+    markConversionFired(applicationNumber);
+  }, [applicationNumber, isWhatsApp, amountParam, currencyParam]);
+
 
   const content = direction === 'rtl' ? {
     title: isWhatsApp ? 'تم إرسال طلبك بنجاح!' : 'تم الدفع بنجاح!',
