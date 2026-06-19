@@ -16,7 +16,7 @@ import {
 import TravelerCounter from '../TravelerCounter';
 import PriceSummaryCard from '../PriceSummaryCard';
 import SARSymbol from '@/components/ui/SARSymbol';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Info } from 'lucide-react';
 import { 
   SCHENGEN_INFO, 
   filterOutSchengenCountries, 
@@ -315,6 +315,14 @@ export default function Step2VisaDetails() {
               isRTL={direction === 'rtl'}
               minDate={new Date()}
             />
+            <div className="flex items-start gap-2 p-3 rounded-lg bg-primary/5 border border-primary/10">
+              <Info className="w-4 h-4 text-primary shrink-0 mt-0.5" />
+              <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                {direction === 'rtl'
+                  ? 'ملاحظة: اختيارك لتاريخ السفر المتوقع ليس بالضرورة التزاماً بتوفير موعد يتناسب معه، حيث نقوم بحجز أقرب موعد متاح لدى السفارة.'
+                  : 'Note: Your selected expected travel date does not guarantee an appointment on that exact date. We will book the nearest available appointment at the embassy.'}
+              </p>
+            </div>
           </div>
 
           {/* Traveler Counters */}
