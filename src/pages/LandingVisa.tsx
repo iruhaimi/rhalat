@@ -8,18 +8,19 @@ import SEO from "@/components/seo/SEO";
 import { trackConversion } from "@/lib/gtagEvents";
 
 import heroImg from "@/assets/ads/ad-landscape-schengen.jpg";
-import passportImg from "@/assets/ads/ad-square-passport.jpg";
-import ukImg from "@/assets/ads/ad-square-uk.jpg";
 import teamImg from "@/assets/ads/ad-square-team.jpg";
+import eiffelImg from "@/assets/ads/landmark-eiffel.jpg";
+import bigBenImg from "@/assets/ads/landmark-bigben.jpg";
+import libertyImg from "@/assets/ads/landmark-liberty.jpg";
 
 const WHATSAPP_PHONE = "966562525665";
 const WHATSAPP_MESSAGE = "مرحباً، أرغب في الاستفسار عن خدمات التأشيرات";
 const WHATSAPP = `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`;
 
 const destinations = [
-  { name: "تأشيرة شنغن", img: heroImg, to: "/destinations" },
-  { name: "تأشيرة بريطانيا", img: ukImg, to: "/destinations" },
-  { name: "تأشيرة أمريكا", img: passportImg, to: "/destinations" },
+  { name: "تأشيرة شنغن", img: eiffelImg, to: "/destinations" },
+  { name: "تأشيرة بريطانيا", img: bigBenImg, to: "/destinations" },
+  { name: "تأشيرة أمريكا", img: libertyImg, to: "/destinations" },
 ];
 
 const steps = [
