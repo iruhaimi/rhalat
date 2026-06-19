@@ -146,7 +146,7 @@ export default function Destinations() {
     <div className="min-h-screen bg-canvas">
       <SEO title="الوجهات والدول — عطلات رحلاتكم" description="تصفح جميع الدول وأنواع التأشيرات المتاحة مع رسوم وتفاصيل التقديم لكل وجهة." path="/destinations" />
       {/* Hero */}
-      <section className="relative bg-gradient-to-br from-navy via-navy/95 to-brand py-24 overflow-hidden">
+      <section className="relative bg-gradient-to-br from-navy via-navy/95 to-brand py-10 sm:py-12 overflow-hidden">
         {/* Decorative Elements */}
         <div className="absolute inset-0 overflow-hidden">
           <motion.div
@@ -172,15 +172,15 @@ export default function Destinations() {
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-              className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-white/15 backdrop-blur-md mb-6"
+              className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-white/15 backdrop-blur-md mb-3"
             >
-              <Globe className="w-10 h-10 text-white" />
+              <Globe className="w-7 h-7 text-white" />
             </motion.div>
-            
-            <h1 className="font-heading-ar text-5xl md:text-6xl font-extrabold tracking-tight text-white mb-4 leading-[1.1]">
+
+            <h1 className="font-heading-ar text-3xl md:text-4xl font-extrabold tracking-tight text-white mb-2 leading-[1.1]">
               {t('countries.title')}
             </h1>
-            <p className="font-body-ar text-lg text-white/75 mb-8 max-w-xl mx-auto">
+            <p className="font-body-ar text-sm text-white/75 mb-4 max-w-xl mx-auto">
               {t('countries.subtitle')}
             </p>
 
@@ -190,19 +190,19 @@ export default function Destinations() {
               transition={{ delay: 0.4 }}
               className="max-w-lg mx-auto"
             >
-              <div className="flex gap-2 bg-white rounded-3xl p-2 shadow-2xl shadow-navy/30">
+              <div className="flex gap-2 bg-white rounded-2xl p-1.5 shadow-2xl shadow-navy/30">
                 <div className="relative flex-1">
-                  <Search className="absolute start-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
+                  <Search className="absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                   <Input
                     type="text"
                     placeholder={t('hero.searchPlaceholder')}
-                    className="border-0 ps-12 py-6 text-base focus-visible:ring-0 rounded-2xl font-body-ar"
+                    className="border-0 ps-10 py-3 text-sm focus-visible:ring-0 rounded-xl font-body-ar h-10"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                   />
                 </div>
-                <Button size="lg" className="rounded-2xl px-6 bg-navy hover:bg-navy/90 text-navy-foreground">
-                  <Search className="h-5 w-5" />
+                <Button size="sm" className="rounded-xl px-4 h-10 bg-navy hover:bg-navy/90 text-navy-foreground">
+                  <Search className="h-4 w-4" />
                 </Button>
               </div>
             </motion.div>
@@ -211,12 +211,12 @@ export default function Destinations() {
       </section>
 
       {/* Countries Grid */}
-      <section className="py-16">
+      <section className="py-6">
         <div className="container-section">
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="flex items-center justify-between mb-8"
+            className="flex items-center justify-between mb-4"
           >
             <div className="flex items-center gap-3">
               <MapPin className="h-5 w-5 text-primary" />
@@ -233,14 +233,14 @@ export default function Destinations() {
           </motion.div>
 
           {isLoading ? (
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {Array.from({ length: 8 }).map((_, i) => (
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+              {Array.from({ length: 10 }).map((_, i) => (
                 <div key={i} className="rounded-2xl overflow-hidden border bg-card">
-                  <Skeleton className="h-32 w-full" />
-                  <div className="p-4 space-y-3">
-                    <Skeleton className="h-6 w-32" />
+                  <Skeleton className="h-28 w-full" />
+                  <div className="p-3 space-y-2">
                     <Skeleton className="h-4 w-24" />
-                    <Skeleton className="h-10 w-full" />
+                    <Skeleton className="h-4 w-16" />
+                    <Skeleton className="h-8 w-full" />
                   </div>
                 </div>
               ))}
@@ -259,7 +259,7 @@ export default function Destinations() {
             </motion.div>
           ) : (
             <motion.div 
-              className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+              className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5"
               variants={containerVariants}
               initial="hidden"
               animate="visible"
@@ -271,11 +271,11 @@ export default function Destinations() {
                     key="schengen"
                     variants={itemVariants}
                     layout
-                    whileHover={{ y: -6, transition: { duration: 0.3 } }}
-                    className="group relative overflow-hidden rounded-4xl bg-card border border-border hover:shadow-2xl hover:shadow-navy/5 hover:border-brand/30 transition-all duration-300"
+                    whileHover={{ y: -4, transition: { duration: 0.3 } }}
+                    className="group relative overflow-hidden rounded-2xl bg-card border border-border hover:shadow-xl hover:shadow-navy/5 hover:border-brand/30 transition-all duration-300"
                   >
                     {/* Flag Background */}
-                    <div className="relative h-44 overflow-hidden bg-gradient-to-br from-navy/5 to-brand/10">
+                    <div className="relative h-28 overflow-hidden bg-gradient-to-br from-navy/5 to-brand/10">
                       <img
                         src={SCHENGEN_INFO.flag_url}
                         alt={SCHENGEN_INFO.name}
@@ -286,9 +286,9 @@ export default function Destinations() {
                       <div className="absolute inset-0 " />
                       
                       {/* Processing Days Badge */}
-                      <div className="absolute top-4 end-4 flex items-center gap-2">
+                      <div className="absolute top-2 end-2 flex items-center gap-2">
                         {schengenProcessingDays && (
-                          <Badge className="bg-navy/90 backdrop-blur-md text-white border-0 rounded-xl px-3 py-1.5 font-jakarta text-[10px] font-bold gap-1">
+                          <Badge className="bg-navy/90 backdrop-blur-md text-white border-0 rounded-lg px-2 py-0.5 font-jakarta text-[10px] font-bold gap-1">
                             <Clock className="h-3 w-3" />
                             {schengenProcessingDays} أيام
                           </Badge>
@@ -297,29 +297,29 @@ export default function Destinations() {
                     </div>
 
                     {/* Content */}
-                    <div className="p-6">
-                      <h3 className="font-heading-ar text-xl font-extrabold text-navy mb-3">{SCHENGEN_INFO.name}</h3>
+                    <div className="p-3">
+                      <h3 className="font-heading-ar text-base font-extrabold text-navy mb-1.5 truncate">{SCHENGEN_INFO.name}</h3>
                       
                       {schengenMinPrice && (
-                        <div className="flex items-baseline gap-2 mb-4">
+                        <div className="flex items-baseline gap-1.5 mb-2">
                           <span className="font-jakarta text-[10px] font-bold tracking-wider uppercase text-muted-foreground">يبدأ من</span>
-                          <span className="font-display text-2xl font-bold text-brand flex items-center gap-1">
+                          <span className="font-numeric text-lg font-extrabold tabular-nums text-brand flex items-center gap-1">
                             {schengenMinPrice}
-                            <SARSymbol size="sm" className="text-brand" />
+                            <SARSymbol size="xs" className="text-brand" />
                           </span>
                         </div>
                       )}
 
-                      <div className="flex gap-2">
-                        <Button variant="outline" size="sm" className="flex-1 rounded-2xl h-10 border-border" asChild>
+                      <div className="flex gap-1.5">
+                        <Button variant="outline" size="sm" className="flex-1 rounded-xl h-8 text-xs border-border" asChild>
                           <Link to="/country/SCHENGEN">
                             التفاصيل
                           </Link>
                         </Button>
-                        <Button size="sm" className="flex-1 rounded-2xl h-10 gap-1 bg-navy hover:bg-navy/90 text-navy-foreground" asChild>
+                        <Button size="sm" className="flex-1 rounded-xl h-8 text-xs gap-1 bg-navy hover:bg-navy/90 text-navy-foreground" asChild>
                           <Link to="/apply?country=SCHENGEN">
                             قدّم الآن
-                            <ArrowIcon className="h-4 w-4" />
+                            <ArrowIcon className="h-3 w-3" />
                           </Link>
                         </Button>
                       </div>
@@ -338,11 +338,11 @@ export default function Destinations() {
                       key={country.id}
                       variants={itemVariants}
                       layout
-                      whileHover={{ y: -6, transition: { duration: 0.3 } }}
-                      className="group relative overflow-hidden rounded-4xl bg-card border border-border hover:shadow-2xl hover:shadow-navy/5 hover:border-brand/30 transition-all duration-300"
+                      whileHover={{ y: -4, transition: { duration: 0.3 } }}
+                      className="group relative overflow-hidden rounded-2xl bg-card border border-border hover:shadow-xl hover:shadow-navy/5 hover:border-brand/30 transition-all duration-300"
                     >
                       {/* Flag Background */}
-                      <div className="relative h-44 overflow-hidden bg-gradient-to-br from-navy/5 to-brand/10">
+                      <div className="relative h-28 overflow-hidden bg-gradient-to-br from-navy/5 to-brand/10">
                         <img
                           src={getSharpFlagUrl(country)}
                           alt={country.name}
@@ -353,9 +353,9 @@ export default function Destinations() {
                         <div className="absolute inset-0 " />
                         
                         {/* Badges */}
-                        <div className="absolute top-4 end-4 flex items-center gap-2">
+                        <div className="absolute top-2 end-2 flex items-center gap-2">
                           {processingDays && (
-                            <Badge className="bg-navy/90 backdrop-blur-md text-white border-0 rounded-xl px-3 py-1.5 font-jakarta text-[10px] font-bold gap-1">
+                            <Badge className="bg-navy/90 backdrop-blur-md text-white border-0 rounded-lg px-2 py-0.5 font-jakarta text-[10px] font-bold gap-1">
                               <Clock className="h-3 w-3" />
                               {processingDays} أيام
                             </Badge>
@@ -363,36 +363,36 @@ export default function Destinations() {
                         </div>
                         
                         {visaCount > 0 && (
-                          <Badge className="absolute top-4 start-4 bg-white/95 text-navy backdrop-blur-md rounded-xl px-3 py-1.5 font-jakarta text-[10px] font-bold">
-                            {visaCount} نوع تأشيرة
+                          <Badge className="absolute top-2 start-2 bg-white/95 text-navy backdrop-blur-md rounded-lg px-2 py-0.5 font-jakarta text-[10px] font-bold">
+                            {visaCount} تأشيرة
                           </Badge>
                         )}
                       </div>
 
                       {/* Content */}
-                      <div className="p-6">
-                        <h3 className="font-heading-ar text-xl font-extrabold text-navy mb-3">{country.name}</h3>
+                      <div className="p-3">
+                        <h3 className="font-heading-ar text-base font-extrabold text-navy mb-1.5 truncate">{country.name}</h3>
                         
                         {minPrice && (
-                          <div className="flex items-baseline gap-2 mb-4">
+                          <div className="flex items-baseline gap-1.5 mb-2">
                             <span className="font-jakarta text-[10px] font-bold tracking-wider uppercase text-muted-foreground">يبدأ من</span>
-                            <span className="font-display text-2xl font-bold text-brand flex items-center gap-1">
+                            <span className="font-numeric text-lg font-extrabold tabular-nums text-brand flex items-center gap-1">
                               {minPrice}
-                              <SARSymbol size="sm" className="text-brand" />
+                              <SARSymbol size="xs" className="text-brand" />
                             </span>
                           </div>
                         )}
 
-                        <div className="flex gap-2">
-                          <Button variant="outline" size="sm" className="flex-1 rounded-2xl h-10 border-border" asChild>
+                        <div className="flex gap-1.5">
+                          <Button variant="outline" size="sm" className="flex-1 rounded-xl h-8 text-xs border-border" asChild>
                             <Link to={`/country/${country.code}`}>
                               التفاصيل
                             </Link>
                           </Button>
-                          <Button size="sm" className="flex-1 rounded-2xl h-10 gap-1 bg-navy hover:bg-navy/90 text-navy-foreground" asChild>
+                          <Button size="sm" className="flex-1 rounded-xl h-8 text-xs gap-1 bg-navy hover:bg-navy/90 text-navy-foreground" asChild>
                             <Link to={`/apply?country=${country.code}`}>
                               قدّم الآن
-                              <ArrowIcon className="h-4 w-4" />
+                              <ArrowIcon className="h-3 w-3" />
                             </Link>
                           </Button>
                         </div>

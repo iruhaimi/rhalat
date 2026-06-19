@@ -1,25 +1,34 @@
-## السبب
+## الهدف
+صفحة `/destinations` بدون تمرير (تظهر كل البطاقات في شاشة واحدة قدر الإمكان) ببطاقات مدمجة.
 
-الأرقام تستخدم حالياً `font-display` (خط **Syne** — خط عرض زخرفي/هندسي مزخرف غير مناسب للأرقام، يجعلها غير واضحة).
+## التغييرات
 
-## الخطة
+### 1. تقليل ارتفاع الـ Hero
+- `py-24` → `py-10 sm:py-12`
+- الأيقونة `w-20 h-20` → `w-14 h-14`، والـ icon `w-10 h-10` → `w-7 h-7`، `mb-6` → `mb-3`
+- العنوان `text-5xl md:text-6xl` → `text-3xl md:text-4xl`، `mb-4` → `mb-2`
+- الوصف `text-lg mb-8` → `text-sm mb-4`
+- شريط البحث: `py-6` → `py-3`، `rounded-3xl p-2` → `rounded-2xl p-1.5`، الزر أصغر
 
-### 1. إضافة خط رقمي واضح
-في `tailwind.config.ts`: إضافة عائلة جديدة
-```ts
-numeric: ['Plus Jakarta Sans', 'Inter', 'system-ui', 'sans-serif']
-```
-(Plus Jakarta Sans محمّل أصلاً، أرقامه نظيفة وواضحة جداً)
+### 2. تقليل المسافات في قسم الشبكة
+- `py-16` → `py-6`
+- شريط العداد `mb-8` → `mb-4`
 
-### 2. استبدال `font-display` بـ `font-numeric` في مواضع الأرقام فقط
-- `WizardStepper.tsx`: أرقام الخطوات (Desktop + Mobile) + إرجاع الأحجام للسابق (`w-11 h-11 text-sm` و `text-xl`)
-- `TravelerCounter.tsx`: رقم العداد + إرجاع الحجم للسابق (`text-3xl` بدل `text-4xl`)
-- `PriceSummaryCard.tsx`: المبالغ (breakdown + serviceTotal + governmentTotal + grandTotal) + إرجاع الإجمالي للحجم السابق (`text-xl sm:text-2xl`)
+### 3. تصغير بطاقات الدول (compact)
+- شبكة أكثر كثافة: `sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4` → `sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5`
+- `gap-6` → `gap-4`
+- صورة العلم `h-44` → `h-28`
+- الـ padding للمحتوى `p-6` → `p-3`
+- اسم الدولة `text-xl mb-3` → `text-base mb-1.5`
+- السعر `text-2xl mb-4` → `text-lg mb-2`، تسمية "يبدأ من" `text-[10px]` تبقى
+- الأزرار `h-10` → `h-8`، `text-xs`، اختصار النصوص إذا لزم
+- شارة "X نوع تأشيرة" + "X أيام": `px-3 py-1.5` → `px-2 py-1`
+- `rounded-4xl` → `rounded-2xl`
 
-### الملفات
-- `tailwind.config.ts`
-- `src/components/apply/WizardStepper.tsx`
-- `src/components/apply/TravelerCounter.tsx`
-- `src/components/apply/PriceSummaryCard.tsx`
+### 4. حالة التحميل (Skeleton)
+مطابقة الأبعاد الجديدة: `h-32` → `h-28`، تقليل عدد العناصر إلى 10 وتحديث شبكتها.
 
-النتيجة: نفس الأحجام السابقة، لكن بخط أرقام نظيف وواضح بدلاً من خط Syne المزخرف.
+## الملفات
+- `src/pages/Destinations.tsx` فقط
+
+النتيجة: hero مدمج + شبكة 5 أعمدة ببطاقات صغيرة → كامل المحتوى تقريباً في viewport واحد على الديسكتوب.
