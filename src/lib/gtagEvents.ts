@@ -142,3 +142,27 @@ export function trackConversion(
 }
 
 export const GOOGLE_ADS_CONVERSION_ID = GOOGLE_ADS_ID;
+
+/**
+ * Lightweight dedupe for conversion events keyed by transaction_id.
+ * Uses sessionStorage so that refreshing the success page won't re-fire
+ * the same purchase. A successful payment in a new session (after
+ * sessionStorage is cleared) will still fire — which is correct.
+ */
+const FIRED_KEY_PREFIX = 'gtag_fired_';
+
+export function wasConversionFired(transactionId: string): boolean {
+  if (typeof window === 'undefined' || !transactionId) return false;
+  try {
+    return sessionStorage.getItem(FIRED_KEY_PREFIX + transactionId) === '1';
+  } catch {
+    return false;
+  }
+}
+
+export function markConversionFired(transactionId: string): void {
+  if (typeof window === 'undefined' || !transactionId) return;
+  try {
+    sessionStorage.setItem(FIRED_KEY_PREFIX + transactionId, '1');
+  } catch {}
+}
