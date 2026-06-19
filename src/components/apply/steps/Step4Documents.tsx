@@ -133,10 +133,10 @@ export default function Step4Documents() {
   const canProceed = true; // Documents are optional - user may continue via WhatsApp
 
   return (
-    <div className="space-y-4 sm:space-y-6">
-      <div className="text-center mb-4 sm:mb-8">
-        <h2 className="text-xl sm:text-2xl font-bold">{t('wizard.step4')}</h2>
-        <p className="text-sm sm:text-base text-muted-foreground mt-2">
+    <div className="space-y-3">
+      <div className="text-center mb-2">
+        <h2 className="text-lg sm:text-xl font-bold">{t('wizard.step4')}</h2>
+        <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
           {direction === 'rtl' 
             ? 'ارفع المستندات المطلوبة لإكمال طلبك' 
             : 'Upload the required documents to complete your application'}
@@ -144,20 +144,20 @@ export default function Step4Documents() {
       </div>
 
       {/* Upload Progress */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-3 sm:p-4 bg-muted/30 rounded-xl">
-        <span className="font-medium text-sm sm:text-base">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-2.5 bg-muted/30 rounded-xl">
+        <span className="font-medium text-xs sm:text-sm">
           {direction === 'rtl' 
             ? `${uploadedCount} مستند تم رفعه`
             : `${uploadedCount} document${uploadedCount !== 1 ? 's' : ''} uploaded`
           }
         </span>
-        <Badge variant="secondary" className="w-fit">
+        <Badge variant="secondary" className="w-fit text-xs">
           {direction === 'rtl' ? 'اختياري' : 'Optional'}
         </Badge>
       </div>
 
       {/* File Upload Areas */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
         {documentTypes.map((docType) => {
           const upload = uploads[docType.id];
           const existingDoc = applicationData.uploadedDocuments.find(d => d.type === docType.id);
@@ -167,7 +167,7 @@ export default function Step4Documents() {
             <div
               key={docType.id}
               className={cn(
-                "relative p-4 rounded-lg border-2 border-dashed transition-colors",
+                "relative p-2.5 rounded-lg border-2 border-dashed transition-colors",
                 isUploaded && "border-green-500 bg-green-50 dark:bg-green-950/20",
                 upload?.status === 'error' && "border-destructive bg-destructive/5",
                 !isUploaded && !upload?.status && "border-muted-foreground/30 hover:border-primary/50"
@@ -184,31 +184,31 @@ export default function Step4Documents() {
                 disabled={upload?.status === 'uploading'}
               />
               
-              <div className="flex items-start gap-3">
+              <div className="flex items-start gap-2">
                 <div className={cn(
-                  "w-10 h-10 rounded-lg flex items-center justify-center",
+                  "w-8 h-8 rounded-lg flex items-center justify-center shrink-0",
                   isUploaded ? "bg-green-100 text-green-600" : "bg-muted"
                 )}>
                   {upload?.status === 'uploading' ? (
-                    <Loader2 className="w-5 h-5 animate-spin" />
+                    <Loader2 className="w-4 h-4 animate-spin" />
                   ) : isUploaded ? (
-                    <CheckCircle2 className="w-5 h-5" />
+                    <CheckCircle2 className="w-4 h-4" />
                   ) : upload?.status === 'error' ? (
-                    <XCircle className="w-5 h-5 text-destructive" />
+                    <XCircle className="w-4 h-4 text-destructive" />
                   ) : (
-                    <Upload className="w-5 h-5 text-muted-foreground" />
+                    <Upload className="w-4 h-4 text-muted-foreground" />
                   )}
                 </div>
                 
                 <div className="flex-1 min-w-0">
-                  <div className="font-medium">
+                  <div className="font-medium text-sm">
                     {docType.label[language]}
                   </div>
                   
                   {upload?.status === 'uploading' && (
-                    <div className="mt-2">
+                    <div className="mt-1.5">
                       <Progress value={upload.progress} className="h-1" />
-                      <span className="text-xs text-muted-foreground">
+                      <span className="text-[10px] text-muted-foreground">
                         {Math.round(upload.progress)}%
                       </span>
                     </div>
@@ -217,23 +217,23 @@ export default function Step4Documents() {
                   {isUploaded && (upload?.file || existingDoc) && (
                     <div className="flex items-center gap-2 mt-1">
                       <FileText className="w-3 h-3 text-muted-foreground" />
-                      <span className="text-xs text-muted-foreground truncate">
+                      <span className="text-[10px] text-muted-foreground truncate">
                         {upload?.file?.name || existingDoc?.fileName}
                       </span>
-                      <span className="text-xs text-muted-foreground">
+                      <span className="text-[10px] text-muted-foreground">
                         ({formatFileSize(upload?.file?.size || existingDoc?.fileSize || 0)})
                       </span>
                     </div>
                   )}
                   
                   {upload?.status === 'error' && (
-                    <div className="text-xs text-destructive mt-1">
+                    <div className="text-[10px] text-destructive mt-0.5">
                       {upload.error}
                     </div>
                   )}
                   
                   {!isUploaded && !upload?.status && (
-                    <div className="text-xs text-muted-foreground mt-1">
+                    <div className="text-[10px] text-muted-foreground mt-0.5">
                       {t('documents.formats')} • {t('documents.maxSize')}
                     </div>
                   )}
@@ -243,13 +243,13 @@ export default function Step4Documents() {
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="h-8 w-8 z-20 relative"
+                    className="h-7 w-7 z-20 relative"
                     onClick={(e) => {
                       e.stopPropagation();
                       handleRemove(docType.id);
                     }}
                   >
-                    <Trash2 className="w-4 h-4 text-muted-foreground hover:text-destructive" />
+                    <Trash2 className="w-3.5 h-3.5 text-muted-foreground hover:text-destructive" />
                   </Button>
                 )}
               </div>
@@ -259,12 +259,12 @@ export default function Step4Documents() {
       </div>
 
       {/* Required Documents Guide */}
-      <div className="p-4 bg-blue-50 dark:bg-blue-950/30 rounded-lg border border-blue-200 dark:border-blue-800">
-        <h4 className="font-semibold text-blue-900 dark:text-blue-100 mb-2 flex items-center gap-2">
-          <FileText className="w-4 h-4" />
+      <div className="p-2.5 bg-blue-50 dark:bg-blue-950/30 rounded-lg border border-blue-200 dark:border-blue-800">
+        <h4 className="font-semibold text-xs sm:text-sm text-blue-900 dark:text-blue-100 mb-1 flex items-center gap-1.5">
+          <FileText className="w-3.5 h-3.5" />
           {direction === 'rtl' ? 'المستندات المطلوبة' : 'Required Documents'}
         </h4>
-        <ul className="text-sm text-blue-900 dark:text-blue-100 space-y-1 list-disc list-inside">
+        <ul className="text-xs text-blue-900 dark:text-blue-100 space-y-0.5 list-disc list-inside">
           <li>{direction === 'rtl' ? 'صورة واضحة من جواز السفر (سارٍ لمدة 6 أشهر على الأقل)' : 'Clear copy of passport (valid for at least 6 months)'}</li>
           <li>{direction === 'rtl' ? 'صورة شخصية بخلفية بيضاء' : 'Personal photo with white background'}</li>
           <li>{direction === 'rtl' ? 'كشف حساب بنكي لآخر 3 أشهر (مختوم وباللغة الإنجليزية)' : 'Bank statement for last 3 months (stamped, in English)'}</li>
@@ -274,12 +274,12 @@ export default function Step4Documents() {
       </div>
 
       {/* Navigation Buttons - Sticky on mobile */}
-      <div className="flex gap-3 sm:gap-4 pt-4 sm:pt-6 sticky bottom-0 bg-background/95 backdrop-blur-sm pb-4 -mx-4 px-4 sm:mx-0 sm:px-0 sm:static sm:bg-transparent sm:backdrop-blur-none border-t sm:border-0 mt-4 sm:mt-0">
+      <div className="flex gap-3 pt-2 sticky bottom-0 bg-background/95 backdrop-blur-sm pb-3 -mx-4 px-4 sm:mx-0 sm:px-0 sm:static sm:bg-transparent sm:backdrop-blur-none border-t sm:border-0 mt-2 sm:mt-0">
         <Button
           type="button"
           variant="outline"
           size="lg"
-          className="flex-1 h-12 gap-2 text-sm sm:text-base"
+          className="flex-1 h-10 gap-2 text-sm"
           onClick={goToPreviousStep}
         >
           <ArrowPrevIcon className="w-4 h-4" />
@@ -289,7 +289,7 @@ export default function Step4Documents() {
         <Button
           type="button"
           size="lg"
-          className="flex-1 h-12 gap-2 text-sm sm:text-base"
+          className="flex-1 h-10 gap-2 text-sm"
           onClick={goToNextStep}
           disabled={!canProceed}
         >
