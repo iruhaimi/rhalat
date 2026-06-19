@@ -183,7 +183,7 @@ export default function Step2VisaDetails() {
   return (
     <div className="space-y-2">
       <div className="text-center mb-1">
-        <h2 className="text-lg sm:text-xl font-bold">{t('wizard.step2')}</h2>
+        <h2 className="text-lg sm:text-xl font-bold">{t('wizard.step1')}</h2>
         <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
           {direction === 'rtl' 
             ? 'حدد نوع التأشيرة وتاريخ السفر وعدد المسافرين' 
