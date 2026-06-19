@@ -30,7 +30,7 @@ export default function WizardStepper({ currentStep, totalSteps, onStepClick }: 
                 onClick={() => onStepClick?.(step.number)}
                 disabled={step.number > currentStep}
                 className={cn(
-                  "w-11 h-11 rounded-2xl flex items-center justify-center text-sm font-display font-black transition-all",
+                  "w-12 h-12 rounded-2xl flex items-center justify-center text-lg font-display font-black tabular-nums transition-all",
                   step.number < currentStep && "bg-navy text-white cursor-pointer hover:scale-105",
                   step.number === currentStep && "bg-navy text-white ring-4 ring-navy/15 scale-105 shadow-lg shadow-navy/20",
                   step.number > currentStep && "bg-muted text-muted-foreground cursor-not-allowed"
@@ -71,7 +71,7 @@ export default function WizardStepper({ currentStep, totalSteps, onStepClick }: 
               {steps.find(s => s.number === currentStep)?.label}
             </span>
           </div>
-          <div className="w-14 h-14 rounded-2xl bg-navy text-white flex items-center justify-center text-xl font-display font-black shadow-lg shadow-navy/20">
+          <div className="w-14 h-14 rounded-2xl bg-navy text-white flex items-center justify-center text-2xl font-display font-black tabular-nums shadow-lg shadow-navy/20">
             {currentStep}
           </div>
         </div>

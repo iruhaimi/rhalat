@@ -67,7 +67,7 @@ export default function TravelerCounter({
           <Minus className="h-5 w-5" />
         </Button>
 
-        <span className="w-14 text-center text-3xl font-display font-black tabular-nums text-navy">{value}</span>
+        <span className="w-16 text-center text-4xl font-display font-black tabular-nums tracking-tight text-navy">{value}</span>
 
         <Button
           type="button"
