@@ -747,6 +747,38 @@ export default function Step6Payment() {
               </div>
             </div>
           )}
+
+          {/* Pay Button + security badges */}
+          {docsComplete && (
+            <>
+              <Button
+                size="lg"
+                className="w-full h-11 sm:h-12 text-sm sm:text-base gap-2"
+                onClick={handlePayment}
+                disabled={!applicationData.paymentMethod || isProcessing || !applicationData.termsAccepted}
+              >
+                {isProcessing ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span className="text-sm">{direction === 'rtl' ? 'جاري المعالجة...' : 'Processing...'}</span>
+                  </>
+                ) : (
+                  <>
+                    <Lock className="w-4 h-4" />
+                    <span className="flex items-center gap-1 text-sm sm:text-base">
+                      {t('wizard.pay')} - {grandTotal.toLocaleString()}
+                      <SARSymbol size="sm" />
+                    </span>
+                  </>
+                )}
+              </Button>
+              <div className="flex items-center justify-center gap-3 text-[10px] text-muted-foreground">
+                <span className="flex items-center gap-1"><Shield className="w-3 h-3 text-accent" />{direction === 'rtl' ? 'دفع آمن' : 'Secure'}</span>
+                <span className="flex items-center gap-1"><Lock className="w-2.5 h-2.5" />SSL</span>
+                <span className="flex items-center gap-1"><CheckCircle2 className="w-2.5 h-2.5" />PCI</span>
+              </div>
+            </>
+          )}
         </div>
       </div>
 
