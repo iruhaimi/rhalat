@@ -42,8 +42,6 @@ export default function FooterArabic() {
   // Merged with DB-driven quick links, deduplicated by URL.
   const movedFromHeader: Array<{ id: string; value: string; url: string }> = [
     { id: 'mv-tourism', value: 'برامج سياحية', url: '/tourism' },
-    { id: 'mv-blog', value: 'المدونة', url: '/blog' },
-    { id: 'mv-faq', value: 'الأسئلة الشائعة', url: '/faq' },
     { id: 'mv-about', value: 'من نحن', url: '/about' },
     { id: 'mv-contact', value: 'تواصل معنا', url: '/contact' },
   ];
