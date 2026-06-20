@@ -2261,6 +2261,68 @@ export type Database = {
         }
         Relationships: []
       }
+      visa_requirements: {
+        Row: {
+          applies_to: string
+          code: string | null
+          created_at: string
+          description_ar: string | null
+          description_en: string | null
+          display_order: number
+          icon: string | null
+          id: string
+          is_active: boolean
+          is_required: boolean
+          name_ar: string
+          name_en: string
+          requires_upload: boolean
+          updated_at: string
+          visa_type_id: string
+        }
+        Insert: {
+          applies_to?: string
+          code?: string | null
+          created_at?: string
+          description_ar?: string | null
+          description_en?: string | null
+          display_order?: number
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          is_required?: boolean
+          name_ar: string
+          name_en: string
+          requires_upload?: boolean
+          updated_at?: string
+          visa_type_id: string
+        }
+        Update: {
+          applies_to?: string
+          code?: string | null
+          created_at?: string
+          description_ar?: string | null
+          description_en?: string | null
+          display_order?: number
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          is_required?: boolean
+          name_ar?: string
+          name_en?: string
+          requires_upload?: boolean
+          updated_at?: string
+          visa_type_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "visa_requirements_visa_type_id_fkey"
+            columns: ["visa_type_id"]
+            isOneToOne: false
+            referencedRelation: "visa_types"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       visa_types: {
         Row: {
           child_price: number | null
