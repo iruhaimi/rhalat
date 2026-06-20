@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Phone } from 'lucide-react';
+import { ArrowLeft, Phone, ShieldCheck, Clock, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/contexts/LanguageContext';
 
@@ -20,19 +20,20 @@ export default function CTASection({ t }: CTASectionProps) {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="relative bg-brand rounded-7xl p-12 md:p-20 text-center overflow-hidden shadow-2xl shadow-brand/20"
+          id="final-cta"
+          className="relative bg-gradient-to-br from-brand via-brand to-navy rounded-3xl p-12 md:p-20 text-center overflow-hidden shadow-[0_30px_80px_-20px] shadow-brand/40"
         >
           <div className="absolute -top-20 -end-20 w-80 h-80 bg-white/10 rounded-full blur-3xl" />
           <div className="absolute -bottom-20 -start-20 w-80 h-80 bg-navy/20 rounded-full blur-3xl" />
 
           <div className="relative z-10 max-w-2xl mx-auto text-white">
             <h2 className="font-heading-ar text-4xl md:text-6xl font-extrabold mb-6 leading-tight">
-              {isRTL ? 'ابدأ مغامرتك القادمة الآن' : 'Start your next adventure'}
+              {isRTL ? 'احجز موعدك خلال 60 ثانية' : 'Book your appointment in 60 seconds'}
             </h2>
             <p className="font-body-ar text-lg md:text-xl opacity-90 mb-10 leading-relaxed">
               {isRTL
-                ? 'فريقنا جاهز لمساعدتك في الحصول على تأشيرتك بأسرع وقت وأقل تكلفة.'
-                : 'Our team is ready to help you get your visa quickly and affordably.'}
+                ? 'أكثر من 10,000 عميل سعيد وثقوا بنا — فريقنا جاهز لمساعدتك بأسرع وقت.'
+                : 'Over 10,000 happy clients trusted us — our team is ready to help you fast.'}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg" className="h-14 px-10 rounded-2xl bg-white text-brand hover:bg-white/95 hover:scale-[1.02] transition-transform font-jakarta font-extrabold text-base shadow-xl">
@@ -47,6 +48,11 @@ export default function CTASection({ t }: CTASectionProps) {
                   {isRTL ? 'تواصل مع خبير' : 'Talk to an expert'}
                 </a>
               </Button>
+            </div>
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm font-body-ar text-white/80">
+              <span className="inline-flex items-center gap-2"><ShieldCheck className="h-4 w-4" />{isRTL ? 'بدون وسطاء' : 'No middlemen'}</span>
+              <span className="inline-flex items-center gap-2"><Users className="h-4 w-4" />{isRTL ? 'ضمان استرداد' : 'Refund guarantee'}</span>
+              <span className="inline-flex items-center gap-2"><Clock className="h-4 w-4" />{isRTL ? 'دعم 24/7' : '24/7 support'}</span>
             </div>
           </div>
         </motion.div>
