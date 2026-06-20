@@ -1,9 +1,11 @@
 import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Clock, ArrowLeft } from 'lucide-react';
+import { Clock, ArrowLeft, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import SARSymbol from '@/components/ui/SARSymbol';
+import { useLanguage } from '@/contexts/LanguageContext';
 import {
   SCHENGEN_INFO,
   filterOutSchengenCountries,
@@ -27,10 +29,13 @@ interface DisplayItem {
   processingDays: number | null;
   href: string;
   applyHref: string;
-  region?: string;
+  visaCount: number;
+  isSchengen?: boolean;
 }
 
 export default function CountriesSection({ countries, visaTypes, t }: CountriesSectionProps) {
+  const { direction } = useLanguage();
+  const ArrowIcon = direction === 'rtl' ? ArrowLeft : ArrowRight;
   const getCountryMinPrice = (countryId: string) => {
     const v = visaTypes.filter(x => x.country_id === countryId);
     return v.length ? Math.min(...v.map(x => x.price)) : null;
@@ -39,6 +44,8 @@ export default function CountriesSection({ countries, visaTypes, t }: CountriesS
     const v = visaTypes.filter(x => x.country_id === countryId);
     return v.length ? Math.min(...v.map(x => x.processing_days)) : null;
   };
+  const getVisaTypesCount = (countryId: string) =>
+    visaTypes.filter(x => x.country_id === countryId).length;
 
   const schengenCountries = useMemo(() => getSchengenCountries(countries), [countries]);
   const nonSchengenCountries = useMemo(() => filterOutSchengenCountries(countries), [countries]);
@@ -64,10 +71,11 @@ export default function CountriesSection({ countries, visaTypes, t }: CountriesS
       processingDays: schengenProcessingDays,
       href: '/country/SCHENGEN',
       applyHref: '/apply?country=SCHENGEN',
-      region: 'أوروبا',
+      visaCount: schengenCountries.reduce((s, c) => s + getVisaTypesCount(c.id), 0),
+      isSchengen: true,
     });
   }
-  nonSchengenCountries.slice(0, schengenCountries.length > 0 ? 7 : 8).forEach(c => {
+  nonSchengenCountries.slice(0, schengenCountries.length > 0 ? 9 : 10).forEach(c => {
     items.push({
       id: c.id,
       name: c.name,
@@ -77,6 +85,7 @@ export default function CountriesSection({ countries, visaTypes, t }: CountriesS
       processingDays: getCountryProcessingDays(c.id),
       href: `/country/${c.code}`,
       applyHref: `/apply?country=${c.code}`,
+      visaCount: getVisaTypesCount(c.id),
     });
   });
 
@@ -114,62 +123,64 @@ export default function CountriesSection({ countries, visaTypes, t }: CountriesS
           whileInView="visible"
           viewport={{ once: true }}
           variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.08 } } }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+          className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"
         >
           {items.map(item => (
             <motion.div
               key={item.id}
               variants={{ hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } }}
-              whileHover={{ y: -6 }}
-              className="group bg-card border border-border rounded-4xl overflow-hidden hover:shadow-2xl hover:shadow-navy/5 hover:border-brand/30 transition-all"
+              whileHover={{ y: -4, transition: { duration: 0.3 } }}
+              className="group relative overflow-hidden rounded-2xl bg-card border border-border hover:shadow-xl hover:shadow-navy/5 hover:border-brand/30 transition-all duration-300"
             >
-              <div className="relative h-48 overflow-hidden bg-gradient-to-br from-navy/5 to-brand/10">
+              <div className="relative h-28 overflow-hidden bg-gradient-to-br from-navy/5 to-brand/10">
                 <img
                   src={item.flagUrl}
                   alt={item.name}
                   loading="lazy"
                   decoding="async"
-                  className="w-full h-full object-cover image-render-auto group-hover:scale-110 transition-transform duration-700"
+                  className="w-full h-full object-cover image-render-auto transition-transform duration-700 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 " />
-                {item.region && (
-                  <span className="absolute top-4 end-4 bg-white/95 backdrop-blur-md px-3 py-1.5 rounded-xl text-[10px] font-jakarta font-bold text-navy uppercase tracking-wider">
-                    {item.region}
-                  </span>
-                )}
-                {item.processingDays && (
-                  <span className="absolute top-4 start-4 bg-navy/90 backdrop-blur-md text-white px-3 py-1.5 rounded-xl text-[10px] font-jakarta font-bold flex items-center gap-1">
-                    <Clock className="h-3 w-3" />
-                    {item.processingDays} أيام
-                  </span>
+                <div className="absolute top-2 end-2 flex items-center gap-2">
+                  {item.processingDays && (
+                    <Badge className="bg-navy/90 backdrop-blur-md text-white border-0 rounded-lg px-2 py-0.5 font-jakarta text-[10px] font-bold gap-1">
+                      <Clock className="h-3 w-3" />
+                      {item.processingDays} أيام
+                    </Badge>
+                  )}
+                </div>
+                {!item.isSchengen && item.visaCount > 0 && (
+                  <Badge className="absolute top-2 start-2 bg-white/95 text-navy backdrop-blur-md rounded-lg px-2 py-0.5 font-jakarta text-[10px] font-bold">
+                    {item.visaCount} تأشيرة
+                  </Badge>
                 )}
               </div>
-              <div className="p-6">
-                <h3 className="font-heading-ar font-extrabold text-xl text-navy mb-1">{item.name}</h3>
-                <p className="font-body-ar text-xs text-muted-foreground mb-5">تأشيرة سياحية / أعمال</p>
+              <div className="p-3">
+                <h3 className="font-heading-ar text-base font-extrabold text-navy mb-1.5 truncate">{item.name}</h3>
 
-                <div className="flex items-end justify-between">
-                  <div>
-                    <p className="font-jakarta text-[10px] font-bold tracking-wider uppercase text-muted-foreground mb-1">تبدأ من</p>
-                    {item.minPrice ? (
-                      <div className="flex items-baseline gap-1">
-                        <span className="font-display text-2xl font-bold text-brand">{item.minPrice}</span>
-                        <SARSymbol size="sm" className="text-brand" />
-                      </div>
-                    ) : (
-                      <span className="text-sm text-muted-foreground">حسب الطلب</span>
-                    )}
+                {item.minPrice ? (
+                  <div className="flex items-baseline gap-1.5 mb-2">
+                    <span className="font-jakarta text-[10px] font-bold tracking-wider uppercase text-muted-foreground">يبدأ من</span>
+                    <span className="font-numeric text-lg font-extrabold tabular-nums text-brand flex items-center gap-1">
+                      {item.minPrice}
+                      <SARSymbol size="xs" className="text-brand" />
+                    </span>
                   </div>
-                  <Button asChild size="sm" className="rounded-xl bg-navy hover:bg-navy/90 text-navy-foreground font-bold h-10 px-4">
+                ) : (
+                  <div className="mb-2 text-xs text-muted-foreground">حسب الطلب</div>
+                )}
+
+                <div className="flex gap-1.5">
+                  <Button variant="outline" size="sm" className="flex-1 rounded-xl h-8 text-xs border-border" asChild>
+                    <Link to={item.href}>التفاصيل</Link>
+                  </Button>
+                  <Button size="sm" className="flex-1 rounded-xl h-8 text-xs gap-1 bg-navy hover:bg-navy/90 text-navy-foreground" asChild>
                     <Link to={item.applyHref}>
                       قدّم الآن
+                      <ArrowIcon className="h-3 w-3" />
                     </Link>
                   </Button>
                 </div>
-
-                <Link to={item.href} className="block mt-4 text-center font-jakarta text-xs font-bold text-brand hover:underline">
-                  عرض التفاصيل ←
-                </Link>
               </div>
             </motion.div>
           ))}
