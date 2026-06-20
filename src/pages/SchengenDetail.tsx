@@ -167,220 +167,389 @@ export default function SchengenDetail() {
           },
         ]}
       />
-      {/* Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-navy via-navy/95 to-brand py-16">
-        <div className="absolute -top-32 -end-32 w-80 h-80 bg-white/5 rounded-full blur-3xl" />
-        <div className="container-section relative">
-          <Link 
-            to="/destinations" 
-            className="inline-flex items-center gap-2 text-white/75 hover:text-white mb-8 font-jakarta text-sm font-bold transition-colors"
-          >
-            <ArrowIcon className="h-4 w-4 rotate-180 rtl:rotate-0" />
-            {direction === 'rtl' ? 'عودة للوجهات' : 'Back to Destinations'}
-          </Link>
+      {(() => {
+        const entryTypes = Array.from(
+          new Set(visaTypes.map(v => v.entry_type).filter(Boolean) as string[])
+        );
+        const showTabs = entryTypes.length > 1;
+        const filteredVisas = activeTab === 'all' ? visaTypes : visaTypes.filter(v => v.entry_type === activeTab);
+        const entryTypeLabel = (key: string) => {
+          if (key === 'single') return isRTL ? 'دخول واحد' : 'Single Entry';
+          if (key === 'multiple') return isRTL ? 'دخول متعدد' : 'Multiple Entry';
+          if (key === 'transit') return isRTL ? 'عبور / ترانزيت' : 'Transit';
+          return key;
+        };
+        const minPrice = visaTypes.length ? Math.min(...visaTypes.map(v => Number(v.price))) : null;
+        const minDays = visaTypes.length ? Math.min(...visaTypes.map(v => v.processing_days)) : null;
+        const schengenCountry = {
+          id: 'schengen',
+          code: 'SCHENGEN',
+          name: isRTL ? 'شنغن' : 'Schengen',
+          flag_url: SCHENGEN_INFO.flag_url,
+        } as unknown as Country;
 
-          <div className="grid lg:grid-cols-12 gap-8 items-center">
-            <div className="lg:col-span-7">
-              <span className="font-jakarta text-xs font-bold tracking-[0.25em] uppercase text-white/60 mb-3 block">
-                EU / SCHENGEN
-              </span>
-              <h1 className="font-heading-ar text-5xl md:text-6xl font-extrabold tracking-tight text-white leading-[1.05]">
-                {direction === 'rtl' ? 'تأشيرة شنغن' : 'Schengen Visa'}
-              </h1>
-              <p className="font-body-ar text-lg text-white/75 mt-4 max-w-lg">
-                {direction === 'rtl' 
-                  ? `${schengenCountries.length} دولة مشمولة بتأشيرة واحدة`
-                  : `${schengenCountries.length} countries covered with one visa`
-                }
-              </p>
-            </div>
-            <div className="lg:col-span-5">
-              <div className="relative aspect-[4/3] rounded-4xl overflow-hidden border border-white/10 shadow-2xl bg-white/5">
-                <img
-                  src={SCHENGEN_INFO.flag_url}
-                  alt="Schengen"
-                  className="w-full h-full object-cover image-render-auto"
-                />
-                <div className="absolute inset-0 " />
+        const defaultSteps = [
+          { title: isRTL ? 'اختر نوع التأشيرة' : 'Choose visa type', description: isRTL ? 'حدد نوع تأشيرة شنغن المناسبة لرحلتك.' : 'Pick the Schengen visa that fits your trip.' },
+          { title: isRTL ? 'تعبئة البيانات' : 'Fill the form', description: isRTL ? 'أدخل بياناتك وارفع المستندات عبر نموذجنا الآمن.' : 'Enter your details and upload documents securely.' },
+          { title: isRTL ? 'حجز موعد السفارة' : 'Embassy appointment', description: isRTL ? 'نقوم بجدولة موعدك في السفارة المختصة.' : 'We schedule your embassy appointment.' },
+          { title: isRTL ? 'استلام التأشيرة' : 'Receive visa', description: isRTL ? 'استلم جواز سفرك مع التأشيرة الموحدة.' : 'Receive your passport with the unified Schengen visa.' },
+        ];
+
+        return (
+          <>
+            {/* Hero — editorial split */}
+            <section className="relative bg-navy text-white overflow-hidden pt-24 pb-20">
+              <div className="absolute inset-0 opacity-10 pointer-events-none">
+                <div className="absolute top-0 end-0 w-1/2 h-full bg-brand skew-x-12 transform translate-x-24" />
               </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Benefits */}
-      <section className="py-16">
-        <div className="container-section">
-          <div className="grid gap-6 md:grid-cols-3">
-            {schengenBenefits.map((benefit, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.1 }}
-              >
-                <Card className="text-center h-full rounded-4xl border-border bg-card hover:shadow-2xl hover:shadow-navy/5 hover:-translate-y-1 transition-all">
-                  <CardContent className="p-8">
-                    <div className="inline-flex h-14 w-14 rounded-2xl bg-cream items-center justify-center mb-4">
-                      <benefit.icon className="h-7 w-7 text-brand" />
-                    </div>
-                    <h3 className="font-heading-ar font-extrabold text-2xl text-navy mb-2">{benefit.title}</h3>
-                    <p className="font-body-ar text-sm text-muted-foreground">{benefit.desc}</p>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Member Countries */}
-      <section className="py-16 bg-cream/40">
-        <div className="container-section">
-          <h2 className="font-heading-ar text-3xl md:text-4xl font-extrabold text-navy mb-8 flex items-center gap-3">
-            <MapPin className="h-7 w-7 text-brand" />
-            {direction === 'rtl' ? 'الدول المشمولة' : 'Member Countries'}
-          </h2>
-
-          <div className="grid gap-3 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-            {schengenCountries.map((country, i) => (
-              <motion.div
-                key={country.id}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: i * 0.03 }}
-              >
-                <Card className="rounded-2xl border-border bg-card hover:shadow-lg hover:border-brand/30 transition-all cursor-default">
-                  <CardContent className="p-3 flex items-center gap-3">
-                    <img
-                      src={getSharpFlagUrl(country)}
-                      alt={country.name}
-                      className="w-9 h-7 rounded-md object-cover image-render-auto shadow-sm"
-                    />
-                    <span className="font-heading-ar font-bold text-sm truncate text-navy">{country.name}</span>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
-
-          {schengenCountries.length === 0 && (
-            <Card className="rounded-4xl border-border">
-              <CardContent className="py-8 text-center text-muted-foreground font-body-ar">
-                {direction === 'rtl' 
-                  ? 'لم يتم إضافة دول شنغن بعد في النظام'
-                  : 'Schengen countries have not been added to the system yet'
-                }
-              </CardContent>
-            </Card>
-          )}
-        </div>
-      </section>
-
-      {/* Visa Types */}
-      {visaTypes.length > 0 && (
-        <section className="py-16">
-          <div className="container-section">
-            <h2 className="font-heading-ar text-3xl md:text-4xl font-extrabold text-navy mb-8">
-              {direction === 'rtl' ? 'أنواع التأشيرات المتاحة' : 'Available Visa Types'}
-            </h2>
-
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {visaTypes.map((visa, i) => (
-                <motion.div
-                  key={visa.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.1 }}
+              <div className="absolute -top-32 -end-32 w-80 h-80 bg-white/5 rounded-full blur-3xl pointer-events-none" />
+              <div className="container-section relative z-10">
+                <Link
+                  to="/destinations"
+                  className="inline-flex items-center gap-2 text-white/75 hover:text-white mb-8 font-jakarta text-sm font-bold transition-colors"
                 >
-                  <Card className="h-full rounded-3xl border-border bg-card hover:shadow-2xl hover:shadow-navy/5 hover:-translate-y-1 transition-all">
-                    <CardContent className="p-6">
-                      <div className="flex justify-between items-start mb-3">
-                        <h3 className="font-heading-ar font-extrabold text-xl text-navy">{visa.name}</h3>
-                        <Badge className="bg-cream text-navy hover:bg-cream border-0 rounded-xl font-jakarta text-[10px] font-bold px-3">
-                          {visa.processing_days} {direction === 'rtl' ? 'يوم' : 'days'}
-                        </Badge>
+                  <ArrowIcon className="h-4 w-4 rotate-180 rtl:rotate-0" />
+                  {isRTL ? 'عودة للوجهات' : 'Back to Destinations'}
+                </Link>
+
+                <div className="flex flex-col lg:flex-row items-center gap-12">
+                  <div className="flex-1 text-center lg:text-start">
+                    <div className="inline-flex items-center gap-2 bg-white/10 px-4 py-1.5 rounded-full mb-6 border border-white/20">
+                      <Sparkles className="h-3 w-3 text-brand" />
+                      <span className="font-jakarta text-[10px] font-bold tracking-wider uppercase opacity-80">
+                        {isRTL ? `${schengenCountries.length} دولة • تأشيرة واحدة` : `${schengenCountries.length} countries • One visa`}
+                      </span>
+                      <div className="w-1 h-1 bg-brand rounded-full" />
+                      <span className="text-xs font-body-ar">SCHENGEN</span>
+                    </div>
+                    <h1 className="font-heading-ar text-5xl md:text-7xl font-extrabold mb-6 tracking-tight leading-[1.05]">
+                      {isRTL ? 'تأشيرة شنغن الموحّدة' : 'Unified Schengen Visa'}
+                    </h1>
+                    <p className="font-body-ar text-lg md:text-xl text-white/70 max-w-2xl mb-8 leading-relaxed">
+                      {isRTL
+                        ? 'تأشيرة واحدة تفتح لك أبواب 27 دولة أوروبية. إجراءات مبسطة، دعم متواصل، ومعالجة سريعة من السعودية.'
+                        : 'One visa unlocks 27 European countries. Simplified procedures, ongoing support, and fast processing from Saudi Arabia.'}
+                    </p>
+                    <div className="flex flex-wrap gap-8 justify-center lg:justify-start border-t border-white/10 pt-8">
+                      <div className="text-start">
+                        <span className="block font-display text-3xl font-extrabold">{schengenCountries.length || 27}</span>
+                        <span className="font-body-ar text-sm text-white/50">
+                          {isRTL ? 'دولة أوروبية' : 'European states'}
+                        </span>
                       </div>
-                      {visa.description && (
-                        <p className="text-sm text-muted-foreground mb-4 font-body-ar">{visa.description}</p>
+                      <div className="w-px h-12 bg-white/10" />
+                      <div className="text-start">
+                        <span className="block font-display text-3xl font-extrabold">90</span>
+                        <span className="font-body-ar text-sm text-white/50">
+                          {isRTL ? 'يوم إقامة قصوى' : 'days max stay'}
+                        </span>
+                      </div>
+                      {minDays && (
+                        <>
+                          <div className="w-px h-12 bg-white/10" />
+                          <div className="text-start">
+                            <span className="block font-display text-3xl font-extrabold">{minDays}</span>
+                            <span className="font-body-ar text-sm text-white/50">
+                              {isRTL ? 'أيام عمل للمعالجة' : 'business days'}
+                            </span>
+                          </div>
+                        </>
                       )}
-                      <div className="flex items-center justify-between mt-auto pt-4 border-t border-border">
-                        <div className="flex items-baseline gap-1 font-display text-2xl font-bold text-brand">
-                          {Number(visa.price).toLocaleString()}
-                          <SARSymbol size="sm" className="text-brand" />
-                        </div>
-                        <Button size="sm" asChild className="rounded-2xl h-10 bg-navy hover:bg-navy/90 text-navy-foreground">
-                          <Link to="/apply?country=SCHENGEN">
-                            {direction === 'rtl' ? 'قدّم الآن' : 'Apply Now'}
-                          </Link>
-                        </Button>
-                      </div>
+                      {minPrice && (
+                        <>
+                          <div className="w-px h-12 bg-white/10" />
+                          <div className="text-start">
+                            <span className="block font-display text-3xl font-extrabold">
+                              {minPrice} <span className="text-base font-bold text-white/60">{isRTL ? 'ر.س' : 'SAR'}</span>
+                            </span>
+                            <span className="font-body-ar text-sm text-white/50">
+                              {isRTL ? 'السعر يبدأ من' : 'starting price'}
+                            </span>
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Flag tile */}
+                  <div className="relative w-64 h-64 md:w-80 md:h-80 flex-shrink-0">
+                    <div className="absolute inset-0 bg-brand rounded-3xl rotate-6" />
+                    <div className="absolute inset-0 bg-white p-4 shadow-2xl rounded-3xl -rotate-2 overflow-hidden">
+                      <img
+                        src={SCHENGEN_INFO.flag_url}
+                        alt="Schengen"
+                        className="w-full h-full object-cover rounded-xl shadow-inner image-render-auto"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {/* Visa Navigator: Tabs + Cards */}
+            <div className="container-section -mt-10 relative z-20">
+              {showTabs && (
+                <div className="bg-card shadow-xl rounded-2xl p-2 mb-10 sticky top-4 border border-border overflow-x-auto z-30">
+                  <Tabs value={activeTab} onValueChange={setActiveTab}>
+                    <TabsList className="bg-transparent h-auto p-0 flex gap-2 w-full">
+                      <TabsTrigger
+                        value="all"
+                        className={cn(
+                          'flex-1 py-3 px-4 rounded-xl font-jakarta font-bold text-sm whitespace-nowrap',
+                          'data-[state=active]:bg-navy data-[state=active]:text-white data-[state=active]:shadow-lg',
+                          'data-[state=inactive]:text-muted-foreground data-[state=inactive]:hover:bg-cream/60'
+                        )}
+                      >
+                        {isRTL ? `الكل (${visaTypes.length})` : `All (${visaTypes.length})`}
+                      </TabsTrigger>
+                      {entryTypes.map((et) => (
+                        <TabsTrigger
+                          key={et}
+                          value={et}
+                          className={cn(
+                            'flex-1 py-3 px-4 rounded-xl font-jakarta font-bold text-sm whitespace-nowrap',
+                            'data-[state=active]:bg-navy data-[state=active]:text-white data-[state=active]:shadow-lg',
+                            'data-[state=inactive]:text-muted-foreground data-[state=inactive]:hover:bg-cream/60'
+                          )}
+                        >
+                          {entryTypeLabel(et)}
+                        </TabsTrigger>
+                      ))}
+                    </TabsList>
+                  </Tabs>
+                </div>
+              )}
+
+              {filteredVisas.length === 0 ? (
+                <Card className="rounded-3xl border-border">
+                  <CardContent className="py-12 text-center">
+                    <FileText className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                    <p className="font-body-ar text-muted-foreground">
+                      {isRTL
+                        ? 'لا توجد تأشيرات شنغن مفعّلة حالياً'
+                        : 'No Schengen visa types are currently active'}
+                    </p>
+                  </CardContent>
+                </Card>
+              ) : (
+                <div className="space-y-6">
+                  {filteredVisas.map((visa, i) => (
+                    <VisaCard
+                      key={visa.id}
+                      visa={visa}
+                      country={schengenCountry}
+                      variant={i === 0 ? 'primary' : 'alternative'}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Benefits */}
+            <section className="py-20 mt-12 bg-cream/40">
+              <div className="container-section">
+                <div className="text-center mb-12">
+                  <h2 className="font-heading-ar text-3xl md:text-4xl font-extrabold text-navy mb-3">
+                    {isRTL ? 'لماذا تأشيرة شنغن؟' : 'Why Schengen?'}
+                  </h2>
+                  <p className="font-body-ar text-muted-foreground">
+                    {isRTL ? 'مزايا فريدة لمسافر واحد ذكي' : 'Unique advantages for the smart traveler'}
+                  </p>
+                </div>
+                <div className="grid gap-6 md:grid-cols-3">
+                  {schengenBenefits.map((benefit, i) => (
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: i * 0.1 }}
+                    >
+                      <Card className="text-center h-full rounded-3xl border-border bg-card hover:shadow-2xl hover:shadow-navy/5 hover:-translate-y-1 transition-all">
+                        <CardContent className="p-8">
+                          <div className="inline-flex h-14 w-14 rounded-2xl bg-cream items-center justify-center mb-4">
+                            <benefit.icon className="h-7 w-7 text-brand" />
+                          </div>
+                          <h3 className="font-heading-ar font-extrabold text-2xl text-navy mb-2">{benefit.title}</h3>
+                          <p className="font-body-ar text-sm text-muted-foreground">{benefit.desc}</p>
+                        </CardContent>
+                      </Card>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            </section>
+
+            {/* Member Countries — horizontal scroll strip */}
+            <section className="py-20">
+              <div className="container-section">
+                <div className="flex items-end justify-between mb-8 gap-4 flex-wrap">
+                  <div>
+                    <h2 className="font-heading-ar text-3xl md:text-4xl font-extrabold text-navy mb-2 flex items-center gap-3">
+                      <MapPin className="h-7 w-7 text-brand" />
+                      {isRTL ? 'الدول المشمولة' : 'Member Countries'}
+                    </h2>
+                    <p className="font-body-ar text-muted-foreground text-sm">
+                      {isRTL
+                        ? `تنقّل بحرية بين ${schengenCountries.length || 27} دولة أوروبية بتأشيرة واحدة`
+                        : `Move freely between ${schengenCountries.length || 27} European countries with one visa`}
+                    </p>
+                  </div>
+                  <span className="font-jakarta text-xs font-bold tracking-wider uppercase text-brand bg-cream px-3 py-1.5 rounded-full">
+                    {schengenCountries.length || 27} {isRTL ? 'دولة' : 'Countries'}
+                  </span>
+                </div>
+
+                {schengenCountries.length === 0 ? (
+                  <Card className="rounded-3xl border-border">
+                    <CardContent className="py-8 text-center text-muted-foreground font-body-ar">
+                      {isRTL ? 'لم يتم إضافة دول شنغن بعد' : 'Schengen countries not yet added'}
                     </CardContent>
                   </Card>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
+                ) : (
+                  <div className="grid gap-3 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+                    {schengenCountries.map((c, i) => (
+                      <motion.div
+                        key={c.id}
+                        initial={{ opacity: 0, y: 10 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: i * 0.02 }}
+                        className="flex items-center gap-3 bg-card border border-border rounded-2xl p-3 hover:border-brand/40 hover:shadow-md transition-all"
+                      >
+                        <img
+                          src={getSharpFlagUrl(c)}
+                          alt={c.name}
+                          className="w-9 h-7 rounded-md object-cover image-render-auto shadow-sm flex-shrink-0"
+                        />
+                        <span className="font-heading-ar font-bold text-sm truncate text-navy">{c.name}</span>
+                      </motion.div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </section>
 
-      {/* Requirements */}
-      <section className="py-16 bg-cream/40">
-        <div className="container-section">
-          <h2 className="font-heading-ar text-3xl md:text-4xl font-extrabold text-navy mb-8 flex items-center gap-3">
-            <CheckCircle2 className="h-7 w-7 text-brand" />
-            {direction === 'rtl' ? 'متطلبات تأشيرة شنغن' : 'Schengen Visa Requirements'}
-          </h2>
-          <Card className="rounded-4xl border-border bg-card">
-            <CardContent className="p-8" dir={direction === 'rtl' ? 'rtl' : 'ltr'}>
-              <ul className="grid gap-4 sm:grid-cols-2" style={{ textAlign: direction === 'rtl' ? 'right' : 'left' }}>
-                {schengenRequirements.map((req, i) => (
-                  <motion.li 
-                    key={i} 
-                    className="flex items-start gap-3 font-body-ar"
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.05 }}
-                  >
-                    <CheckCircle2 className="h-5 w-5 text-brand flex-shrink-0 mt-0.5" />
-                    <span className="text-foreground">{req}</span>
-                  </motion.li>
-                ))}
-              </ul>
-              <p className="mt-6 text-xs text-muted-foreground font-body-ar" style={{ textAlign: direction === 'rtl' ? 'right' : 'left' }}>
-                {direction === 'rtl' 
-                  ? '* قد تختلف المتطلبات حسب سفارة الدولة المختارة. تأكد من مراجعة المتطلبات الخاصة بالسفارة قبل التقديم.'
-                  : '* Requirements may vary by embassy. Please verify specific embassy requirements before applying.'
-                }
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
+            {/* Application Roadmap */}
+            <section className="py-20 bg-cream/40">
+              <div className="container-section">
+                <div className="text-center mb-14">
+                  <h2 className="font-heading-ar text-3xl md:text-4xl font-extrabold text-navy mb-3 flex items-center justify-center gap-3">
+                    <ListChecks className="h-7 w-7 text-brand" />
+                    {isRTL ? 'خطوات الحصول على تأشيرة شنغن' : 'Application Roadmap'}
+                  </h2>
+                  <p className="font-body-ar text-muted-foreground">
+                    {isRTL ? 'رحلة بسيطة وميسرة من الطلب حتى الاستلام' : 'A simple journey from application to delivery'}
+                  </p>
+                </div>
+                <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+                  {defaultSteps.map((step, i) => {
+                    const isLast = i === defaultSteps.length - 1;
+                    return (
+                      <motion.div
+                        key={i}
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: i * 0.1 }}
+                        className={cn(
+                          'rounded-3xl p-8 border transition-all',
+                          isLast
+                            ? 'bg-navy text-white border-navy shadow-xl'
+                            : 'bg-card border-border hover:shadow-lg'
+                        )}
+                      >
+                        <div
+                          className={cn(
+                            'inline-flex items-center justify-center w-12 h-12 rounded-2xl font-display text-xl font-extrabold mb-5',
+                            isLast ? 'bg-white text-navy' : 'bg-brand/10 text-brand'
+                          )}
+                        >
+                          {String(i + 1).padStart(2, '0')}
+                        </div>
+                        <h3
+                          className={cn(
+                            'font-heading-ar font-extrabold text-lg mb-2',
+                            isLast ? 'text-white' : 'text-navy'
+                          )}
+                        >
+                          {step.title}
+                        </h3>
+                        <p
+                          className={cn(
+                            'font-body-ar text-sm leading-relaxed',
+                            isLast ? 'text-white/70' : 'text-muted-foreground'
+                          )}
+                        >
+                          {step.description}
+                        </p>
+                      </motion.div>
+                    );
+                  })}
+                </div>
+              </div>
+            </section>
 
-      {/* CTA */}
-      <section className="py-20">
-        <div className="container-section">
-          <div className="relative overflow-hidden rounded-[3rem] bg-gradient-to-br from-navy via-navy/95 to-brand p-12 md:p-16 text-center">
-            <div className="absolute -top-20 -end-20 w-64 h-64 bg-white/5 rounded-full blur-3xl" />
-            <h2 className="font-heading-ar text-4xl md:text-5xl font-extrabold text-white mb-4 relative">
-              {direction === 'rtl' ? 'جاهز للتقديم؟' : 'Ready to Apply?'}
-            </h2>
-            <p className="font-body-ar text-white/75 mb-8 max-w-xl mx-auto relative">
-              {direction === 'rtl' 
-                ? 'ابدأ طلب تأشيرة شنغن الآن واستمتع بالسفر لأكثر من 27 دولة أوروبية بتأشيرة واحدة'
-                : 'Start your Schengen visa application now and enjoy traveling to over 27 European countries with one visa'
-              }
-            </p>
-            <Button size="lg" asChild className="rounded-2xl h-14 px-8 bg-white text-navy hover:bg-white/90 font-bold relative">
-              <Link to="/apply?country=SCHENGEN" className="gap-2">
-                {direction === 'rtl' ? 'ابدأ التقديم' : 'Start Application'}
-                <ArrowIcon className="h-4 w-4" />
-              </Link>
-            </Button>
-          </div>
-        </div>
-      </section>
+            {/* Requirements */}
+            <section className="py-20">
+              <div className="container-section">
+                <div className="max-w-3xl mx-auto text-center mb-12">
+                  <h2 className="font-heading-ar text-3xl md:text-4xl font-extrabold text-navy mb-3 flex items-center justify-center gap-3">
+                    <CheckCircle2 className="h-7 w-7 text-brand" />
+                    {isRTL ? 'متطلبات تأشيرة شنغن' : 'Schengen Requirements'}
+                  </h2>
+                  <p className="font-body-ar text-muted-foreground">
+                    {isRTL ? 'قائمة شاملة لضمان قبول طلبك من أول مرة' : 'A complete checklist to maximize your approval chances'}
+                  </p>
+                </div>
+                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3" dir={isRTL ? 'rtl' : 'ltr'}>
+                  {schengenRequirements.map((req, i) => (
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, y: 10 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: i * 0.04 }}
+                      className="flex items-start gap-3 bg-card border border-border rounded-2xl p-4 hover:border-brand/30 transition-colors"
+                    >
+                      <CheckCircle2 className="h-5 w-5 text-brand flex-shrink-0 mt-0.5" />
+                      <span className="text-sm font-body-ar text-foreground">{req}</span>
+                    </motion.div>
+                  ))}
+                </div>
+                <p className="mt-8 text-xs text-muted-foreground font-body-ar text-center max-w-2xl mx-auto">
+                  {isRTL
+                    ? '* قد تختلف المتطلبات حسب سفارة الدولة المختارة. تأكد من مراجعة المتطلبات الخاصة بالسفارة قبل التقديم.'
+                    : '* Requirements may vary by embassy. Please verify specific embassy requirements before applying.'}
+                </p>
+              </div>
+            </section>
+
+            {/* CTA */}
+            <section className="py-20">
+              <div className="container-section">
+                <div className="relative overflow-hidden rounded-[3rem] bg-gradient-to-br from-navy via-navy/95 to-brand p-12 md:p-16 text-center">
+                  <div className="absolute -top-20 -end-20 w-64 h-64 bg-white/5 rounded-full blur-3xl" />
+                  <h2 className="font-heading-ar text-4xl md:text-5xl font-extrabold text-white mb-4 relative">
+                    {isRTL ? 'جاهز للتقديم؟' : 'Ready to Apply?'}
+                  </h2>
+                  <p className="font-body-ar text-white/75 mb-8 max-w-xl mx-auto relative">
+                    {isRTL
+                      ? 'ابدأ طلب تأشيرة شنغن الآن واستمتع بالسفر لأكثر من 27 دولة أوروبية بتأشيرة واحدة'
+                      : 'Start your Schengen visa application now and enjoy traveling to over 27 European countries with one visa'}
+                  </p>
+                  <Button size="lg" asChild className="rounded-2xl h-14 px-8 bg-white text-navy hover:bg-white/90 font-bold relative">
+                    <Link to="/apply?country=SCHENGEN" className="gap-2">
+                      {isRTL ? 'ابدأ التقديم' : 'Start Application'}
+                      <ArrowIcon className="h-4 w-4" />
+                    </Link>
+                  </Button>
+                </div>
+              </div>
+            </section>
+          </>
+        );
+      })()}
     </div>
   );
 }
