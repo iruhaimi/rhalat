@@ -190,7 +190,7 @@ export default function FooterArabic() {
                 <BadgeCheck className="h-5 w-5 text-primary" />
               </div>
               <div>
-                <p className="text-sm font-bold text-primary">مرخصون رسمياً من وزارة السياحة والتجارة</p>
+                <p className="text-sm font-bold text-primary">مرخصون رسمياً</p>
                 <p className="text-xs text-muted-foreground mt-0.5">المملكة العربية السعودية</p>
               </div>
             </div>
