@@ -8,7 +8,6 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import WizardStepper from '@/components/apply/WizardStepper';
 import Step2VisaDetails from '@/components/apply/steps/Step2VisaDetails';
-import Step3Requirements from '@/components/apply/steps/Step3Requirements';
 import Step4Documents from '@/components/apply/steps/Step4Documents';
 import Step6Payment from '@/components/apply/steps/Step6Payment';
 import PathChoiceCard from '@/components/apply/PathChoiceCard';
@@ -251,9 +250,9 @@ function ApplyContent() {
   // Auth gate: block transition to step 3 (path choice) and beyond for guests.
   // When the user authenticates inside the gate modal, advance to step 3.
   useEffect(() => {
-    if (currentStep >= 3 && !user) {
-      // Force user back to step 2 (requirements) and open the gate
-      setCurrentStep(2);
+    if (currentStep >= 2 && !user) {
+      // Force user back to step 1 (visa details) and open the gate
+      setCurrentStep(1);
       setShowAuthGate(true);
     }
   }, [currentStep, user, setCurrentStep, setShowAuthGate]);
@@ -264,7 +263,7 @@ function ApplyContent() {
       setShowAuthGate(false);
       // Allow profile to load + save effect to fire, then advance to path choice
       const timer = setTimeout(() => {
-        setCurrentStep(3);
+        setCurrentStep(2);
         // Clear local guest copy now that DB will own the draft
         clearGuestDraft();
         toast({
@@ -313,12 +312,10 @@ function ApplyContent() {
       case 1:
         return <Step2VisaDetails />;
       case 2:
-        return <Step3Requirements />;
+        return <PathChoiceCard onBack={() => setCurrentStep(1)} />;
       case 3:
-        return <PathChoiceCard onBack={() => setCurrentStep(2)} />;
-      case 4:
         return <Step4Documents />;
-      case 5:
+      case 4:
         return <Step6Payment />;
       default:
         return <Step2VisaDetails />;
@@ -373,7 +370,7 @@ function ApplyContent() {
         <div className="max-w-5xl mx-auto bg-card border border-border rounded-2xl shadow-md shadow-navy/5 px-3 sm:px-4 py-1">
           <WizardStepper
             currentStep={currentStep}
-            totalSteps={5}
+            totalSteps={4}
             onStepClick={handleStepClick}
           />
         </div>

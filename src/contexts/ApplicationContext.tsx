@@ -240,7 +240,7 @@ export function ApplicationProvider({ children }: { children: React.ReactNode })
   }, [applicationData]);
 
   const goToNextStep = useCallback(() => {
-    if (currentStep < 5) {
+    if (currentStep < 4) {
       setCurrentStep(prev => prev + 1);
       window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
     }
@@ -262,12 +262,10 @@ export function ApplicationProvider({ children }: { children: React.ReactNode })
           (applicationData.travelers.adults + applicationData.travelers.children + applicationData.travelers.infants) > 0
         );
       case 2:
-        return applicationData.checkedRequirements.length > 0;
-      case 3:
         return applicationData.termsAccepted;
+      case 3:
+        return true; // documents step is optional — user may continue via WhatsApp
       case 4:
-        return applicationData.uploadedDocuments.some(doc => doc.uploaded);
-      case 5:
         return applicationData.termsAccepted && !!applicationData.paymentMethod;
       default:
         return false;
