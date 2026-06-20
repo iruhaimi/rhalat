@@ -48,7 +48,7 @@ export default function ComplianceDisclaimer({ variant = 'banner' }: { variant?:
           {isRTL ? (
             <>
               <p>
-                <strong className="text-foreground">إخلاء مسؤولية:</strong> موقع <span dir="ltr">{LEGAL.domain}</span> هو منصة تابعة لـ {LEGAL.companyNameAr}، وكالة سفر خاصة تقدم خدمات استشارية ومساعدة في تجهيز ملفات التأشيرة مقابل رسوم إضافية. لسنا جهة حكومية ولا تابعين لأي سفارة. (أرقام التراخيص الرسمية موضّحة أعلاه في شريط الاعتماد.)
+                <strong className="text-foreground">إخلاء مسؤولية:</strong> موقع <span dir="ltr">{LEGAL.domain}</span> هو منصة تابعة لـ {LEGAL.companyNameAr}، وكالة سفر خاصة تقدم خدمات استشارية ومساعدة في تجهيز ملفات التأشيرة مقابل رسوم إضافية. لسنا جهة حكومية ولا تابعين لأي سفارة.
               </p>
               <p>
                 <strong className="text-foreground">شفافية الرسوم:</strong> الرسوم المدفوعة لنا هي مقابل خدمة التنسيق والاستشارة وتجهيز الملف، وليست رسوم التأشيرة الحكومية الرسمية. يمكنك الحصول على التأشيرة مباشرة عبر المواقع الحكومية الرسمية بتكلفة أقل أو مجاناً.
@@ -71,7 +71,7 @@ export default function ComplianceDisclaimer({ variant = 'banner' }: { variant?:
           ) : (
             <>
               <p>
-                <strong className="text-foreground">Disclaimer:</strong> {LEGAL.domain} is operated by {LEGAL.companyNameEn}, a private travel agency providing third-party consultancy and visa application assistance for a fee. We are not a government entity or affiliated with any embassy. (Official license numbers are shown above in the accreditation bar.)
+                <strong className="text-foreground">Disclaimer:</strong> {LEGAL.domain} is operated by {LEGAL.companyNameEn}, a private travel agency providing third-party consultancy and visa application assistance for a fee. We are not a government entity or affiliated with any embassy.
               </p>
               <p>
                 <strong className="text-foreground">Fee transparency:</strong> Fees paid to us are for coordination, consultancy and file preparation — not the official government visa fees. Official services are available directly from government websites, typically at a lower cost or free.
