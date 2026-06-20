@@ -38,18 +38,34 @@ export default function FooterArabic() {
    const quickLinksSettings = footerSettings?.filter(s => s.category === 'quick_links') || [];
    const policiesSettings = footerSettings?.filter(s => s.category === 'policies') || [];
 
-  // Essential links moved from the header to keep the top nav clean.
-  // Merged with DB-driven quick links, deduplicated by URL.
-  const movedFromHeader: Array<{ id: string; value: string; url: string }> = [
+  // Curated browse links (Explore column)
+  const exploreFallback: Array<{ id: string; value: string; url: string }> = [
+    { id: 'mv-home', value: 'الرئيسية', url: '/' },
+    { id: 'mv-destinations', value: 'الوجهات', url: '/destinations' },
+    { id: 'mv-pricing', value: 'الأسعار', url: '/pricing' },
     { id: 'mv-tourism', value: 'برامج سياحية', url: '/tourism' },
     { id: 'mv-about', value: 'من نحن', url: '/about' },
-    { id: 'mv-contact', value: 'تواصل معنا', url: '/contact' },
   ];
-  const existingUrls = new Set(quickLinksSettings.map((l: any) => l.url));
-  const mergedQuickLinks = [
-    ...quickLinksSettings,
-    ...movedFromHeader.filter((l) => !existingUrls.has(l.url)),
-  ];
+  // URLs that belong in the "Help" column instead of "Explore"
+  const HELP_URLS = new Set(['/faq', '/track', '/track-order', '/track-application', '/support']);
+  // URLs to exclude (handled by dedicated columns elsewhere)
+  const EXCLUDE_URLS = new Set(['/contact', '/blog']);
+
+  const allLinks = [...quickLinksSettings, ...exploreFallback].filter(
+    (l: any) => l.url && !EXCLUDE_URLS.has(l.url)
+  );
+  // Dedupe by URL (keep first occurrence — DB wins over fallback)
+  const seen = new Set<string>();
+  const uniqueLinks = allLinks.filter((l: any) => {
+    if (seen.has(l.url)) return false;
+    seen.add(l.url);
+    return true;
+  });
+
+  const exploreLinks = uniqueLinks.filter((l: any) => !HELP_URLS.has(l.url));
+  const helpLinksFromQuick = uniqueLinks.filter((l: any) => HELP_URLS.has(l.url));
+  // Help column = support links + policy links combined
+  const helpLinks = [...helpLinksFromQuick, ...policiesSettings];
 
   // Get specific general settings
   const companyName = generalSettings.find(s => s.key === 'company_name')?.value || 'عطلات رحلاتكم للسياحة والسفر';
@@ -58,7 +74,7 @@ export default function FooterArabic() {
   return (
     <footer className="border-t border-border bg-card" style={{ paddingBottom: 'var(--safe-area-bottom, 0px)' }}>
       <div className="container-section py-12 md:py-16">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4 items-start">
           {/* Brand */}
           <div>
             <Link to="/" className="flex items-center gap-2">
@@ -94,34 +110,34 @@ export default function FooterArabic() {
             )}
           </div>
 
-          {/* Quick Links */}
+          {/* Explore */}
           <div>
-            <h3 className="font-semibold text-foreground">{t('footer.quickLinks')}</h3>
+            <h3 className="font-semibold text-foreground">استكشف</h3>
             <ul className="mt-4 space-y-3">
-               {mergedQuickLinks.map((link: any) => (
-                 <li key={link.id}>
+              {exploreLinks.map((link: any) => (
+                <li key={link.id}>
                   <Link
-                     to={link.url || '/'}
+                    to={link.url || '/'}
                     className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                   >
-                     {link.value}
+                    {link.value}
                   </Link>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Policies */}
+          {/* Help & Policies */}
           <div>
-            <h3 className="font-semibold text-foreground">{t('footer.policies')}</h3>
+            <h3 className="font-semibold text-foreground">مساعدة</h3>
             <ul className="mt-4 space-y-3">
-               {policiesSettings.map((link) => (
-                 <li key={link.id}>
+              {helpLinks.map((link: any) => (
+                <li key={link.id}>
                   <Link
-                     to={link.url || '/'}
+                    to={link.url || '/'}
                     className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                   >
-                     {link.value}
+                    {link.value}
                   </Link>
                 </li>
               ))}
