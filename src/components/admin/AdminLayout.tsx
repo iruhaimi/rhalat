@@ -295,6 +295,12 @@ export default function AdminLayout() {
           href: '/admin/settings',
           show: isAdmin && (hasPermission('manage_settings') || hasPermission('manage_countries')),
         },
+        {
+          title: 'متطلبات التأشيرات',
+          icon: FileText,
+          href: '/admin/visa-requirements',
+          show: isAdmin && (hasPermission('manage_settings') || hasPermission('manage_countries')),
+        },
       ],
     },
   ];
