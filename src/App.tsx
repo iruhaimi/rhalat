@@ -79,6 +79,7 @@ const BlogManagement = lazy(() => import("@/pages/admin/BlogManagement"));
 const BlogPostEditor = lazy(() => import("@/pages/admin/BlogPostEditor"));
 const TourProgramsManagement = lazy(() => import("@/pages/admin/TourProgramsManagement"));
 const TourOperatorsApproval = lazy(() => import("@/pages/admin/TourOperatorsApproval"));
+const VisaRequirementsManagement = lazy(() => import("@/pages/admin/VisaRequirementsManagement"));
 
 // Agent — lazy
 const AgentLayout = lazy(() => import("@/components/agent/AgentLayout"));
@@ -173,6 +174,7 @@ const App = () => (
                 <Route path="applications/:id" element={<ApplicationDetail />} />
                 <Route path="users" element={<UsersManagement />} />
                 <Route path="settings" element={<Settings />} />
+                <Route path="visa-requirements" element={<VisaRequirementsManagement />} />
                 <Route path="offers" element={<OffersManagement />} />
                 <Route path="refunds" element={<RefundRequestsManagement />} />
                 <Route path="hero" element={<HeroManagement />} />
