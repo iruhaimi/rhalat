@@ -568,7 +568,13 @@ export default function Step6Payment() {
           {/* Online payment only — WhatsApp path branches off after step 3 */}
           {true && (
             <>
-              {!docsComplete && (
+              {reqsLoading && (
+                <div className="p-3 rounded-xl border bg-muted/30 flex items-center justify-center gap-2 text-xs text-muted-foreground">
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  {direction === 'rtl' ? 'جاري التحقق من المستندات...' : 'Checking documents...'}
+                </div>
+              )}
+              {!reqsLoading && !docsComplete && (
                 <div className="p-2.5 rounded-xl border-2 border-amber-300 bg-amber-50 dark:bg-amber-950/30">
                   <div className="flex items-start gap-2 mb-1.5">
                     <AlertCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
@@ -576,11 +582,18 @@ export default function Step6Payment() {
                       <h4 className="font-semibold text-amber-900 dark:text-amber-100 text-xs sm:text-sm">
                         {direction === 'rtl' ? 'يجب رفع المستندات قبل الدفع' : 'Documents required before payment'}
                       </h4>
-                      <p className="text-[11px] text-amber-800 dark:text-amber-200 mt-0.5">
-                        {direction === 'rtl'
-                          ? 'المستندات الإجبارية: جواز السفر + الصورة الشخصية'
-                          : 'Required: Passport + Personal Photo'}
-                      </p>
+                      <ul className="text-[11px] text-amber-800 dark:text-amber-200 mt-0.5 list-disc ps-4 space-y-0.5">
+                        {missingDocs.slice(0, 6).map(d => (
+                          <li key={d.slotId}>{d.label}</li>
+                        ))}
+                        {missingDocs.length > 6 && (
+                          <li>
+                            {direction === 'rtl'
+                              ? `+ ${missingDocs.length - 6} مستند آخر`
+                              : `+ ${missingDocs.length - 6} more`}
+                          </li>
+                        )}
+                      </ul>
                     </div>
                   </div>
                   <Button
