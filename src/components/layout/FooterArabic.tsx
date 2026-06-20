@@ -56,7 +56,6 @@ export default function FooterArabic() {
   // Get specific general settings
   const companyName = generalSettings.find(s => s.key === 'company_name')?.value || 'عطلات رحلاتكم للسياحة والسفر';
   const description = generalSettings.find(s => s.key === 'description')?.value || t('footer.about');
-  const legalNotice = generalSettings.find(s => s.key === 'legal_notice')?.value;
 
   return (
     <footer className="border-t border-border bg-card" style={{ paddingBottom: 'var(--safe-area-bottom, 0px)' }}>
@@ -74,30 +73,27 @@ export default function FooterArabic() {
             <p className="mt-4 text-sm text-muted-foreground">
               {description}
             </p>
-            <div className="mt-4 rounded-xl border-2 border-primary/30 bg-primary/10 p-4 shadow-sm">
-              <div className="flex items-center gap-2 mb-3">
-                <BadgeCheck className="h-5 w-5 text-primary flex-shrink-0" />
-                <span className="text-sm font-bold text-primary">مرخصون من وزارة السياحة والتجارة</span>
+            {/* Socials moved up here */}
+            {socialSettings.length > 0 && (
+              <div className="mt-5 flex items-center gap-3">
+                {socialSettings.map((item) => {
+                  const icon = getIconComponent(item.icon, "h-4 w-4");
+                  if (!item.url || !icon) return null;
+                  return (
+                    <a
+                      key={item.id}
+                      href={item.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={item.label}
+                      className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border bg-background text-muted-foreground transition-colors hover:bg-primary hover:text-primary-foreground hover:border-primary"
+                    >
+                      {icon}
+                    </a>
+                  );
+                })}
               </div>
-              <div className="space-y-1.5 text-sm text-foreground">
-                <div className="flex items-center justify-between gap-2">
-                  <span className="text-muted-foreground">فئة الترخيص</span>
-                  <span className="font-bold text-slate-900">وكالة سفر وسياحة</span>
-                </div>
-                <div className="flex items-center justify-between gap-2">
-                  <span className="text-muted-foreground">ترخيص وزارة السياحة</span>
-                  <span className="font-bold tabular-nums text-slate-900" dir="ltr">73100234</span>
-                </div>
-                <div className="flex items-center justify-between gap-2">
-                  <span className="text-muted-foreground">ترخيص وزارة التجارة</span>
-                  <span className="font-bold tabular-nums text-slate-900" dir="ltr">7010581259</span>
-                </div>
-                <div className="flex items-center justify-between gap-2">
-                  <span className="text-muted-foreground">الرقم الضريبي (VAT)</span>
-                  <span className="font-bold tabular-nums text-slate-900" dir="ltr">{LEGAL.vatNumber}</span>
-                </div>
-              </div>
-            </div>
+            )}
           </div>
 
           {/* Quick Links */}
@@ -186,50 +182,50 @@ export default function FooterArabic() {
           </div>
         </div>
 
-        {/* Bottom */}
-        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-border pt-8 md:flex-row">
-          <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} {companyName}. {t('footer.rights')}.
-          </p>
-          <div className="flex items-center gap-4">
-            {socialSettings.map((item) => {
-              const icon = getIconComponent(item.icon, "h-5 w-5");
-              if (!item.url || !icon) return null;
-              
-              return (
-                <a
-                  key={item.id}
-                  href={item.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-muted-foreground transition-colors hover:text-foreground"
-                  aria-label={item.label}
-                >
-                  {icon}
-                </a>
-              );
-            })}
+        {/* Official Accreditation Strip — single source of truth for license numbers */}
+        <div className="mt-12 rounded-2xl border border-primary/20 bg-primary/5 px-5 py-5 md:px-8">
+          <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+            <div className="flex items-center gap-3">
+              <div className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-primary/15 flex-shrink-0">
+                <BadgeCheck className="h-5 w-5 text-primary" />
+              </div>
+              <div>
+                <p className="text-sm font-bold text-primary">مرخصون رسمياً من وزارة السياحة والتجارة</p>
+                <p className="text-xs text-muted-foreground mt-0.5">المملكة العربية السعودية</p>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 lg:gap-2 flex-1 lg:max-w-3xl">
+              <div className="rounded-xl bg-background border border-border px-3 py-2.5 text-center">
+                <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wide">فئة الترخيص</div>
+                <div className="text-xs font-bold text-foreground mt-1">وكالة سفر وسياحة</div>
+              </div>
+              <div className="rounded-xl bg-background border border-border px-3 py-2.5 text-center">
+                <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wide">وزارة السياحة</div>
+                <div dir="ltr" className="text-xs font-bold text-foreground mt-1 tabular-nums">{LEGAL.tourismLicense}</div>
+              </div>
+              <div className="rounded-xl bg-background border border-border px-3 py-2.5 text-center">
+                <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wide">السجل التجاري</div>
+                <div dir="ltr" className="text-xs font-bold text-foreground mt-1 tabular-nums">{LEGAL.commercialRegistration}</div>
+              </div>
+              <div className="rounded-xl bg-background border border-border px-3 py-2.5 text-center">
+                <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wide">الرقم الضريبي (VAT)</div>
+                <div dir="ltr" className="text-xs font-bold text-foreground mt-1 tabular-nums">{LEGAL.vatNumber}</div>
+              </div>
+            </div>
           </div>
         </div>
-
-        {/* Legal Notice */}
-        {legalNotice && (
-          <div className="mt-6 text-center">
-            <p className="text-xs text-muted-foreground">
-              {legalNotice}
-            </p>
-          </div>
-        )}
 
         {/* Google Ads compliance disclaimer — required, do not remove */}
         <ComplianceDisclaimer variant="footer" />
 
-        {/* Permanent compact legal line — visible even without expanding the disclaimer */}
-        <div className="mt-4 text-center text-[11px] text-muted-foreground leading-relaxed" dir="rtl">
-          {LEGAL.companyNameAr} · ترخيص سياحة:{' '}
-          <span dir="ltr" className="tabular-nums">{LEGAL.tourismLicense}</span> · س.ت:{' '}
-          <span dir="ltr" className="tabular-nums">{LEGAL.commercialRegistration}</span> · VAT:{' '}
-          <span dir="ltr" className="tabular-nums">{LEGAL.vatNumber}</span>
+        {/* Final bar: copyright + non-government notice */}
+        <div className="mt-8 border-t border-border pt-6 flex flex-col items-center gap-2 text-center">
+          <p className="text-xs text-muted-foreground">
+            هذا الموقع يقدم خدمات المساعدة في إصدار التأشيرات ولا يمثل أي سفارة أو جهة حكومية رسمية.
+          </p>
+          <p className="text-sm text-muted-foreground">
+            © {new Date().getFullYear()} {companyName}. {t('footer.rights')}.
+          </p>
         </div>
       </div>
     </footer>
