@@ -433,8 +433,12 @@ export default function Step6Payment() {
       const consentUA = typeof navigator !== 'undefined' ? navigator.userAgent : null;
       const consentAt = new Date().toISOString();
 
-      // Simulate payment gateway processing
-      await new Promise(resolve => setTimeout(resolve, 2500));
+      const isBankTransfer = applicationData.paymentMethod === 'bank_transfer';
+
+      // Simulate payment gateway processing (skip for bank transfer — manual verification)
+      if (!isBankTransfer) {
+        await new Promise(resolve => setTimeout(resolve, 2500));
+      }
 
       // Persist the application so it appears in admin & customer dashboards
       let appId = draftId;
@@ -453,8 +457,8 @@ export default function Step6Payment() {
         const { data, error } = await supabase
           .from('applications')
           .update({
-            status: 'submitted',
-            submission_method: 'online',
+            status: isBankTransfer ? 'pending_payment' : 'submitted',
+            submission_method: isBankTransfer ? 'bank_transfer' : 'online',
             submitted_at: new Date().toISOString(),
             purpose_of_travel: JSON.stringify({
               fullName: customerName,
@@ -483,7 +487,11 @@ export default function Step6Payment() {
         paymentMethods.find(m => m.id === applicationData.paymentMethod)?.label[language] || '';
 
       // Send confirmation email (non-blocking)
-      await sendConfirmationEmail(appNumber, 'online', methodLabel);
+      await sendConfirmationEmail(
+        appNumber,
+        isBankTransfer ? 'whatsapp' : 'online',
+        methodLabel
+      );
 
       // Enhanced Conversions: attach hashed identifiers before purchase fires
       setEnhancedConversionUserData({
@@ -499,10 +507,18 @@ export default function Step6Payment() {
             }
           : undefined,
       });
-      // Primary conversion: paid purchase (with dedupe so a refresh on
-      // /payment-success doesn't double-fire — the success page also
-      // fires as a safety net)
-      if (!wasConversionFired(appNumber)) {
+      // For bank transfer the payment is not yet confirmed — fire generate_lead.
+      // For card/Apple Pay fire purchase (the success page also fires as a safety net).
+      if (isBankTransfer) {
+        if (!wasConversionFired(appNumber)) {
+          trackConversion('generate_lead', {
+            value: grandTotal,
+            currency: 'SAR',
+            transaction_id: appNumber,
+          });
+          markConversionFired(appNumber);
+        }
+      } else if (!wasConversionFired(appNumber)) {
         trackConversion('purchase', {
           value: grandTotal,
           currency: 'SAR',
@@ -527,7 +543,7 @@ export default function Step6Payment() {
         value: grandTotal,
         currency: 'SAR',
         transaction_id: appNumber,
-        method: 'online',
+        method: isBankTransfer ? 'bank_transfer' : 'online',
       });
 
       // Pass the order value to the success page so it can re-assert the
@@ -535,6 +551,7 @@ export default function Step6Payment() {
       // confirmation page).
       navigate(
         `/payment-success?app=${encodeURIComponent(appNumber)}` +
+          (isBankTransfer ? `&method=bank_transfer` : '') +
           `&amount=${encodeURIComponent(grandTotal)}` +
           `&currency=SAR`
       );
