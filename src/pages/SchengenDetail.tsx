@@ -8,17 +8,21 @@ import {
   Globe,
   Shield,
   Clock,
-  MapPin
+  MapPin,
+  Sparkles,
+  ListChecks,
+  FileText
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
 import { useLanguage } from '@/contexts/LanguageContext';
-import SARSymbol from '@/components/ui/SARSymbol';
 import { SCHENGEN_INFO, SCHENGEN_COUNTRY_CODES } from '@/lib/schengenCountries';
 import { getSharpFlagUrl } from '@/lib/flagUtils';
+import { VisaCard } from '@/components/visa/VisaCard';
 import SEO from '@/components/seo/SEO';
 import type { Country, VisaType } from '@/types/database';
 
@@ -27,8 +31,10 @@ export default function SchengenDetail() {
   const [schengenCountries, setSchengenCountries] = useState<Country[]>([]);
   const [visaTypes, setVisaTypes] = useState<VisaType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<string>('all');
 
   const ArrowIcon = direction === 'rtl' ? ArrowLeft : ArrowRight;
+  const isRTL = direction === 'rtl';
 
   useEffect(() => {
     async function fetchData() {
