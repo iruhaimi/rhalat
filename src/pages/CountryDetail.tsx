@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { 
   ArrowLeft,
@@ -189,10 +189,7 @@ export default function CountryDetail() {
     new Set(visaTypes.map(v => v.entry_type).filter(Boolean) as string[])
   );
   const showTabs = entryTypes.length > 1;
-  const filteredVisas = useMemo(() => {
-    if (activeTab === 'all') return visaTypes;
-    return visaTypes.filter(v => v.entry_type === activeTab);
-  }, [activeTab, visaTypes]);
+  const filteredVisas = activeTab === 'all' ? visaTypes : visaTypes.filter(v => v.entry_type === activeTab);
 
   const defaultSteps = [
     { title: isRTL ? 'تعبئة البيانات' : 'Fill the form', description: isRTL ? 'أدخل بياناتك الأساسية وارفع المستندات المطلوبة عبر نموذجنا الآمن.' : 'Submit your details and upload required documents via our secure form.' },
