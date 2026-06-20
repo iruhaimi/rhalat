@@ -17,6 +17,8 @@ const StatsSection = lazy(() => import('@/components/home/StatsSection'));
 const TestimonialsSection = lazy(() => import('@/components/home/TestimonialsSection'));
 const FAQSection = lazy(() => import('@/components/home/FAQSection'));
 const CTASection = lazy(() => import('@/components/home/CTASection'));
+const MiniCTA = lazy(() => import('@/components/home/MiniCTA'));
+const StickyCTABar = lazy(() => import('@/components/home/StickyCTABar'));
 
 export default function HomeArabic() {
   const { t } = useLanguage();
@@ -54,12 +56,14 @@ export default function HomeArabic() {
       <CountriesSection countries={countries} visaTypes={visaTypes} t={t} />
 
       <Suspense fallback={<div className="min-h-[200px]" />}>
+        <MiniCTA />
         <HowItWorksSection t={t} />
         <FeaturesSection t={t} />
         <StatsSection />
         <TestimonialsSection />
         <FAQSection t={t} />
         <CTASection t={t} />
+        <StickyCTABar />
       </Suspense>
     </div>
   );
