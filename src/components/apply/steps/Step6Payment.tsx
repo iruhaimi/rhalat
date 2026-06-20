@@ -13,6 +13,7 @@ import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import SARSymbol from '@/components/ui/SARSymbol';
 import { Link } from 'react-router-dom';
 import { 
@@ -511,192 +512,9 @@ export default function Step6Payment() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
-        {/* Order Summary */}
-        <div className="space-y-2.5 order-2 lg:order-1">
-          <h3 className="font-bold text-sm sm:text-base flex items-center gap-2">
-            <FileText className="w-4 h-4" />
-            {t('payment.summary')}
-          </h3>
-          
-          {/* Application Details */}
-          <Card>
-            <CardContent className="p-3 space-y-2.5">
-              {/* Customer Info */}
-              <div className="space-y-1.5">
-                <div className="flex items-center gap-2 text-xs sm:text-sm">
-                  <User className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-muted-foreground">{t('form.fullName')}:</span>
-                  <span className="font-medium">{customerName || '—'}</span>
-                </div>
-                <div className="flex items-center gap-2 text-xs sm:text-sm">
-                  <Mail className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-muted-foreground">{t('form.email')}:</span>
-                  <span className="font-medium" dir="ltr">{customerEmail || '—'}</span>
-                </div>
-                <div className="flex items-center gap-2 text-xs sm:text-sm">
-                  <Phone className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-muted-foreground">{t('form.phone')}:</span>
-                  <span className="font-medium" dir="ltr">{customerPhoneDisplay || '—'}</span>
-                </div>
-              </div>
-              
-              <Separator />
-              
-              {/* Visa Info */}
-              <div className="space-y-1.5">
-                <div className="flex items-center gap-2 text-xs sm:text-sm">
-                  <MapPin className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-muted-foreground">{t('form.country')}:</span>
-                  <span className="font-medium">{applicationData.countryName}</span>
-                </div>
-                <div className="flex items-center gap-2 text-xs sm:text-sm">
-                  <FileText className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-muted-foreground">{t('form.visaType')}:</span>
-                  <span className="font-medium">{applicationData.visaTypeName}</span>
-                </div>
-                {applicationData.travelDate && (
-                  <div className="flex items-center gap-2 text-xs sm:text-sm">
-                    <Calendar className="w-4 h-4 text-muted-foreground" />
-                    <span className="text-muted-foreground">{t('form.travelDate')}:</span>
-                    <span className="font-medium">
-                      {format(applicationData.travelDate, 'PPP', { locale: language === 'ar' ? ar : enUS })}
-                    </span>
-                  </div>
-                )}
-                <div className="flex items-center gap-2 text-xs sm:text-sm">
-                  <Users className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-muted-foreground">{t('form.travelers')}:</span>
-                  <span className="font-medium">
-                    {applicationData.travelers.adults} {t('form.adults')}
-                    {applicationData.travelers.children > 0 && `, ${applicationData.travelers.children} ${t('form.children')}`}
-                    {applicationData.travelers.infants > 0 && `, ${applicationData.travelers.infants} ${t('form.infants')}`}
-                  </span>
-                </div>
-              </div>
-              
-              <Separator />
-              
-              {/* Price Breakdown */}
-              <div className="space-y-1.5">
-                {applicationData.travelers.adults > 0 && (
-                  <div className="flex justify-between text-xs sm:text-sm">
-                    <span className="text-muted-foreground">
-                      {t('pricing.adult')} × {applicationData.travelers.adults}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      {breakdown.adults.toLocaleString()}
-                      <SARSymbol size="xs" />
-                    </span>
-                  </div>
-                )}
-                {applicationData.travelers.children > 0 && (
-                  <div className="flex justify-between text-xs sm:text-sm">
-                    <span className="text-muted-foreground">
-                      {t('pricing.child')} × {applicationData.travelers.children}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      {breakdown.children.toLocaleString()}
-                      <SARSymbol size="xs" />
-                    </span>
-                  </div>
-                )}
-                {applicationData.travelers.infants > 0 && (
-                  <div className="flex justify-between text-xs sm:text-sm">
-                    <span className="text-muted-foreground">
-                      {t('pricing.infant')} × {applicationData.travelers.infants}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      {breakdown.infants.toLocaleString()}
-                      <SARSymbol size="xs" />
-                    </span>
-                  </div>
-                )}
-                
-                <Separator className="my-1.5" />
-                
-                <div className="flex justify-between text-xs sm:text-sm">
-                  <span>{direction === 'rtl' ? 'رسوم الخدمة' : 'Service Fees'}</span>
-                  <span className="flex items-center gap-1">
-                    {serviceTotal.toLocaleString()}
-                    <SARSymbol size="xs" />
-                  </span>
-                </div>
-                
-                {!applicationData.visaFeesIncluded && governmentTotal > 0 && (
-                  <div className="flex justify-between text-xs sm:text-sm text-muted-foreground">
-                    <span>{direction === 'rtl' ? 'رسوم التأشيرة (تُدفع لاحقاً)' : 'Visa Fees (to be paid later)'}</span>
-                    <span className="flex items-center gap-1">
-                      {governmentTotal.toLocaleString()}
-                      <SARSymbol size="xs" />
-                    </span>
-                  </div>
-                )}
-                
-                <Separator className="my-1.5" />
-                
-                <div className="flex justify-between font-bold text-base sm:text-lg">
-                  <span>{t('pricing.total')}</span>
-                  <span className="text-primary flex items-center gap-1">
-                    {grandTotal.toLocaleString()}
-                    <SARSymbol size="md" className="text-primary" />
-                  </span>
-                </div>
-              </div>
-              
-              <Badge 
-                variant="secondary" 
-                className={cn(
-                  "w-full justify-center py-1.5 text-xs",
-                  applicationData.visaFeesIncluded 
-                    ? "bg-accent/20 text-accent-foreground" 
-                    : "bg-warning/20 text-warning-foreground"
-                )}
-              >
-                {applicationData.visaFeesIncluded 
-                  ? t('pricing.visaFeesIncluded')
-                  : t('pricing.visaFeesNotIncluded')
-                }
-              </Badge>
-            </CardContent>
-          </Card>
-
-          {/* Fee transparency notice — required by Google Ads "Government Documents" policy */}
-          <div className="rounded-xl border border-amber-200 bg-amber-50/70 dark:bg-amber-950/20 dark:border-amber-900/40 p-2.5 text-xs text-amber-900 dark:text-amber-100 leading-snug">
-            <div className="font-bold mb-1 flex items-center gap-1.5">
-              <AlertCircle className="w-3.5 h-3.5" />
-              {direction === 'rtl' ? 'إفصاح الرسوم' : 'Fee transparency'}
-            </div>
-            {direction === 'rtl' ? (
-              <p>
-                المبلغ أعلاه يشمل <strong>رسوم خدمة Visafaster</strong> فقط (تنسيق واستشارة وتجهيز الملف).
-                {governmentTotal > 0 && !applicationData.visaFeesIncluded && (
-                  <> رسوم التأشيرة الحكومية الرسمية تُدفع بشكل منفصل للسفارة وليست إيراداً لنا.</>
-                )}
-                {' '}يمكنك التقديم على التأشيرة مباشرة عبر{' '}
-                <Link to="/official-embassies" className="font-semibold underline">
-                  المواقع الحكومية الرسمية
-                </Link>{' '}
-                بتكلفة أقل أو مجاناً.
-              </p>
-            ) : (
-              <p>
-                The amount above covers <strong>Visafaster service fees only</strong> (coordination, consultancy, file preparation).
-                {governmentTotal > 0 && !applicationData.visaFeesIncluded && (
-                  <> Official government visa fees are paid separately to the embassy and are not revenue to us.</>
-                )}
-                {' '}You may apply directly through the{' '}
-                <Link to="/official-embassies" className="font-semibold underline">
-                  official government websites
-                </Link>{' '}
-                at a lower cost or free.
-              </p>
-            )}
-          </div>
-        </div>
-
-        {/* Right column: payment */}
-        <div className="space-y-2.5 order-1 lg:order-2">
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-3">
+        {/* Left column (3/5): Payment */}
+        <div className="space-y-2.5 lg:col-span-3 order-1">
           {/* Online payment only — WhatsApp path branches off after step 3 */}
           {true && (
             <>
@@ -730,88 +548,164 @@ export default function Step6Payment() {
 
               {docsComplete && (
                 <>
-                  <h3 className="font-bold text-sm sm:text-base flex items-center gap-2">
+                  <h3 className="font-bold text-sm flex items-center gap-2">
                     <CreditCard className="w-4 h-4" />
                     {t('payment.selectMethod')}
                   </h3>
                   <RadioGroup
-            value={applicationData.paymentMethod}
-            onValueChange={(value) => updateApplicationData({ paymentMethod: value })}
-            className="space-y-1.5"
-          >
-            {paymentMethods.map((method) => (
-              <div
-                key={method.id}
-                className={cn(
-                  "flex items-center space-x-2.5 rtl:space-x-reverse p-2.5 rounded-xl border-2 cursor-pointer transition-colors",
-                  applicationData.paymentMethod === method.id 
-                    ? "border-primary bg-primary/5" 
-                    : "border-muted hover:border-primary/50"
-                )}
-                onClick={() => updateApplicationData({ paymentMethod: method.id })}
-              >
-                <RadioGroupItem value={method.id} id={method.id} />
-                <method.icon className="w-5 h-5 text-muted-foreground shrink-0" />
-                <Label htmlFor={method.id} className="flex-1 cursor-pointer">
-                  <div className="font-medium text-sm">{method.label[language]}</div>
-                  <div className="text-[11px] text-muted-foreground">{method.description[language]}</div>
-                </Label>
-              </div>
-            ))}
-          </RadioGroup>
-
-                  {/* Security Badges */}
-                  <div className="p-2.5 bg-muted/30 rounded-xl">
-            <div className="flex items-center gap-2 mb-1.5">
-              <Shield className="w-4 h-4 text-accent" />
-              <span className="font-medium text-xs">
-                {direction === 'rtl' ? 'دفع آمن ومشفر' : 'Secure & Encrypted Payment'}
-              </span>
-            </div>
-            <div className="flex items-center gap-3 text-[10px] text-muted-foreground">
-              <div className="flex items-center gap-1">
-                <Lock className="w-2.5 h-2.5" />
-                <span>SSL Secured</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <CheckCircle2 className="w-2.5 h-2.5" />
-                <span>PCI Compliant</span>
-              </div>
-            </div>
-          </div>
-
-                  {/* Pay Button */}
-                  <Button
-            size="lg"
-            className="w-full h-11 sm:h-12 text-sm sm:text-base gap-2"
-            onClick={handlePayment}
-            disabled={!applicationData.paymentMethod || isProcessing || !applicationData.termsAccepted}
-          >
-            {isProcessing ? (
-              <>
-                <Loader2 className="w-4 h-4 animate-spin" />
-                <span className="text-sm">{direction === 'rtl' ? 'جاري المعالجة...' : 'Processing...'}</span>
-              </>
-            ) : (
-              <>
-                <Lock className="w-4 h-4" />
-                <span className="flex items-center gap-1 text-sm sm:text-base">
-                  {t('wizard.pay')} - {grandTotal.toLocaleString()}
-                  <SARSymbol size="sm" />
-                </span>
-              </>
-            )}
-          </Button>
+                    value={applicationData.paymentMethod}
+                    onValueChange={(value) => updateApplicationData({ paymentMethod: value })}
+                    className="grid grid-cols-3 gap-2"
+                  >
+                    {paymentMethods.map((method) => {
+                      const selected = applicationData.paymentMethod === method.id;
+                      return (
+                        <button
+                          type="button"
+                          key={method.id}
+                          onClick={() => updateApplicationData({ paymentMethod: method.id })}
+                          className={cn(
+                            "flex flex-col items-center justify-center gap-1 p-2 rounded-xl border-2 transition-colors text-center min-h-[68px]",
+                            selected
+                              ? "border-primary bg-primary/5"
+                              : "border-muted hover:border-primary/50"
+                          )}
+                        >
+                          <RadioGroupItem value={method.id} id={method.id} className="sr-only" />
+                          <method.icon className={cn("w-5 h-5", selected ? "text-primary" : "text-muted-foreground")} />
+                          <span className="font-medium text-[11px] sm:text-xs leading-tight">{method.label[language]}</span>
+                        </button>
+                      );
+                    })}
+                  </RadioGroup>
+                  {applicationData.paymentMethod && (
+                    <p className="text-[11px] text-muted-foreground text-center -mt-1">
+                      {paymentMethods.find(m => m.id === applicationData.paymentMethod)?.description[language]}
+                    </p>
+                  )}
                 </>
               )}
             </>
           )}
+        </div>
+
+        {/* Right column (2/5): Compact summary */}
+        <div className="space-y-2 lg:col-span-2 order-2">
+          <Card>
+            <CardContent className="p-3 space-y-2">
+              {/* Identity + visa compact lines */}
+              <div className="space-y-1 text-[11px] sm:text-xs text-muted-foreground">
+                <div className="flex items-center gap-1.5 truncate">
+                  <User className="w-3.5 h-3.5 shrink-0" />
+                  <span className="truncate font-medium text-foreground">{customerName || '—'}</span>
+                  <span>·</span>
+                  <span dir="ltr" className="truncate">{customerPhoneDisplay || customerEmail}</span>
+                </div>
+                <div className="flex items-center gap-1.5 truncate">
+                  <MapPin className="w-3.5 h-3.5 shrink-0" />
+                  <span className="font-medium text-foreground truncate">{applicationData.countryName}</span>
+                  <span>·</span>
+                  <span className="truncate">{applicationData.visaTypeName}</span>
+                </div>
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  <Users className="w-3.5 h-3.5 shrink-0" />
+                  <span>
+                    {applicationData.travelers.adults}{t('form.adults').charAt(0)}
+                    {applicationData.travelers.children > 0 && ` · ${applicationData.travelers.children}${t('form.children').charAt(0)}`}
+                    {applicationData.travelers.infants > 0 && ` · ${applicationData.travelers.infants}${t('form.infants').charAt(0)}`}
+                  </span>
+                  {applicationData.travelDate && (
+                    <>
+                      <span>·</span>
+                      <Calendar className="w-3.5 h-3.5 shrink-0" />
+                      <span>{format(applicationData.travelDate, 'd MMM yyyy', { locale: language === 'ar' ? ar : enUS })}</span>
+                    </>
+                  )}
+                </div>
+              </div>
+
+              <Separator />
+
+              {/* Total — primary focus */}
+              <div className="flex items-baseline justify-between">
+                <span className="text-xs text-muted-foreground">{t('pricing.total')}</span>
+                <span className="text-primary font-bold text-xl flex items-center gap-1">
+                  {grandTotal.toLocaleString()}
+                  <SARSymbol size="md" className="text-primary" />
+                </span>
+              </div>
+
+              {/* Collapsible breakdown */}
+              <details className="group">
+                <summary className="text-[11px] text-primary cursor-pointer hover:underline list-none flex items-center gap-1">
+                  <span>{direction === 'rtl' ? 'تفاصيل السعر' : 'Price details'}</span>
+                  <span className="group-open:rotate-180 transition-transform">▾</span>
+                </summary>
+                <div className="mt-1.5 space-y-1 text-[11px]">
+                  {applicationData.travelers.adults > 0 && (
+                    <div className="flex justify-between"><span className="text-muted-foreground">{t('pricing.adult')} × {applicationData.travelers.adults}</span><span className="flex items-center gap-0.5">{breakdown.adults.toLocaleString()}<SARSymbol size="xs" /></span></div>
+                  )}
+                  {applicationData.travelers.children > 0 && (
+                    <div className="flex justify-between"><span className="text-muted-foreground">{t('pricing.child')} × {applicationData.travelers.children}</span><span className="flex items-center gap-0.5">{breakdown.children.toLocaleString()}<SARSymbol size="xs" /></span></div>
+                  )}
+                  {applicationData.travelers.infants > 0 && (
+                    <div className="flex justify-between"><span className="text-muted-foreground">{t('pricing.infant')} × {applicationData.travelers.infants}</span><span className="flex items-center gap-0.5">{breakdown.infants.toLocaleString()}<SARSymbol size="xs" /></span></div>
+                  )}
+                  <div className="flex justify-between pt-1 border-t">
+                    <span>{direction === 'rtl' ? 'رسوم الخدمة' : 'Service Fees'}</span>
+                    <span className="flex items-center gap-0.5">{serviceTotal.toLocaleString()}<SARSymbol size="xs" /></span>
+                  </div>
+                  {!applicationData.visaFeesIncluded && governmentTotal > 0 && (
+                    <div className="flex justify-between text-muted-foreground">
+                      <span>{direction === 'rtl' ? 'رسوم التأشيرة (لاحقاً)' : 'Visa Fees (later)'}</span>
+                      <span className="flex items-center gap-0.5">{governmentTotal.toLocaleString()}<SARSymbol size="xs" /></span>
+                    </div>
+                  )}
+                </div>
+              </details>
+
+              {/* Fee transparency popover */}
+              <Popover>
+                <PopoverTrigger asChild>
+                  <button type="button" className="w-full flex items-center justify-center gap-1 text-[10px] text-amber-700 dark:text-amber-300 hover:underline">
+                    <AlertCircle className="w-3 h-3" />
+                    {direction === 'rtl' ? 'إفصاح الرسوم' : 'Fee transparency'}
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent className="w-72 text-xs leading-snug">
+                  {direction === 'rtl' ? (
+                    <p>
+                      المبلغ يشمل <strong>رسوم خدمة Visafaster</strong> فقط.
+                      {governmentTotal > 0 && !applicationData.visaFeesIncluded && (
+                        <> رسوم التأشيرة الحكومية تُدفع للسفارة بشكل منفصل.</>
+                      )}
+                      {' '}يمكنك التقديم مباشرة عبر{' '}
+                      <Link to="/official-embassies" className="font-semibold underline">المواقع الرسمية</Link>.
+                    </p>
+                  ) : (
+                    <p>
+                      Amount covers <strong>Visafaster service fees only</strong>.
+                      {governmentTotal > 0 && !applicationData.visaFeesIncluded && (
+                        <> Government visa fees are paid separately to the embassy.</>
+                      )}
+                      {' '}You may apply directly via{' '}
+                      <Link to="/official-embassies" className="font-semibold underline">official sites</Link>.
+                    </p>
+                  )}
+                </PopoverContent>
+              </Popover>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Bottom: terms + CTA — sticky on mobile, inline on desktop */}
+        <div className="lg:col-span-5 order-3 space-y-2 sticky bottom-0 lg:static bg-background/95 lg:bg-transparent backdrop-blur lg:backdrop-blur-none pt-2 pb-2 lg:pt-0 lg:pb-0 -mx-2 px-2 lg:mx-0 lg:px-0 border-t lg:border-0 z-10">
 
           {/* Terms & Conditions consent */}
-          {true && (
+          {docsComplete && (
             <div
               className={cn(
-                'p-2.5 rounded-xl border-2 transition-colors cursor-pointer',
+                'p-2 rounded-xl border-2 transition-colors cursor-pointer',
                 applicationData.termsAccepted
                   ? 'border-primary bg-primary/5'
                   : 'border-muted hover:border-primary/50'
