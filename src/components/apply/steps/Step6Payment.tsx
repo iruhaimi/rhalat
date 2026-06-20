@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { format } from 'date-fns';
 import { ar, enUS } from 'date-fns/locale';
 import { useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useApplication } from '@/contexts/ApplicationContext';
 import { useAuth } from '@/contexts/AuthContext';
@@ -95,6 +96,23 @@ export default function Step6Payment() {
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  // Fetch dynamic visa requirements (same source as Step4Documents)
+  const { data: dbRequirements, isLoading: reqsLoading } = useQuery({
+    queryKey: ['visa-requirements', applicationData.visaTypeId],
+    queryFn: async () => {
+      if (!applicationData.visaTypeId) return [] as any[];
+      const { data, error } = await supabase
+        .from('visa_requirements')
+        .select('*')
+        .eq('visa_type_id', applicationData.visaTypeId)
+        .eq('is_active', true)
+        .order('display_order', { ascending: true });
+      if (error) throw error;
+      return data || [];
+    },
+    enabled: !!applicationData.visaTypeId,
+  });
+
   // Reaching the payment step always means the electronic path was chosen earlier
   useEffect(() => {
     if (applicationData.submissionMethod !== 'online') {
@@ -128,11 +146,43 @@ export default function Step6Payment() {
   
   const ArrowPrevIcon = direction === 'rtl' ? ArrowRight : ArrowLeft;
 
-  // Required documents for online payment
-  const REQUIRED_DOC_TYPES = ['passport', 'photo'];
-  const uploadedTypes = applicationData.uploadedDocuments.filter(d => d.uploaded).map(d => d.type);
-  const missingDocs = REQUIRED_DOC_TYPES.filter(t => !uploadedTypes.includes(t));
-  const docsComplete = missingDocs.length === 0;
+  // Build required slotIds the same way Step4Documents does, then verify uploads
+  const { travelers } = applicationData;
+  const requiredSlots: { slotId: string; label: string }[] = (() => {
+    const out: { slotId: string; label: string }[] = [];
+    if (!dbRequirements) return out;
+    for (const req of dbRequirements as any[]) {
+      if (!req.is_required || !req.requires_upload) continue;
+      const name = language === 'ar' ? req.name_ar : req.name_en;
+      const labels = {
+        ar: { adult: 'بالغ', child: 'طفل', infant: 'رضيع' },
+        en: { adult: 'Adult', child: 'Child', infant: 'Infant' },
+      } as const;
+      const push = (cat: 'adult' | 'child' | 'infant', i: number) =>
+        out.push({
+          slotId: `${req.id}_${cat}_${i}`,
+          label: `${name} — ${labels[language][cat]} ${i}`,
+        });
+      if (req.applies_to === 'all') {
+        for (let i = 1; i <= travelers.adults; i++) push('adult', i);
+        for (let i = 1; i <= travelers.children; i++) push('child', i);
+        for (let i = 1; i <= travelers.infants; i++) push('infant', i);
+      } else if (req.applies_to === 'adult') {
+        for (let i = 1; i <= travelers.adults; i++) push('adult', i);
+      } else if (req.applies_to === 'child') {
+        for (let i = 1; i <= travelers.children; i++) push('child', i);
+      } else if (req.applies_to === 'infant') {
+        for (let i = 1; i <= travelers.infants; i++) push('infant', i);
+      }
+    }
+    return out;
+  })();
+
+  const uploadedSet = new Set(
+    applicationData.uploadedDocuments.filter(d => d.uploaded).map(d => d.type)
+  );
+  const missingDocs = requiredSlots.filter(s => !uploadedSet.has(s.slotId));
+  const docsComplete = !reqsLoading && missingDocs.length === 0;
 
   const submissionMethod = applicationData.submissionMethod;
 
