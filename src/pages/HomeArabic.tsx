@@ -14,7 +14,6 @@ import ComplianceDisclaimer from '@/components/layout/ComplianceDisclaimer';
 const HowItWorksSection = lazy(() => import('@/components/home/HowItWorksSection'));
 const FeaturesSection = lazy(() => import('@/components/home/FeaturesSection'));
 const StatsSection = lazy(() => import('@/components/home/StatsSection'));
-const PartnersSection = lazy(() => import('@/components/home/PartnersSection'));
 const TestimonialsSection = lazy(() => import('@/components/home/TestimonialsSection'));
 const FAQSection = lazy(() => import('@/components/home/FAQSection'));
 const CTASection = lazy(() => import('@/components/home/CTASection'));
@@ -58,7 +57,6 @@ export default function HomeArabic() {
         <HowItWorksSection t={t} />
         <FeaturesSection t={t} />
         <StatsSection />
-        <PartnersSection />
         <TestimonialsSection />
         <FAQSection t={t} />
         <CTASection t={t} />
