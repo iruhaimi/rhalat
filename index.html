@@ -12,6 +12,17 @@
 
     <!-- Google Consent Mode v2 — default DENIED until user choice (CookieConsent.tsx updates) -->
     <script>
+      // iOS App Store compliance: fully disable Google Ads/gtag inside the
+      // Despia iOS WebView so the app collects no advertising/tracking data
+      // and does not require Apple's App Tracking Transparency prompt.
+      // Web (all other browsers, including Despia Android) is unchanged.
+      var __isDespiaIOS = /despia-iphone|despia-ipad/i.test(
+        (typeof navigator !== 'undefined' && navigator.userAgent) || ''
+      );
+      if (__isDespiaIOS) {
+        window.dataLayer = [];
+        window.gtag = function () {};
+      } else {
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       window.gtag = window.gtag || gtag;
@@ -47,13 +58,20 @@
         gtag('set', 'ads_data_redaction', true);
         gtag('set', 'url_passthrough', true);
       }
+      }
     </script>
 
     <!-- Google tag (gtag.js) — Google Ads AW-16509107883 -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-16509107883"></script>
     <script>
-      gtag('js', new Date());
-      gtag('config', 'AW-16509107883', { debug_mode: true });
+      // Skip loading gtag.js entirely on Despia iOS (see block above).
+      if (!/despia-iphone|despia-ipad/i.test((navigator && navigator.userAgent) || '')) {
+        var __s = document.createElement('script');
+        __s.async = true;
+        __s.src = 'https://www.googletagmanager.com/gtag/js?id=AW-16509107883';
+        document.head.appendChild(__s);
+        gtag('js', new Date());
+        gtag('config', 'AW-16509107883', { debug_mode: true });
+      }
     </script>
 
     <!-- Performance: preconnect & dns-prefetch -->

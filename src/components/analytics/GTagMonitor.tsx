@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { isDespiaIOS } from "@/lib/despia";
 
 const GTAG_ID = "AW-16509107883";
 const SCRIPT_MATCH = `googletagmanager.com/gtag/js?id=${GTAG_ID}`;
@@ -64,6 +65,8 @@ export default function GTagMonitor() {
   const location = useLocation();
 
   useEffect(() => {
+    // gtag is intentionally disabled on Despia iOS — skip diagnostics.
+    if (isDespiaIOS()) return;
     // Defer until after paint so gtag.js has a chance to load on the first route
     const t = window.setTimeout(() => {
       const results = runGTagChecks();

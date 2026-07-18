@@ -59,8 +59,19 @@ export interface EnhancedConversionUserData {
 
 type GtagFn = (...args: unknown[]) => void;
 
+/**
+ * iOS App Store compliance: no advertising/tracking events from the Despia
+ * iOS WebView. This lets us declare "Data Not Used to Track You" and skip
+ * Apple's ATT prompt. Web behavior is unchanged.
+ */
+function isTrackingDisabled(): boolean {
+  if (typeof navigator === 'undefined') return false;
+  return /despia-iphone|despia-ipad/i.test(navigator.userAgent || '');
+}
+
 function getGtag(): GtagFn | null {
   if (typeof window === 'undefined') return null;
+  if (isTrackingDisabled()) return null;
   const g = (window as unknown as { gtag?: GtagFn }).gtag;
   return typeof g === 'function' ? g : null;
 }
