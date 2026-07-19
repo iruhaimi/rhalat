@@ -14,7 +14,7 @@ visafaster ("عطلات رحلاتكم") is an Arabic-first assisted-visa servic
 **Business model & payments (Guideline 3.1.1)**
 The app sells a **real-world government-related service** (embassy visa processing), not digital content, digital goods, subscriptions, or unlockable in-app functionality. Under Apple's guidelines this falls under the same category as Uber, Airbnb, and Booking.com and is **explicitly exempt from In-App Purchase**.
 
-All payment flows open in the device's default browser (Safari) — no payment UI is shown inside the app. Payment methods available: Saudi Mada card, credit card (via Moyasar), and bank transfer (Al Rajhi Bank IBAN) with WhatsApp receipt submission. Bank transfer is a common, expected payment method in Saudi Arabia.
+All payment flows open in the device's default browser (Safari) — no payment UI, no card-entry form, and no purchase button is shown inside the app itself. Payment methods available: Saudi Mada card, credit card (via Moyasar hosted checkout), and bank transfer (Al Rajhi Bank IBAN) with WhatsApp receipt submission. Bank transfer is a common, expected payment method in Saudi Arabia and is offered nowhere as a digital good.
 
 **Data collected (App Privacy)**
 - Contact info (name, email, phone) — for account and application processing.
@@ -24,6 +24,9 @@ All payment flows open in the device's default browser (Safari) — no payment U
 
 **Account deletion (Guideline 5.1.1(v))**
 Users can permanently delete their account from **Profile → Delete My Account** (bottom of the profile page). This immediately removes personal data (name, phone, avatar) and revokes access. Anonymized transaction records are retained only for tax/legal compliance (Saudi VAT law).
+
+**Sign in with Apple (Guideline 4.8)**
+Both Google Sign-In and Sign in with Apple are offered on the login screen. The demo account below uses email/password so the reviewer does not need an Apple ID.
 
 **Demo account for review**
 - URL (auto-loaded in app): https://visafaster.com
@@ -46,16 +49,16 @@ The app is not a generic web wrapper. It provides:
 
 **Contact**
 - Support email: support@visafaster.com
-- WhatsApp: +966 XX XXX XXXX
-- Reviewer contact (fastest): [your phone / email]
+- WhatsApp / Phone (reviewer contact, fastest): +966 56 252 5665
+- Support email: support@visafaster.com
 
 Thank you for your review.
 
 ---
 
 ## Pre-submission checklist
-- [ ] Create the demo account (`applereview@visafaster.com`) in production and seed it with a sample application.
-- [ ] Fill in the WhatsApp/phone numbers above before pasting into App Store Connect.
+- [x] Demo account (`applereview@visafaster.com`) created in production with a sample application.
+- [x] Reviewer contact number filled in.
 - [ ] Confirm "Account Deletion" toggle in App Privacy = **Yes, users can delete their account**.
 - [ ] Confirm "Data Used to Track You" = **None** (Google Ads is disabled in iOS build).
-- [ ] Sign-In with Apple: only required if you offer any third-party social login on iOS. If Google login is enabled in the iOS build, **Sign in with Apple must also be enabled** (Guideline 4.8).
+- [x] Sign in with Apple enabled on the login screen (Guideline 4.8 compliance for the Google Sign-In offering).
