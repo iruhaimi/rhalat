@@ -8,11 +8,22 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { User, Phone, Save, Loader2, Camera, Upload, FileText, RotateCcw, ChevronRight, ChevronLeft } from 'lucide-react';
+import { User, Phone, Save, Loader2, Camera, Upload, FileText, RotateCcw, ChevronRight, ChevronLeft, Trash2, AlertTriangle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import CountryCodePicker from '@/components/ui/CountryCodePicker';
 import { filterNonNumeric as filterPhoneNonNumeric } from '@/lib/inputFilters';
 import NoIndex from '@/components/seo/NoIndex';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 
 const Profile = () => {
   const { user, profile, refreshProfile } = useAuth();
