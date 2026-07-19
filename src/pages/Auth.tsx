@@ -365,6 +365,7 @@ export default function Auth() {
               {!isForgotPassword && (
                 <div className="mb-5 space-y-4">
                   <GoogleSignInButton className="w-full h-11" redirectPath={safeRedirect} />
+                  <AppleSignInButton className="w-full h-11 bg-black text-white hover:bg-black/90 border-black" redirectPath={safeRedirect} />
                   <div className="relative">
                     <div className="absolute inset-0 flex items-center"><span className="w-full border-t" /></div>
                     <div className="relative flex justify-center text-xs uppercase">
