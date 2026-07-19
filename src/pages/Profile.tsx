@@ -429,6 +429,70 @@ const Profile = () => {
             </Button>
           </div>
         </form>
+
+        {/* Danger Zone — Account Deletion (Apple App Store requirement) */}
+        <Card className="mt-8 rounded-3xl border-destructive/30 shadow-xl shadow-destructive/5">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-destructive">
+              <AlertTriangle className="h-5 w-5" />
+              {isRTL ? 'حذف الحساب' : 'Delete Account'}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              {isRTL
+                ? 'سيؤدي حذف الحساب إلى إزالة بياناتك الشخصية (الاسم، رقم الهاتف، الصورة الشخصية) نهائياً وإلغاء وصولك إلى التطبيق. لأغراض قانونية ومحاسبية، قد نحتفظ بسجلات الطلبات والمدفوعات المرتبطة بحسابك بصيغة مجهولة الهوية. هذا الإجراء لا يمكن التراجع عنه.'
+                : 'Deleting your account will permanently remove your personal information (name, phone, avatar) and revoke your access to the app. For legal and accounting reasons, we may retain anonymized records of your visa applications and payments. This action cannot be undone.'}
+            </p>
+            <AlertDialog onOpenChange={(open) => !open && setDeleteConfirmText('')}>
+              <AlertDialogTrigger asChild>
+                <Button variant="destructive" className="rounded-2xl">
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  {isRTL ? 'حذف حسابي نهائياً' : 'Delete My Account'}
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>
+                    {isRTL ? 'هل أنت متأكد؟' : 'Are you absolutely sure?'}
+                  </AlertDialogTitle>
+                  <AlertDialogDescription>
+                    {isRTL
+                      ? 'اكتب "حذف" للتأكيد. سيتم حذف حسابك فوراً ولا يمكن التراجع.'
+                      : 'Type "DELETE" to confirm. Your account will be deleted immediately and cannot be recovered.'}
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <Input
+                  value={deleteConfirmText}
+                  onChange={(e) => setDeleteConfirmText(e.target.value)}
+                  placeholder={isRTL ? 'اكتب: حذف' : 'Type: DELETE'}
+                  className="mt-2"
+                />
+                <AlertDialogFooter>
+                  <AlertDialogCancel disabled={isDeleting}>
+                    {isRTL ? 'إلغاء' : 'Cancel'}
+                  </AlertDialogCancel>
+                  <AlertDialogAction
+                    disabled={
+                      isDeleting ||
+                      (isRTL ? deleteConfirmText !== 'حذف' : deleteConfirmText !== 'DELETE')
+                    }
+                    onClick={handleDeleteAccount}
+                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                  >
+                    {isDeleting ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : isRTL ? (
+                      'تأكيد الحذف'
+                    ) : (
+                      'Confirm Delete'
+                    )}
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </CardContent>
+        </Card>
         </div>
       </div>
     </div>
