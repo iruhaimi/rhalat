@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -27,6 +28,7 @@ import {
 
 const Profile = () => {
   const { user, profile, refreshProfile } = useAuth();
+  const navigate = useNavigate();
   const { direction } = useLanguage();
   const { toast } = useToast();
   const isRTL = direction === 'rtl';
@@ -34,6 +36,8 @@ const Profile = () => {
   
   const [isLoading, setIsLoading] = useState(false);
   const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteConfirmText, setDeleteConfirmText] = useState('');
   const [formData, setFormData] = useState({
     full_name: '',
     phone: '',
