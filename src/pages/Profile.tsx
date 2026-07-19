@@ -192,6 +192,33 @@ const Profile = () => {
     }
   };
 
+  const handleDeleteAccount = async () => {
+    setIsDeleting(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('delete-account');
+      if (error || !data?.success) {
+        throw new Error(data?.error || error?.message || 'Delete failed');
+      }
+      toast({
+        title: isRTL ? 'تم حذف الحساب' : 'Account deleted',
+        description: isRTL
+          ? 'تم حذف حسابك وبياناتك الشخصية نهائياً.'
+          : 'Your account and personal data have been permanently deleted.',
+      });
+      await supabase.auth.signOut();
+      navigate('/', { replace: true });
+    } catch (err) {
+      toast({
+        title: isRTL ? 'خطأ' : 'Error',
+        description: (err as Error).message,
+        variant: 'destructive',
+      });
+    } finally {
+      setIsDeleting(false);
+      setDeleteConfirmText('');
+    }
+  };
+
   const labels = {
     pageTitle: isRTL ? 'الملف الشخصي' : 'Profile',
     personalInfo: isRTL ? 'المعلومات الشخصية' : 'Personal Information',
