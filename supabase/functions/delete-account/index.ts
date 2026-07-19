@@ -59,7 +59,6 @@ Deno.serve(async (req) => {
         full_name: 'Deleted User',
         phone: null,
         avatar_url: null,
-        deleted_at: new Date().toISOString(),
       })
       .eq('id', user.id)
 
