@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -8,14 +9,26 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { User, Phone, Save, Loader2, Camera, Upload, FileText, RotateCcw, ChevronRight, ChevronLeft } from 'lucide-react';
+import { User, Phone, Save, Loader2, Camera, Upload, FileText, RotateCcw, ChevronRight, ChevronLeft, Trash2, AlertTriangle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import CountryCodePicker from '@/components/ui/CountryCodePicker';
 import { filterNonNumeric as filterPhoneNonNumeric } from '@/lib/inputFilters';
 import NoIndex from '@/components/seo/NoIndex';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 
 const Profile = () => {
   const { user, profile, refreshProfile } = useAuth();
+  const navigate = useNavigate();
   const { direction } = useLanguage();
   const { toast } = useToast();
   const isRTL = direction === 'rtl';
@@ -23,6 +36,8 @@ const Profile = () => {
   
   const [isLoading, setIsLoading] = useState(false);
   const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteConfirmText, setDeleteConfirmText] = useState('');
   const [formData, setFormData] = useState({
     full_name: '',
     phone: '',
@@ -174,6 +189,33 @@ const Profile = () => {
       });
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    setIsDeleting(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('delete-account');
+      if (error || !data?.success) {
+        throw new Error(data?.error || error?.message || 'Delete failed');
+      }
+      toast({
+        title: isRTL ? 'تم حذف الحساب' : 'Account deleted',
+        description: isRTL
+          ? 'تم حذف حسابك وبياناتك الشخصية نهائياً.'
+          : 'Your account and personal data have been permanently deleted.',
+      });
+      await supabase.auth.signOut();
+      navigate('/', { replace: true });
+    } catch (err) {
+      toast({
+        title: isRTL ? 'خطأ' : 'Error',
+        description: (err as Error).message,
+        variant: 'destructive',
+      });
+    } finally {
+      setIsDeleting(false);
+      setDeleteConfirmText('');
     }
   };
 
@@ -387,6 +429,70 @@ const Profile = () => {
             </Button>
           </div>
         </form>
+
+        {/* Danger Zone — Account Deletion (Apple App Store requirement) */}
+        <Card className="mt-8 rounded-3xl border-destructive/30 shadow-xl shadow-destructive/5">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-destructive">
+              <AlertTriangle className="h-5 w-5" />
+              {isRTL ? 'حذف الحساب' : 'Delete Account'}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              {isRTL
+                ? 'سيؤدي حذف الحساب إلى إزالة بياناتك الشخصية (الاسم، رقم الهاتف، الصورة الشخصية) نهائياً وإلغاء وصولك إلى التطبيق. لأغراض قانونية ومحاسبية، قد نحتفظ بسجلات الطلبات والمدفوعات المرتبطة بحسابك بصيغة مجهولة الهوية. هذا الإجراء لا يمكن التراجع عنه.'
+                : 'Deleting your account will permanently remove your personal information (name, phone, avatar) and revoke your access to the app. For legal and accounting reasons, we may retain anonymized records of your visa applications and payments. This action cannot be undone.'}
+            </p>
+            <AlertDialog onOpenChange={(open) => !open && setDeleteConfirmText('')}>
+              <AlertDialogTrigger asChild>
+                <Button variant="destructive" className="rounded-2xl">
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  {isRTL ? 'حذف حسابي نهائياً' : 'Delete My Account'}
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>
+                    {isRTL ? 'هل أنت متأكد؟' : 'Are you absolutely sure?'}
+                  </AlertDialogTitle>
+                  <AlertDialogDescription>
+                    {isRTL
+                      ? 'اكتب "حذف" للتأكيد. سيتم حذف حسابك فوراً ولا يمكن التراجع.'
+                      : 'Type "DELETE" to confirm. Your account will be deleted immediately and cannot be recovered.'}
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <Input
+                  value={deleteConfirmText}
+                  onChange={(e) => setDeleteConfirmText(e.target.value)}
+                  placeholder={isRTL ? 'اكتب: حذف' : 'Type: DELETE'}
+                  className="mt-2"
+                />
+                <AlertDialogFooter>
+                  <AlertDialogCancel disabled={isDeleting}>
+                    {isRTL ? 'إلغاء' : 'Cancel'}
+                  </AlertDialogCancel>
+                  <AlertDialogAction
+                    disabled={
+                      isDeleting ||
+                      (isRTL ? deleteConfirmText !== 'حذف' : deleteConfirmText !== 'DELETE')
+                    }
+                    onClick={handleDeleteAccount}
+                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                  >
+                    {isDeleting ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : isRTL ? (
+                      'تأكيد الحذف'
+                    ) : (
+                      'Confirm Delete'
+                    )}
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </CardContent>
+        </Card>
         </div>
       </div>
     </div>

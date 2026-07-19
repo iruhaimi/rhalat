@@ -1,51 +1,79 @@
-# Plan: Disable Google Ads / gtag inside iOS Despia app
+# هل سيتم اعتماد التطبيق؟
 
-**Goal:** No advertising or tracking events sent to Google from the iOS native app (Despia WebView on iPhone/iPad), so we can declare "Data Not Used to Track You" in App Privacy and skip Apple's ATT prompt. Web (Safari/Chrome/Android) behavior is unchanged.
+**الإجابة الصريحة**: لا أحد يستطيع ضمان القبول 100% — قرار المراجعة يعود لمراجع Apple البشري. لكن بناءً على ما أعرفه عن مشروعك، هناك **نقاط قوة** وأيضاً **مخاطر حقيقية** قد تسبب الرفض في الجولة الأولى.
 
-**Detection signal:** `navigator.userAgent` contains `despia-iphone` or `despia-ipad` (already exposed by `src/lib/despia.ts` via `isDespiaIOS()`).
+---
 
-## Changes
+## ✅ نقاط قوة (تعمل لصالحك)
+- التطبيق يقدم خدمة حقيقية (تأشيرات) — ليس مجرد Web View فارغ.
+- تم تعطيل Google Ads + Enhanced Conversions داخل iOS، فلن تحتاج ATT prompt → لا مشاكل مع سياسة التتبع.
+- المدفوعات تفتح في المتصفح (خارج التطبيق) → متوافق مع سياسة Apple بخصوص السلع/الخدمات المادية (التأشيرات خدمة حقيقية، ليست محتوى رقمي، فلا يلزمك IAP).
+- سياسة خصوصية + شروط استخدام موجودة.
+- التطبيق باللغة العربية بشكل صحيح، ومربوط بحساب رسمي مرخّص.
 
-### 1. `index.html` — gate the gtag bootstrap
-Wrap the two gtag blocks in a runtime check. Before installing the `dataLayer` shim and injecting `https://www.googletagmanager.com/gtag/js?id=AW-16509107883`, compute:
+---
 
-```js
-var __isDespiaIOS = /despia-iphone|despia-ipad/i.test(navigator.userAgent || '');
-```
+## ⚠️ مخاطر الرفض المحتملة (رتّبتها بالأهم)
 
-If `__isDespiaIOS === true`:
-- Do **not** inject the `googletagmanager.com/gtag/js` `<script>` tag.
-- Install a **no-op** `window.gtag = function(){}` and `window.dataLayer = []` so any downstream `window.gtag(...)` call is silently swallowed (belt-and-suspenders — matches how `getGtag()` in `src/lib/gtagEvents.ts` already checks for existence).
-- Skip the Consent Mode `gtag('consent', 'default', …)` calls, `ads_data_redaction`, `url_passthrough`, and the `gtag('config', …)` call.
+### 1) Guideline 4.2 — Minimum Functionality (الأخطر لتطبيقات Despia/WebView)
+Apple ترفض التطبيقات التي هي مجرد "غلاف لموقع ويب". مشروعك عبر Despia هو تحديداً WebView wrapper. قد يقول المراجع: "يمكن للمستخدم استخدام Safari بدلاً منه".
+**كيف تدفع الاحتمال بعيداً**: أثبت وجود ميزات أصلية (native) — إشعارات Push، حفظ للحالة، دعم offline، تفاعل مع الكاميرا لرفع المستندات، إلخ.
 
-Web behavior (all non-Despia-iOS browsers, incl. Android Despia and iOS Safari outside the app) is untouched — the existing consent-denied default + gtag.js load continues to run exactly as today.
+### 2) Guideline 5.1.1 — تسجيل حساب + جمع بيانات حساسة
+تجمع: جواز سفر، صور شخصية، تاريخ ميلاد، عنوان. Apple تتحقق من:
+- وجود سياسة خصوصية واضحة (✅ عندك).
+- إمكانية **حذف الحساب من داخل التطبيق** (Account Deletion) — إجباري منذ 2022. **يجب التأكد أنها متاحة داخل الشاشة، ليست بالتواصل مع الدعم فقط**.
 
-### 2. `src/lib/gtagEvents.ts` — hard guard in the TS wrapper
-Add an early-return inside `getGtag()` (or a small helper `isGtagDisabled()`) that returns `null` when `/despia-iphone|despia-ipad/i.test(navigator.userAgent)`. This ensures:
-- `trackConversion(...)` becomes a no-op on iOS app (no `gtag('event', ...)`, no `gtag('event', 'conversion', ...)`).
-- `setEnhancedConversionUserData(...)` becomes a no-op — **no hashed email/phone sent to Google** from the iOS app.
+### 3) Guideline 3.1.1 — In-App Purchase
+إذا لاحظ المراجع أن الدفع يتم بالبطاقة/التحويل داخل تدفق يبدو "رقمياً"، قد يطلب استخدام IAP.
+**دفاعك**: التأشيرة خدمة حكومية خارجية = مستثناة صراحة من IAP (مثل Uber، Airbnb، Booking).
 
-Web path is unchanged (returns the real `window.gtag`).
+### 4) Demo Account
+إذا لم توفّر **حساب تجريبي** (اسم مستخدم + كلمة مرور) في حقل "App Review Information"، المراجع لن يتمكن من الدخول → رفض فوري.
 
-### 3. `src/components/analytics/GTagMonitor.tsx` — skip diagnostic on iOS app
-Return `null` and skip `runGTagChecks()` when `isDespiaIOS()` is true, so we don't log "checks failed" noise on iOS.
+### 5) شاشة الدفع بالتحويل البنكي
+عرض حساب IBAN + طلب إرسال إيصال عبر WhatsApp قد يبدو للمراجع كتحايل على IAP. اشرح في ملاحظات المراجعة أن هذا للخدمة الحكومية.
 
-## Files touched
+### 6) الترجمة/الأخطاء
+أي زر أو رسالة خطأ باللغة الإنجليزية داخل واجهة عربية قد تُلاحظ. الكثير من الشاشات الإدارية عندنا مختلطة اللغة، لكن المستخدم النهائي لن يصل لها.
 
-- `index.html` — wrap gtag bootstrap in an iOS-app skip guard
-- `src/lib/gtagEvents.ts` — no-op `getGtag()` and `setEnhancedConversionUserData()` on iOS app
-- `src/components/analytics/GTagMonitor.tsx` — bail on iOS app
+---
 
-No changes to: Supabase, OneSignal/Despia push code, payments, UI, routes, or any web-facing logic.
+## 📊 تقديري الصريح
 
-## Verification
+| الاحتمال | النسبة التقريبية |
+|---|---|
+| قبول من أول محاولة | **40–55%** |
+| رفض + طلب تعديلات (شائع جداً) ثم قبول | **35–45%** |
+| رفض نهائي بسبب 4.2 (WebView) | **10–20%** |
 
-- Playwright with UA `Mozilla/5.0 despia-iphone`: confirm `window.gtag` exists but is a no-op, no `googletagmanager.com` network request, `dataLayer` empty.
-- Default UA: confirm `googletagmanager.com/gtag/js?id=AW-16509107883` still loads and dataLayer receives the `config` entry (unchanged behavior).
+**الرفض في الجولة الأولى شيء طبيعي جداً** حتى لكبرى الشركات. لا تقلق إذا حدث — يتم الرد على ملاحظات المراجع وإعادة الإرسال.
 
-## App Store Privacy impact
+---
 
-After this change, the iOS app collects **no advertising data and no tracking identifiers shared with third parties**. You can safely answer:
-- **App Tracking Transparency:** Not required — declare "Data Not Used to Track You".
-- **Data Used to Track You:** None.
-- **Google/Advertising SDKs:** Not present in iOS app.
+## 🛡️ ما أقترحه الآن (قبل أن يبدأ المراجع)
+
+### إجراءات وقائية عاجلة (لا تحتاج كود):
+1. **افتح App Store Connect → App Information → App Review Information** وأضف:
+   - حساب تجريبي (Demo Account): إيميل + كلمة مرور لحساب عميل حقيقي عليه بيانات وطلبات.
+   - Notes للمراجع (بالإنجليزية): اشرح أن التأشيرات خدمة حكومية خارجية، الدفع للجهة الرسمية، وليس محتوى رقمي داخل التطبيق.
+   - رقم تواصل مباشر.
+
+2. **تأكد من زر "حذف الحساب"** موجود داخل صفحة البروفايل. إذا غير موجود، هذا سبب رفض شبه مؤكد.
+
+3. **جهّز رد سريع** إذا جاء رفض 4.2: أرسل قائمة بالميزات الأصلية (Push notifications عبر OneSignal، Camera upload، Offline draft, إلخ).
+
+### تحسينات اختيارية بعد الرد الأول (إذا لزم):
+- إضافة شاشة Onboarding native تعرّف بالميزات.
+- تفعيل Push notifications الفعلي وربطه بالطلبات.
+- Deep linking لفتح طلب معيّن مباشرة.
+
+---
+
+## القرار
+هل تريد مني (بعد اعتماد الخطة):
+- **(أ)** التحقق من وجود زر "حذف الحساب" وإضافته إذا كان مفقوداً؟
+- **(ب)** كتابة نص "App Review Notes" بالإنجليزية جاهز للنسخ في App Store Connect؟
+- **(ج)** الاثنين معاً (موصى به)؟
+
+قل لي "نفّذ ج" مثلاً وأنتقل لوضع البناء.
