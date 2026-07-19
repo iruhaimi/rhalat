@@ -13,6 +13,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
 import GoogleSignInButton from '@/components/auth/GoogleSignInButton';
+import AppleSignInButton from '@/components/auth/AppleSignInButton';
 import NoIndex from '@/components/seo/NoIndex';
 import { createClient } from '@supabase/supabase-js';
 import { resolvePostAuthRedirect, consumePendingRedirect, sanitizeRedirect } from '@/lib/safeRedirect';
