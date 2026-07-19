@@ -2868,6 +2868,10 @@ export type Database = {
         Returns: undefined
       }
       rotate_staff_portal_path: { Args: { p_new_path: string }; Returns: Json }
+      submit_unlock_request: {
+        Args: { p_email: string; p_reason: string }
+        Returns: string
+      }
       verify_staff_2fa: {
         Args: { p_code: string; p_user_id: string }
         Returns: boolean

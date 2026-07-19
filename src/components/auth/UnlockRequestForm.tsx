@@ -54,14 +54,18 @@ export default function UnlockRequestForm({
     setSubmitting(true);
 
     try {
-      const { error } = await supabase.from('account_unlock_requests').insert({
-        user_id: userId,
-        email: email,
-        reason: reason.trim(),
-        status: 'pending',
+      const { error } = await supabase.rpc('submit_unlock_request', {
+        p_email: email,
+        p_reason: reason.trim(),
       });
 
-      if (error) throw error;
+      if (error) {
+        if ((error as any).message?.includes('rate_limited')) {
+          toast.error('لقد تجاوزت الحد المسموح. حاول لاحقاً.');
+          return;
+        }
+        throw error;
+      }
 
       setSubmitted(true);
       toast.success('تم إرسال طلب فك القفل بنجاح');
