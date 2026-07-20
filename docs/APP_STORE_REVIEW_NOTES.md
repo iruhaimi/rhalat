@@ -31,7 +31,7 @@ Both Google Sign-In and Sign in with Apple are offered on the login screen. The 
 **Demo account for review**
 - URL (auto-loaded in app): https://visafaster.com
 - Email: `applereview@visafaster.com`
-- Password: `AppleReview2026!`
+- Password: `Vf-Rev!7k2Q9pXm4T`
 - This test account already has a sample visa application in progress so you can inspect the full flow (destinations → wizard → document upload → payment screen → tracking).
 
 **Regarding Guideline 4.2 (Minimum Functionality)**
