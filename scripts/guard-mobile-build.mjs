@@ -26,9 +26,11 @@ const ignoredDirectories = new Set([
 
 const ignoredFiles = new Set([
   'guard-mobile-build.mjs',
+  'nativeSafety.ts',
   'package-lock.json',
   'bun.lockb',
   'tsconfig.app.tsbuildinfo',
+  'tsconfig.node.tsbuildinfo',
 ]);
 
 const textExtensions = new Set([

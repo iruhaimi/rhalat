@@ -12,6 +12,13 @@ export function enforceNativeUrlSafety() {
   try {
     if (!Capacitor.isNativePlatform()) return;
 
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker
+        .getRegistrations()
+        .then((registrations) => registrations.forEach((registration) => registration.unregister()))
+        .catch(() => undefined);
+    }
+
     const href = window.location.href.toLowerCase();
     const host = window.location.hostname.toLowerCase();
     const hasForbiddenHost = FORBIDDEN_HOST_FRAGMENTS.some((fragment) => host.includes(fragment));
