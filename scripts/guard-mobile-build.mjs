@@ -45,10 +45,13 @@ const textExtensions = new Set([
 ]);
 
 const forbiddenPatterns = [
+  { pattern: /lovable\.dev/i, label: 'lovable.dev' },
   { pattern: /lovableproject\.com/i, label: 'lovableproject.com' },
   { pattern: /forceHideBadge/i, label: 'forceHideBadge' },
   { pattern: /app\.lovable\.[a-z0-9.-]+/i, label: 'app.lovable.*' },
   { pattern: /\.lovable\.app/i, label: '*.lovable.app' },
+  { pattern: /@lovable\.dev\/cloud-auth-js/i, label: '@lovable.dev/cloud-auth-js' },
+  { pattern: /createLovableAuth/i, label: 'createLovableAuth' },
 ];
 
 function hasTextExtension(filePath) {

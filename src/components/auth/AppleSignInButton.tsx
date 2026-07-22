@@ -5,7 +5,6 @@ import { Button, type ButtonProps } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { lovable } from '@/integrations/lovable';
 import { supabase } from '@/integrations/supabase/client';
 import { Capacitor } from '@capacitor/core';
 import { SignInWithApple, type SignInWithAppleOptions } from '@capacitor-community/apple-sign-in';
@@ -85,21 +84,29 @@ export default function AppleSignInButton({
         return;
       }
 
-      const result = await lovable.auth.signInWithOAuth('apple', {
-        redirect_uri: `${window.location.origin}${resolved}`,
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'apple',
+        options: {
+          redirectTo: `${window.location.origin}${resolved}`,
+          skipBrowserRedirect: true,
+        },
       });
 
-      if (result?.error) {
+      if (error) {
         toast({
           variant: 'destructive',
           title: isRTL ? 'فشل تسجيل الدخول عبر Apple' : 'Apple sign-in failed',
-          description: result.error.message,
+          description: error.message,
         });
         setIsLoading(false);
         return;
       }
 
-      if (result?.redirected) return;
+      if (data?.url) {
+        window.location.assign(data.url);
+        return;
+      }
+
       navigate(resolved);
     } catch (error) {
       toast({
