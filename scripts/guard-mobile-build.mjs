@@ -11,14 +11,17 @@ if (/server\s*:\s*{[\s\S]*?url\s*:/m.test(capacitorConfig)) {
   failures.push('Remove `server.url` from capacitor.config.ts before building the native app.');
 }
 
+const scanTargets = [
+  'capacitor.config.ts',
+  'index.html',
+  'package.json',
+  'src',
+  'public',
+];
+
 const ignoredDirectories = new Set([
-  '.git',
-  '.lovable',
   'dist',
   'node_modules',
-  'ios',
-  'android',
-  'self-hosted',
 ]);
 
 const ignoredFiles = new Set([
@@ -45,10 +48,13 @@ const textExtensions = new Set([
 ]);
 
 const forbiddenPatterns = [
+  { pattern: /lovable\.dev/i, label: 'lovable.dev' },
   { pattern: /lovableproject\.com/i, label: 'lovableproject.com' },
   { pattern: /forceHideBadge/i, label: 'forceHideBadge' },
   { pattern: /app\.lovable\.[a-z0-9.-]+/i, label: 'app.lovable.*' },
   { pattern: /\.lovable\.app/i, label: '*.lovable.app' },
+  { pattern: /@lovable\.dev\/cloud-auth-js/i, label: '@lovable.dev/cloud-auth-js' },
+  { pattern: /createLovableAuth/i, label: 'createLovableAuth' },
 ];
 
 function hasTextExtension(filePath) {
@@ -78,7 +84,20 @@ function scanDirectory(directory) {
   }
 }
 
-scanDirectory(root);
+for (const target of scanTargets) {
+  const fullPath = join(root, target);
+  const stats = statSync(fullPath);
+  if (stats.isDirectory()) {
+    scanDirectory(fullPath);
+  } else if (stats.isFile()) {
+    const content = readFileSync(fullPath, 'utf8');
+    for (const { pattern, label } of forbiddenPatterns) {
+      if (pattern.test(content)) {
+        failures.push(`${target} contains forbidden native-build reference: ${label}`);
+      }
+    }
+  }
+}
 
 if (failures.length > 0) {
   console.error('Native build guard failed:');

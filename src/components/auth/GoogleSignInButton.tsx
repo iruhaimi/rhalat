@@ -5,7 +5,7 @@ import { Button, type ButtonProps } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { lovable } from '@/integrations/lovable';
+import { supabase } from '@/integrations/supabase/client';
 import { cn } from '@/lib/utils';
 import { sanitizeRedirect, resolvePostAuthRedirect, stashPendingRedirect } from '@/lib/safeRedirect';
 
@@ -58,21 +58,28 @@ export default function GoogleSignInButton({
       // OAuth round-trip strips our query params; stash a copy so we can recover it.
       stashPendingRedirect(resolved);
 
-      const result = await lovable.auth.signInWithOAuth('google', {
-        redirect_uri: `${window.location.origin}${resolved}`,
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}${resolved}`,
+          skipBrowserRedirect: true,
+        },
       });
 
-      if (result?.error) {
+      if (error) {
         toast({
           variant: 'destructive',
           title: isRTL ? 'فشل تسجيل الدخول عبر Google' : 'Google sign-in failed',
-          description: result.error.message,
+          description: error.message,
         });
         setIsLoading(false);
         return;
       }
 
-      if (result?.redirected) return;
+      if (data?.url) {
+        window.location.assign(data.url);
+        return;
+      }
 
       navigate(resolved);
     } catch (error) {

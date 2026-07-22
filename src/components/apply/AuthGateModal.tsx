@@ -6,8 +6,8 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { useApplication } from '@/contexts/ApplicationContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
-import { lovable } from '@/integrations/lovable';
 import { useToast } from '@/hooks/use-toast';
+import { isIOSApp } from '@/lib/platform';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -25,19 +25,30 @@ function GoogleButton() {
   const [loading, setLoading] = useState(false);
   const isRTL = direction === 'rtl';
 
+  if (isIOSApp()) return null;
+
   const handleClick = async () => {
     setLoading(true);
     try {
-      const result = await lovable.auth.signInWithOAuth('google', {
-        redirect_uri: window.location.href,
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: window.location.href,
+          skipBrowserRedirect: true,
+        },
       });
-      if (result?.error) {
+      if (error) {
         toast({
           variant: 'destructive',
           title: isRTL ? 'فشل تسجيل الدخول' : 'Login Failed',
-          description: result.error.message,
+          description: error.message,
         });
         setLoading(false);
+        return;
+      }
+      if (data?.url) {
+        window.location.assign(data.url);
+        return;
       }
     } catch {
       setLoading(false);
@@ -248,14 +259,18 @@ export default function AuthGateModal() {
           </TabsContent>
         </Tabs>
 
-        <div className="relative my-4">
-          <Separator />
-          <span className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 bg-background px-3 text-xs text-muted-foreground">
-            {isRTL ? 'أو' : 'OR'}
-          </span>
-        </div>
+        {!isIOSApp() && (
+          <>
+            <div className="relative my-4">
+              <Separator />
+              <span className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 bg-background px-3 text-xs text-muted-foreground">
+                {isRTL ? 'أو' : 'OR'}
+              </span>
+            </div>
 
-        <GoogleButton />
+            <GoogleButton />
+          </>
+        )}
       </DialogContent>
     </Dialog>
   );
