@@ -26,13 +26,17 @@ All payment flows open in the device's default browser (Safari) — no payment U
 Users can permanently delete their account from **Profile → Delete My Account** (bottom of the profile page). This immediately removes personal data (name, phone, avatar) and revokes access. Anonymized transaction records are retained only for tax/legal compliance (Saudi VAT law).
 
 **Sign in with Apple (Guideline 4.8)**
-Both Google Sign-In and Sign in with Apple are offered on the login screen. The demo account below uses email/password so the reviewer does not need an Apple ID.
+**Sign in with Apple** and **Email/Password** are the login options offered inside the iOS app. Google Sign-In is intentionally **hidden inside the iOS build** (detected via Despia user-agent) because the OAuth popup is unreliable in the in-app webview; Google Sign-In remains available on the web version. Since Google is not offered in iOS, Guideline 4.8 requirements are satisfied by Sign in with Apple + email/password. The demo account below uses email/password so the reviewer does not need an Apple ID.
+
+**Cookie consent banner (Guideline 5.1.2)**
+The website shows a cookie consent banner for EU/GDPR visitors. Inside the iOS app the banner is **not displayed** and Google Ads gtag is fully **disabled at runtime** (same Despia user-agent detection). The iOS build does **not** track users, does **not** set advertising cookies, and does **not** share data with a data broker — therefore no ATT prompt is required. App Privacy label "Data Used to Track You" is set to **None**.
 
 **Demo account for review**
 - URL (auto-loaded in app): https://visafaster.com
 - Email: `applereview@visafaster.com`
 - Password: `Vf-Rev!7k2Q9pXm4T`
 - This test account already has a sample visa application in progress so you can inspect the full flow (destinations → wizard → document upload → payment screen → tracking).
+- ⚠️ The previously listed credentials (`iruhaimii@gmail.com` / `Ibra1983@`) were incorrect — please use the credentials above.
 
 **Regarding Guideline 4.2 (Minimum Functionality)**
 The app is not a generic web wrapper. It provides:
