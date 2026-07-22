@@ -8,8 +8,7 @@ const corsHeaders = {
 
 interface Send2FARequest {
   email: string;
-  code?: string; // Optional - will be generated if not provided
-  phone?: string; // Optional for SMS
+  code?: string; // Ignored - always generated server-side
   userId: string; // Required - the user ID for the 2FA code
   accessToken?: string; // Optional fallback when platform headers are overwritten
 }
@@ -28,7 +27,7 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const { email, code: providedCode, phone, userId, accessToken: bodyAccessToken }: Send2FARequest = await req.json();
+    const { email, userId, accessToken: bodyAccessToken }: Send2FARequest = await req.json();
 
     // Validate required fields
     if (!email || !userId) {
@@ -114,7 +113,27 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     if (!verifiedBySession) {
-      console.warn("2FA proceeding via staff-account fallback validation", { userId });
+      // SECURITY: require a valid caller session that matches the target userId.
+      // The prior fallback (account existence + role check) allowed anyone who
+      // knew a staff email/userId to trigger a 2FA send, so it is removed.
+      console.error("2FA rejected: caller session did not match target user", { userId });
+      return new Response(
+        JSON.stringify({ error: "Unauthorized" }),
+        { status: 401, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
+
+    // SECURITY: destination phone must come from the server-side user record,
+    // never from the request body, so an attacker cannot redirect the OTP.
+    let phone: string | undefined =
+      (targetUser?.user?.phone && String(targetUser.user.phone).trim()) || undefined;
+    if (!phone) {
+      const { data: profileRow } = await supabase
+        .from("profiles")
+        .select("phone")
+        .eq("user_id", userId)
+        .maybeSingle();
+      if (profileRow?.phone) phone = String(profileRow.phone).trim();
     }
 
     // Rate limit (max 5 codes per user per 5 minutes)

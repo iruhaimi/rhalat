@@ -60,7 +60,7 @@ Deno.serve(async (req) => {
         phone: null,
         avatar_url: null,
       })
-      .eq('id', user.id)
+      .eq('user_id', user.id)
 
     // Delete the auth user — cascades sessions and revokes tokens
     const { error: deleteError } = await adminClient.auth.admin.deleteUser(user.id)
