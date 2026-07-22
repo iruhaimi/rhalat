@@ -1,34 +1,36 @@
-## المشكلة
-- شعار الموقع الحالي: `logo-new.png` (مرفوع على CDN، مستخدم في `src/assets/logo.png.asset.json`)
-- أيقونة التطبيق الحالية `public/app-icon-1024.png` **مختلفة** عن شعار الموقع
-- عند اختبار التطبيق على iOS الأيقونة لم تظهر أصلاً — السبب الأغلب: **لم يتم رفع الأيقونة داخل `Assets.xcassets/AppIcon` في Xcode**. الملف الموجود في `public/` هو للـ PWA فقط ولا يُقرأ من Capacitor iOS.
+## سبب المشكلة
 
-## خطة العمل
+في الصورة، شاشة الـ Splash تعرض الشعار **مقصوص من الجانبين** (يظهر "طلات رحلاتك" بدل "عطلات رحلاتكم" كاملاً).
 
-### 1. توليد أيقونة موحّدة من شعار الموقع
-- تنزيل الشعار الرسمي من CDN (`logo-new.png`)
-- توليد أيقونة iOS مربعة 1024×1024 بخلفية بيضاء صلبة (iOS يرفض PNG بشفافية للـ AppStore)
-- حفظها في `public/app-icon-1024.png` (استبدال القديمة)
-- توليد `apple-touch-icon.png` (180×180) و `favicon-32.png` من نفس الشعار
+السبب: `LaunchScreen.storyboard` في Xcode يستخدم `UIImageView` بوضع `Content Mode = Scale To Fill` أو `Aspect Fill` مع صورة splash عريضة/غير مربعة، فيتمدد الشعار ويُقصّ على شاشات iPhone الطويلة.
 
-### 2. تحديث ملفات المشروع
-- `public/app-icon-1024.png` → الجديدة (شعار الموقع بخلفية بيضاء)
-- `public/apple-touch-icon.png` → 180×180
-- `public/favicon-32.png` → 32×32
-- `public/favicon.ico` → تحديث
-- التأكد من `index.html` أنه يشير للأيقونات الصحيحة
+هذا ملف **iOS Native** (خارج كود الويب) — لا يمكنني تعديله من هنا، لكن الحل يدوي بسيط في Xcode.
 
-### 3. تعليمات ما يجب على المستخدم فعله في Xcode (خارج نطاق الكود)
-لأن الأيقونة **لا تظهر داخل التطبيق** حتى لو غيّرناها في `public/`، يجب:
+## الحل في Xcode (يدوي — دقيقتان)
 
-1. `git pull` بعد تنفيذي للتغييرات
-2. فتح Xcode → في المتصفح الأيسر: `App/App/Assets.xcassets/AppIcon`
-3. سحب `public/app-icon-1024.png` إلى خانة **App Store iOS 1024pt**
-4. Xcode 15+ سيولّد باقي الأحجام تلقائياً (أو استخدام موقع مثل appicon.co لتوليد جميع الأحجام دفعة واحدة)
-5. زيادة Build Number في General tab
-6. `Product → Clean Build Folder` ثم `Archive` مجدداً
+### الخيار 1 (الأسرع — موصى به): استخدم أيقونة التطبيق نفسها كصورة Splash
 
-## ملاحظات تقنية
-- أيقونات iOS **لا تدعم الشفافية** — يجب أن تكون الخلفية صلبة
-- الأيقونة في `capacitor.config.ts` لا تتحكم بأيقونة iOS، فقط `Assets.xcassets` يتحكم
-- بدون هذه الخطوة اليدوية في Xcode، لن يظهر الشعار مهما عدّلنا الكود
+1. في Xcode → `App/App/Assets.xcassets` → كليك يمين → **New Image Set** → سمّه `SplashLogo`
+2. اسحب `public/app-icon-1024.png` (نفس أيقونة التطبيق) إلى خانة `1x` أو `2x`
+3. افتح `LaunchScreen.storyboard` → اختر الـ `Splash` ImageView في الجانب الأيسر
+4. في الـ Attributes Inspector (يمين):
+   - **Image**: غيّرها إلى `SplashLogo`
+   - **Content Mode**: غيّرها إلى **`Aspect Fit`** (بدل Scale To Fill)
+5. في Size Inspector → تأكد أن الـ Constraints:
+   - Width & Height: **250pt** (ثابتة، ليس Fill Superview)
+   - Center X & Center Y in Superview
+6. الخلفية: اختر الـ View الرئيسي (الأزرق الفاتح) → غيّر Background إلى **White** لمطابقة الأيقونة
+
+### الخيار 2: استبدل صورة الـ Splash الحالية
+لو تفضّل الإبقاء على تصميم الـ Splash الحالي، افتح `Assets.xcassets` → ابحث عن `Splash` Image Set → استبدل الصور الثلاث (1x/2x/3x) بأيقونات مربعة من `public/app-icon-1024.png` بأحجام 250/500/750 px.
+
+## بعد التعديل
+
+1. `Product → Clean Build Folder` (Cmd+Shift+K)
+2. زوّد Build Number
+3. Archive → Upload
+
+## ما لن أفعله (لأنه خارج نطاق كود الويب)
+
+- تعديل `ios/App/App/Base.lproj/LaunchScreen.storyboard` — هذا ملف Xcode native، والمشروع لا يحتوي مجلد `ios/` مُتتبَّع (يُولَّد عند `npx cap add ios` على جهازك).
+- أي تغيير في الكود لن يؤثر على شاشة الـ Splash — هي مضبوطة 100% من Storyboard.
