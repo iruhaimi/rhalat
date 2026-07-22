@@ -1,56 +1,55 @@
-## المشكلة
+## الهدف
+إيقاف أي تحويل داخل تطبيق iPhone إلى صفحة Lovable أو أي نطاق Lovable، والتأكد أن التطبيق يفتح ملفات المشروع المحلية باسم وهوية "عطلات رحلاتكم" فقط.
 
-الشاشة التي ظهرت لك (شعار Lovable + Log in + شريط `lovable.dev` بالأسفل) ليست شاشة تطبيقك — هي موقع Lovable نفسه فُتح داخل التطبيق. السبب في `capacitor.config.ts`:
+## ما تم التحقق منه الآن
+- ملف `capacitor.config.ts` الحالي لا يحتوي على `server.url` ولا رابط `lovableproject`.
+- البحث في الكود أظهر أن الرابط المتبقي المهم موجود داخل `index.html` كسكربت تحويل من بعض نطاقات `lovable.app` إلى `visafaster.com`، وليس داخل إعداد Capacitor الحالي.
+- إذا كان تطبيق iPhone ما زال يفتح صفحة Lovable، فالاحتمال الأكبر أن Xcode/مجلد iOS المحلي عندك ما زال يستخدم build أو ملف native قديم تم إنشاؤه قبل حذف `server.url`، أو أنك تفتح مشروع iOS قديم وليس المشروع النظيف الحالي.
 
-```ts
-server: {
-  url: 'https://616b2e7f-...lovableproject.com?forceHideBadge=true',
-  cleartext: true
-}
-```
+## خطة الإصلاح
 
-هذا الحقل يُستخدم فقط أثناء التطوير (hot-reload من sandbox). وجوده في build الإنتاج يجعل التطبيق يحمّل موقع Lovable بدل ملفاتك من `dist/`. لذلك لا يظهر تصميمك ولا الشعار الخاص بك، ويظهر شعار Lovable وصفحة دخوله.
+### 1. تنظيف الكود من أي تحويل متعلق بـ Lovable
+- إزالة سكربت التحويل الموجود في `index.html` الذي يتحقق من نطاقات `lovable.app`.
+- الإبقاء على روابط الإنتاج الرسمية فقط: `visafaster.com` واسم العلامة "عطلات رحلاتكم".
+- عدم لمس مكتبة المصادقة `@lovable.dev/cloud-auth-js` لأنها مستخدمة للمصادقة في الويب وليست سبب ظهور صفحة Lovable داخل التطبيق.
 
-## الخطة
+### 2. تثبيت إعداد Capacitor للإنتاج فقط
+- التأكد أن `capacitor.config.ts` يحتوي فقط على:
+  - `appId: 'com.visafaster.app'`
+  - `appName: 'عطلات رحلاتكم'`
+  - `webDir: 'dist'`
+- عدم وجود أي `server.url` نهائياً، لأن هذا هو الإعداد الذي يجعل التطبيق يفتح رابط خارجي بدل ملفات `dist`.
 
-### 1. تعديل `capacitor.config.ts`
-- حذف كتلة `server` بالكامل، حتى يفتح التطبيق ملفات `dist/` المضمّنة محلياً.
-- الإبقاء على `appId` و`appName` وإعدادات iOS/Android كما هي.
+### 3. إضافة فحص يمنع رجوع الخطأ
+- إضافة سكربت فحص بسيط قبل مزامنة iOS يمنع وجود:
+  - `server.url`
+  - `lovableproject.com`
+  - `forceHideBadge`
+  - `app.lovable...`
+- الهدف: لو رجع أي إعداد Lovable بالغلط مستقبلاً، يظهر الخطأ قبل بناء التطبيق بدل ما تكتشفه بعد فتحه على iPhone.
 
-النتيجة النهائية:
-
-```ts
-const config: CapacitorConfig = {
-  appId: 'com.visafaster.app',
-  appName: 'عطلات رحلاتكم',
-  webDir: 'dist',
-  ios: { contentInset: 'automatic', preferredContentMode: 'mobile' },
-  android: { allowMixedContent: true }
-};
-```
-
-### 2. الخطوات التي ستنفذها على جهاز الماك بعد التعديل
+### 4. إعطاؤك أوامر تنظيف محلية نهائية على الماك
+بعد التعديل سأعطيك أوامر واضحة تمسح نسخة iOS القديمة وتعيد إنشاءها من الصفر، مثل:
 
 ```bash
 cd ~/Documents/visa-hub-cloud
 git pull
+rm -rf ios
 npm install
 npm run build
+npx cap add ios
 npx cap sync ios
 npx cap open ios
 ```
 
-ثم في Xcode: **Product → Clean Build Folder** (Shift+Cmd+K)، ثم شغّل التطبيق ▶︎.
+ثم داخل Xcode:
+- التأكد من Bundle Identifier: `com.visafaster.app`
+- Bundle display name: `عطلات رحلاتكم`
+- إضافة Sign in with Apple
+- Clean Build Folder ثم تشغيل التطبيق
 
-### 3. التحقّق بعد التشغيل
-- شاشة البداية تعرض شعار "عطلات رحلاتكم"، وليس شعار Lovable.
-- لا يوجد شريط `lovable.dev` بالأسفل.
-- الواجهة عربية RTL بتصميم موقعك.
-- تسجيل الدخول عبر Apple يعمل من داخل التطبيق.
-
-## ملاحظة مهمة
-
-بعد هذا التعديل، التطبيق على الأجهزة **لن يتحدّث تلقائياً** عند كل تغيير في Lovable. لتحديث التطبيق على iPhone بعد أي تعديل مستقبلي، لازم كل مرة:
-`git pull` ← `npm run build` ← `npx cap sync ios` ← إعادة البناء في Xcode.
-
-هذا هو السلوك الطبيعي والصحيح لتطبيق إنتاجي يُرفع على App Store.
+### 5. التحقق النهائي
+- عند فتح التطبيق لا يظهر أي شعار أو صفحة أو شريط Lovable.
+- لا يوجد تحويل إلى `lovable.dev` أو `lovableproject.com`.
+- التطبيق يبدأ من واجهة "عطلات رحلاتكم" المحلية.
+- الشعار والاسم والأيقونة تكون للعلامة الحالية فقط.
