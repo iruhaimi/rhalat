@@ -1,74 +1,71 @@
-## الهدف
-إيقاف أي فتح أو تحويل إلى Lovable نهائياً داخل تطبيق iPhone/iPad/Android، والتأكد أن نسخة الجوال تعمل من ملفات التطبيق المحلية فقط باسم وهوية "عطلات رحلاتكم".
+## ما تحققت منه الآن في الكود (بدون تعديل)
 
-## ما تأكدت منه الآن
-- `capacitor.config.ts` الحالي لا يحتوي على `server.url`، وهذا صحيح لنسخة متجر التطبيقات.
-- `appId` الحالي هو `com.visafaster.app` وليس `app.lovable...`.
-- ما زال المشروع يحتوي على إعداد PWA/service worker عبر `vite-plugin-pwa` في `vite.config.ts`.
-- ما زالت بعض مسارات تسجيل الدخول الاجتماعي تستخدم `window.location.origin` أو `window.location.href`، وهذا خطر داخل تطبيق الجوال إذا كان الأصل أو جلسة قديمة تشير إلى رابط خارجي.
-- الحارس الحالي يمنع بعض مراجع Lovable، لكنه لا يعزل كل مخاطر الجوال مثل Service Worker أو مسارات OAuth داخل التطبيق.
+- `capacitor.config.ts`: نظيف — `appId: com.visafaster.app`, `appName: عطلات رحلاتكم`, **لا يوجد `server.url`**.
+- `index.html`: لا يحتوي أي إشارة إلى `lovable` أو أي `redirect` أو `server`.
+- `src/main.tsx`: يستدعي `enforceNativeUrlSafety()` قبل تركيب React، وهذا يمنع أي URL يحتوي `lovable.*` من الاستمرار داخل التطبيق.
+- `src/`: لا توجد أي مرجعية لـ `lovable.dev` / `lovable.app` / `lovableproject.com` (فقط داخل قائمة الحماية في `nativeSafety.ts` والحارس، وهذا مطلوب).
+- `vite.config.ts`: خالٍ من `vite-plugin-pwa` / `VitePWA` / أي service worker.
+- `package.json`: لا يحتوي `vite-plugin-pwa` ولا `@lovable.dev/cloud-auth-js`.
+- `public/`: لا يوجد `index.html` بديل ولا manifest لـ PWA. يوجد `sw.js` وهو **kill-switch فقط** (لا يُسجَّل من أي مكان في الكود، ووظيفته حذف الكاش القديم عند التفعيل من متصفح قديم).
+- `scripts/guard-mobile-build.mjs`: يمنع أي إشارة `lovable*` أو PWA من الدخول للبناء ويعمل تلقائياً قبل `vite build` عبر `prebuild`.
 
-## الخطة بعد موافقتك
+**النتيجة:** المستودع نفسه نظيف تماماً. اللقطة التي أرسلتها تُظهر أن التطبيق فتح صفحة `lovable.dev` داخل WebView. بما أن الكود المصدري خالٍ من أي رابط أو تحويل لهذا الموقع، فالمصدر الوحيد الممكن هو **مجلد `ios/` قديم مبني قبل الإصلاح**: ملف `ios/App/App/capacitor.config.json` أو محتوى `ios/App/App/public/` المُبيَّت داخل التطبيق ما زال يحمل `server.url` القديم الذي يشير إلى Lovable.
 
-### 1. تعطيل PWA/service worker بالكامل الآن
-- إزالة `vite-plugin-pwa` من `vite.config.ts` حتى لا يتم توليد service worker أو manifest runtime قديم.
-- إزالة dependency غير الضروري من `package.json` إذا لم يعد مستخدماً.
-- الهدف: منع أي كاش أو تشغيل قديم قد يعيد فتح روابط أو ملفات غير مرغوبة.
+## الخطة
 
-### 2. جعل تسجيل الدخول داخل تطبيق iOS/Android آمناً للجوال
-- منع Google OAuth داخل التطبيق native نهائياً.
-- إبقاء Apple داخل iOS عبر Apple native فقط.
-- منع أي `window.location.assign(data.url)` داخل native app لأي مزود OAuth ويب.
-- جعل روابط تأكيد البريد واستعادة كلمة المرور في native تستخدم دومين الموقع الرسمي فقط عند الحاجة، وليس origin من WebView.
+### 1. تقوية Capacitor config كطبقة أمان إضافية
+- إضافة `server.androidScheme` و `server.iosScheme` صريحين (`https`) في `capacitor.config.ts` مع تعليق يمنع أي `server.url`.
+- تحديث `scripts/guard-mobile-build.mjs` ليفشل البناء صراحةً إذا احتوى `capacitor.config.ts` على أي مفتاح `server.url` أو `hostname` أو `allowNavigation` يشير لأصل خارجي.
+- إضافة قائمة `server.allowNavigation` فارغة/محصورة على الدومين الرسمي فقط عند الحاجة، ومنع أي أصل غير `visafaster.com` من التنقل داخل WebView.
 
-### 3. إضافة طبقة حماية عند بدء التطبيق
-- إضافة فحص مبكر في `src/main.tsx` أو ملف صغير مستقل:
-  - إذا كان التطبيق يعمل داخل Capacitor/native وكان الرابط الحالي يحتوي `lovable.dev` أو `lovable.app` أو `lovableproject.com`، يتم استبداله فوراً بمسار `/` داخل التطبيق.
-  - هذا ليس بديلاً عن الإصلاح، لكنه يمنع أي تسريب أو تحويل لو بقي أثر قديم عند المستخدم.
+### 2. تقوية `nativeSafety` ليقفل WebView على أصل التطبيق فقط
+- توسيع `enforceNativeUrlSafety` بحيث:
+  - يعمل مبكراً جداً (قبل React) — يقوم بذلك بالفعل، سنُبقي هذا.
+  - يعترض أي `window.open` / `location.assign` / `location.href` يشير لأصل يحتوي `lovable*` أو أي أصل خارجي غير مسموح، ويستبدله بـ `/`.
+  - يُلغي تسجيل أي Service Worker قديم — موجود، سنُبقيه.
+- الهدف: حتى لو بقي ملف قديم داخل نسخة التطبيق على جهاز أحد المستخدمين، أول جافاسكربت يعمل يمنع التحويل.
 
-### 4. تقوية حارس البناء للجوال
-- توسيع `scripts/guard-mobile-build.mjs` ليمنع:
-  - أي Service Worker/PWA registration أو ناتج PWA غير مقصود في إعدادات البناء.
-  - أي `server.url` في Capacitor.
-  - أي مراجع Lovable في ملفات التطبيق أو إعداداته.
-- إبقاء الاستثناءات فقط للوثائق/السكريبت نفسه حتى لا يمنع الفحص بسبب النصوص التوضيحية.
+### 3. حذف `public/sw.js` من نسخة التطبيق
+- سيبقى فقط لمتصفح الويب حتى ينظف نفسه. للتطبيق native، سنستثنيه من `webDir` عبر خطوة post-build صغيرة في `scripts/guard-mobile-build.mjs` تحذفه من `dist/` بعد البناء إذا كانت البيئة native.
+- بديل أبسط وأكيد: نحذفه نهائياً الآن — لم يعد ضرورياً لأنه لا PWA أصلاً في المشروع.
 
-### 5. فحص الملفات العامة والصور غير التابعة للهوية
-- حصر محتوى `public/` الذي يدخل تطبيق iOS تلقائياً.
-- حذف أو استبعاد الصور القديمة غير التابعة للموقع من نسخة التطبيق.
-- إبقاء الأيقونات والملفات الضرورية فقط.
+### 4. إضافة سكربت تنظيف ذري وأتمتة إعادة البناء
+إضافة `scripts/rebuild-ios.sh` يقوم تلقائياً بـ:
+```bash
+rm -rf ios dist node_modules/.vite
+npm ci
+npm run build
+# فحص إثبات النظافة قبل ما نلمس Xcode
+grep -R -i "lovable\|server\.url\|forceHideBadge" dist && exit 1
+npx cap add ios
+npx cap sync ios
+# فحص ثانٍ داخل مجلد iOS المُوَلَّد
+grep -R -i "lovable\|lovableproject" ios/App/App/capacitor.config.json ios/App/App/public && exit 1
+echo "iOS clean. Open ios/App/App.xcworkspace"
+```
+هذا يضمن أنه لا يمكنك أن تفتح Xcode إلا بعد أن يثبت السكربت أن الحزمة نظيفة.
 
-### 6. التحقق قبل تسليمك خطوات Xcode
-- تشغيل فحص نصي يؤكد عدم وجود مراجع Lovable في المسارات التي تدخل التطبيق.
-- التأكد أن `capacitor.config.ts` خالٍ من `server.url`.
-- التأكد أن build guard ينجح.
+### 5. اختبار قبل التسليم
+سأقوم قبل تسليمك بـ:
+- تشغيل `npm run build` والتأكد أن حارس الجوال يمر.
+- تشغيل بحث نصي على `dist/` بعد البناء للتأكد من خلوه من أي `lovable.*` أو `forceHideBadge` أو `server.url`.
+- إخراج نتيجة الفحص كاملة في الرد النهائي حتى تراها بعينك قبل ما تعيد البناء.
 
-## خطواتك بعد تنفيذ الإصلاح
-بعد موافقتك وتنفيذ التعديلات، ستكون الخطوات على جهازك كالتالي:
-
+### 6. خطواتك على جهازك بعد التنفيذ
 ```bash
 cd ~/Documents/visa-hub-cloud
 git pull
-rm -rf ios
-npm install
-npm run build
-npx cap add ios
-npx cap sync ios
+bash scripts/rebuild-ios.sh
 npx cap open ios
 ```
-
-ثم داخل Xcode:
-- افتح فقط `ios/App/App.xcworkspace`.
-- احذف التطبيق القديم من الجهاز أو المحاكي.
+ثم في Xcode:
+- احذف التطبيق نهائياً من المحاكي/الجهاز (long-press → Remove App → Delete App).
 - Product → Clean Build Folder.
-- شغّل التطبيق من جديد.
+- شغّل التطبيق.
 
-## حدود الخطة
-لن أضيف ميزات جديدة، ولن ألمس لوحة التحكم أو قاعدة البيانات أو التصميم العام. التركيز فقط على إيقاف Lovable داخل تطبيق الجوال وإزالة أسباب التحويل/الكاش القديمة.
-
-<presentation-actions>
-  <presentation-open-history>View History</presentation-open-history>
-</presentation-actions>
+## ما لن ألمسه
+- لا تصميم، لا لوحة تحكم، لا قاعدة بيانات، لا edge functions، لا مسارات موقع الويب.
+- فقط: إعدادات Capacitor + حارس البناء + `nativeSafety` + سكربت إعادة بناء iOS + حذف `public/sw.js`.
 
 <presentation-actions>
 <presentation-link url="https://docs.lovable.dev/tips-tricks/troubleshooting">Troubleshooting docs</presentation-link>

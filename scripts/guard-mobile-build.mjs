@@ -7,8 +7,14 @@ const capacitorConfig = readFileSync(capacitorConfigPath, 'utf8');
 
 const failures = [];
 
-if (/server\s*:\s*{[\s\S]*?url\s*:/m.test(capacitorConfig)) {
+if (/server\s*:\s*{[\s\S]*?\burl\s*:/m.test(capacitorConfig)) {
   failures.push('Remove `server.url` from capacitor.config.ts before building the native app.');
+}
+if (/server\s*:\s*{[\s\S]*?\bhostname\s*:/m.test(capacitorConfig)) {
+  failures.push('Remove `server.hostname` from capacitor.config.ts before building the native app.');
+}
+if (/allowNavigation\s*:/.test(capacitorConfig)) {
+  failures.push('Remove `server.allowNavigation` from capacitor.config.ts — native app must not navigate to external origins.');
 }
 
 const scanTargets = [
