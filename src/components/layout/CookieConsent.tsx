@@ -4,6 +4,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Cookie, X, Settings, Check } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { isIOSApp } from '@/lib/platform';
 
 const COOKIE_CONSENT_KEY = 'cookie-consent-accepted';
 
@@ -28,6 +29,11 @@ export default function CookieConsent() {
     analytics: false,
     marketing: false,
   });
+
+  // Never show cookie consent inside the iOS app — Apple treats cookie
+  // prompts as tracking (Guideline 5.1.2). gtag is already disabled on iOS,
+  // so there is nothing to consent to.
+  if (isIOSApp()) return null;
 
   useEffect(() => {
     // Check if user has already consented

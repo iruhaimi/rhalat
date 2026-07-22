@@ -14,6 +14,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
 import GoogleSignInButton from '@/components/auth/GoogleSignInButton';
 import AppleSignInButton from '@/components/auth/AppleSignInButton';
+import { isIOSApp } from '@/lib/platform';
 import NoIndex from '@/components/seo/NoIndex';
 import { createClient } from '@supabase/supabase-js';
 import { resolvePostAuthRedirect, consumePendingRedirect, sanitizeRedirect } from '@/lib/safeRedirect';
@@ -364,8 +365,10 @@ export default function Auth() {
             <CardContent className="px-0 sm:px-6">
               {!isForgotPassword && (
                 <div className="mb-5 space-y-4">
-                  <GoogleSignInButton className="w-full h-11" redirectPath={safeRedirect} />
                   <AppleSignInButton className="w-full h-11 bg-black text-white hover:bg-black/90 border-black" redirectPath={safeRedirect} />
+                  {!isIOSApp() && (
+                    <GoogleSignInButton className="w-full h-11" redirectPath={safeRedirect} />
+                  )}
                   <div className="relative">
                     <div className="absolute inset-0 flex items-center"><span className="w-full border-t" /></div>
                     <div className="relative flex justify-center text-xs uppercase">

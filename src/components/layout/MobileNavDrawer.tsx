@@ -23,6 +23,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import GoogleSignInButton from '@/components/auth/GoogleSignInButton';
 import AppleSignInButton from '@/components/auth/AppleSignInButton';
+import { isIOSApp } from '@/lib/platform';
 
 interface MobileNavDrawerProps {
   isOpen: boolean;
@@ -244,16 +245,18 @@ export default function MobileNavDrawer({ isOpen, onClose }: MobileNavDrawerProp
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.3 }}
                     >
-                      <GoogleSignInButton className="w-full h-12 rounded-xl text-base" onStart={onClose} />
-                    </motion.div>
-
-                    <motion.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.32 }}
-                    >
                       <AppleSignInButton className="w-full h-12 rounded-xl text-base bg-black text-white hover:bg-black/90 border-black" onStart={onClose} />
                     </motion.div>
+
+                    {!isIOSApp() && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.32 }}
+                      >
+                        <GoogleSignInButton className="w-full h-12 rounded-xl text-base" onStart={onClose} />
+                      </motion.div>
+                    )}
 
                     <motion.div
                       initial={{ opacity: 0, y: 10 }}
