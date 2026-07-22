@@ -22,12 +22,15 @@ echo "==> [3/6] Building web bundle (runs mobile build guard automatically)"
 npm run build
 
 echo "==> [4/6] Proving dist/ is clean"
-if grep -R -I -i -E "lovable\.(dev|app)|lovableproject|forceHideBadge|server\s*\.\s*url" dist >/dev/null 2>&1; then
-  echo "FAIL: dist/ still contains forbidden references. Aborting BEFORE touching iOS."
-  grep -R -I -n -i -E "lovable\.(dev|app)|lovableproject|forceHideBadge|server\s*\.\s*url" dist || true
+# Only flag ACTUAL URLs / navigations to Lovable, not the defensive host list
+# that nativeSafety.ts uses to block those URLs. The safety list is a bare
+# string array (e.g. ["lovable.dev","lovable.app",...]) with no https:// or //.
+if grep -R -I -i -E "(https?:)?//[a-z0-9.-]*lovable\.(dev|app)|(https?:)?//[a-z0-9.-]*lovableproject|forceHideBadge" dist >/dev/null 2>&1; then
+  echo "FAIL: dist/ contains an actual Lovable URL. Aborting BEFORE touching iOS."
+  grep -R -I -n -i -E "(https?:)?//[a-z0-9.-]*lovable\.(dev|app)|(https?:)?//[a-z0-9.-]*lovableproject|forceHideBadge" dist || true
   exit 1
 fi
-echo "OK: dist/ is clean."
+echo "OK: dist/ has no Lovable URLs."
 
 echo "==> [5/6] Adding & syncing iOS platform"
 npx cap add ios
@@ -35,8 +38,8 @@ npx cap sync ios
 
 echo "==> [6/6] Proving generated ios/ is clean"
 FAILED=0
-if grep -R -I -i -E "lovable\.(dev|app)|lovableproject" ios/App/App/capacitor.config.json ios/App/App/public 2>/dev/null; then
-  echo "FAIL: iOS bundle still contains Lovable references."
+if grep -R -I -i -E "(https?:)?//[a-z0-9.-]*lovable\.(dev|app)|(https?:)?//[a-z0-9.-]*lovableproject" ios/App/App/capacitor.config.json ios/App/App/public 2>/dev/null; then
+  echo "FAIL: iOS bundle contains an actual Lovable URL."
   FAILED=1
 fi
 if grep -q '"url"' ios/App/App/capacitor.config.json 2>/dev/null; then
