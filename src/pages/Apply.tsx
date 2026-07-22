@@ -307,6 +307,18 @@ function ApplyContent() {
     }
   };
 
+  // Ensure the page scrolls to the top on ANY step transition (forward/back),
+  // regardless of which component triggered setCurrentStep.
+  useEffect(() => {
+    // Use rAF so the new step content mounts first, then we jump to top.
+    const raf = requestAnimationFrame(() => {
+      window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+    });
+    return () => cancelAnimationFrame(raf);
+  }, [currentStep]);
+
   const renderStep = () => {
     switch (currentStep) {
       case 1:
