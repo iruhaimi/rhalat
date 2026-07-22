@@ -1,43 +1,31 @@
-## المشكلتان
+## الوضع الحالي
+في الصورة يظهر الحقل: `com.visafaster.app·com.visafaster.signin`
+الرمز الذي يبدو كنقطة وسطى (`·`) هو في الغالب مجرد **فاصل بصري** يعرضه Supabase بين القيم في حقل tags/chips — أي أنك أدخلت القيمتين بالفعل بشكل صحيح وليس هناك خطأ.
 
-**1) الويب: `invalid_client` من Apple**
-السبب: Apple's OAuth يتطلب أن يكون **Return URL** في Services ID مطابقاً تماماً لعنوان الـ callback الذي يستقبل الرد. Supabase يستخدم دائماً:
-```
-https://hgxvwziiumjxifpgpjce.supabase.co/auth/v1/callback
-```
-لكنك أضفت في Apple فقط `https://visafaster.com/` و `https://www.visafaster.com/`. لذلك Apple ترفض الطلب فوراً بـ `invalid_client`.
+## التحقق قبل أي تغيير
 
-**2) iOS: `Unacceptable audience in id_token: [com.visafaster.app]`**
-السبب: قائمة **Client IDs** في لوحة Cloud → Apple لا تحتوي على `com.visafaster.app` (Bundle ID). Supabase يستقبل id_token صالحاً من Apple لكن جمهوره (`aud`) غير مُصرّح به في القائمة.
+للتأكد أن Client IDs مسجّلة فعلاً كقيمتين منفصلتين (وليس سلسلة واحدة)، افعل التالي داخل لوحة Cloud → Users → Auth Settings → Apple:
 
----
+1. اضغط داخل حقل **Client ID**.
+2. اضغط زر **Backspace** مرة واحدة فقط.
+3. النتيجة المتوقعة:
+   - إذا اختفت `com.visafaster.signin` كاملة → القيم مسجّلة بشكل صحيح كـ tags منفصلة ✅ (الفاصل البصري `·` طبيعي).
+   - إذا اختفى حرف واحد فقط (`n`) → القيمتان ملتصقتان كسلسلة واحدة ❌ ويجب إعادة الإدخال.
 
-## الإصلاح — كل الخطوات يدوية، لا يوجد كود يتغيّر
+## إذا كانت النتيجة ✅
+- اضغط **Save** إذا لم تحفظ بعد.
+- جرّب iOS مرة أخرى: الخطأ `Unacceptable audience` يجب أن يختفي.
+- إذا استمر الخطأ على iOS، السبب مختلف (كاش Supabase أو مشكلة في Bundle ID داخل Xcode) وسأحقّق فيه في خطة تالية.
 
-### أ) في Apple Developer Console
-افتح **Identifiers → Services IDs → `com.visafaster.signin` → Sign In with Apple → Configure**.
+## إذا كانت النتيجة ❌
+- امسح المحتوى بالكامل من الحقل.
+- اكتب `com.visafaster.app` ثم اضغط **Enter** أو **فاصلة `,`** ← يجب أن تتحول إلى tag/chip.
+- اكتب `com.visafaster.signin` ثم اضغط **Enter** ← تتحول أيضاً إلى tag/chip منفصل.
+- اضغط **Save**.
 
-في **Return URLs** أضف السطر التالي (احتفظ بالسطور الحالية):
-```
-https://hgxvwziiumjxifpgpjce.supabase.co/auth/v1/callback
-```
-اضغط **Next → Done → Save**.
+## بعد الحفظ
+اختبر iOS وأرسل لي:
+- لقطة شاشة للحقل بعد الحفظ.
+- نتيجة تسجيل الدخول عبر Apple في التطبيق.
 
-### ب) في لوحة Lovable Cloud → Users → Auth Settings → Apple
-تحقّق أن خانة **Client IDs** تحتوي على **الاثنين** (كل واحد في سطر منفصل):
-```
-com.visafaster.signin
-com.visafaster.app
-```
-إذا كان `com.visafaster.app` مفقوداً، أضِفه واضغط **Save**.
-
-لا تُعِد توليد Client Secret — الحالي صالح للـ Services ID.
-
----
-
-## التحقق بعد الحفظ
-
-1. **الويب**: https://visafaster.com/auth → زر Apple → يجب أن تفتح صفحة تسجيل دخول Apple عادية (بدلاً من `invalid_client`) وترجع مسجّلاً.
-2. **iOS**: افتح التطبيق → زر Apple → Face ID → دخول مباشر بدون خطأ `Unacceptable audience`.
-
-أخبرني بالنتيجة بعد الخطوتين.
+لا تعديل على الكود في هذه الخطة — كلها تحقّق يدوي في لوحة Cloud.
