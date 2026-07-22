@@ -1,43 +1,53 @@
-## المشكلة
-شغّلت الأوامر من مجلد الـ Home (`~`) وليس من داخل مجلد المشروع، لذلك:
-- `git pull` فشل → لا يوجد مستودع git هنا
-- `npm run build` فشل → لا يوجد `package.json` فيه script باسم build
-- `npx cap` فشل → لا يوجد إعداد Capacitor
+سبب الخطأ واضح: نسخة المشروع عندك على الماك ما زالت تستخدم App ID القديم غير صالح:
 
-## الحل
-تحتاج أولاً الدخول إلى مجلد المشروع. إذا كنت قد استنسخت المشروع سابقاً من GitHub، ابحث عن مجلده. الأسماء الشائعة:
-
-```bash
-ls ~/Documents
-ls ~/Desktop
-ls ~
+```text
+app.lovable.616b2e7f7e454cdc90ea1c048e4da3b0
 ```
 
-ابحث عن مجلد باسم مثل `visafaster` أو `rahala` أو اسم مستودعك على GitHub.
+بينما الإعداد الصحيح في المشروع الحالي هنا هو:
 
-### إذا وجدت المجلد
-```bash
-cd ~/Documents/visafaster    # أو المسار الصحيح
-git pull
-npm install
-npm run build
-npx cap sync ios
-npx cap open ios
+```text
+com.visafaster.app
 ```
 
-### إذا لم يكن المشروع مستنسخاً بعد
-اذهب إلى GitHub → مستودع مشروعك → زر **Code** → انسخ رابط HTTPS، ثم:
+الخطة:
 
-```bash
-cd ~/Documents
-git clone <الرابط>
-cd <اسم-المجلد>
-npm install
-npx cap add ios          # فقط أول مرة
-npm run build
-npx cap sync ios
-npx cap open ios
+1. **تحديث ملف Capacitor في GitHub/المشروع**
+   - التأكد أن `capacitor.config.ts` يحتوي على:
+     - `appId: 'com.visafaster.app'`
+     - اسم التطبيق الصحيح
+     - رابط السيرفر الخاص بالتطبيق إن كان مطلوباً للتشغيل داخل التطبيق.
+
+2. **مزامنة النسخة عندك على الماك**
+   - بعد اعتماد التعديل، تسحب آخر نسخة داخل:
+     ```bash
+     cd ~/Documents/visa-hub-cloud
+     git pull
+     npm install
+     ```
+
+3. **إعادة إنشاء iOS من الصفر داخل المشروع الصحيح**
+   - إذا كان مجلد iOS لم يُنشأ بعد:
+     ```bash
+     npx cap add ios
+     npx cap sync ios
+     npx cap open ios
+     ```
+
+4. **إعداد Xcode مرة واحدة**
+   - افتح دائماً:
+     ```text
+     ~/Documents/visa-hub-cloud/ios/App/App.xcworkspace
+     ```
+   - وليس `.xcodeproj`.
+   - داخل Xcode:
+     - Team = حساب Apple Developer الخاص بك
+     - Bundle ID = `com.visafaster.app`
+     - إضافة Capability: **Sign in with Apple**
+     - ثم **Product → Clean Build Folder** وبعدها تشغيل التطبيق.
+
+مهم: لا تستخدم أي مشروع قديم على Desktop بعد الآن. المشروع الوحيد الصحيح هو:
+
+```text
+~/Documents/visa-hub-cloud
 ```
-
-## سؤال
-هل استنسخت المشروع من GitHub على الماك من قبل، أم هذه أول مرة؟ إذا كانت أول مرة، شارك اسم مستودعك على GitHub (username/repo) وسأعطيك الأوامر جاهزة بالكامل.
