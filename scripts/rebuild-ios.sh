@@ -35,18 +35,14 @@ echo "OK: dist/ has no Lovable URLs."
 echo "==> [5/6] Adding & syncing iOS platform"
 npx cap add ios
 
-# Restore brand icon + splash — `npx cap add ios` overwrites these with
-# Capacitor's default placeholder icons. The source-of-truth files live in
-# resources/ and MUST be copied over the freshly generated placeholders.
-if [ -f resources/icon.png ]; then
-  cp resources/icon.png ios/App/App/Assets.xcassets/AppIcon.appiconset/AppIcon-512@2x.png
-  echo "OK: brand AppIcon copied from resources/icon.png"
-fi
-if [ -f resources/splash.png ]; then
-  cp resources/splash.png ios/App/App/Assets.xcassets/Splash.imageset/splash-2732x2732.png
-  cp resources/splash.png ios/App/App/Assets.xcassets/Splash.imageset/splash-2732x2732-1.png
-  cp resources/splash.png ios/App/App/Assets.xcassets/Splash.imageset/splash-2732x2732-2.png
-  echo "OK: brand Splash copied from resources/splash.png"
+# Generate ALL icon + splash sizes from resources/ using the official
+# @capacitor/assets tool. This regenerates every entry in AppIcon.appiconset
+# and Splash.imageset (and their Contents.json) so nothing stays empty.
+if [ -f resources/icon.png ] && [ -f resources/splash.png ]; then
+  echo "==> Generating iOS icons + splash from resources/"
+  npx --yes @capacitor/assets generate --ios --assetPath resources
+else
+  echo "WARN: resources/icon.png or resources/splash.png missing — icons NOT regenerated"
 fi
 
 npx cap sync ios
