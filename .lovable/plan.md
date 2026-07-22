@@ -1,51 +1,43 @@
-## كيف تعيد بناء التطبيق في Xcode لتظهر التعديلات (الشعار)
+## المشكلة
+شغّلت الأوامر من مجلد الـ Home (`~`) وليس من داخل مجلد المشروع، لذلك:
+- `git pull` فشل → لا يوجد مستودع git هنا
+- `npm run build` فشل → لا يوجد `package.json` فيه script باسم build
+- `npx cap` فشل → لا يوجد إعداد Capacitor
 
-التعديلات التي أجريتها على الكود (ملف `assetUrl.ts` + تحديث `HeaderArabic` و`FooterArabic` وغيرها) موجودة في مشروع الويب فقط. لكي تنعكس داخل تطبيق iOS، لازم تُبنى نسخة `dist` جديدة، تُنسخ إلى مجلد iOS عبر Capacitor، ثم يعاد تشغيلها من Xcode.
+## الحل
+تحتاج أولاً الدخول إلى مجلد المشروع. إذا كنت قد استنسخت المشروع سابقاً من GitHub، ابحث عن مجلده. الأسماء الشائعة:
 
-### الخطوات على جهاز الماك
+```bash
+ls ~/Documents
+ls ~/Desktop
+ls ~
+```
 
-1. **اسحب آخر تحديثات من GitHub**
-   ```bash
-   cd <مجلد المشروع>
-   git pull
-   ```
+ابحث عن مجلد باسم مثل `visafaster` أو `rahala` أو اسم مستودعك على GitHub.
 
-2. **ثبّت أي حزم جديدة** (احتياطاً)
-   ```bash
-   npm install
-   ```
+### إذا وجدت المجلد
+```bash
+cd ~/Documents/visafaster    # أو المسار الصحيح
+git pull
+npm install
+npm run build
+npx cap sync ios
+npx cap open ios
+```
 
-3. **ابنِ نسخة الويب للإنتاج**
-   ```bash
-   npm run build
-   ```
-   هذا يولّد مجلد `dist/` الذي يحوي الشعار مع المسار المطلق.
+### إذا لم يكن المشروع مستنسخاً بعد
+اذهب إلى GitHub → مستودع مشروعك → زر **Code** → انسخ رابط HTTPS، ثم:
 
-4. **زامن نسخة الويب مع مجلد iOS**
-   ```bash
-   npx cap sync ios
-   ```
-   هذا الأمر ينسخ محتويات `dist/` إلى مشروع Xcode ويحدّث الإضافات (Plugins) مثل `@capacitor-community/apple-sign-in`.
+```bash
+cd ~/Documents
+git clone <الرابط>
+cd <اسم-المجلد>
+npm install
+npx cap add ios          # فقط أول مرة
+npm run build
+npx cap sync ios
+npx cap open ios
+```
 
-5. **افتح المشروع في Xcode**
-   ```bash
-   npx cap open ios
-   ```
-
-6. **داخل Xcode**
-   - اختر الجهاز أو المحاكي (Simulator) من الأعلى.
-   - اضغط **Product → Clean Build Folder** (Shift + Cmd + K) لضمان بناء نظيف.
-   - اضغط زر التشغيل ▶︎ (Cmd + R) لبناء التطبيق وتشغيله.
-
-7. **تحقّق**
-   - افتح التطبيق → الشعار يظهر في الهيدر بدل المربع الأبيض.
-   - سجّل الدخول بحساب Apple → يعمل كالمعتاد.
-
-### ملاحظات مهمة
-- لا تحتاج تعديل أي إعدادات في Xcode، فقط بناء وتشغيل.
-- إذا كنت ستحمّل نسخة جديدة إلى App Store Connect لاحقاً:
-  - غيّر رقم **Build** في تبويب General (مثلاً من 1 إلى 2).
-  - اختر **Any iOS Device (arm64)** بدل المحاكي.
-  - Product → Archive → Distribute App → App Store Connect.
-
-هل تريد أن أضيف أيضاً في الخطة كيفية رفع النسخة الجديدة إلى App Store Connect بعد التأكد من الشعار؟
+## سؤال
+هل استنسخت المشروع من GitHub على الماك من قبل، أم هذه أول مرة؟ إذا كانت أول مرة، شارك اسم مستودعك على GitHub (username/repo) وسأعطيك الأوامر جاهزة بالكامل.
