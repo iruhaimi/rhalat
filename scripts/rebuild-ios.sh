@@ -34,6 +34,21 @@ echo "OK: dist/ has no Lovable URLs."
 
 echo "==> [5/6] Adding & syncing iOS platform"
 npx cap add ios
+
+# Restore brand icon + splash — `npx cap add ios` overwrites these with
+# Capacitor's default placeholder icons. The source-of-truth files live in
+# resources/ and MUST be copied over the freshly generated placeholders.
+if [ -f resources/icon.png ]; then
+  cp resources/icon.png ios/App/App/Assets.xcassets/AppIcon.appiconset/AppIcon-512@2x.png
+  echo "OK: brand AppIcon copied from resources/icon.png"
+fi
+if [ -f resources/splash.png ]; then
+  cp resources/splash.png ios/App/App/Assets.xcassets/Splash.imageset/splash-2732x2732.png
+  cp resources/splash.png ios/App/App/Assets.xcassets/Splash.imageset/splash-2732x2732-1.png
+  cp resources/splash.png ios/App/App/Assets.xcassets/Splash.imageset/splash-2732x2732-2.png
+  echo "OK: brand Splash copied from resources/splash.png"
+fi
+
 npx cap sync ios
 
 echo "==> [6/6] Proving generated ios/ is clean"
