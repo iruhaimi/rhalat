@@ -1,83 +1,43 @@
-## الهدف
-تفعيل تسجيل الدخول عبر Apple من مكانين:
-- **تطبيق iOS الأصلي** (Xcode/Capacitor) — يستخدم Bundle ID `com.visafaster.app` ✅ (جاهز)
-- **الموقع** visafaster.com و www.visafaster.com — يحتاج **Services ID** جديد (لأن Apple لا يسمح باستخدام Bundle ID للويب)
+## المشكلتان
 
----
-
-## ما ستفعله في Apple Developer (يدوياً)
-
-### 1) إنشاء Services ID جديد
-- في القائمة المفتوحة عندك الآن، اضغط **Services IDs** (بدل App IDs).
-- ستجد القائمة فارغة → اضغط زر **+** الأزرق بجانب "Identifiers".
-- اختر **Services IDs** → **Continue**.
-- املأ:
-  - **Description**: `Visa Faster Web Sign In`
-  - **Identifier**: `com.visafaster.signin` (لا يمكن أن يطابق Bundle ID)
-- **Continue** → **Register**.
-
-### 2) تفعيل Sign In with Apple على الـ Services ID
-- افتح الـ Services ID الجديد الذي أنشأته للتو.
-- ✅ فعّل **Sign In with Apple** → اضغط **Configure**.
-- **Primary App ID**: اختر `com.visafaster.app`.
-- **Domains and Subdomains** (سطر واحد لكل نطاق):
-  ```
-  visafaster.com
-  www.visafaster.com
-  ```
-- **Return URLs**:
-  ```
-  https://visafaster.com
-  https://www.visafaster.com
-  ```
-- **Next** → **Done** → **Save**.
-
-### 3) إعادة استخدام نفس المفتاح (.p8) الذي أنشأته سابقاً
-- المفتاح `M7P3CQPHYS` صالح لكل من Bundle ID والـ Services ID الجديد (لأن كلاهما تحت نفس Primary App ID).
-- لا حاجة لإنشاء مفتاح جديد.
-
----
-
-## ما ستفعله في لوحة Lovable Cloud
-
-### 4) تحديث إعدادات Apple Auth
-افتح: **Cloud → Users → Auth Settings → Sign In Methods → Apple**
-
-في حقل **Client IDs** أضف الاثنين معاً (مفصولين بفاصلة أو سطر):
+**1) الويب: `invalid_client` من Apple**
+السبب: Apple's OAuth يتطلب أن يكون **Return URL** في Services ID مطابقاً تماماً لعنوان الـ callback الذي يستقبل الرد. Supabase يستخدم دائماً:
 ```
-com.visafaster.app
+https://hgxvwziiumjxifpgpjce.supabase.co/auth/v1/callback
+```
+لكنك أضفت في Apple فقط `https://visafaster.com/` و `https://www.visafaster.com/`. لذلك Apple ترفض الطلب فوراً بـ `invalid_client`.
+
+**2) iOS: `Unacceptable audience in id_token: [com.visafaster.app]`**
+السبب: قائمة **Client IDs** في لوحة Cloud → Apple لا تحتوي على `com.visafaster.app` (Bundle ID). Supabase يستقبل id_token صالحاً من Apple لكن جمهوره (`aud`) غير مُصرّح به في القائمة.
+
+---
+
+## الإصلاح — كل الخطوات يدوية، لا يوجد كود يتغيّر
+
+### أ) في Apple Developer Console
+افتح **Identifiers → Services IDs → `com.visafaster.signin` → Sign In with Apple → Configure**.
+
+في **Return URLs** أضف السطر التالي (احتفظ بالسطور الحالية):
+```
+https://hgxvwziiumjxifpgpjce.supabase.co/auth/v1/callback
+```
+اضغط **Next → Done → Save**.
+
+### ب) في لوحة Lovable Cloud → Users → Auth Settings → Apple
+تحقّق أن خانة **Client IDs** تحتوي على **الاثنين** (كل واحد في سطر منفصل):
+```
 com.visafaster.signin
+com.visafaster.app
 ```
+إذا كان `com.visafaster.app` مفقوداً، أضِفه واضغط **Save**.
 
-في **Redirect URLs** فعّل:
-- ✅ `visafaster.com`
-- ✅ `www.visafaster.com`
-
-في **Generate Secret** (إذا طُلب مجدداً):
-- **Client ID**: `com.visafaster.signin` (Services ID للويب)
-- **Team ID**: `7VFVD6Z3SG`
-- **Key ID**: `M7P3CQPHYS`
-- **.p8**: نفس الملف
-
-اضغط **Save**.
-
----
-
-## ما لا يحتاج تغيير في الكود
-- `AppleSignInButton.tsx` جاهز بالفعل لكلا الحالتين:
-  - على iOS Native → يستدعي `SignInWithApple.authorize` مع Bundle ID.
-  - على الويب → يستدعي `lovable.auth.signInWithOAuth('apple')` الذي سيستخدم Services ID تلقائياً.
-- لا تعديلات على `capacitor.config.ts` أو `AppleSignInButton.tsx` أو أي ملف آخر.
+لا تُعِد توليد Client Secret — الحالي صالح للـ Services ID.
 
 ---
 
 ## التحقق بعد الحفظ
-1. **الويب**: افتح https://visafaster.com/auth → اضغط زر Apple → يجب أن تفتح صفحة Apple ثم يعود المستخدم مسجّلاً دخوله.
-2. **iOS**: افتح التطبيق من Xcode → زر Apple → تظهر شاشة Apple الأصلية (Face ID) → دخول مباشر.
 
----
+1. **الويب**: https://visafaster.com/auth → زر Apple → يجب أن تفتح صفحة تسجيل دخول Apple عادية (بدلاً من `invalid_client`) وترجع مسجّلاً.
+2. **iOS**: افتح التطبيق → زر Apple → Face ID → دخول مباشر بدون خطأ `Unacceptable audience`.
 
-## ملاحظة
-لن يظهر لك سؤال "أيهما Services ID أم Bundle ID" في لوحة Cloud لأنها تقبل قائمة Client IDs متعددة. Supabase يطابق الـ audience تلقائياً حسب مصدر الطلب.
-
-هل تريد أن أنتظر بعد ما تحفظ وتجرّب، أم عندك سؤال قبل البدء؟
+أخبرني بالنتيجة بعد الخطوتين.
