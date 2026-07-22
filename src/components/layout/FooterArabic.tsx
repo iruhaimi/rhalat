@@ -4,6 +4,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { useFooterSettings } from '@/hooks/useFooterSettings';
 import { parseWorkingHours, formatWorkingHours } from '@/lib/workingHours';
 import logo from '@/assets/logo.png.asset.json';
+import { assetUrl } from '@/lib/assetUrl';
 import ComplianceDisclaimer from '@/components/layout/ComplianceDisclaimer';
 import { LEGAL } from '@/config/legal';
 
@@ -79,7 +80,7 @@ export default function FooterArabic() {
           <div>
             <Link to="/" className="flex items-center gap-2">
               <img 
-                src={logo.url} 
+                src={assetUrl(logo.url)} 
                 alt={companyName}
                 className="h-14 w-auto object-contain"
               />
