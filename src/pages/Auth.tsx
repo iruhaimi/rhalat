@@ -14,7 +14,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
 import GoogleSignInButton from '@/components/auth/GoogleSignInButton';
 import AppleSignInButton from '@/components/auth/AppleSignInButton';
-import { isIOSApp } from '@/lib/platform';
+import { getExternalAuthOrigin, isIOSApp, isNativeMobileApp } from '@/lib/platform';
 import NoIndex from '@/components/seo/NoIndex';
 import { createClient } from '@supabase/supabase-js';
 import { resolvePostAuthRedirect, consumePendingRedirect, sanitizeRedirect } from '@/lib/safeRedirect';
@@ -261,7 +261,7 @@ export default function Auth() {
   const handleSignUp = async (data: SignUpFormData) => {
     setIsLoading(true);
     // Carry the intended destination through the email-confirmation round trip.
-    const emailRedirectTo = `${window.location.origin}/auth?redirect=${encodeURIComponent(safeRedirect)}`;
+    const emailRedirectTo = `${getExternalAuthOrigin()}/auth?redirect=${encodeURIComponent(safeRedirect)}`;
     const { error } = await signUp(data.email, data.password, data.fullName, { emailRedirectTo });
     setIsLoading(false);
 
@@ -299,7 +299,7 @@ export default function Auth() {
   const handleForgotPassword = async (data: ForgotPasswordFormData) => {
     setIsLoading(true);
     
-    const redirectUrl = `${window.location.origin}/reset-password`;
+    const redirectUrl = `${getExternalAuthOrigin()}/reset-password`;
     
     const { error } = await supabase.auth.resetPasswordForEmail(data.email, {
       redirectTo: redirectUrl,
@@ -365,8 +365,10 @@ export default function Auth() {
             <CardContent className="px-0 sm:px-6">
               {!isForgotPassword && (
                 <div className="mb-5 space-y-4">
-                  <AppleSignInButton className="w-full h-11 bg-black text-white hover:bg-black/90 border-black" redirectPath={safeRedirect} />
-                  {!isIOSApp() && (
+                  {(!isNativeMobileApp() || isIOSApp()) && (
+                    <AppleSignInButton className="w-full h-11 bg-black text-white hover:bg-black/90 border-black" redirectPath={safeRedirect} />
+                  )}
+                  {!isNativeMobileApp() && (
                     <GoogleSignInButton className="w-full h-11" redirectPath={safeRedirect} />
                   )}
                   <div className="relative">

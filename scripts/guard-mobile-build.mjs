@@ -26,9 +26,11 @@ const ignoredDirectories = new Set([
 
 const ignoredFiles = new Set([
   'guard-mobile-build.mjs',
+  'nativeSafety.ts',
   'package-lock.json',
   'bun.lockb',
   'tsconfig.app.tsbuildinfo',
+  'tsconfig.node.tsbuildinfo',
 ]);
 
 const textExtensions = new Set([
@@ -50,12 +52,43 @@ const textExtensions = new Set([
 const forbiddenPatterns = [
   { pattern: /lovable\.dev/i, label: 'lovable.dev' },
   { pattern: /lovableproject\.com/i, label: 'lovableproject.com' },
+  { pattern: /lovableproject-dev\.com/i, label: 'lovableproject-dev.com' },
   { pattern: /forceHideBadge/i, label: 'forceHideBadge' },
   { pattern: /app\.lovable\.[a-z0-9.-]+/i, label: 'app.lovable.*' },
   { pattern: /\.lovable\.app/i, label: '*.lovable.app' },
   { pattern: /@lovable\.dev\/cloud-auth-js/i, label: '@lovable.dev/cloud-auth-js' },
   { pattern: /createLovableAuth/i, label: 'createLovableAuth' },
 ];
+
+const forbiddenPwaPatterns = [
+  { pattern: /vite-plugin-pwa/i, label: 'vite-plugin-pwa' },
+  { pattern: /VitePWA/i, label: 'VitePWA' },
+  { pattern: /virtual:pwa-register/i, label: 'virtual:pwa-register' },
+  { pattern: /navigator\.serviceWorker\.register/i, label: 'service worker registration' },
+  { pattern: /registerSW\s*\(/i, label: 'registerSW' },
+  { pattern: /workbox/i, label: 'Workbox app-shell cache' },
+];
+
+function shouldScanForPwaReferences(relativePath) {
+  if (relativePath === 'public/sw.js') return false;
+  return relativePath === 'vite.config.ts' || relativePath === 'package.json' || relativePath.startsWith('src/');
+}
+
+function scanContent(content, relativePath) {
+  for (const { pattern, label } of forbiddenPatterns) {
+    if (pattern.test(content)) {
+      failures.push(`${relativePath} contains forbidden native-build reference: ${label}`);
+    }
+  }
+
+  if (shouldScanForPwaReferences(relativePath)) {
+    for (const { pattern, label } of forbiddenPwaPatterns) {
+      if (pattern.test(content)) {
+        failures.push(`${relativePath} contains forbidden native-build PWA/cache reference: ${label}`);
+      }
+    }
+  }
+}
 
 function hasTextExtension(filePath) {
   return [...textExtensions].some((extension) => filePath.endsWith(extension));
@@ -76,11 +109,7 @@ function scanDirectory(directory) {
     if (!stats.isFile() || ignoredFiles.has(entry) || !hasTextExtension(fullPath)) continue;
 
     const content = readFileSync(fullPath, 'utf8');
-    for (const { pattern, label } of forbiddenPatterns) {
-      if (pattern.test(content)) {
-        failures.push(`${relative(root, fullPath)} contains forbidden native-build reference: ${label}`);
-      }
-    }
+    scanContent(content, relative(root, fullPath));
   }
 }
 
@@ -91,11 +120,7 @@ for (const target of scanTargets) {
     scanDirectory(fullPath);
   } else if (stats.isFile()) {
     const content = readFileSync(fullPath, 'utf8');
-    for (const { pattern, label } of forbiddenPatterns) {
-      if (pattern.test(content)) {
-        failures.push(`${target} contains forbidden native-build reference: ${label}`);
-      }
-    }
+    scanContent(content, target);
   }
 }
 

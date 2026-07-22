@@ -9,6 +9,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Capacitor } from '@capacitor/core';
 import { SignInWithApple, type SignInWithAppleOptions } from '@capacitor-community/apple-sign-in';
 import { cn } from '@/lib/utils';
+import { APP_PUBLIC_ORIGIN, getExternalAuthOrigin, isNativeMobileApp } from '@/lib/platform';
 import { sanitizeRedirect, resolvePostAuthRedirect, stashPendingRedirect } from '@/lib/safeRedirect';
 
 function AppleIcon({ className }: { className?: string }) {
@@ -43,6 +44,8 @@ export default function AppleSignInButton({
   const isRTL = direction === 'rtl';
   const buttonLabel = label ?? (isRTL ? 'الدخول عبر Apple' : 'Sign in with Apple');
 
+  if (isNativeMobileApp() && Capacitor.getPlatform() !== 'ios') return null;
+
   const handleAppleSignIn = async () => {
     setIsLoading(true);
     onStart?.();
@@ -58,7 +61,7 @@ export default function AppleSignInButton({
       if (Capacitor.isNativePlatform() && Capacitor.getPlatform() === 'ios') {
         const options: SignInWithAppleOptions = {
           clientId: 'com.visafaster.app',
-          redirectURI: `${window.location.origin}${resolved}`,
+          redirectURI: `${APP_PUBLIC_ORIGIN}/auth`,
           scopes: 'email name',
           state: Math.random().toString(36).slice(2),
         };
@@ -87,7 +90,7 @@ export default function AppleSignInButton({
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'apple',
         options: {
-          redirectTo: `${window.location.origin}${resolved}`,
+          redirectTo: `${getExternalAuthOrigin()}${resolved}`,
           skipBrowserRedirect: true,
         },
       });

@@ -8,9 +8,25 @@
  */
 import { Capacitor } from '@capacitor/core';
 
+export const APP_PUBLIC_ORIGIN = 'https://visafaster.com';
+
+export const isNativeMobileApp = (): boolean => {
+  try {
+    return Boolean(Capacitor?.isNativePlatform?.());
+  } catch {
+    return false;
+  }
+};
+
+export const getExternalAuthOrigin = (): string => {
+  if (isNativeMobileApp()) return APP_PUBLIC_ORIGIN;
+  if (typeof window === 'undefined') return APP_PUBLIC_ORIGIN;
+  return window.location.origin;
+};
+
 export const isIOSApp = (): boolean => {
   try {
-    if (Capacitor?.isNativePlatform?.() && Capacitor.getPlatform() === 'ios') {
+    if (isNativeMobileApp() && Capacitor.getPlatform() === 'ios') {
       return true;
     }
   } catch {

@@ -7,6 +7,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
 import { cn } from '@/lib/utils';
+import { getExternalAuthOrigin, isNativeMobileApp } from '@/lib/platform';
 import { sanitizeRedirect, resolvePostAuthRedirect, stashPendingRedirect } from '@/lib/safeRedirect';
 
 function GoogleIcon({ className }: { className?: string }) {
@@ -44,6 +45,8 @@ export default function GoogleSignInButton({
   const isRTL = direction === 'rtl';
   const buttonLabel = label ?? (isRTL ? 'الدخول عبر Google' : 'Sign in with Google');
 
+  if (isNativeMobileApp()) return null;
+
   const handleGoogleSignIn = async () => {
     setIsLoading(true);
     onStart?.();
@@ -61,7 +64,7 @@ export default function GoogleSignInButton({
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}${resolved}`,
+          redirectTo: `${getExternalAuthOrigin()}${resolved}`,
           skipBrowserRedirect: true,
         },
       });

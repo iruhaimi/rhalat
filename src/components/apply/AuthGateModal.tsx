@@ -7,7 +7,7 @@ import { useApplication } from '@/contexts/ApplicationContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { isIOSApp } from '@/lib/platform';
+import { getExternalAuthOrigin, isNativeMobileApp } from '@/lib/platform';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -25,7 +25,7 @@ function GoogleButton() {
   const [loading, setLoading] = useState(false);
   const isRTL = direction === 'rtl';
 
-  if (isIOSApp()) return null;
+  if (isNativeMobileApp()) return null;
 
   const handleClick = async () => {
     setLoading(true);
@@ -33,7 +33,7 @@ function GoogleButton() {
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: window.location.href,
+          redirectTo: `${getExternalAuthOrigin()}${window.location.pathname}${window.location.search}`,
           skipBrowserRedirect: true,
         },
       });
@@ -162,7 +162,7 @@ function SignUpPanel({ defaultEmail, defaultName }: { defaultEmail?: string; def
       email: data.email,
       password: data.password,
       options: {
-        emailRedirectTo: window.location.href,
+        emailRedirectTo: `${getExternalAuthOrigin()}${window.location.pathname}${window.location.search}`,
         data: { full_name: data.fullName },
       },
     });
@@ -259,7 +259,7 @@ export default function AuthGateModal() {
           </TabsContent>
         </Tabs>
 
-        {!isIOSApp() && (
+        {!isNativeMobileApp() && (
           <>
             <div className="relative my-4">
               <Separator />
