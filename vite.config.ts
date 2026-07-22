@@ -18,9 +18,9 @@ export default defineConfig(({ mode }) => ({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'robots.txt'],
       manifest: {
-        name: 'رحلات - خدمات التأشيرات',
-        short_name: 'رحلات',
-        description: 'منصة رحلات لخدمات التأشيرات السياحية',
+        name: 'عطلات رحلاتكم - خدمات التأشيرات',
+        short_name: 'عطلات رحلاتكم',
+        description: 'منصة عطلات رحلاتكم لخدمات التأشيرات السياحية',
         theme_color: '#1a1a2e',
         background_color: '#0f0f1a',
         display: 'standalone',
