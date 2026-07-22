@@ -67,7 +67,11 @@ export default function PathChoiceCard({ onBack }: Props) {
         .eq('id', profile.id);
       if (error) throw error;
       updateApplicationData({ phone: normalized, countryCode: '+966' });
-      await refreshProfile();
+      // Fire-and-forget refresh — awaiting it here cascades a full profile+roles
+      // refetch and multiple re-renders that visibly freeze the wizard on
+      // slower devices. The local applicationData update above is enough for
+      // the current screen.
+      refreshProfile();
       toast({
         title: isRTL ? '✅ تم حفظ الرقم' : '✅ Phone saved',
       });
