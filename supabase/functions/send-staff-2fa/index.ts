@@ -125,8 +125,16 @@ const handler = async (req: Request): Promise<Response> => {
 
     // SECURITY: destination phone must come from the server-side user record,
     // never from the request body, so an attacker cannot redirect the OTP.
-    const phone: string | undefined =
+    let phone: string | undefined =
       (targetUser?.user?.phone && String(targetUser.user.phone).trim()) || undefined;
+    if (!phone) {
+      const { data: profileRow } = await supabase
+        .from("profiles")
+        .select("phone")
+        .eq("user_id", userId)
+        .maybeSingle();
+      if (profileRow?.phone) phone = String(profileRow.phone).trim();
+    }
 
     // Rate limit (max 5 codes per user per 5 minutes)
     const { data: rateOk } = await supabase.rpc("check_2fa_rate_limit", {
