@@ -1,50 +1,44 @@
-الخطة:
+## المشكلة
 
-1. **اعتماد App ID الصحيح**
-   - قيمة `app.lovable.616b2e7f7e454cdc90ea1c048e4da3b0` غير صالحة لـ iOS/Android.
-   - القيمة الصحيحة التي يجب أن تكون في مشروعك هي:
-     ```text
-     com.visafaster.app
-     ```
+1. **اسم التطبيق في Xcode يظهر "رحلات - خدمات التأشيرات"** بدلاً من "عطلات رحلاتكم" — لأن `CFBundleDisplayName` (Bundle display name) في `ios/App/App/Info.plist` مكتوب يدوياً بهذه القيمة، ولا يتحدّث تلقائياً عند `npx cap sync`.
+2. **`appName` في `capacitor.config.ts`** حالياً `"visafaster"` — يجب أن يكون `"عطلات رحلاتكم"` ليكون مصدر الحقيقة لأي إعادة إنشاء مستقبلية.
+3. **أيقونة التطبيق القديمة** لا تزال في `ios/App/App/Assets.xcassets/AppIcon.appiconset/` على جهازك — لأن Capacitor لا ينسخ الأيقونات تلقائياً من `public/app-icon-1024.png`؛ يجب استيرادها يدوياً في Xcode.
+4. **صور داخل `public/images/`** (`destination-istanbul.jpg`, `london`, `newyork`, `paris`) — غير مستخدمة في أي مكان بالكود، لكن Google فَهرسها لأنها مكشوفة على الدومين.
 
-2. **التأكد أن GitHub يحتوي آخر تعديل**
-   - عندي في المشروع هنا ملف `capacitor.config.ts` مضبوط حالياً على `com.visafaster.app`.
-   - بما أن جهازك بعد `git pull` ما زال يقرأ القيمة القديمة، فهذا غالباً يعني أن آخر تعديل من Lovable لم يصل إلى مستودع GitHub المحلي عندك بعد، أو أن جهازك يحتوي نسخة قديمة من الملف.
+## الخطة
 
-3. **الحل العملي على جهازك**
-   - افتح الملف المحلي:
-     ```bash
-     cd ~/Documents/visa-hub-cloud
-     cat capacitor.config.ts
-     ```
-   - إذا ظهر فيه:
-     ```text
-     app.lovable.616b2e7f7e454cdc90ea1c048e4da3b0
-     ```
-     غيّره إلى:
-     ```text
-     com.visafaster.app
-     ```
+### 1. تصحيح اسم التطبيق في المصدر
+- تعديل `capacitor.config.ts`:
+  - `appName: 'عطلات رحلاتكم'`
 
-4. **بعد تصحيح الملف المحلي**
-   - نفّذ:
-     ```bash
-     npm install
-     npx cap add ios
-     npx cap sync ios
-     npx cap open ios
-     ```
+### 2. حذف الصور غير المستخدمة من `public/`
+- حذف `public/images/destination-istanbul.jpg`
+- حذف `public/images/destination-london.jpg`
+- حذف `public/images/destination-newyork.jpg`
+- حذف `public/images/destination-paris.jpg`
+- إضافة `Disallow: /images/` في `public/robots.txt` (حماية إضافية لأي بقايا مؤقتة عند Google).
 
-5. **داخل Xcode**
-   - افتح دائماً:
-     ```text
-     ios/App/App.xcworkspace
-     ```
-   - تأكد من:
-     ```text
-     Bundle ID = com.visafaster.app
-     Team = حسابك في Apple Developer
-     Capability = Sign in with Apple
-     ```
+### 3. تعليمات يدوية على جهاز Mac (لا تُنفَّذ من هنا لأن مجلد `ios/` غير موجود في GitHub — يُنشأ محلياً)
 
-ملاحظة مهمة: بعد أي تعديل Native/Capacitor، اسحب آخر نسخة من GitHub ثم شغّل `npx cap sync`. ويفضل مراجعة مقال Lovable عن تحويل التطبيق إلى Native/Capacitor قبل الإرسال النهائي.
+بعد `git pull` ثم `npx cap sync ios`، افتح Xcode ونفّذ:
+
+**أ. تصحيح اسم التطبيق المعروض**
+- في الشريط الأيسر: `App → App → Info`
+- عدّل `Bundle display name` من `رحلات - خدمات التأشيرات` إلى `عطلات رحلاتكم`
+- عدّل `Bundle name` (إن وُجد كسلسلة نصية) إلى نفس القيمة
+
+**ب. تصحيح اسم الـ Scheme الغريب**
+- في الأعلى بجانب زر ▶︎ يظهر "سبحان الله وبحمده…" — هذا اسم Scheme.
+- `Product → Scheme → Manage Schemes…` → اختر الـ Scheme → زر Edit → غيّر الاسم إلى `App` واحذف أي Scheme إضافي.
+
+**ج. استبدال أيقونة التطبيق**
+- في الشريط الأيسر: `App → App → Assets.xcassets → AppIcon`
+- اسحب `public/app-icon-1024.png` (الأيقونة الرسمية الجديدة) إلى خانة **1024×1024 App Store**
+- احذف أي صور قديمة في نفس الـ set
+- `Product → Clean Build Folder` (Shift+Cmd+K) ثم أعد التشغيل
+
+### تفاصيل تقنية
+
+- سبب عدم تحديث الاسم تلقائياً: `npx cap sync` يحدّث `capacitor.config.json` داخل iOS، لكن `Info.plist` يبقى ملكاً للمشروع الأصلي ولا يُلمس بعد أول `cap add ios`.
+- سبب عدم تحديث الأيقونة تلقائياً: Capacitor لا يدير `AppIcon.appiconset`؛ الحل الرسمي هو أداة `@capacitor/assets` (اختيارية، يمكن إضافتها لاحقاً لأتمتة الأيقونات وشاشة الإطلاق).
+- إضافة `Disallow: /images/` في robots.txt يوقف زحف Google للمجلد؛ لإزالة الصور المفهرسة نهائياً استخدم Google Search Console → Removals.
