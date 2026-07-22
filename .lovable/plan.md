@@ -1,89 +1,51 @@
-## الأسئلة الثلاثة — إجابات مباشرة
+## كيف تعيد بناء التطبيق في Xcode لتظهر التعديلات (الشعار)
 
-### 1) الويب لا يزال يعطي `invalid_client` — ما السبب؟
-Apple ترفض الطلب لأن **Supabase callback** غير مسجّل ضمن Return URLs في Services ID. Supabase يرسل المستخدم دائماً إلى:
-```
-https://hgxvwziiumjxifpgpjce.supabase.co/auth/v1/callback
-```
-لكنك سجّلت في Apple فقط `https://visafaster.com/` و `https://www.visafaster.com/`.
+التعديلات التي أجريتها على الكود (ملف `assetUrl.ts` + تحديث `HeaderArabic` و`FooterArabic` وغيرها) موجودة في مشروع الويب فقط. لكي تنعكس داخل تطبيق iOS، لازم تُبنى نسخة `dist` جديدة، تُنسخ إلى مجلد iOS عبر Capacitor، ثم يعاد تشغيلها من Xcode.
 
-**الإصلاح (يدوي في Apple Developer فقط، لا كود):**
-- افتح Identifiers → Services IDs → `com.visafaster.signin` → Sign In with Apple → Configure.
-- في Return URLs أضف السطر:
-  ```
-  https://hgxvwziiumjxifpgpjce.supabase.co/auth/v1/callback
-  ```
-- Save.
+### الخطوات على جهاز الماك
 
-### 2) هل هذا يحل مشكلة اعتماد التطبيق في Apple؟
-**نعم مبدئياً، لكنه لا يكفي وحده.** مراجعة Apple تختبر على جهاز iOS، وقد أثبتنا:
-- ✅ Apple Sign-In يعمل الآن على iOS الأصلي
-- ✅ Google Login مخفي على iOS
-- ✅ Cookie Banner مخفي على iOS
-- ✅ Delete Account متاح
-- ✅ الأيقونة 1024×1024 جاهزة
-
-لكن ما زال يعتمد على:
-- تفعيل "Sign in with Apple" Capability في Xcode
-- رفع الأيقونة الصحيحة في AppIcon.appiconset
-- تغيير اسم Seller في App Store Connect إلى "Visa Faster"
-- استخدام حساب المراجع المُسلَّم في review notes
-
-مشكلة الويب **لا تؤثر** على اعتماد التطبيق (Apple يختبر iOS فقط).
-
-### 3) الشعار لا يظهر داخل التطبيق (المربع الأبيض بعلامة ؟)
-
-**السبب المؤكد:** الشعار مستضاف كأصل Lovable بمسار نسبي:
-```
-/__l5e/assets-v1/6ff4b400-.../logo-new.png
-```
-داخل تطبيق iOS الأصلي، الـ origin هو `capacitor://localhost`، فيحاول المتصفح المدمج تحميل الشعار من:
-```
-capacitor://localhost/__l5e/assets-v1/.../logo-new.png
-```
-وهذا **لا وجود له** — Lovable CDN يعمل فقط على النطاقات المنشورة، وليس داخل حاوية Capacitor.
-
-نفس المشكلة تؤثر على أي صورة أصلها Lovable Assets داخل التطبيق (شعارات الشركاء، صور الأبطال ... إلخ).
-
----
-
-## الخطة
-
-### أ) إصلاح الويب (يدوي، بدون كود)
-أضف رابط Supabase callback في Apple Services ID كما هو موضّح أعلاه.
-
-### ب) إصلاح ظهور الشعار داخل التطبيق (تعديل كود)
-لا نستطيع الاعتماد على مسار نسبي داخل Capacitor. الحل: تحويل مسار Lovable Assets إلى **URL مطلق** إلى نطاق الإنتاج فقط عندما نكون داخل تطبيق iOS الأصلي.
-
-**التنفيذ:**
-1. إنشاء دالة مساعدة `src/lib/assetUrl.ts`:
-   ```ts
-   import { isNativeApp } from '@/lib/platform';
-   const CDN_ORIGIN = 'https://visafaster.com';
-   export function assetUrl(url: string) {
-     if (!url) return url;
-     if (url.startsWith('http')) return url;
-     if (isNativeApp() && url.startsWith('/')) return CDN_ORIGIN + url;
-     return url;
-   }
+1. **اسحب آخر تحديثات من GitHub**
+   ```bash
+   cd <مجلد المشروع>
+   git pull
    ```
-2. استيراد `assetUrl` واستخدامها في:
-   - `src/components/layout/HeaderArabic.tsx` (الشعار)
-   - `src/components/layout/FooterArabic.tsx` (إن كان يستخدم شعاراً)
-   - أي مكان آخر يستخدم `.asset.json` (شعارات الشركاء في `PartnersSection`, `HeroManagement`, ...)
 
-3. التحقق: بعد `npm run build` + `npx cap sync ios` وتشغيل التطبيق، يجب أن يظهر الشعار في الهيدر وصفحة الملف الشخصي.
+2. **ثبّت أي حزم جديدة** (احتياطاً)
+   ```bash
+   npm install
+   ```
 
-### ج) نقاط لاحقة (لا تتطلب كود الآن)
-- بعد أن يعمل الويب، تأكد من ظهور زر Apple بنجاح على `visafaster.com/auth`.
-- لا حاجة لإعادة توليد Client Secret — الحالي صالح.
+3. **ابنِ نسخة الويب للإنتاج**
+   ```bash
+   npm run build
+   ```
+   هذا يولّد مجلد `dist/` الذي يحوي الشعار مع المسار المطلق.
 
----
+4. **زامن نسخة الويب مع مجلد iOS**
+   ```bash
+   npx cap sync ios
+   ```
+   هذا الأمر ينسخ محتويات `dist/` إلى مشروع Xcode ويحدّث الإضافات (Plugins) مثل `@capacitor-community/apple-sign-in`.
 
-## ملخص التغييرات في الكود
-- **ملف جديد:** `src/lib/assetUrl.ts` (دالة مساعدة صغيرة)
-- **تعديل:** كل ملف يستورد `.asset.json` ويستخدم `.url` مباشرة — نغلّفه بـ `assetUrl(...)`
+5. **افتح المشروع في Xcode**
+   ```bash
+   npx cap open ios
+   ```
 
-لا تعديلات على قاعدة البيانات، ولا على Edge Functions، ولا على إعدادات Supabase.
+6. **داخل Xcode**
+   - اختر الجهاز أو المحاكي (Simulator) من الأعلى.
+   - اضغط **Product → Clean Build Folder** (Shift + Cmd + K) لضمان بناء نظيف.
+   - اضغط زر التشغيل ▶︎ (Cmd + R) لبناء التطبيق وتشغيله.
 
-هل أبدأ بالتنفيذ؟
+7. **تحقّق**
+   - افتح التطبيق → الشعار يظهر في الهيدر بدل المربع الأبيض.
+   - سجّل الدخول بحساب Apple → يعمل كالمعتاد.
+
+### ملاحظات مهمة
+- لا تحتاج تعديل أي إعدادات في Xcode، فقط بناء وتشغيل.
+- إذا كنت ستحمّل نسخة جديدة إلى App Store Connect لاحقاً:
+  - غيّر رقم **Build** في تبويب General (مثلاً من 1 إلى 2).
+  - اختر **Any iOS Device (arm64)** بدل المحاكي.
+  - Product → Archive → Distribute App → App Store Connect.
+
+هل تريد أن أضيف أيضاً في الخطة كيفية رفع النسخة الجديدة إلى App Store Connect بعد التأكد من الشعار؟
