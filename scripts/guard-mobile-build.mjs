@@ -22,6 +22,7 @@ const ignoredDirectories = new Set([
 ]);
 
 const ignoredFiles = new Set([
+  'guard-mobile-build.mjs',
   'package-lock.json',
   'bun.lockb',
   'tsconfig.app.tsbuildinfo',
