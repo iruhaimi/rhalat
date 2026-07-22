@@ -51,12 +51,16 @@ function ApplyContent() {
       (user.user_metadata as any)?.full_name ||
       (user.user_metadata as any)?.name ||
       '';
-    updateApplicationData({
-      fullName: applicationData.fullName || fullNameFromAuth,
-      email: applicationData.email || user.email || '',
-      phone: applicationData.phone || profile?.phone || '',
-      countryCode: applicationData.countryCode || '+966',
-    });
+    const next: Record<string, string> = {};
+    const nextFullName = applicationData.fullName || fullNameFromAuth;
+    const nextEmail = applicationData.email || user.email || '';
+    const nextPhone = applicationData.phone || profile?.phone || '';
+    const nextCountryCode = applicationData.countryCode || '+966';
+    if (nextFullName !== applicationData.fullName) next.fullName = nextFullName;
+    if (nextEmail !== applicationData.email) next.email = nextEmail;
+    if (nextPhone !== applicationData.phone) next.phone = nextPhone;
+    if (nextCountryCode !== applicationData.countryCode) next.countryCode = nextCountryCode;
+    if (Object.keys(next).length > 0) updateApplicationData(next);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, profile?.full_name, profile?.phone]);
 
@@ -238,14 +242,17 @@ function ApplyContent() {
   }, [profile, applicationData, currentStep, draftId, setDraftId]);
 
   // Trigger DB save on step change (requires auth — gate enforces it before step 3)
+  // Dep on currentStep only (not on saveDraft) to avoid re-schedule loops when
+  // applicationData changes rebuild the callback identity.
   useEffect(() => {
     if (currentStep >= 2 && profile && applicationData.visaTypeId) {
       const timer = setTimeout(() => {
         saveDraft();
-      }, 500);
+      }, 1200);
       return () => clearTimeout(timer);
     }
-  }, [currentStep, saveDraft, profile, applicationData.visaTypeId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentStep, profile?.id, applicationData.visaTypeId]);
 
   // Auth gate: block transition to step 3 (path choice) and beyond for guests.
   // When the user authenticates inside the gate modal, advance to step 3.
