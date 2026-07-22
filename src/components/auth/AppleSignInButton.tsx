@@ -6,6 +6,9 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { lovable } from '@/integrations/lovable';
+import { supabase } from '@/integrations/supabase/client';
+import { Capacitor } from '@capacitor/core';
+import { SignInWithApple, type SignInWithAppleOptions } from '@capacitor-community/apple-sign-in';
 import { cn } from '@/lib/utils';
 import { sanitizeRedirect, resolvePostAuthRedirect, stashPendingRedirect } from '@/lib/safeRedirect';
 
@@ -51,6 +54,36 @@ export default function AppleSignInButton({
         '/profile'
       );
       stashPendingRedirect(resolved);
+
+      // Native iOS: use the on-device Apple Sign-In sheet (required by App Store Guideline 4.8).
+      if (Capacitor.isNativePlatform() && Capacitor.getPlatform() === 'ios') {
+        const options: SignInWithAppleOptions = {
+          clientId: 'com.visafaster.app',
+          redirectURI: `${window.location.origin}${resolved}`,
+          scopes: 'email name',
+          state: Math.random().toString(36).slice(2),
+        };
+        const res = await SignInWithApple.authorize(options);
+        const idToken = res.response?.identityToken;
+        if (!idToken) {
+          throw new Error(isRTL ? 'لم يتم استلام رمز Apple' : 'No Apple identity token returned');
+        }
+        const { error } = await supabase.auth.signInWithIdToken({
+          provider: 'apple',
+          token: idToken,
+        });
+        if (error) {
+          toast({
+            variant: 'destructive',
+            title: isRTL ? 'فشل تسجيل الدخول عبر Apple' : 'Apple sign-in failed',
+            description: error.message,
+          });
+          setIsLoading(false);
+          return;
+        }
+        navigate(resolved);
+        return;
+      }
 
       const result = await lovable.auth.signInWithOAuth('apple', {
         redirect_uri: `${window.location.origin}${resolved}`,
