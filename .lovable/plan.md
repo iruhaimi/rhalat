@@ -1,36 +1,27 @@
-## سبب المشكلة
+## المشكلة
+عند تسجيل الدخول عبر Apple من التطبيق (Xcode/iOS)، يظهر الخطأ:
+> `Unacceptable audience in id_token: [com.visafaster.app]`
 
-في الصورة، شاشة الـ Splash تعرض الشعار **مقصوص من الجانبين** (يظهر "طلات رحلاتك" بدل "عطلات رحلاتكم" كاملاً).
+## السبب الجذري
+Apple Sign-In الأصلي (Native) على iOS يُصدر `id_token` بـ `audience = bundle ID` وهو `com.visafaster.app`.
+لكن مزوّد Apple في Lovable Cloud (Supabase Auth) مُهيّأ حالياً بـ **Services ID** فقط (مثل `com.visafaster.web` أو المُدار من Lovable) — فيرفض أي توكن جمهوره لا يطابق ذلك.
 
-السبب: `LaunchScreen.storyboard` في Xcode يستخدم `UIImageView` بوضع `Content Mode = Scale To Fill` أو `Aspect Fill` مع صورة splash عريضة/غير مربعة، فيتمدد الشعار ويُقصّ على شاشات iPhone الطويلة.
+الحل: يجب إضافة `com.visafaster.app` (bundle ID) إلى قائمة **Client IDs / Allowed Audiences** لمزوّد Apple في لوحة Cloud. هذه إعدادات لا تُعدَّل من الكود.
 
-هذا ملف **iOS Native** (خارج كود الويب) — لا يمكنني تعديله من هنا، لكن الحل يدوي بسيط في Xcode.
+## الخطوات المطلوبة (يدوياً — لوحة Cloud)
 
-## الحل في Xcode (يدوي — دقيقتان)
+1. افتح **Backend → Users → Authentication Settings → Sign In Methods → Apple**.
+2. في حقل **Client IDs** (أو Authorized Client IDs / Allowed Audiences)، أضف قيمة إضافية:
+   ```
+   com.visafaster.app
+   ```
+   إلى جانب Services ID الحالي (لا تحذف الحالي — الويب يستخدمه).
+3. احفظ الإعدادات.
+4. أعد المحاولة من التطبيق — لن تحتاج إعادة بناء (`cap sync` غير مطلوب).
 
-### الخيار 1 (الأسرع — موصى به): استخدم أيقونة التطبيق نفسها كصورة Splash
+## لماذا لا يوجد تغيير كود
+- `AppleSignInButton.tsx` صحيح: يمرر `clientId: 'com.visafaster.app'` (bundle ID) لـ `SignInWithApple.authorize` — وهذا هو السلوك الصحيح لـ Native iOS.
+- المشكلة حصراً في إعدادات مزوّد Apple على الخادم.
 
-1. في Xcode → `App/App/Assets.xcassets` → كليك يمين → **New Image Set** → سمّه `SplashLogo`
-2. اسحب `public/app-icon-1024.png` (نفس أيقونة التطبيق) إلى خانة `1x` أو `2x`
-3. افتح `LaunchScreen.storyboard` → اختر الـ `Splash` ImageView في الجانب الأيسر
-4. في الـ Attributes Inspector (يمين):
-   - **Image**: غيّرها إلى `SplashLogo`
-   - **Content Mode**: غيّرها إلى **`Aspect Fit`** (بدل Scale To Fill)
-5. في Size Inspector → تأكد أن الـ Constraints:
-   - Width & Height: **250pt** (ثابتة، ليس Fill Superview)
-   - Center X & Center Y in Superview
-6. الخلفية: اختر الـ View الرئيسي (الأزرق الفاتح) → غيّر Background إلى **White** لمطابقة الأيقونة
-
-### الخيار 2: استبدل صورة الـ Splash الحالية
-لو تفضّل الإبقاء على تصميم الـ Splash الحالي، افتح `Assets.xcassets` → ابحث عن `Splash` Image Set → استبدل الصور الثلاث (1x/2x/3x) بأيقونات مربعة من `public/app-icon-1024.png` بأحجام 250/500/750 px.
-
-## بعد التعديل
-
-1. `Product → Clean Build Folder` (Cmd+Shift+K)
-2. زوّد Build Number
-3. Archive → Upload
-
-## ما لن أفعله (لأنه خارج نطاق كود الويب)
-
-- تعديل `ios/App/App/Base.lproj/LaunchScreen.storyboard` — هذا ملف Xcode native، والمشروع لا يحتوي مجلد `ios/` مُتتبَّع (يُولَّد عند `npx cap add ios` على جهازك).
-- أي تغيير في الكود لن يؤثر على شاشة الـ Splash — هي مضبوطة 100% من Storyboard.
+## إجراء زر واحد
+سأعرض لك زر فتح لوحة Cloud مباشرة بعد الموافقة على الخطة.
