@@ -76,7 +76,6 @@ const forbiddenPwaPatterns = [
 ];
 
 function shouldScanForPwaReferences(relativePath) {
-  if (relativePath === 'public/sw.js') return false;
   return relativePath === 'vite.config.ts' || relativePath === 'package.json' || relativePath.startsWith('src/');
 }
 
