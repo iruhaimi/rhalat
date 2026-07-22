@@ -142,11 +142,14 @@ export function ApplicationProvider({ children }: { children: React.ReactNode })
     }
   }, []);
 
-  // Persist guest draft to localStorage (only steps 1-3, lightweight)
+  // Persist guest draft to localStorage (debounced to avoid blocking the main
+  // thread on every keystroke — JSON.stringify + setItem is synchronous and
+  // can visibly janks slow WebViews when called on each state change).
   useEffect(() => {
     if (!hydrated) return;
-    try {
-      const payload = {
+    const handle = setTimeout(() => {
+      try {
+        const payload = {
         currentStep,
         applicationData: {
           fullName: applicationData.fullName,
@@ -169,13 +172,13 @@ export function ApplicationProvider({ children }: { children: React.ReactNode })
           checkedRequirements: applicationData.checkedRequirements,
         },
         savedAt: Date.now(),
-      };
-      // Re-hydrate dates correctly on load
-      const dataForStorage = { ...payload.applicationData };
-      localStorage.setItem(GUEST_DRAFT_KEY, JSON.stringify({ ...payload, applicationData: dataForStorage }));
-    } catch {
-      // ignore quota / privacy errors
-    }
+        };
+        localStorage.setItem(GUEST_DRAFT_KEY, JSON.stringify(payload));
+      } catch {
+        // ignore quota / privacy errors
+      }
+    }, 400);
+    return () => clearTimeout(handle);
   }, [applicationData, currentStep, hydrated]);
 
   // After load, re-parse travelDate from ISO string
