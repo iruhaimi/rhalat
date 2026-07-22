@@ -1,53 +1,50 @@
-سبب الخطأ واضح: نسخة المشروع عندك على الماك ما زالت تستخدم App ID القديم غير صالح:
-
-```text
-app.lovable.616b2e7f7e454cdc90ea1c048e4da3b0
-```
-
-بينما الإعداد الصحيح في المشروع الحالي هنا هو:
-
-```text
-com.visafaster.app
-```
-
 الخطة:
 
-1. **تحديث ملف Capacitor في GitHub/المشروع**
-   - التأكد أن `capacitor.config.ts` يحتوي على:
-     - `appId: 'com.visafaster.app'`
-     - اسم التطبيق الصحيح
-     - رابط السيرفر الخاص بالتطبيق إن كان مطلوباً للتشغيل داخل التطبيق.
-
-2. **مزامنة النسخة عندك على الماك**
-   - بعد اعتماد التعديل، تسحب آخر نسخة داخل:
-     ```bash
-     cd ~/Documents/visa-hub-cloud
-     git pull
-     npm install
+1. **اعتماد App ID الصحيح**
+   - قيمة `app.lovable.616b2e7f7e454cdc90ea1c048e4da3b0` غير صالحة لـ iOS/Android.
+   - القيمة الصحيحة التي يجب أن تكون في مشروعك هي:
+     ```text
+     com.visafaster.app
      ```
 
-3. **إعادة إنشاء iOS من الصفر داخل المشروع الصحيح**
-   - إذا كان مجلد iOS لم يُنشأ بعد:
+2. **التأكد أن GitHub يحتوي آخر تعديل**
+   - عندي في المشروع هنا ملف `capacitor.config.ts` مضبوط حالياً على `com.visafaster.app`.
+   - بما أن جهازك بعد `git pull` ما زال يقرأ القيمة القديمة، فهذا غالباً يعني أن آخر تعديل من Lovable لم يصل إلى مستودع GitHub المحلي عندك بعد، أو أن جهازك يحتوي نسخة قديمة من الملف.
+
+3. **الحل العملي على جهازك**
+   - افتح الملف المحلي:
      ```bash
+     cd ~/Documents/visa-hub-cloud
+     cat capacitor.config.ts
+     ```
+   - إذا ظهر فيه:
+     ```text
+     app.lovable.616b2e7f7e454cdc90ea1c048e4da3b0
+     ```
+     غيّره إلى:
+     ```text
+     com.visafaster.app
+     ```
+
+4. **بعد تصحيح الملف المحلي**
+   - نفّذ:
+     ```bash
+     npm install
      npx cap add ios
      npx cap sync ios
      npx cap open ios
      ```
 
-4. **إعداد Xcode مرة واحدة**
+5. **داخل Xcode**
    - افتح دائماً:
      ```text
-     ~/Documents/visa-hub-cloud/ios/App/App.xcworkspace
+     ios/App/App.xcworkspace
      ```
-   - وليس `.xcodeproj`.
-   - داخل Xcode:
-     - Team = حساب Apple Developer الخاص بك
-     - Bundle ID = `com.visafaster.app`
-     - إضافة Capability: **Sign in with Apple**
-     - ثم **Product → Clean Build Folder** وبعدها تشغيل التطبيق.
+   - تأكد من:
+     ```text
+     Bundle ID = com.visafaster.app
+     Team = حسابك في Apple Developer
+     Capability = Sign in with Apple
+     ```
 
-مهم: لا تستخدم أي مشروع قديم على Desktop بعد الآن. المشروع الوحيد الصحيح هو:
-
-```text
-~/Documents/visa-hub-cloud
-```
+ملاحظة مهمة: بعد أي تعديل Native/Capacitor، اسحب آخر نسخة من GitHub ثم شغّل `npx cap sync`. ويفضل مراجعة مقال Lovable عن تحويل التطبيق إلى Native/Capacitor قبل الإرسال النهائي.
