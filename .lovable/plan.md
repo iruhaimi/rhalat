@@ -1,85 +1,34 @@
+## المشكلة
+- شعار الموقع الحالي: `logo-new.png` (مرفوع على CDN، مستخدم في `src/assets/logo.png.asset.json`)
+- أيقونة التطبيق الحالية `public/app-icon-1024.png` **مختلفة** عن شعار الموقع
+- عند اختبار التطبيق على iOS الأيقونة لم تظهر أصلاً — السبب الأغلب: **لم يتم رفع الأيقونة داخل `Assets.xcassets/AppIcon` في Xcode**. الملف الموجود في `public/` هو للـ PWA فقط ولا يُقرأ من Capacitor iOS.
 
-# خطة معالجة رفض آبل (Submission 8543b9f6)
+## خطة العمل
 
-آبل رفضت الإصدار لـ 7 أسباب. بعضها يُحل بتعديل الكود (نقوم به نحن)، وبعضها يتطلب تعديل داخل حساب **App Store Connect** أو **Apple Developer** (تقوم بها أنت — لا يمكن للكود إصلاحها).
+### 1. توليد أيقونة موحّدة من شعار الموقع
+- تنزيل الشعار الرسمي من CDN (`logo-new.png`)
+- توليد أيقونة iOS مربعة 1024×1024 بخلفية بيضاء صلبة (iOS يرفض PNG بشفافية للـ AppStore)
+- حفظها في `public/app-icon-1024.png` (استبدال القديمة)
+- توليد `apple-touch-icon.png` (180×180) و `favicon-32.png` من نفس الشعار
 
----
+### 2. تحديث ملفات المشروع
+- `public/app-icon-1024.png` → الجديدة (شعار الموقع بخلفية بيضاء)
+- `public/apple-touch-icon.png` → 180×180
+- `public/favicon-32.png` → 32×32
+- `public/favicon.ico` → تحديث
+- التأكد من `index.html` أنه يشير للأيقونات الصحيحة
 
-## أولاً: إصلاحات في الكود (نقوم بها)
+### 3. تعليمات ما يجب على المستخدم فعله في Xcode (خارج نطاق الكود)
+لأن الأيقونة **لا تظهر داخل التطبيق** حتى لو غيّرناها في `public/`، يجب:
 
-### 1) إخفاء تسجيل الدخول بـ Google داخل تطبيق iOS فقط (يعالج 2.1a + 4.8)
-- المراجع شاهد **شاشة خطأ عند تسجيل الدخول بجوجل** على iPad/iPhone. مشكلة OAuth داخل غلاف Despia webview شائعة.
-- الحل الأسرع والأأمن: **إخفاء زر Google داخل التطبيق iOS فقط** (يبقى ظاهراً على الموقع). Sign in with Apple + Email/Password يبقيان — وهذا يُلغي تلقائياً مخالفة 4.8 (لأن Google لن يُعرض أصلاً).
-- تعديل: `src/pages/Auth.tsx` و `src/components/layout/MobileNavDrawer.tsx` لاستخدام دالة `isIOSApp()` (نفس اكتشاف Despia UA الموجودة في `gtagEvents.ts`).
-- تقديم زر Apple فوق زر Google في كل المنصات (ترتيب متوافق مع 4.8).
+1. `git pull` بعد تنفيذي للتغييرات
+2. فتح Xcode → في المتصفح الأيسر: `App/App/Assets.xcassets/AppIcon`
+3. سحب `public/app-icon-1024.png` إلى خانة **App Store iOS 1024pt**
+4. Xcode 15+ سيولّد باقي الأحجام تلقائياً (أو استخدام موقع مثل appicon.co لتوليد جميع الأحجام دفعة واحدة)
+5. زيادة Build Number في General tab
+6. `Product → Clean Build Folder` ثم `Archive` مجدداً
 
-### 2) إخفاء بانر ملفات تعريف الارتباط داخل iOS (يعالج 5.1.2(i) الثاني)
-- آبل رفضت لأن التطبيق يعرض **Cookie Consent** ولا يستخدم ATT.
-- بما أننا لا نتتبع فعلياً داخل iOS (gtag معطّل)، الحل: **عدم عرض `CookieConsent` عندما `isIOSApp() === true`**.
-- تعديل: `src/components/layout/MainLayout.tsx` أو `CookieConsent.tsx` مباشرة لإرجاع `null` داخل iOS.
-
-### 3) استبدال أيقونة التطبيق (يعالج 2.3.8)
-- المراجع اعتبر الأيقونات الحالية "Placeholder".
-- نولّد أيقونة احترافية جديدة لعلامة **Visa Faster / عطلات رحلاتكم** بحجم 1024×1024 (متطلب آبل)، نحفظها في `public/app-icon-1024.png`، ونحدّث `pwa-192x192.png` و `pwa-512x512.png` و `favicon` بنفس التصميم.
-- ⚠️ **تحتاج أن تحمّلها يدوياً في Despia dashboard** كأيقونة التطبيق قبل إعادة البناء (الكود وحده لا يُحدّث أيقونة iOS build).
-
-### 4) تحديث ملاحظات المراجعة `docs/APP_STORE_REVIEW_NOTES.md`
-- توضيح للمراجع:
-  - "Google Sign-In مخفي داخل iOS build عمداً؛ استخدم Sign in with Apple أو حساب Demo (email/password)."
-  - "لا يُعرض Cookie banner داخل iOS لأننا لا نتتبع؛ لذلك ATT غير مطلوب."
-  - "بيانات المراجعة الصحيحة: `applereview@visafaster.com` / `Vf-Rev!7k2Q9pXm4T`."
-
----
-
-## ثانياً: إجراءات يجب أن تقوم بها أنت (لا يمكن للكود إصلاحها)
-
-### A) Guideline 5.1.1(ix) — اسم الناشر يجب أن يعكس "Visa Faster" 🔴 الأهم
-- التطبيق حالياً منشور تحت اسم شخصي: **ibrahim almutairi**.
-- آبل صريحة: تطبيقات الخدمات المنظّمة (تأشيرات) يجب أن تُنشر باسم شركة يعكس اسم العلامة.
-- الحل: صاحب الحساب (Account Holder) يتواصل مع **Apple Developer Support** لطلب تغيير اسم الشركة إلى **"Visa Faster"** أو الاسم القانوني للوكالة.
-  - رابط: https://developer.apple.com/contact/ → "Membership & Account" → "Change organization name".
-  - يحتاج مستندات: السجل التجاري / رخصة وزارة السياحة.
-- هذه أطول خطوة (5–15 يوم عمل)، ابدأها **اليوم**.
-
-### B) Guideline 5.1.2(i) الأول — تحديث App Privacy Labels
-- الملصقات الحالية تقول التطبيق **يتتبع** المستخدم (Email، Photos، Phone، Name، User ID) → آبل تطلب ATT.
-- افتح: **App Store Connect → App Privacy → Edit**.
-- في قسم **Data Used to Track You** → غيّر إلى **"None"** (لأن gtag معطل داخل iOS).
-- احتفظ بالبيانات في قسم **Data Linked to You** و **Data Not Linked to You** كما هي.
-
-### C) Guideline 2.1 — تحديث بيانات الحساب التجريبي
-- الحساب المسجل حالياً: `iruhaimii@gmail.com` / `Ibra1983@` (لا يعمل).
-- افتح: **App Store Connect → App Information → App Review Information → Sign-in Information**.
-- بدّل إلى:
-  - Username: `applereview@visafaster.com`
-  - Password: `Vf-Rev!7k2Q9pXm4T`
-- الصق نص Review Notes المُحدّث من `docs/APP_STORE_REVIEW_NOTES.md` في حقل **Notes**.
-
-### D) رفع الأيقونة الجديدة في Despia
-- بعد أن أنتج الأيقونة (خطوة 3 أعلاه) حمّلها في:
-  - **Despia dashboard → App Icon** (1024×1024).
-  - أعِد بناء التطبيق ورفعه على TestFlight ثم Submit.
-
----
-
-## Technical details
-
-- iOS detection: نستخدم نفس منطق `src/lib/gtagEvents.ts`:
-  ```ts
-  export const isIOSApp = () =>
-    typeof navigator !== 'undefined' &&
-    /Despia|VisaFasterIOS/i.test(navigator.userAgent);
-  ```
-- سنستخرجه إلى `src/lib/platform.ts` ليُعاد استخدامه في `Auth.tsx` و `MobileNavDrawer.tsx` و `MainLayout.tsx`.
-- أيقونة التطبيق: `imagegen` بجودة `premium` (لأنها تحتوي على شعار/نص)، 1024×1024، خلفية زرقاء (لون العلامة `#1e40af`) مع رمز جواز/تأشيرة، بدون شفافية.
-
----
-
-## ترتيب التنفيذ الموصى به
-1. **الآن**: تواصل مع Apple Developer Support لتغيير اسم الشركة (البند A) — أطول خطوة.
-2. أوافقني على الخطة لأنفذ التعديلات البرمجية (1–4) وأنتج الأيقونة الجديدة.
-3. أنت تُحدّث App Privacy + Demo Account في App Store Connect (البندان B و C).
-4. ترفع الأيقونة في Despia وتعيد البناء.
-5. Resubmit بعد اكتمال تغيير اسم الشركة.
-
-هل تريد أن أبدأ التنفيذ البرمجي (1–4)؟
+## ملاحظات تقنية
+- أيقونات iOS **لا تدعم الشفافية** — يجب أن تكون الخلفية صلبة
+- الأيقونة في `capacitor.config.ts` لا تتحكم بأيقونة iOS، فقط `Assets.xcassets` يتحكم
+- بدون هذه الخطوة اليدوية في Xcode، لن يظهر الشعار مهما عدّلنا الكود
