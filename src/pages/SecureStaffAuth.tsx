@@ -11,7 +11,8 @@ import { Eye, EyeOff, Shield, Loader2, Lock, Mail, AlertTriangle, Key } from 'lu
 import { filterArabicChars } from '@/lib/inputFilters';
 import { motion } from 'framer-motion';
 import logoAsset from '@/assets/logo.png.asset.json';
-const logo = logoAsset.url;
+import { assetUrl } from '@/lib/assetUrl';
+const logo = assetUrl(logoAsset.url);
 import AdvancedCaptcha from '@/components/auth/AdvancedCaptcha';
 import TwoFactorVerification from '@/components/auth/TwoFactorVerification';
 import RecoveryCodesDisplay from '@/components/auth/RecoveryCodesDisplay';

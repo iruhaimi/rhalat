@@ -15,7 +15,8 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
 import NoIndex from '@/components/seo/NoIndex';
 import logoAsset from '@/assets/logo.png.asset.json';
-const logo = logoAsset.url;
+import { assetUrl } from '@/lib/assetUrl';
+const logo = assetUrl(logoAsset.url);
 
 // Password strength checker
 const getPasswordStrength = (password: string): { score: number; label: string; color: string } => {
