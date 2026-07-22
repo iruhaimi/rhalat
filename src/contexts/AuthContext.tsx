@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
+import { getExternalAuthOrigin } from '@/lib/platform';
 import { useNavigate } from 'react-router-dom';
 import type { Profile, UserRole, AppRole } from '@/types/database';
 
@@ -146,7 +147,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     fullName: string,
     options?: { emailRedirectTo?: string }
   ) => {
-    const redirectUrl = options?.emailRedirectTo ?? `${window.location.origin}/`;
+    const redirectUrl = options?.emailRedirectTo ?? `${getExternalAuthOrigin()}/`;
 
     const { error } = await supabase.auth.signUp({
       email,
