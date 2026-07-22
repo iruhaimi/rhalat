@@ -1,50 +1,85 @@
-# خطة: تنظيف تحذيرات SECURITY DEFINER (63 → 0)
 
-## الوضع الحالي (تم التحقق منه)
-- التطبيق نظيف من ثغرات التبعيات (npm) ولا توجد نتائج أمنية معلقة عبر الماسحات.
-- Supabase linter يُصدر 63 تحذيراً من نفس النوع فقط: **Public Can Execute SECURITY DEFINER Function**.
-- استعلام `pg_proc` أكد أن 20 دالة `SECURITY DEFINER` قابلة للتنفيذ من دور `anon` (بدون تسجيل دخول).
-- **هذه ليست ثغرات فعلية** — كل دالة تتحقق من الصلاحيات داخلياً — لكن Postgres/Supabase يُنبّه لأن السطح المكشوف يجب تقليصه (defense in depth).
+# خطة معالجة رفض آبل (Submission 8543b9f6)
 
-## تصنيف الدوال الـ20 المكشوفة لـ anon
+آبل رفضت الإصدار لـ 7 أسباب. بعضها يُحل بتعديل الكود (نقوم به نحن)، وبعضها يتطلب تعديل داخل حساب **App Store Connect** أو **Apple Developer** (تقوم بها أنت — لا يمكن للكود إصلاحها).
 
-**فئة A — يجب أن تبقى متاحة لـ anon (لا تُعدَّل):**
-- `submit_unlock_request` — يستخدمه موظف مقفول الحساب (بدون جلسة).
-- `check_staff_portal_path` — يُفحص عبر `DynamicPortalRoute` قبل تسجيل الدخول.
-- `has_role`, `is_admin`, `is_agent`, `get_profile_id` — تُستخدم داخل سياسات RLS التي تعمل تحت أدوار متعددة.
-- `increment_blog_post_views` — عدّاد عام لصفحات المدونة.
+---
 
-**فئة B — أدوات AI (تتحقق داخلياً من super_admin لكن لا يوجد سبب لكشفها لـ anon):**
-`ai_agent_performance`, `ai_bulk_notify`, `ai_query_applications`, `ai_toggle_offer`, `ai_update_site_content`, `ai_update_visa_price`
-→ **إلغاء `EXECUTE` من `anon` والإبقاء لـ `authenticated`.**
+## أولاً: إصلاحات في الكود (نقوم بها)
 
-**فئة C — دوال داخلية للـ backend/cron (لا يجب استدعاؤها من العميل مطلقاً):**
-`delete_email`, `email_queue_dispatch`, `email_queue_wake`, `enqueue_email`, `move_to_dlq`, `read_email_batch`
-→ **إلغاء `EXECUTE` من `anon` و`authenticated`، الإبقاء على `service_role` فقط.**
+### 1) إخفاء تسجيل الدخول بـ Google داخل تطبيق iOS فقط (يعالج 2.1a + 4.8)
+- المراجع شاهد **شاشة خطأ عند تسجيل الدخول بجوجل** على iPad/iPhone. مشكلة OAuth داخل غلاف Despia webview شائعة.
+- الحل الأسرع والأأمن: **إخفاء زر Google داخل التطبيق iOS فقط** (يبقى ظاهراً على الموقع). Sign in with Apple + Email/Password يبقيان — وهذا يُلغي تلقائياً مخالفة 4.8 (لأن Google لن يُعرض أصلاً).
+- تعديل: `src/pages/Auth.tsx` و `src/components/layout/MobileNavDrawer.tsx` لاستخدام دالة `isIOSApp()` (نفس اكتشاف Despia UA الموجودة في `gtagEvents.ts`).
+- تقديم زر Apple فوق زر Google في كل المنصات (ترتيب متوافق مع 4.8).
 
-**فئة D — عمليات مستخدم مسجَّل:**
-`create_whatsapp_order` — يتطلب `auth.uid()` داخلياً.
-→ **إلغاء `EXECUTE` من `anon` والإبقاء لـ `authenticated`.**
+### 2) إخفاء بانر ملفات تعريف الارتباط داخل iOS (يعالج 5.1.2(i) الثاني)
+- آبل رفضت لأن التطبيق يعرض **Cookie Consent** ولا يستخدم ATT.
+- بما أننا لا نتتبع فعلياً داخل iOS (gtag معطّل)، الحل: **عدم عرض `CookieConsent` عندما `isIOSApp() === true`**.
+- تعديل: `src/components/layout/MainLayout.tsx` أو `CookieConsent.tsx` مباشرة لإرجاع `null` داخل iOS.
 
-## التنفيذ (Migration واحدة)
+### 3) استبدال أيقونة التطبيق (يعالج 2.3.8)
+- المراجع اعتبر الأيقونات الحالية "Placeholder".
+- نولّد أيقونة احترافية جديدة لعلامة **Visa Faster / عطلات رحلاتكم** بحجم 1024×1024 (متطلب آبل)، نحفظها في `public/app-icon-1024.png`، ونحدّث `pwa-192x192.png` و `pwa-512x512.png` و `favicon` بنفس التصميم.
+- ⚠️ **تحتاج أن تحمّلها يدوياً في Despia dashboard** كأيقونة التطبيق قبل إعادة البناء (الكود وحده لا يُحدّث أيقونة iOS build).
 
-`REVOKE EXECUTE` من الأدوار غير اللازمة لكل دالة أعلاه، مع `GRANT EXECUTE` صريح للأدوار المطلوبة فقط. مثال:
+### 4) تحديث ملاحظات المراجعة `docs/APP_STORE_REVIEW_NOTES.md`
+- توضيح للمراجع:
+  - "Google Sign-In مخفي داخل iOS build عمداً؛ استخدم Sign in with Apple أو حساب Demo (email/password)."
+  - "لا يُعرض Cookie banner داخل iOS لأننا لا نتتبع؛ لذلك ATT غير مطلوب."
+  - "بيانات المراجعة الصحيحة: `applereview@visafaster.com` / `Vf-Rev!7k2Q9pXm4T`."
 
-```sql
-REVOKE EXECUTE ON FUNCTION public.ai_toggle_offer(uuid, boolean) FROM anon, public;
-GRANT EXECUTE ON FUNCTION public.ai_toggle_offer(uuid, boolean) TO authenticated;
+---
 
-REVOKE EXECUTE ON FUNCTION public.enqueue_email(text, jsonb) FROM anon, authenticated, public;
-GRANT EXECUTE ON FUNCTION public.enqueue_email(text, jsonb) TO service_role;
-```
+## ثانياً: إجراءات يجب أن تقوم بها أنت (لا يمكن للكود إصلاحها)
 
-- دوال الفئة A لا تُلمس.
-- الـ trigger functions المكشوفة (`auto_assign_customer_role`, `handle_new_user`, `notify_*`, `protect_*`, ...) لا يمكن استدعاؤها كـ RPC لأنها لا تأخذ معاملات — سنمنع `EXECUTE` عنها من `public` كخط دفاع إضافي.
+### A) Guideline 5.1.1(ix) — اسم الناشر يجب أن يعكس "Visa Faster" 🔴 الأهم
+- التطبيق حالياً منشور تحت اسم شخصي: **ibrahim almutairi**.
+- آبل صريحة: تطبيقات الخدمات المنظّمة (تأشيرات) يجب أن تُنشر باسم شركة يعكس اسم العلامة.
+- الحل: صاحب الحساب (Account Holder) يتواصل مع **Apple Developer Support** لطلب تغيير اسم الشركة إلى **"Visa Faster"** أو الاسم القانوني للوكالة.
+  - رابط: https://developer.apple.com/contact/ → "Membership & Account" → "Change organization name".
+  - يحتاج مستندات: السجل التجاري / رخصة وزارة السياحة.
+- هذه أطول خطوة (5–15 يوم عمل)، ابدأها **اليوم**.
 
-## ما بعد التنفيذ
-- تشغيل `supabase--linter` مجدداً للتأكد أن العدد أصبح 0 (أو بقيت فقط دوال الفئة A مبرَّرة).
-- لا يوجد تأثير على واجهة المستخدم أو الوظائف — فقط تقليص للسطح المكشوف.
+### B) Guideline 5.1.2(i) الأول — تحديث App Privacy Labels
+- الملصقات الحالية تقول التطبيق **يتتبع** المستخدم (Email، Photos، Phone، Name، User ID) → آبل تطلب ATT.
+- افتح: **App Store Connect → App Privacy → Edit**.
+- في قسم **Data Used to Track You** → غيّر إلى **"None"** (لأن gtag معطل داخل iOS).
+- احتفظ بالبيانات في قسم **Data Linked to You** و **Data Not Linked to You** كما هي.
 
-## غير مشمول
-- لا تغييرات في UI/RLS/جداول جديدة.
-- لا يمس متطلبات آبل (التطبيق جاهز أصلاً للنشر).
+### C) Guideline 2.1 — تحديث بيانات الحساب التجريبي
+- الحساب المسجل حالياً: `iruhaimii@gmail.com` / `Ibra1983@` (لا يعمل).
+- افتح: **App Store Connect → App Information → App Review Information → Sign-in Information**.
+- بدّل إلى:
+  - Username: `applereview@visafaster.com`
+  - Password: `Vf-Rev!7k2Q9pXm4T`
+- الصق نص Review Notes المُحدّث من `docs/APP_STORE_REVIEW_NOTES.md` في حقل **Notes**.
+
+### D) رفع الأيقونة الجديدة في Despia
+- بعد أن أنتج الأيقونة (خطوة 3 أعلاه) حمّلها في:
+  - **Despia dashboard → App Icon** (1024×1024).
+  - أعِد بناء التطبيق ورفعه على TestFlight ثم Submit.
+
+---
+
+## Technical details
+
+- iOS detection: نستخدم نفس منطق `src/lib/gtagEvents.ts`:
+  ```ts
+  export const isIOSApp = () =>
+    typeof navigator !== 'undefined' &&
+    /Despia|VisaFasterIOS/i.test(navigator.userAgent);
+  ```
+- سنستخرجه إلى `src/lib/platform.ts` ليُعاد استخدامه في `Auth.tsx` و `MobileNavDrawer.tsx` و `MainLayout.tsx`.
+- أيقونة التطبيق: `imagegen` بجودة `premium` (لأنها تحتوي على شعار/نص)، 1024×1024، خلفية زرقاء (لون العلامة `#1e40af`) مع رمز جواز/تأشيرة، بدون شفافية.
+
+---
+
+## ترتيب التنفيذ الموصى به
+1. **الآن**: تواصل مع Apple Developer Support لتغيير اسم الشركة (البند A) — أطول خطوة.
+2. أوافقني على الخطة لأنفذ التعديلات البرمجية (1–4) وأنتج الأيقونة الجديدة.
+3. أنت تُحدّث App Privacy + Demo Account في App Store Connect (البندان B و C).
+4. ترفع الأيقونة في Despia وتعيد البناء.
+5. Resubmit بعد اكتمال تغيير اسم الشركة.
+
+هل تريد أن أبدأ التنفيذ البرمجي (1–4)؟
