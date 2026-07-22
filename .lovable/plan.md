@@ -1,27 +1,38 @@
-## المشكلة
-عند تسجيل الدخول عبر Apple من التطبيق (Xcode/iOS)، يظهر الخطأ:
-> `Unacceptable audience in id_token: [com.visafaster.app]`
+## الوضع الحالي
+اخترت **Your own credentials** وأدخلت `com.visafaster.app` كـ Client ID. النموذج يطلب الآن **Client Secret (JWT)** — بدونه لن يُحفظ الإعداد.
 
-## السبب الجذري
-Apple Sign-In الأصلي (Native) على iOS يُصدر `id_token` بـ `audience = bundle ID` وهو `com.visafaster.app`.
-لكن مزوّد Apple في Lovable Cloud (Supabase Auth) مُهيّأ حالياً بـ **Services ID** فقط (مثل `com.visafaster.web` أو المُدار من Lovable) — فيرفض أي توكن جمهوره لا يطابق ذلك.
+هذا الـ JWT يُولَّد من مفاتيح حسابك في Apple Developer. لا يمكن إنشاؤه من الكود؛ لا بد من ٤ قيم من Apple Developer Console.
 
-الحل: يجب إضافة `com.visafaster.app` (bundle ID) إلى قائمة **Client IDs / Allowed Audiences** لمزوّد Apple في لوحة Cloud. هذه إعدادات لا تُعدَّل من الكود.
+## ما تحتاجه من Apple Developer (https://developer.apple.com/account)
 
-## الخطوات المطلوبة (يدوياً — لوحة Cloud)
+| القيمة | من أين | الشكل |
+|---|---|---|
+| **Team ID** | أعلى يمين الصفحة تحت اسم الحساب | 10 أحرف/أرقام (مثل `A1B2C3D4E5`) |
+| **Key ID** | Certificates, IDs & Profiles → **Keys** → أنشئ مفتاح جديد، فعّل **Sign in with Apple**، احفظ Key ID | 10 أحرف/أرقام |
+| **ملف .p8** | نفس الخطوة السابقة — يُنزَّل مرة واحدة فقط عند الإنشاء | ملف نصي يبدأ بـ `-----BEGIN PRIVATE KEY-----` |
+| **Client ID** | جاهز = `com.visafaster.app` (Bundle ID) | ✅ |
 
-1. افتح **Backend → Users → Authentication Settings → Sign In Methods → Apple**.
-2. في حقل **Client IDs** (أو Authorized Client IDs / Allowed Audiences)، أضف قيمة إضافية:
-   ```
-   com.visafaster.app
-   ```
-   إلى جانب Services ID الحالي (لا تحذف الحالي — الويب يستخدمه).
-3. احفظ الإعدادات.
-4. أعد المحاولة من التطبيق — لن تحتاج إعادة بناء (`cap sync` غير مطلوب).
+> مهم: عند إنشاء الـ Key اربطه بـ **Primary App ID = `com.visafaster.app`**.
 
-## لماذا لا يوجد تغيير كود
-- `AppleSignInButton.tsx` صحيح: يمرر `clientId: 'com.visafaster.app'` (bundle ID) لـ `SignInWithApple.authorize` — وهذا هو السلوك الصحيح لـ Native iOS.
-- المشكلة حصراً في إعدادات مزوّد Apple على الخادم.
+## الخطوات داخل لوحة Cloud (بعد جمع القيم)
 
-## إجراء زر واحد
-سأعرض لك زر فتح لوحة Cloud مباشرة بعد الموافقة على الخطة.
+1. ابقَ في نفس الشاشة الحالية (**Apple settings → Your own credentials**).
+2. اضغط الشريط السفلي **Generate secret** — سيفتح نموذجاً يطلب:
+   - Team ID
+   - Key ID
+   - Client ID (= `com.visafaster.app`)
+   - محتوى ملف `.p8` (افتحه بمحرر نصوص والصق كامل المحتوى)
+3. سيولّد Lovable تلقائياً الـ JWT ويعبّئ حقل Client Secret.
+4. اضغط **Save**.
+
+## بديل أبسط (موصى به إن كنت لا تحتاج تخصيص Apple)
+ارجع لخيار **Managed by Lovable** — لكن هذا يستخدم Services ID الخاص بـ Lovable، ولن يقبل الـ id_token الأصلي من تطبيقك (نفس خطأ `Unacceptable audience`).
+
+لذا: **يجب اختيار Your own credentials** ما دمت تستخدم Native Apple Sign-In على iOS.
+
+## بعد الحفظ
+- لا حاجة لأي تغيير في الكود.
+- أعد تجربة الدخول من التطبيق مباشرة.
+
+## هل تحتاج مساعدتي؟
+أخبرني إن كنت تريد شرح كيفية إنشاء **Key** في Apple Developer بالتفصيل، أو أن الشاشة مختلفة عندك.
