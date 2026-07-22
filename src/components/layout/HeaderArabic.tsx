@@ -16,6 +16,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import MobileNavDrawer from './MobileNavDrawer';
 import { NotificationBell } from '@/components/notifications/NotificationBell';
 import logo from '@/assets/logo.png.asset.json';
+import { assetUrl } from '@/lib/assetUrl';
 
 export default function HeaderArabic() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -71,7 +72,7 @@ export default function HeaderArabic() {
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3 group">
             <img 
-              src={logo.url} 
+              src={assetUrl(logo.url)} 
               alt="عطلات رحلاتكم" 
               className="h-14 w-auto object-contain transition-transform group-hover:scale-105"
             />
