@@ -22,5 +22,6 @@ Disallow: /my-applications
 Disallow: /reset-password
 Disallow: /payment-success
 Disallow: /payment-failed
+Disallow: /images/
 
 Sitemap: https://visafaster.com/sitemap.xml
