@@ -70,8 +70,8 @@ export default function GoogleSignInButton({
         try {
           await SocialLogin.initialize({
             google: {
-              iOSClientId: '__REPLACE_WITH_IOS_CLIENT_ID__.apps.googleusercontent.com',
-              iOSServerClientId: '__REPLACE_WITH_WEB_CLIENT_ID__.apps.googleusercontent.com',
+              iOSClientId: '96772078009-k6qa0s0hg6r62dmgg5vptjmuik28vkp6.apps.googleusercontent.com',
+              iOSServerClientId: '96772078009-k6qa0s0hg6r62dmgg5vptjmuik28vkp6.apps.googleusercontent.com',
             },
           });
         } catch {
