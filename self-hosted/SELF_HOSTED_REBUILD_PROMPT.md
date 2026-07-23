@@ -1,6 +1,6 @@
 # SELF_HOSTED_REBUILD_PROMPT
 
-مرجع لإعادة بناء منصة "عطلات رحلاتكم" (VisaFaster) على بنية تحتية ذاتية الاستضافة دون أي اعتماد على Lovable / Supabase / SaaS مغلقة.
+مرجع لإعادة بناء منصة "عطلات رحلاتكم" (VisaFaster) على بنية تحتية ذاتية الاستضافة دون أي اعتماد على SaaS مغلقة.
 
 ## Stack
 - Ubuntu 22.04 + Docker Compose

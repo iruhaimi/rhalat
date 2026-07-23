@@ -2,7 +2,7 @@
 
 > **READ THIS FIRST (Claude):**
 > أنت ستبني منصة كاملة باسم **VisaFaster / عطلات رحلاتكم** من الصفر، وفق المواصفات أدناه.
-> **القيد المطلق:** صفر اعتماد على أي طرف ثالث مغلق (No Lovable, No Supabase, No Firebase, No Vercel, No Netlify, No Auth0/Clerk, No RevenueCat, No Pusher).
+> **القيد المطلق:** صفر اعتماد على أي طرف ثالث مغلق (No Supabase, No Firebase, No Vercel, No Netlify, No Auth0/Clerk, No RevenueCat, No Pusher).
 > كل البيانات والكود والمفاتيح يجب أن تعمل على **VPS واحد** يملكه المستخدم، خلف Cloudflare CDN فقط.
 > اعرض خطة قبل التنفيذ، نفّذ على دفعات (compose → schema → backend → frontend → mobile → monitoring)، واطلب موافقة قبل أي قرار يخالف القائمة السوداء أعلاه.
 
@@ -30,7 +30,7 @@
 - المنتجات: تأشيرات (Schengen + Non-Schengen) + برامج سياحية + محفظة عملاء + استرداد + رسائل داخلية + لوحات تحكم متقدمة.
 
 **Acceptance:**
-- لا يظهر اسم "Lovable" أو "Supabase" في أي مكان (UI/Code/Logs).
+- لا يظهر اسم أي مزوّد SaaS مغلق في أي مكان (UI/Code/Logs).
 - كل الـ network calls تذهب فقط إلى: `visafaster.com`, `notify.visafaster.com`, `cdn.cloudflare.com`, `<saudi-storage>.example`.
 
 ---
@@ -731,7 +731,7 @@ GET    /health
 
 ---
 
-## 13. Migration from Lovable/Supabase (one-time)
+## 13. Migration from managed backend (one-time)
 
 ```
 # 1. DB
