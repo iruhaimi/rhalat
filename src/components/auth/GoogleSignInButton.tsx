@@ -9,8 +9,9 @@ import { supabase } from '@/integrations/supabase/client';
 import { Capacitor } from '@capacitor/core';
 import { SocialLogin } from '@capgo/capacitor-social-login';
 import { cn } from '@/lib/utils';
-import { getExternalAuthOrigin, isNativeMobileApp, isIOSApp } from '@/lib/platform';
+import { isNativeMobileApp, isIOSApp } from '@/lib/platform';
 import { sanitizeRedirect, resolvePostAuthRedirect, stashPendingRedirect } from '@/lib/safeRedirect';
+import { GOOGLE_WEB_CLIENT_ID, requestGoogleIdToken } from '@/lib/googleIdentity';
 
 function GoogleIcon({ className }: { className?: string }) {
   return (
@@ -71,7 +72,7 @@ export default function GoogleSignInButton({
           await SocialLogin.initialize({
             google: {
               iOSClientId: '96772078009-k6qa0s0hg6r62dmgg5vptjmuik28vkp6.apps.googleusercontent.com',
-              iOSServerClientId: '96772078009-3504quk2lhmc3vh8k73t0qsj1mrj42ku.apps.googleusercontent.com',
+              iOSServerClientId: GOOGLE_WEB_CLIENT_ID,
             },
           });
         } catch {
@@ -103,12 +104,10 @@ export default function GoogleSignInButton({
         return;
       }
 
-      const { data, error } = await supabase.auth.signInWithOAuth({
+      const idToken = await requestGoogleIdToken();
+      const { error } = await supabase.auth.signInWithIdToken({
         provider: 'google',
-        options: {
-          redirectTo: `${getExternalAuthOrigin()}${resolved}`,
-          skipBrowserRedirect: true,
-        },
+        token: idToken,
       });
 
       if (error) {
@@ -118,11 +117,6 @@ export default function GoogleSignInButton({
           description: error.message,
         });
         setIsLoading(false);
-        return;
-      }
-
-      if (data?.url) {
-        window.location.assign(data.url);
         return;
       }
 
