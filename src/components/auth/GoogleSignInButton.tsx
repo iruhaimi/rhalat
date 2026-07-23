@@ -11,7 +11,7 @@ import { SocialLogin } from '@capgo/capacitor-social-login';
 import { cn } from '@/lib/utils';
 import { isNativeMobileApp, isIOSApp } from '@/lib/platform';
 import { sanitizeRedirect, resolvePostAuthRedirect, stashPendingRedirect } from '@/lib/safeRedirect';
-import { GOOGLE_WEB_CLIENT_ID, requestGoogleIdToken, generateNonce } from '@/lib/googleIdentity';
+import { GOOGLE_WEB_CLIENT_ID, requestGoogleIdToken, generateNonce, getJwtNonce } from '@/lib/googleIdentity';
 
 function GoogleIcon({ className }: { className?: string }) {
   return (
@@ -68,30 +68,59 @@ export default function GoogleSignInButton({
       // Native iOS: use the on-device Google Sign-In sheet (App Store Guideline 4.8 / 2.1a).
       // Uses the native Google SDK via @capgo/capacitor-social-login (SPM-compatible).
       if (Capacitor.isNativePlatform() && Capacitor.getPlatform() === 'ios') {
-        const { nonce, hashedNonce } = await generateNonce();
         try {
           await SocialLogin.initialize({
             google: {
               iOSClientId: '96772078009-k6qa0s0hg6r62dmgg5vptjmuik28vkp6.apps.googleusercontent.com',
               iOSServerClientId: GOOGLE_WEB_CLIENT_ID,
+              mode: 'online',
             },
           });
         } catch {
           // initialize is idempotent; ignore repeated init errors.
         }
-        const res = await SocialLogin.login({
-          provider: 'google',
-          options: { scopes: ['email', 'profile'], nonce: hashedNonce },
-        });
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const idToken = (res?.result as any)?.idToken;
-        if (!idToken) {
-          throw new Error(isRTL ? 'لم يتم استلام رمز Google' : 'No Google identity token returned');
+
+        const requestNativeGoogleToken = async () => {
+          const { nonce, hashedNonce } = await generateNonce();
+          const res = await SocialLogin.login({
+            provider: 'google',
+            options: {
+              scopes: ['email', 'profile', 'openid'],
+              nonce: hashedNonce,
+              forcePrompt: true,
+            },
+          });
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const idToken = (res?.result as any)?.idToken;
+          if (!idToken) {
+            throw new Error(isRTL ? 'لم يتم استلام رمز Google' : 'No Google identity token returned');
+          }
+          return { idToken, nonce, hashedNonce };
+        };
+
+        const clearGoogleSession = async () => {
+          try {
+            await SocialLogin.logout({ provider: 'google' });
+          } catch {
+            // Nothing to clear, or the native SDK was not signed in yet.
+          }
+        };
+
+        await clearGoogleSession();
+        let nativeToken = await requestNativeGoogleToken();
+        if (getJwtNonce(nativeToken.idToken) !== nativeToken.hashedNonce) {
+          await clearGoogleSession();
+          nativeToken = await requestNativeGoogleToken();
         }
+
+        if (getJwtNonce(nativeToken.idToken) !== nativeToken.hashedNonce) {
+          throw new Error(isRTL ? 'تعذر تحديث جلسة Google. أغلق التطبيق وافتحه ثم حاول مرة أخرى.' : 'Google returned a stale sign-in token. Please restart the app and try again.');
+        }
+
         const { error } = await supabase.auth.signInWithIdToken({
           provider: 'google',
-          token: idToken,
-          nonce,
+          token: nativeToken.idToken,
+          nonce: nativeToken.nonce,
         });
         if (error) {
           toast({
