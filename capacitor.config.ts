@@ -20,14 +20,8 @@ const config: CapacitorConfig = {
     allowMixedContent: true
   },
   plugins: {
-    GoogleAuth: {
-      // Web/Server OAuth Client ID from Google Cloud Console.
-      // The idToken returned by the native SDK will have this as its `aud`,
-      // which matches what Supabase Auth is configured with.
-      scopes: ['profile', 'email'],
-      serverClientId: '__REPLACE_WITH_WEB_CLIENT_ID__.apps.googleusercontent.com',
-      forceCodeForRefreshToken: true,
-    },
+    // Native Google Sign-In for iOS via @capgo/capacitor-social-login (SPM-compatible).
+    // Initialization (with the Web Client ID) is done at runtime in the app code.
   },
 };
 
