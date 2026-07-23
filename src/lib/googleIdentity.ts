@@ -80,6 +80,23 @@ export async function generateNonce(): Promise<{ nonce: string; hashedNonce: str
   return { nonce, hashedNonce };
 }
 
+function decodeBase64Url(value: string): string {
+  const normalized = value.replace(/-/g, '+').replace(/_/g, '/');
+  const padded = normalized.padEnd(Math.ceil(normalized.length / 4) * 4, '=');
+  return atob(padded);
+}
+
+export function getJwtNonce(idToken: string): string | undefined {
+  try {
+    const payload = idToken.split('.')[1];
+    if (!payload) return undefined;
+    const parsed = JSON.parse(decodeBase64Url(payload)) as { nonce?: unknown };
+    return typeof parsed.nonce === 'string' ? parsed.nonce : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 export async function requestGoogleIdToken(hashedNonce?: string): Promise<string> {
   await loadGoogleIdentityScript();
 
