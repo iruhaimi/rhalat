@@ -15,8 +15,8 @@ function isForbidden(value: string | null | undefined): boolean {
 
 /**
  * Hard lock the native WebView to the local bundled app only.
- * If ANY code path tries to send the user to a Lovable-hosted URL,
- * we neutralize it before the browser can navigate.
+ * If ANY code path tries to send the user to a disallowed external
+ * host, we neutralize it before the browser can navigate.
  */
 export function enforceNativeUrlSafety() {
   try {
@@ -30,7 +30,7 @@ export function enforceNativeUrlSafety() {
         .catch(() => undefined);
     }
 
-    // 2) If the current page itself is a Lovable host, wipe it to `/`.
+    // 2) If the current page itself is a disallowed host, wipe it to `/`.
     const currentHost = window.location.hostname.toLowerCase();
     if (isForbidden(currentHost)) {
       window.history.replaceState(null, document.title, '/');
@@ -38,7 +38,7 @@ export function enforceNativeUrlSafety() {
       return;
     }
 
-    // 3) Neutralize any future navigation attempt to a Lovable host.
+    // 3) Neutralize any future navigation attempt to a disallowed host.
     try {
       const originalAssign = window.location.assign.bind(window.location);
       const originalReplace = window.location.replace.bind(window.location);
@@ -60,7 +60,7 @@ export function enforceNativeUrlSafety() {
         return originalOpen(url as string, target as string, features as string);
       }) as typeof window.open;
     } catch {
-      // Non-fatal: if the browser froze these props, safety layer 2 still catches boot-time Lovable URLs.
+      // Non-fatal: if the browser froze these props, safety layer 2 still catches boot-time disallowed URLs.
     }
   } catch {
     // Never block app startup because of a defensive URL check.
