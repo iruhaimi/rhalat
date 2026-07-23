@@ -105,10 +105,23 @@ export function useDraftApplication() {
           .select('id')
           .single();
       } else {
-        // Create new draft
+        // Create new draft via SECURITY DEFINER RPC — avoids RLS mismatch when
+        // client-side profile.id is stale or the session's auth.uid() doesn't
+        // resolve to the same profile that get_profile_id() returns.
+        const { data: newId, error: rpcError } = await supabase.rpc('create_application_draft', {
+          p_visa_type_id: applicationData.visaTypeId,
+          p_travel_date: draftPayload.travel_date,
+          p_draft_data: {} as any,
+        });
+        if (rpcError) throw rpcError;
+        // Persist the payload fields the RPC doesn't set (purpose_of_travel).
         result = await supabase
           .from('applications')
-          .insert(draftPayload)
+          .update({
+            purpose_of_travel: draftPayload.purpose_of_travel,
+            updated_at: new Date().toISOString(),
+          })
+          .eq('id', newId as string)
           .select('id')
           .single();
       }

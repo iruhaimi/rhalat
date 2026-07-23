@@ -219,9 +219,20 @@ function ApplyContent() {
           .select('id')
           .single();
       } else {
+        // Use SECURITY DEFINER RPC to avoid RLS mismatch on first insert.
+        const { data: newId, error: rpcError } = await supabase.rpc('create_application_draft', {
+          p_visa_type_id: applicationData.visaTypeId,
+          p_travel_date: draftPayload.travel_date,
+          p_draft_data: {} as any,
+        });
+        if (rpcError) throw rpcError;
         result = await supabase
           .from('applications')
-          .insert(draftPayload)
+          .update({
+            purpose_of_travel: draftPayload.purpose_of_travel,
+            updated_at: new Date().toISOString(),
+          })
+          .eq('id', newId as string)
           .select('id')
           .single();
       }
