@@ -23,6 +23,7 @@ type GoogleIdentityApi = {
         auto_select?: boolean;
         cancel_on_tap_outside?: boolean;
         use_fedcm_for_prompt?: boolean;
+        nonce?: string;
       }) => void;
       prompt: (callback?: (notification: GooglePromptNotification) => void) => void;
       cancel: () => void;
@@ -67,7 +68,19 @@ function loadGoogleIdentityScript(): Promise<void> {
   return googleIdentityScriptPromise;
 }
 
-export async function requestGoogleIdToken(): Promise<string> {
+export async function generateNonce(): Promise<{ nonce: string; hashedNonce: string }> {
+  const nonce = Array.from(crypto.getRandomValues(new Uint8Array(32)))
+    .map((b) => b.toString(16).padStart(2, '0'))
+    .join('');
+  const encoded = new TextEncoder().encode(nonce);
+  const digest = await crypto.subtle.digest('SHA-256', encoded);
+  const hashedNonce = Array.from(new Uint8Array(digest))
+    .map((b) => b.toString(16).padStart(2, '0'))
+    .join('');
+  return { nonce, hashedNonce };
+}
+
+export async function requestGoogleIdToken(hashedNonce?: string): Promise<string> {
   await loadGoogleIdentityScript();
 
   const google = window.google;
@@ -103,6 +116,7 @@ export async function requestGoogleIdToken(): Promise<string> {
       auto_select: false,
       cancel_on_tap_outside: true,
       use_fedcm_for_prompt: true,
+      ...(hashedNonce ? { nonce: hashedNonce } : {}),
       callback: (response) => {
         if (response.credential) {
           finish(response.credential);

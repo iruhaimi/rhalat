@@ -11,7 +11,7 @@ import { SocialLogin } from '@capgo/capacitor-social-login';
 import { cn } from '@/lib/utils';
 import { isNativeMobileApp, isIOSApp } from '@/lib/platform';
 import { sanitizeRedirect, resolvePostAuthRedirect, stashPendingRedirect } from '@/lib/safeRedirect';
-import { GOOGLE_WEB_CLIENT_ID, requestGoogleIdToken } from '@/lib/googleIdentity';
+import { GOOGLE_WEB_CLIENT_ID, requestGoogleIdToken, generateNonce } from '@/lib/googleIdentity';
 
 function GoogleIcon({ className }: { className?: string }) {
   return (
@@ -104,10 +104,12 @@ export default function GoogleSignInButton({
         return;
       }
 
-      const idToken = await requestGoogleIdToken();
+      const { nonce, hashedNonce } = await generateNonce();
+      const idToken = await requestGoogleIdToken(hashedNonce);
       const { error } = await supabase.auth.signInWithIdToken({
         provider: 'google',
         token: idToken,
+        nonce,
       });
 
       if (error) {
