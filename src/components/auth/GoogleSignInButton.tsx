@@ -7,7 +7,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
 import { Capacitor } from '@capacitor/core';
-import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth';
+import { SocialLogin } from '@capgo/capacitor-social-login';
 import { cn } from '@/lib/utils';
 import { getExternalAuthOrigin, isNativeMobileApp, isIOSApp } from '@/lib/platform';
 import { sanitizeRedirect, resolvePostAuthRedirect, stashPendingRedirect } from '@/lib/safeRedirect';
@@ -65,15 +65,24 @@ export default function GoogleSignInButton({
       stashPendingRedirect(resolved);
 
       // Native iOS: use the on-device Google Sign-In sheet (App Store Guideline 4.8 / 2.1a).
-      // Uses ASWebAuthenticationSession under the hood — NOT a webview.
+      // Uses the native Google SDK via @capgo/capacitor-social-login (SPM-compatible).
       if (Capacitor.isNativePlatform() && Capacitor.getPlatform() === 'ios') {
         try {
-          await GoogleAuth.initialize();
+          await SocialLogin.initialize({
+            google: {
+              iOSClientId: '__REPLACE_WITH_IOS_CLIENT_ID__.apps.googleusercontent.com',
+              iOSServerClientId: '__REPLACE_WITH_WEB_CLIENT_ID__.apps.googleusercontent.com',
+            },
+          });
         } catch {
           // initialize is idempotent; ignore repeated init errors.
         }
-        const res = await GoogleAuth.signIn();
-        const idToken = res?.authentication?.idToken;
+        const res = await SocialLogin.login({
+          provider: 'google',
+          options: { scopes: ['email', 'profile'] },
+        });
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const idToken = (res?.result as any)?.idToken;
         if (!idToken) {
           throw new Error(isRTL ? 'لم يتم استلام رمز Google' : 'No Google identity token returned');
         }
