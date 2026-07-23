@@ -171,7 +171,7 @@ const handler = async (req: Request): Promise<Response> => {
     console.log(`2FA code created for user: ${userId}`);
 
     // ============================================================
-    // EMAIL SENDING (via Lovable Cloud built-in email queue)
+    // EMAIL SENDING (via backend built-in email queue)
     // ============================================================
     const TWILIO_ACCOUNT_SID = Deno.env.get("TWILIO_ACCOUNT_SID");
     const TWILIO_AUTH_TOKEN = Deno.env.get("TWILIO_AUTH_TOKEN");
@@ -203,13 +203,13 @@ const handler = async (req: Request): Promise<Response> => {
 
       if (!emailResponse.ok) {
         const errorText = await emailResponse.text();
-        console.error("Lovable email invoke error:", emailResponse.status, errorText);
+        console.error("email invoke error:", emailResponse.status, errorText);
         results.errors?.push(`Email error: ${emailResponse.status} ${errorText}`);
       } else {
         const invokeData = await emailResponse.json().catch(() => null);
         emailSent = true;
         results.email = true;
-        console.log("2FA email enqueued successfully via Lovable Cloud", invokeData);
+        console.log("2FA email enqueued successfully", invokeData);
       }
     } catch (emailError: unknown) {
       console.error("Email sending failed:", emailError);

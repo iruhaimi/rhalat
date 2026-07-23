@@ -1,6 +1,6 @@
 # VisaFaster — Self-Hosted Stack
 
-حزمة بنية تحتية كاملة لتشغيل منصة "عطلات رحلاتكم" (VisaFaster) على خادم خاص (VPS) دون أي اعتماد على Lovable أو Supabase أو أي طرف ثالث مغلق.
+حزمة بنية تحتية كاملة لتشغيل منصة "عطلات رحلاتكم" (VisaFaster) على خادم خاص (VPS) دون أي اعتماد على أي طرف ثالث مغلق.
 
 ## ما الذي تحتويه هذه الحزمة
 
@@ -42,10 +42,10 @@ docker compose exec backend npx prisma migrate deploy
 
 اقرأ [`docs/SECURITY.md`](docs/SECURITY.md): RBAC، PDPL، 2FA، rate limiting، CSP.
 
-## خارطة الهجرة من Lovable
+## خارطة الهجرة إلى الاستضافة الذاتية
 
 1. شغّل هذا الـ stack محلياً وتأكد من Auth + رفع ملف.
 2. صدّر بيانات Supabase الحالية: `pg_dump` ثم استورد بـ `psql`.
 3. انقل ملفات Supabase Storage إلى MinIO (سكربت `infrastructure/minio/migrate-from-supabase.sh` موثق).
 4. انقل صفحات الفرونت تدريجياً من المشروع الأصلي إلى `frontend/src/` مع استبدال `supabase-js` بـ `lib/api.ts`.
-5. حوّل DNS من Lovable إلى الـ VPS.
+5. حوّل DNS إلى الـ VPS.

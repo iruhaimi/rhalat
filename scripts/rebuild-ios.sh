@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Nuclear iOS rebuild — guarantees the native bundle contains ZERO Lovable
-# references and no stale `server.url`. Run this from the project root
+# Nuclear iOS rebuild — guarantees the native bundle contains ZERO disallowed
+# external references and no stale `server.url`. Run this from the project root
 # BEFORE opening Xcode. If any check fails the script exits non-zero and
 # you must NOT open Xcode until it's fixed.
 set -euo pipefail
@@ -22,15 +22,15 @@ echo "==> [3/6] Building web bundle (runs mobile build guard automatically)"
 npm run build
 
 echo "==> [4/6] Proving dist/ is clean"
-# Only flag ACTUAL URLs / navigations to Lovable, not the defensive host list
-# that nativeSafety.ts uses to block those URLs. The safety list is a bare
-# string array (e.g. ["lovable.dev","lovable.app",...]) with no https:// or //.
+# Only flag ACTUAL URLs / navigations, not the defensive host list that
+# nativeSafety.ts uses to block those URLs. The safety list is a bare
+# string array with no https:// or // prefix.
 if grep -R -I -i -E "(https?:)?//[a-z0-9.-]*lovable\.(dev|app)|(https?:)?//[a-z0-9.-]*lovableproject|forceHideBadge" dist >/dev/null 2>&1; then
-  echo "FAIL: dist/ contains an actual Lovable URL. Aborting BEFORE touching iOS."
+  echo "FAIL: dist/ contains a disallowed external URL. Aborting BEFORE touching iOS."
   grep -R -I -n -i -E "(https?:)?//[a-z0-9.-]*lovable\.(dev|app)|(https?:)?//[a-z0-9.-]*lovableproject|forceHideBadge" dist || true
   exit 1
 fi
-echo "OK: dist/ has no Lovable URLs."
+echo "OK: dist/ has no disallowed external URLs."
 
 echo "==> [5/6] Adding & syncing iOS platform"
 npx cap add ios
@@ -50,7 +50,7 @@ npx cap sync ios
 echo "==> [6/6] Proving generated ios/ is clean"
 FAILED=0
 if grep -R -I -i -E "(https?:)?//[a-z0-9.-]*lovable\.(dev|app)|(https?:)?//[a-z0-9.-]*lovableproject" ios/App/App/capacitor.config.json ios/App/App/public 2>/dev/null; then
-  echo "FAIL: iOS bundle contains an actual Lovable URL."
+  echo "FAIL: iOS bundle contains a disallowed external URL."
   FAILED=1
 fi
 if grep -q '"url"' ios/App/App/capacitor.config.json 2>/dev/null; then

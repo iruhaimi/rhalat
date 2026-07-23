@@ -1,7 +1,7 @@
 /**
- * Lovable Assets are served from a relative path (/__l5e/assets-v1/...).
+ * Static assets are served from a relative path on the web.
  * Inside the native iOS Capacitor app, the origin is capacitor://localhost
- * so relative asset URLs 404. Rewrite to the production CDN origin when
+ * so relative asset URLs 404. Rewrite to the production origin when
  * running natively.
  */
 import { isIOSApp } from '@/lib/platform';

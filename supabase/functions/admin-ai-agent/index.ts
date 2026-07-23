@@ -8,7 +8,8 @@ const corsHeaders = {
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const SUPABASE_ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY")!;
-const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY")!;
+// Backend AI gateway API key (server-side only, not user-visible).
+const AI_GATEWAY_API_KEY = Deno.env.get("LOVABLE_API_KEY")!;
 
 const SYSTEM_PROMPT = `أنت مساعد ذكي يدير موقع تأشيرات "عطلات رحلاتكم" نيابة عن المالك.
 
@@ -252,7 +253,7 @@ async function callAI(messages: any[]) {
   const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
     method: "POST",
     headers: {
-      Authorization: `Bearer ${LOVABLE_API_KEY}`,
+      Authorization: `Bearer ${AI_GATEWAY_API_KEY}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify({

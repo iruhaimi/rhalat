@@ -26,6 +26,6 @@
 
 ## Why no third-party SaaS
 
-- No Lovable, Supabase, Firebase, Vercel, Auth0.
+- No Supabase, Firebase, Vercel, Auth0.
 - All dependencies are free open-source and run inside Docker on a VPS you own.
 - Migration to a different VPS = `git clone` + restore restic snapshots = under 30 minutes.
