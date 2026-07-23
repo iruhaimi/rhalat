@@ -7,8 +7,9 @@ import { useApplication } from '@/contexts/ApplicationContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { getExternalAuthOrigin, isNativeMobileApp } from '@/lib/platform';
+import { getExternalAuthOrigin, isNativeMobileApp, isIOSApp } from '@/lib/platform';
 import GoogleSignInButton from '@/components/auth/GoogleSignInButton';
+import AppleSignInButton from '@/components/auth/AppleSignInButton';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -209,7 +210,7 @@ export default function AuthGateModal() {
           </TabsContent>
         </Tabs>
 
-        {!isNativeMobileApp() && (
+        {(!isNativeMobileApp() || isIOSApp()) && (
           <>
             <div className="relative my-4">
               <Separator />
@@ -218,7 +219,16 @@ export default function AuthGateModal() {
               </span>
             </div>
 
-            <GoogleSignInButton className="w-full h-12" redirectPath={`${window.location.pathname}${window.location.search}`} />
+            <div className="space-y-3">
+              <AppleSignInButton
+                className="w-full h-12 bg-black text-white hover:bg-black/90 border-black"
+                redirectPath={`${window.location.pathname}${window.location.search}`}
+              />
+              <GoogleSignInButton
+                className="w-full h-12"
+                redirectPath={`${window.location.pathname}${window.location.search}`}
+              />
+            </div>
           </>
         )}
       </DialogContent>
