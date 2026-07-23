@@ -6,8 +6,10 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
+import { Capacitor } from '@capacitor/core';
+import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth';
 import { cn } from '@/lib/utils';
-import { getExternalAuthOrigin, isNativeMobileApp } from '@/lib/platform';
+import { getExternalAuthOrigin, isNativeMobileApp, isIOSApp } from '@/lib/platform';
 import { sanitizeRedirect, resolvePostAuthRedirect, stashPendingRedirect } from '@/lib/safeRedirect';
 
 function GoogleIcon({ className }: { className?: string }) {
@@ -45,7 +47,8 @@ export default function GoogleSignInButton({
   const isRTL = direction === 'rtl';
   const buttonLabel = label ?? (isRTL ? 'الدخول عبر Google' : 'Sign in with Google');
 
-  if (isNativeMobileApp()) return null;
+  // Hide on Android native builds (not configured); allow web + iOS native.
+  if (isNativeMobileApp() && !isIOSApp()) return null;
 
   const handleGoogleSignIn = async () => {
     setIsLoading(true);
@@ -60,6 +63,36 @@ export default function GoogleSignInButton({
 
       // OAuth round-trip strips our query params; stash a copy so we can recover it.
       stashPendingRedirect(resolved);
+
+      // Native iOS: use the on-device Google Sign-In sheet (App Store Guideline 4.8 / 2.1a).
+      // Uses ASWebAuthenticationSession under the hood — NOT a webview.
+      if (Capacitor.isNativePlatform() && Capacitor.getPlatform() === 'ios') {
+        try {
+          await GoogleAuth.initialize();
+        } catch {
+          // initialize is idempotent; ignore repeated init errors.
+        }
+        const res = await GoogleAuth.signIn();
+        const idToken = res?.authentication?.idToken;
+        if (!idToken) {
+          throw new Error(isRTL ? 'لم يتم استلام رمز Google' : 'No Google identity token returned');
+        }
+        const { error } = await supabase.auth.signInWithIdToken({
+          provider: 'google',
+          token: idToken,
+        });
+        if (error) {
+          toast({
+            variant: 'destructive',
+            title: isRTL ? 'فشل تسجيل الدخول عبر Google' : 'Google sign-in failed',
+            description: error.message,
+          });
+          setIsLoading(false);
+          return;
+        }
+        navigate(resolved);
+        return;
+      }
 
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',

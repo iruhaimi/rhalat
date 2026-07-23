@@ -368,7 +368,7 @@ export default function Auth() {
                   {(!isNativeMobileApp() || isIOSApp()) && (
                     <AppleSignInButton className="w-full h-11 bg-black text-white hover:bg-black/90 border-black" redirectPath={safeRedirect} />
                   )}
-                  {!isNativeMobileApp() && (
+                  {(!isNativeMobileApp() || isIOSApp()) && (
                     <GoogleSignInButton className="w-full h-11" redirectPath={safeRedirect} />
                   )}
                   <div className="relative">

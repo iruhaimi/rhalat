@@ -18,7 +18,17 @@ const config: CapacitorConfig = {
   },
   android: {
     allowMixedContent: true
-  }
+  },
+  plugins: {
+    GoogleAuth: {
+      // Web/Server OAuth Client ID from Google Cloud Console.
+      // The idToken returned by the native SDK will have this as its `aud`,
+      // which matches what Supabase Auth is configured with.
+      scopes: ['profile', 'email'],
+      serverClientId: '__REPLACE_WITH_WEB_CLIENT_ID__.apps.googleusercontent.com',
+      forceCodeForRefreshToken: true,
+    },
+  },
 };
 
 export default config;
