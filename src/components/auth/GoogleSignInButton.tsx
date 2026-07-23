@@ -68,6 +68,7 @@ export default function GoogleSignInButton({
       // Native iOS: use the on-device Google Sign-In sheet (App Store Guideline 4.8 / 2.1a).
       // Uses the native Google SDK via @capgo/capacitor-social-login (SPM-compatible).
       if (Capacitor.isNativePlatform() && Capacitor.getPlatform() === 'ios') {
+        const { nonce, hashedNonce } = await generateNonce();
         try {
           await SocialLogin.initialize({
             google: {
@@ -80,7 +81,7 @@ export default function GoogleSignInButton({
         }
         const res = await SocialLogin.login({
           provider: 'google',
-          options: { scopes: ['email', 'profile'] },
+          options: { scopes: ['email', 'profile'], nonce: hashedNonce },
         });
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const idToken = (res?.result as any)?.idToken;
@@ -90,6 +91,7 @@ export default function GoogleSignInButton({
         const { error } = await supabase.auth.signInWithIdToken({
           provider: 'google',
           token: idToken,
+          nonce,
         });
         if (error) {
           toast({
