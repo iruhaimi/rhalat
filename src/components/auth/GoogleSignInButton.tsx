@@ -71,7 +71,7 @@ export default function GoogleSignInButton({
           await SocialLogin.initialize({
             google: {
               iOSClientId: '96772078009-k6qa0s0hg6r62dmgg5vptjmuik28vkp6.apps.googleusercontent.com',
-              iOSServerClientId: '96772078009-k6qa0s0hg6r62dmgg5vptjmuik28vkp6.apps.googleusercontent.com',
+              iOSServerClientId: '96772078009-3504quk2lhmc3vh8k73t0qsj1mrj42ku.apps.googleusercontent.com',
             },
           });
         } catch {
