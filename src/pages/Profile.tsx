@@ -27,7 +27,7 @@ import {
 } from '@/components/ui/alert-dialog';
 
 const Profile = () => {
-  const { user, profile, refreshProfile } = useAuth();
+  const { user, profile, refreshProfile, isLoading: isAuthLoading } = useAuth();
   const navigate = useNavigate();
   const { direction } = useLanguage();
   const { toast } = useToast();
@@ -235,6 +235,24 @@ const Profile = () => {
     if (!name) return 'U';
     return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
   };
+
+  useEffect(() => {
+    if (!isAuthLoading && !user) {
+      navigate('/auth', { replace: true });
+    }
+  }, [isAuthLoading, navigate, user]);
+
+  if (isAuthLoading) {
+    return (
+      <div className="min-h-screen bg-canvas flex items-center justify-center" dir={direction}>
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (!user) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-canvas" dir={direction}>

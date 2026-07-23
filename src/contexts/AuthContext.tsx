@@ -182,6 +182,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signOut = async (isStaff: boolean = false) => {
     sessionStorage.removeItem('staff_2fa_verified_user_id');
     sessionStorage.removeItem('staff_2fa_pending_user_id');
+    setSession(null);
+    setUser(null);
+    setProfile(null);
+    setRoles([]);
+    setIsLoading(false);
     await supabase.auth.signOut();
     if (isStaff) {
       // Do NOT embed the staff portal path in client code.

@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   X, 
@@ -46,6 +46,7 @@ export default function MobileNavDrawer({ isOpen, onClose }: MobileNavDrawerProp
   const { user, profile, isAdmin, isAgent, signOut } = useAuth();
   const { t } = useLanguage();
   const location = useLocation();
+  const navigate = useNavigate();
 
   // Close on route change
   useEffect(() => {
@@ -97,6 +98,7 @@ export default function MobileNavDrawer({ isOpen, onClose }: MobileNavDrawerProp
   const handleSignOut = async () => {
     await signOut();
     onClose();
+    navigate('/', { replace: true });
   };
 
   return (
