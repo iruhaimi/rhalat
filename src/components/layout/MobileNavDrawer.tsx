@@ -96,8 +96,8 @@ export default function MobileNavDrawer({ isOpen, onClose }: MobileNavDrawerProp
   };
 
   const handleSignOut = async () => {
-    await signOut();
     onClose();
+    void signOut();
     navigate('/', { replace: true });
   };
 

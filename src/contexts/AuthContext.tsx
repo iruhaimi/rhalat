@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
+import React, { createContext, useContext, useEffect, useState, useCallback, useRef } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { getExternalAuthOrigin } from '@/lib/platform';
@@ -51,13 +51,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [roles, setRoles] = useState<AppRole[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const authVersionRef = useRef(0);
 
-  const fetchProfile = async (userId: string): Promise<AppRole[]> => {
+  const fetchProfile = async (userId: string, version = authVersionRef.current): Promise<AppRole[]> => {
     try {
       const [profileRes, rolesRes] = await Promise.all([
         supabase.from('profiles').select('*').eq('user_id', userId).single(),
         supabase.from('user_roles').select('role').eq('user_id', userId),
       ]);
+
+      if (version !== authVersionRef.current) {
+        return [];
+      }
 
       const { data: profileData, error: profileError } = profileRes;
       const { data: rolesData, error: rolesError } = rolesRes;
@@ -79,6 +84,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setRoles(nextRoles);
       return nextRoles;
     } catch (error) {
+      if (version !== authVersionRef.current) {
+        return [];
+      }
       console.error('Error in fetchProfile:', error);
       setProfile(null);
       setRoles([]);
@@ -96,6 +104,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, currentSession) => {
+        authVersionRef.current += 1;
+        const eventVersion = authVersionRef.current;
         setSession(currentSession);
         setUser(currentSession?.user ?? null);
 
@@ -103,9 +113,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (currentSession?.user) {
           setIsLoading(true);
           setTimeout(() => {
-            fetchProfile(currentSession.user.id).then((nextRoles) => {
+            fetchProfile(currentSession.user.id, eventVersion).then((nextRoles) => {
+              if (eventVersion !== authVersionRef.current) return;
               enforceStaff2FAOnRestore(event, currentSession.user.id, nextRoles);
-            }).finally(() => setIsLoading(false));
+            }).finally(() => {
+              if (eventVersion === authVersionRef.current) setIsLoading(false);
+            });
           }, 0);
         } else {
           setProfile(null);
@@ -123,15 +136,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     );
 
     // THEN check for existing session
+    const sessionCheckVersion = authVersionRef.current;
     supabase.auth.getSession().then(({ data: { session: existingSession } }) => {
+      if (sessionCheckVersion !== authVersionRef.current) return;
       setSession(existingSession);
       setUser(existingSession?.user ?? null);
 
       if (existingSession?.user) {
-        fetchProfile(existingSession.user.id).then((nextRoles) => {
+        fetchProfile(existingSession.user.id, sessionCheckVersion).then((nextRoles) => {
+          if (sessionCheckVersion !== authVersionRef.current) return;
           enforceStaff2FAOnRestore('INITIAL_SESSION', existingSession.user.id, nextRoles);
         }).finally(() => {
-          setIsLoading(false);
+          if (sessionCheckVersion === authVersionRef.current) setIsLoading(false);
         });
       } else {
         setIsLoading(false);
@@ -180,6 +196,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signOut = async (isStaff: boolean = false) => {
+    authVersionRef.current += 1;
     sessionStorage.removeItem('staff_2fa_verified_user_id');
     sessionStorage.removeItem('staff_2fa_pending_user_id');
     setSession(null);
@@ -187,13 +204,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setProfile(null);
     setRoles([]);
     setIsLoading(false);
-    await supabase.auth.signOut();
+    const completeSignOut = supabase.auth.signOut().catch((error) => {
+      console.error('Sign out failed after local session clear:', error);
+    });
     if (isStaff) {
       // Do NOT embed the staff portal path in client code.
       // Staff are sent to the public home; they reach the portal via the
       // out-of-band secret URL they already know.
-      window.location.href = '/';
+      window.location.replace('/');
     }
+    void completeSignOut;
   };
 
   const isAdmin = roles.includes('admin');

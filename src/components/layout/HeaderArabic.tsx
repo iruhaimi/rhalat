@@ -34,8 +34,8 @@ export default function HeaderArabic() {
   ];
 
   const handleSignOut = async () => {
-    await signOut();
-    navigate('/');
+    void signOut();
+    navigate('/', { replace: true });
   };
 
   const getDashboardLink = () => {
