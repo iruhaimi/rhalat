@@ -100,20 +100,6 @@ export function DeleteStaffDialog({ user, open, onOpenChange, onSuccess }: Delet
       const { data: { user: currentUser } } = await supabase.auth.getUser();
       if (!currentUser) throw new Error('غير مصرح');
 
-      // If the requester is the ONLY super admin, execute deletion directly
-      // (no second approver exists, so the two-person rule cannot be satisfied)
-      if (superAdminCount <= 1) {
-        const { data, error } = await supabase.functions.invoke('delete-staff-user', {
-          body: { user_id: user.user_id }
-        });
-        if (error) throw error;
-        if (data && !data.success) throw new Error(data.error || 'فشل الحذف');
-        toast.success('تم حذف الموظف بنجاح');
-        onOpenChange(false);
-        onSuccess();
-        return;
-      }
-
       // Create a pending sensitive operation
       const insertData = {
         operation_type: 'delete_staff',

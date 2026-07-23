@@ -80,6 +80,39 @@ Deno.serve(async (req) => {
       )
     }
 
+    // SECURITY: Enforce two-person rule. Require an approved pending_sensitive_operations
+    // row for this target, approved by a super admin other than the requester, within 1 hour.
+    const { data: approvedOps, error: approvalError } = await adminClient
+      .from('pending_sensitive_operations')
+      .select('id, requested_by, approved_by, approved_at, status')
+      .eq('target_user_id', user_id)
+      .eq('operation_type', 'delete_staff')
+      .eq('status', 'approved')
+      .gte('approved_at', new Date(Date.now() - 60 * 60 * 1000).toISOString())
+
+    if (approvalError) {
+      console.error('Error checking approvals:', approvalError)
+      return new Response(
+        JSON.stringify({ success: false, error: 'Failed to verify two-person approval' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
+    }
+
+    const validApproval = (approvedOps || []).find(
+      (op) => op.approved_by && op.approved_by !== op.requested_by
+    )
+
+    if (!validApproval) {
+      console.log(`Security: Rejected delete_staff for ${user_id} — no valid two-person approval`)
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: 'يتطلب حذف حساب موظف موافقة مدير عام آخر (قاعدة الشخصين). أنشئ طلب حذف واطلب من مدير عام آخر الموافقة عليه أولاً.',
+        }),
+        { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
+    }
+
     // Check if target user is staff (has admin or agent role)
     const { data: targetRoles } = await adminClient
       .from('user_roles')
