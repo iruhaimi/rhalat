@@ -11,6 +11,7 @@ import { SocialLogin } from '@capgo/capacitor-social-login';
 import { cn } from '@/lib/utils';
 import { isNativeMobileApp, isIOSApp } from '@/lib/platform';
 import { sanitizeRedirect, resolvePostAuthRedirect, stashPendingRedirect } from '@/lib/safeRedirect';
+import { getExternalAuthOrigin } from '@/lib/platform';
 import { GOOGLE_WEB_CLIENT_ID, requestGoogleIdToken, generateNonce, getJwtNonce } from '@/lib/googleIdentity';
 
 function GoogleIcon({ className }: { className?: string }) {
@@ -136,7 +137,29 @@ export default function GoogleSignInButton({
       }
 
       const { nonce, hashedNonce } = await generateNonce();
-      const idToken = await requestGoogleIdToken(hashedNonce);
+      let idToken: string | null = null;
+      try {
+        idToken = await requestGoogleIdToken(hashedNonce);
+      } catch {
+        // GIS One Tap unavailable (Safari, blocked 3rd-party cookies, no active
+        // Google session, prompt cool-down, etc). Fall back to a full-page
+        // OAuth redirect so sign-in still works in every browser.
+        const redirectTo = `${getExternalAuthOrigin()}/auth?redirect=${encodeURIComponent(resolved)}`;
+        const { error: redirectError } = await supabase.auth.signInWithOAuth({
+          provider: 'google',
+          options: { redirectTo },
+        });
+        if (redirectError) {
+          toast({
+            variant: 'destructive',
+            title: isRTL ? 'فشل تسجيل الدخول عبر Google' : 'Google sign-in failed',
+            description: redirectError.message,
+          });
+          setIsLoading(false);
+        }
+        return;
+      }
+
       const { error } = await supabase.auth.signInWithIdToken({
         provider: 'google',
         token: idToken,
