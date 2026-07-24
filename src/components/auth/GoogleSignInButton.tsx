@@ -9,7 +9,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Capacitor } from '@capacitor/core';
 import { SocialLogin } from '@capgo/capacitor-social-login';
 import { cn } from '@/lib/utils';
-import { isNativeMobileApp, isIOSApp } from '@/lib/platform';
+import { isNativeMobileApp, isIOSApp, isAndroidApp } from '@/lib/platform';
 import { sanitizeRedirect, resolvePostAuthRedirect, stashPendingRedirect } from '@/lib/safeRedirect';
 import { getExternalAuthOrigin } from '@/lib/platform';
 import { GOOGLE_WEB_CLIENT_ID, requestGoogleIdToken, generateNonce, getJwtNonce } from '@/lib/googleIdentity';
@@ -49,8 +49,7 @@ export default function GoogleSignInButton({
   const isRTL = direction === 'rtl';
   const buttonLabel = label ?? (isRTL ? 'الدخول عبر Google' : 'Sign in with Google');
 
-  // Hide on Android native builds (not configured); allow web + iOS native.
-  if (isNativeMobileApp() && !isIOSApp()) return null;
+  // Web + native iOS + native Android all supported.
 
   const handleGoogleSignIn = async () => {
     setIsLoading(true);
@@ -66,14 +65,16 @@ export default function GoogleSignInButton({
       // OAuth round-trip strips our query params; stash a copy so we can recover it.
       stashPendingRedirect(resolved);
 
-      // Native iOS: use the on-device Google Sign-In sheet (App Store Guideline 4.8 / 2.1a).
-      // Uses the native Google SDK via @capgo/capacitor-social-login (SPM-compatible).
-      if (Capacitor.isNativePlatform() && Capacitor.getPlatform() === 'ios') {
+      // Native iOS / Android: use the on-device Google Sign-In sheet via
+      // @capgo/capacitor-social-login (App Store Guideline 4.8 / 2.1a on iOS;
+      // Play Store best-practice on Android).
+      if (Capacitor.isNativePlatform() && (Capacitor.getPlatform() === 'ios' || Capacitor.getPlatform() === 'android')) {
         try {
           await SocialLogin.initialize({
             google: {
               iOSClientId: '96772078009-k6qa0s0hg6r62dmgg5vptjmuik28vkp6.apps.googleusercontent.com',
               iOSServerClientId: GOOGLE_WEB_CLIENT_ID,
+              webClientId: GOOGLE_WEB_CLIENT_ID,
               mode: 'online',
             },
           });
