@@ -35,3 +35,15 @@ export const isIOSApp = (): boolean => {
   if (typeof navigator === 'undefined') return false;
   return /Despia|VisaFasterIOS/i.test(navigator.userAgent);
 };
+
+export const isAndroidApp = (): boolean => {
+  try {
+    if (isNativeMobileApp() && Capacitor.getPlatform() === 'android') {
+      return true;
+    }
+  } catch {
+    // Capacitor not available on web — fall through to UA detection.
+  }
+  if (typeof navigator === 'undefined') return false;
+  return /VisaFasterAndroid/i.test(navigator.userAgent);
+};
