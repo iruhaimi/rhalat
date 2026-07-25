@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useApplication } from '@/contexts/ApplicationContext';
+import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
@@ -53,7 +54,15 @@ interface FileUploadState {
 
 export default function Step4Documents() {
   const { t, direction, language } = useLanguage();
-  const { applicationData, updateApplicationData, goToNextStep, goToPreviousStep } = useApplication();
+  const {
+    applicationData,
+    updateApplicationData,
+    goToNextStep,
+    goToPreviousStep,
+    draftId,
+    setDraftId,
+  } = useApplication();
+  const { user } = useAuth();
   
   const [uploads, setUploads] = useState<Record<string, FileUploadState>>({});
   
@@ -116,78 +125,155 @@ export default function Step4Documents() {
     return result;
   })();
 
-  const handleFileSelect = useCallback((docType: string, file: File) => {
-    // Validate file
+  // Magic-byte sniffing — reject files whose header does not match the claimed MIME.
+  const sniffMatchesMime = async (file: File): Promise<boolean> => {
+    try {
+      const buf = new Uint8Array(await file.slice(0, 8).arrayBuffer());
+      const isPDF = buf[0] === 0x25 && buf[1] === 0x50 && buf[2] === 0x44 && buf[3] === 0x46; // %PDF
+      const isJPG = buf[0] === 0xff && buf[1] === 0xd8 && buf[2] === 0xff;
+      const isPNG = buf[0] === 0x89 && buf[1] === 0x50 && buf[2] === 0x4e && buf[3] === 0x47;
+      if (file.type === 'application/pdf') return isPDF;
+      if (file.type === 'image/jpeg' || file.type === 'image/jpg') return isJPG;
+      if (file.type === 'image/png') return isPNG;
+      return false;
+    } catch {
+      return false;
+    }
+  };
+
+  // Ensure a draft application exists so uploads can be attached to it.
+  const ensureDraftId = async (): Promise<string | null> => {
+    if (draftId) return draftId;
+    if (!applicationData.visaTypeId) return null;
+    const { data: newId, error } = await supabase.rpc('create_application_draft', {
+      p_visa_type_id: applicationData.visaTypeId,
+      p_travel_date: applicationData.travelDate
+        ? applicationData.travelDate.toISOString().split('T')[0]
+        : null,
+      p_draft_data: {},
+    });
+    if (error || !newId) return null;
+    setDraftId(newId as string);
+    return newId as string;
+  };
+
+  const handleFileSelect = useCallback(async (slot: ExpandedRequirement, file: File) => {
+    const docType = slot.slotId;
     const maxSize = 10 * 1024 * 1024; // 10MB
-    const allowedTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/jpg'];
-    
-    if (!allowedTypes.includes(file.type)) {
+    const extByMime: Record<string, string> = {
+      'application/pdf': 'pdf',
+      'image/jpeg': 'jpg',
+      'image/jpg': 'jpg',
+      'image/png': 'png',
+    };
+
+    if (!extByMime[file.type]) {
       setUploads(prev => ({
         ...prev,
-        [docType]: {
-          file: null,
-          progress: 0,
-          status: 'error',
-          error: direction === 'rtl' ? 'نوع الملف غير مدعوم' : 'File type not supported',
-        },
+        [docType]: { file: null, progress: 0, status: 'error',
+          error: direction === 'rtl' ? 'نوع الملف غير مدعوم' : 'File type not supported' },
       }));
       return;
     }
-    
     if (file.size > maxSize) {
       setUploads(prev => ({
         ...prev,
-        [docType]: {
-          file: null,
-          progress: 0,
-          status: 'error',
-          error: direction === 'rtl' ? 'حجم الملف كبير جداً' : 'File size too large',
-        },
+        [docType]: { file: null, progress: 0, status: 'error',
+          error: direction === 'rtl' ? 'حجم الملف كبير جداً (الحد 10MB)' : 'File too large (max 10MB)' },
+      }));
+      return;
+    }
+    if (!(await sniffMatchesMime(file))) {
+      setUploads(prev => ({
+        ...prev,
+        [docType]: { file: null, progress: 0, status: 'error',
+          error: direction === 'rtl' ? 'محتوى الملف لا يطابق امتداده' : 'File content does not match its type' },
+      }));
+      return;
+    }
+    if (!user) {
+      setUploads(prev => ({
+        ...prev,
+        [docType]: { file: null, progress: 0, status: 'error',
+          error: direction === 'rtl' ? 'يجب تسجيل الدخول لرفع المستندات' : 'Sign in required to upload' },
       }));
       return;
     }
 
-    // Simulate upload
-    setUploads(prev => ({
-      ...prev,
-      [docType]: { file, progress: 0, status: 'uploading' },
-    }));
+    setUploads(prev => ({ ...prev, [docType]: { file, progress: 10, status: 'uploading' } }));
 
-    // Simulate progress
-    let progress = 0;
-    const interval = setInterval(() => {
-      progress += Math.random() * 30;
-      if (progress >= 100) {
-        progress = 100;
-        clearInterval(interval);
-        setUploads(prev => ({
-          ...prev,
-          [docType]: { file, progress: 100, status: 'success' },
-        }));
-        
-        // Update application data
-        const newDoc = {
-          type: docType,
-          fileName: file.name,
-          fileSize: file.size,
-          uploaded: true,
-        };
-        updateApplicationData({
-          uploadedDocuments: [
-            ...applicationData.uploadedDocuments.filter(d => d.type !== docType),
-            newDoc,
-          ],
-        });
-      } else {
-        setUploads(prev => ({
-          ...prev,
-          [docType]: { ...prev[docType], progress },
-        }));
+    try {
+      const appId = await ensureDraftId();
+      if (!appId) throw new Error('draft_unavailable');
+
+      const ext = extByMime[file.type];
+      const uuid = (crypto as any)?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+      // RLS on `documents` requires first path segment == auth.uid().
+      const path = `${user.id}/${appId}/${slot.reqId}/${docType}-${uuid}.${ext}`;
+
+      setUploads(prev => ({ ...prev, [docType]: { file, progress: 40, status: 'uploading' } }));
+
+      const { error: upErr } = await supabase.storage
+        .from('documents')
+        .upload(path, file, { contentType: file.type, upsert: false });
+      if (upErr) throw upErr;
+
+      setUploads(prev => ({ ...prev, [docType]: { file, progress: 80, status: 'uploading' } }));
+
+      // Record in application_documents. document_type = requirement UUID
+      // so submit_application's server-side completeness check can match it.
+      const { error: insErr } = await supabase.from('application_documents').insert({
+        application_id: appId,
+        document_type: slot.reqId,
+        file_name: file.name,
+        file_path: path,
+        file_size: file.size,
+        mime_type: file.type,
+        status: 'pending',
+      });
+      if (insErr) throw insErr;
+
+      setUploads(prev => ({ ...prev, [docType]: { file, progress: 100, status: 'success' } }));
+
+      updateApplicationData({
+        uploadedDocuments: [
+          ...applicationData.uploadedDocuments.filter(d => d.type !== docType),
+          { type: docType, fileName: file.name, fileSize: file.size, uploaded: true },
+        ],
+      });
+    } catch (e: any) {
+      console.error('Upload failed:', e);
+      setUploads(prev => ({
+        ...prev,
+        [docType]: { file: null, progress: 0, status: 'error',
+          error: direction === 'rtl' ? 'فشل رفع الملف، حاول مجدداً' : 'Upload failed, please try again' },
+      }));
+    }
+  }, [applicationData.uploadedDocuments, applicationData.visaTypeId, applicationData.travelDate, direction, updateApplicationData, user, draftId, setDraftId]);
+
+  const handleRemove = async (slot: ExpandedRequirement) => {
+    const docType = slot.slotId;
+    try {
+      if (draftId) {
+        // Find the matching document row(s) for this requirement + application
+        // and prefer the most recent one uploaded for this slot's file name if present.
+        const { data: rows } = await supabase
+          .from('application_documents')
+          .select('id, file_path, file_name')
+          .eq('application_id', draftId)
+          .eq('document_type', slot.reqId)
+          .order('created_at', { ascending: false });
+        const localName = uploads[docType]?.file?.name
+          ?? applicationData.uploadedDocuments.find(d => d.type === docType)?.fileName;
+        const target = rows?.find(r => r.file_name === localName) ?? rows?.[0];
+        if (target) {
+          await supabase.storage.from('documents').remove([target.file_path]);
+          await supabase.from('application_documents').delete().eq('id', target.id);
+        }
       }
-    }, 200);
-  }, [applicationData.uploadedDocuments, direction, updateApplicationData]);
-
-  const handleRemove = (docType: string) => {
+    } catch (e) {
+      console.error('Remove failed:', e);
+    }
     setUploads(prev => {
       const updated = { ...prev };
       delete updated[docType];
@@ -281,7 +367,7 @@ export default function Step4Documents() {
                   className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                   onChange={(e) => {
                     const file = e.target.files?.[0];
-                    if (file) handleFileSelect(req.slotId, file);
+                    if (file) handleFileSelect(req, file);
                   }}
                   disabled={upload?.status === 'uploading'}
                 />
@@ -367,7 +453,7 @@ export default function Step4Documents() {
                     className="h-7 w-7 z-20 relative"
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleRemove(req.slotId);
+                      handleRemove(req);
                     }}
                   >
                     <Trash2 className="w-3.5 h-3.5 text-muted-foreground hover:text-destructive" />

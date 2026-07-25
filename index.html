@@ -3,7 +3,26 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-    
+
+    <!-- Clickjacking defense (defense-in-depth: no HTTP frame-ancestors on this host) -->
+    <script>
+      (function () {
+        try {
+          if (window.top !== window.self) {
+            // Native WebViews (Capacitor) legitimately host us at capacitor://localhost.
+            var __proto = (window.location && window.location.protocol) || '';
+            if (__proto === 'http:' || __proto === 'https:') {
+              try { window.top.location = window.self.location.href; }
+              catch (e) { document.documentElement.style.display = 'none'; }
+            }
+          }
+        } catch (e) { /* cross-origin — ignore */ }
+      })();
+    </script>
+
+    <!-- Content Security Policy (meta form — frame-ancestors ignored here, enforced elsewhere) -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.googleadservices.com https://googleads.g.doubleclick.net https://accounts.google.com https://apis.google.com https://cdn.onesignal.com https://onesignal.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https://hgxvwziiumjxifpgpjce.supabase.co https://flagcdn.com https://*.googleusercontent.com https://www.google-analytics.com https://www.googletagmanager.com https://www.googleadservices.com https://googleads.g.doubleclick.net; connect-src 'self' https://hgxvwziiumjxifpgpjce.supabase.co wss://hgxvwziiumjxifpgpjce.supabase.co https://www.google-analytics.com https://www.googletagmanager.com https://www.googleadservices.com https://googleads.g.doubleclick.net https://accounts.google.com https://onesignal.com https://api.onesignal.com https://api.ipify.org; frame-src https://accounts.google.com https://appleid.apple.com https://td.doubleclick.net; form-action 'self' https://appleid.apple.com; object-src 'none'; base-uri 'none'; manifest-src 'self'; worker-src 'self' blob:; upgrade-insecure-requests" />
+
     <!-- App Info -->
     <title>عطلات رحلاتكم — خدمات التأشيرات السياحية والأعمال</title>
     <meta name="description" content="عطلات رحلاتكم (Visafaster) — وكالة خاصة مستقلة لخدمات استشارية وتجهيز ملفات التأشيرات (سياحية، أعمال، طلابية، شنغن). لسنا جهة حكومية." />
