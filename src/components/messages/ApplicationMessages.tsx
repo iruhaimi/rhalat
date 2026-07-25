@@ -31,6 +31,7 @@ import { useApplicationMessages } from '@/hooks/useApplicationMessages';
 import { FilePreview } from '@/components/ui/FilePreview';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { useAuth } from '@/contexts/AuthContext';
 import { format } from 'date-fns';
 import { ar } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
@@ -70,6 +71,7 @@ export function ApplicationMessages({
   
   const scrollRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { user } = useAuth();
 
   // Auto-scroll to bottom on new messages
   useEffect(() => {
@@ -89,14 +91,13 @@ export function ApplicationMessages({
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Validate file type
-    const isImage = file.type.startsWith('image/');
-    const isPdf = file.type === 'application/pdf';
-
-    if (!isImage && !isPdf) {
+    // Strict MIME allowlist — reject spoofed extensions
+    const ALLOWED = new Set(['image/jpeg', 'image/png', 'image/webp', 'application/pdf']);
+    if (!ALLOWED.has(file.type)) {
       toast.error('يُسمح فقط بالصور ومستندات PDF');
       return;
     }
+    const isImage = file.type.startsWith('image/');
 
     // Validate file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
@@ -129,15 +130,31 @@ export function ApplicationMessages({
 
     // Upload attachment if exists
     if (attachment) {
+      if (!user) {
+        toast.error('يجب تسجيل الدخول لإرفاق ملف');
+        return;
+      }
       setUploading(true);
       try {
-        const timestamp = Date.now();
-        const ext = attachment.file.name.split('.').pop();
-        const path = `messages/${applicationId}/${timestamp}.${ext}`;
+        // RLS on `documents` bucket requires the first path segment to equal
+        // auth.uid(). Extension is derived from the validated MIME (not user
+        // input) to prevent path/type spoofing.
+        const extByMime: Record<string, string> = {
+          'image/jpeg': 'jpg',
+          'image/png': 'png',
+          'image/webp': 'webp',
+          'application/pdf': 'pdf',
+        };
+        const ext = extByMime[attachment.file.type] || 'bin';
+        const uuid = (crypto as any)?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+        const path = `${user.id}/messages/${applicationId}/${uuid}.${ext}`;
 
         const { error } = await supabase.storage
           .from('documents')
-          .upload(path, attachment.file);
+          .upload(path, attachment.file, {
+            contentType: attachment.file.type,
+            upsert: false,
+          });
 
         if (error) throw error;
 
