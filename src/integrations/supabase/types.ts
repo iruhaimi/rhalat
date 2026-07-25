@@ -2868,6 +2868,21 @@ export type Database = {
         Returns: undefined
       }
       rotate_staff_portal_path: { Args: { p_new_path: string }; Returns: Json }
+      submit_application: {
+        Args: {
+          p_app_id: string
+          p_is_bank_transfer: boolean
+          p_purpose: Json
+          p_terms_ip: string
+          p_terms_user_agent: string
+          p_terms_version: string
+        }
+        Returns: {
+          display_number: string
+          id: string
+          status: Database["public"]["Enums"]["application_status"]
+        }[]
+      }
       submit_unlock_request: {
         Args: { p_email: string; p_reason: string }
         Returns: string
