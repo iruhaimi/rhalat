@@ -454,33 +454,30 @@ export default function Step6Payment() {
 
       let appNumber = `VF-${Date.now().toString(36).toUpperCase()}`;
       if (appId) {
-        const { data, error } = await supabase
-          .from('applications')
-          .update({
-            status: isBankTransfer ? 'pending_payment' : 'submitted',
-            submission_method: isBankTransfer ? 'bank_transfer' : 'online',
-            submitted_at: new Date().toISOString(),
-            purpose_of_travel: JSON.stringify({
-              fullName: customerName,
-              email: customerEmail,
-              phone: customerPhone,
-              countryCode: customerCountryCode,
-              travelers: applicationData.travelers,
-              checkedRequirements: applicationData.checkedRequirements,
-              totalAmount: grandTotal,
-              paymentMethod: applicationData.paymentMethod,
-              termsAccepted: applicationData.termsAccepted,
-            }),
-            terms_accepted_at: consentAt,
-            terms_version: TERMS_VERSION,
-            terms_ip_address: consentIp,
-            terms_user_agent: consentUA,
-            updated_at: new Date().toISOString(),
-          })
-          .eq('id', appId)
-          .select('id, display_number')
-          .single();
-        if (!error && data?.display_number) appNumber = data.display_number;
+        // Use SECURITY DEFINER RPC — the direct .update() path is blocked by RLS
+        // (WITH CHECK only allows draft/documents_required), so status transitions
+        // to submitted/pending_payment must go through this server-side function.
+        const { data, error } = await supabase.rpc('submit_application', {
+          p_app_id: appId,
+          p_is_bank_transfer: isBankTransfer,
+          p_purpose: {
+            fullName: customerName,
+            email: customerEmail,
+            phone: customerPhone,
+            countryCode: customerCountryCode,
+            travelers: applicationData.travelers,
+            checkedRequirements: applicationData.checkedRequirements,
+            totalAmount: grandTotal,
+            paymentMethod: applicationData.paymentMethod,
+            termsAccepted: applicationData.termsAccepted,
+          } as any,
+          p_terms_version: TERMS_VERSION,
+          p_terms_ip: consentIp,
+          p_terms_user_agent: consentUA,
+        });
+        if (error) throw error;
+        const row = Array.isArray(data) ? data[0] : data;
+        if (row?.display_number) appNumber = row.display_number as string;
       }
 
       const methodLabel =

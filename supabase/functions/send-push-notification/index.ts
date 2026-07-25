@@ -58,6 +58,31 @@ Deno.serve(async (req) => {
           { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         )
       }
+
+      // Agents may only push to customers whose application they are assigned to.
+      // Admins bypass this check.
+      if (isAgent && !isAdmin) {
+        const targetUserId = (await req.clone().json())?.user_id
+        if (!targetUserId) {
+          return new Response(
+            JSON.stringify({ error: 'user_id required' }),
+            { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          )
+        }
+        const { data: assigned } = await adminCheck
+          .from('applications')
+          .select('id')
+          .eq('assigned_agent_id', userData.user.id)
+          .eq('user_id', targetUserId)
+          .limit(1)
+          .maybeSingle()
+        if (!assigned) {
+          return new Response(
+            JSON.stringify({ error: 'Forbidden: agent not assigned to this customer' }),
+            { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          )
+        }
+      }
     }
 
     const { user_id, title, message, url, data } = await req.json()

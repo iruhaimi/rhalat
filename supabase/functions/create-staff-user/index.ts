@@ -41,11 +41,17 @@ Deno.serve(async (req) => {
     // Check if calling user is admin using service role
     const adminClient = createClient(supabaseUrl, supabaseServiceKey)
     
-    const { data: isAdminResult } = await adminClient.rpc('is_admin', { _user_id: callingUser.id })
-    
-    if (!isAdminResult) {
+    // SECURITY: require manage_staff (super admin) to create staff accounts.
+    // Regular admins cannot create additional admin/agent accounts — this prevents
+    // a single compromised admin from establishing persistence by minting new staff.
+    const { data: canManageStaff } = await adminClient.rpc('has_permission', {
+      _user_id: callingUser.id,
+      _permission: 'manage_staff',
+    })
+
+    if (!canManageStaff) {
       return new Response(
-        JSON.stringify({ success: false, error: 'Only admins can create staff users' }),
+        JSON.stringify({ success: false, error: 'Only super admins can create staff users' }),
         { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
