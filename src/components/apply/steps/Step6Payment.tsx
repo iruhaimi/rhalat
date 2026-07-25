@@ -555,9 +555,17 @@ export default function Step6Payment() {
       setTimeout(() => resetApplication(), 1000);
     } catch (error: any) {
       console.error('Payment error:', error);
+      const raw = String(error?.message || '');
+      const friendly = raw.includes('missing_required_documents')
+        ? (direction === 'rtl'
+            ? 'يجب رفع جميع المستندات الإلزامية قبل الإرسال'
+            : 'All required documents must be uploaded before submission')
+        : raw.includes('invalid_status_transition')
+          ? (direction === 'rtl' ? 'حالة الطلب لا تسمح بالإرسال' : 'Application status does not allow submission')
+          : (raw || (direction === 'rtl' ? 'فشلت عملية الدفع، حاول مرة أخرى' : 'Payment failed, please try again'));
       toast({
         title: 'خطأ',
-        description: error.message || 'فشلت عملية الدفع، حاول مرة أخرى',
+        description: friendly,
         variant: 'destructive',
       });
     } finally {
