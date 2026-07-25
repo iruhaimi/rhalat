@@ -17,7 +17,10 @@ const config: CapacitorConfig = {
     preferredContentMode: 'mobile'
   },
   android: {
-    allowMixedContent: true
+    // Mixed content disabled — the app only loads local bundled assets and
+    // HTTPS endpoints (Supabase, Google Identity). Allowing HTTP resources
+    // over HTTPS enables MITM content injection on hostile Wi-Fi.
+    allowMixedContent: false
   },
   plugins: {
     // Native Google Sign-In for iOS via @capgo/capacitor-social-login (SPM-compatible).
