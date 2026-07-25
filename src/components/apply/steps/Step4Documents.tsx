@@ -229,7 +229,7 @@ export default function Step4Documents() {
         file_path: path,
         file_size: file.size,
         mime_type: file.type,
-        status: 'uploaded',
+        status: 'pending',
       });
       if (insErr) throw insErr;
 
