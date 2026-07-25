@@ -15,7 +15,6 @@ Allow: /
 Disallow: /admin
 Disallow: /agent
 Disallow: /tourism-portal
-Disallow: /portal-x7k9m2
 Disallow: /auth
 Disallow: /profile
 Disallow: /my-applications

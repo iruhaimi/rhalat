@@ -15,12 +15,7 @@ const SENDER_DOMAIN = "notify.visafaster.com"
 // even though actual sending uses the subdomain above.
 const FROM_DOMAIN = "visafaster.com"
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers':
-    'authorization, x-client-info, apikey, content-type',
-}
-
+import { getCorsHeaders } from "../_shared/cors.ts";
 // Generate a cryptographically random 32-byte hex token
 function generateToken(): string {
   const bytes = new Uint8Array(32)
@@ -60,7 +55,9 @@ function decodeJwtRole(token: string): { role: string | null; email: string | nu
 }
 
 Deno.serve(async (req) => {
-  // Handle CORS preflight
+  
+  const corsHeaders = getCorsHeaders(req);
+// Handle CORS preflight
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders })
   }

@@ -1,11 +1,6 @@
 import { createClient } from 'npm:@supabase/supabase-js@2'
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers':
-    'authorization, x-client-info, apikey, content-type',
-}
-
+import { getCorsHeaders } from "../_shared/cors.ts";
 function jsonResponse(data: Record<string, unknown>, status = 200): Response {
   return new Response(JSON.stringify(data), {
     status,
@@ -14,7 +9,9 @@ function jsonResponse(data: Record<string, unknown>, status = 200): Response {
 }
 
 Deno.serve(async (req) => {
-  // Handle CORS preflight
+  
+  const corsHeaders = getCorsHeaders(req);
+// Handle CORS preflight
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders })
   }
