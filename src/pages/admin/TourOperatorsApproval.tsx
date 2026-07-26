@@ -54,10 +54,7 @@ export default function TourOperatorsApproval() {
 
   const fetchOperators = async () => {
     setLoading(true);
-    const { data, error } = await supabase
-      .from('tour_operators')
-      .select('*')
-      .order('created_at', { ascending: false });
+    const { data, error } = await supabase.rpc('admin_list_tour_operators');
     if (error) {
       console.error(error);
       toast.error('تعذّر تحميل الوكلاء السياحيين');
