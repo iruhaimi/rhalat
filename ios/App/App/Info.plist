@@ -60,5 +60,13 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>يستخدم التطبيق الكاميرا لالتقاط صورة الملف الشخصي وصور المستندات المطلوبة لطلب التأشيرة.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>يحتاج التطبيق إلى الوصول إلى مكتبة الصور لاختيار صورة الملف الشخصي وصور المستندات المطلوبة لطلب التأشيرة.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>يستخدم التطبيق مكتبة الصور لحفظ إيصالات ووثائق التأشيرة التي تختار تنزيلها.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>قد يطلب التطبيق الوصول إلى الميكروفون عند تسجيل مقاطع فيديو للمستندات.</string>
 </dict>
 </plist>
