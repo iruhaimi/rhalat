@@ -38,12 +38,12 @@ patchFile(SOCIAL_LOGIN_PACKAGE, (source) => {
   // Remove unused package declarations. Google Sign-In is the only provider
   // invoked by src/components/auth/GoogleSignInButton.tsx.
   next = next.replace(/\n\s*\/\/ FBSDKCoreKit and FBSDKLoginKit\n\s*\.package\(url: "https:\/\/github\.com\/facebook\/facebook-ios-sdk\.git", \.upToNextMajor\(from: "[^"]+"\)\),/g, '');
-  next = next.replace(/\n\s*\/\/ Alamofire\n\s*\.package\(url: "https:\/\/github\.com\/Alamofire\/Alamofire\.git", \.upToNextMajor\(from: "[^"]+"\)\),/g, '');
+  next = next.replace(/,?\n\s*\/\/ Alamofire\n\s*\.package\(url: "https:\/\/github\.com\/Alamofire\/Alamofire\.git", \.upToNextMajor\(from: "[^"]+"\)\),?/g, '');
 
   // Remove unused product dependencies from the SocialLogin target.
   next = next.replace(/\n\s*\.product\(name: "FacebookCore", package: "facebook-ios-sdk"\),/g, '');
   next = next.replace(/\n\s*\.product\(name: "FacebookLogin", package: "facebook-ios-sdk"\),/g, '');
-  next = next.replace(/\n\s*\.product\(name: "Alamofire", package: "Alamofire"\),/g, '');
+  next = next.replace(/,?\n\s*\.product\(name: "Alamofire", package: "Alamofire"\),?/g, '');
 
   return next;
 });
