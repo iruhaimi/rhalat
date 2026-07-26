@@ -1,0 +1,5 @@
+# Supabase publishable (anon) key — safe to ship in browser bundle.
+# Protected by RLS, not by secrecy. See Supabase docs.
+211355be82ff35b89d78dece6240e0d10935b619:scripts/generate-sitemap.ts:jwt:10
+bbae192866f6815570805b9e3971a4be9c5100ad:supabase/functions/send-staff-2fa/index.ts:jwt:13
+ad7c0eb51e8e5126c0c126c585041294e9e9e422:.env:jwt:2
