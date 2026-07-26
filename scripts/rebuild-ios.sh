@@ -33,7 +33,6 @@ fi
 echo "OK: dist/ has no disallowed external URLs."
 
 echo "==> [5/6] Adding & syncing iOS platform"
-npx cap sync ios
 node scripts/patch-ios-native-deps.mjs
 npx cap add ios
 
