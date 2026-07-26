@@ -108,7 +108,6 @@ export default function TourProgramsManagement() {
                       </p>
                       <p className="text-xs text-muted-foreground">
                         الوكيل: <strong>{p.tour_operators?.company_name ?? 'غير معروف'}</strong>
-                        {' '}({p.tour_operators?.email})
                       </p>
                       <p className="text-sm font-bold">
                         {(p.discounted_price ?? p.price)?.toLocaleString()} {p.currency}
