@@ -7,6 +7,7 @@ const ALLOWED_ORIGINS = new Set<string>([
   'https://visafaster.lovable.app',
   'https://id-preview--616b2e7f-7e45-4cdc-90ea-1c048e4da3b0.lovable.app',
   'capacitor://localhost',
+  'https://localhost',
   'http://localhost',
   'http://localhost:5173',
   'http://localhost:8080',
