@@ -25,6 +25,14 @@ const config: CapacitorConfig = {
   plugins: {
     // Native Google Sign-In for iOS via @capgo/capacitor-social-login (SPM-compatible).
     // Initialization (with the Web Client ID) is done at runtime in the app code.
+    SocialLogin: {
+      providers: {
+        google: true,
+        facebook: false,
+        apple: false,
+        twitter: false,
+      },
+    },
   },
 };
 

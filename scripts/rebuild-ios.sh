@@ -33,10 +33,13 @@ fi
 echo "OK: dist/ has no disallowed external URLs."
 
 echo "==> [5/6] Adding & syncing iOS platform"
+npx cap sync ios
+node scripts/patch-ios-native-deps.mjs
 npx cap add ios
 
 echo "==> Patching ios/App/App/Info.plist (permissions + Google URL scheme)"
 node scripts/patch-ios-infoplist.mjs
+node scripts/patch-ios-native-deps.mjs
 
 # Generate ALL icon + splash sizes from resources/ using the official
 # @capacitor/assets tool. This regenerates every entry in AppIcon.appiconset
@@ -49,6 +52,7 @@ else
 fi
 
 npx cap sync ios
+node scripts/patch-ios-native-deps.mjs
 
 echo "==> [6/6] Proving generated ios/ is clean"
 FAILED=0
