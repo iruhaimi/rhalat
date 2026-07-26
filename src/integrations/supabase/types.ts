@@ -2691,6 +2691,39 @@ export type Database = {
       }
     }
     Functions: {
+      admin_list_tour_operators: {
+        Args: never
+        Returns: {
+          address: string | null
+          admin_notes: string | null
+          city: string | null
+          company_name: string
+          company_name_en: string | null
+          country: string | null
+          cover_image_url: string | null
+          created_at: string
+          description: string | null
+          description_en: string | null
+          email: string | null
+          id: string
+          is_active: boolean
+          is_verified: boolean
+          logo_url: string | null
+          phone: string | null
+          updated_at: string
+          user_id: string
+          verified_at: string | null
+          verified_by: string | null
+          website: string | null
+          whatsapp_number: string | null
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "tour_operators"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       ai_agent_performance: { Args: { p_days_back?: number }; Returns: Json }
       ai_bulk_notify: {
         Args: {
