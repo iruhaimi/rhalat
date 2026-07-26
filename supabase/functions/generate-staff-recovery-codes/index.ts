@@ -1,5 +1,5 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.49.1'
-import { corsHeaders } from '../_shared/cors.ts'
+import { getCorsHeaders } from '../_shared/cors.ts'
 
 // Generate a single recovery code using a CSPRNG (Web Crypto API)
 function generateRecoveryCode(): string {
@@ -34,6 +34,7 @@ async function hashRecoveryCode(code: string): Promise<string> {
 }
 
 Deno.serve(async (req) => {
+  const corsHeaders = getCorsHeaders(req)
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
   }
