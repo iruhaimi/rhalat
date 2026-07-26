@@ -35,6 +35,9 @@ echo "OK: dist/ has no disallowed external URLs."
 echo "==> [5/6] Adding & syncing iOS platform"
 npx cap add ios
 
+echo "==> Patching ios/App/App/Info.plist (permissions + Google URL scheme)"
+node scripts/patch-ios-infoplist.mjs
+
 # Generate ALL icon + splash sizes from resources/ using the official
 # @capacitor/assets tool. This regenerates every entry in AppIcon.appiconset
 # and Splash.imageset (and their Contents.json) so nothing stays empty.
