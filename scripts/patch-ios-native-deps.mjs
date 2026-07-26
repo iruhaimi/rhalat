@@ -13,6 +13,11 @@ import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 
 const SOCIAL_LOGIN_PACKAGE = 'node_modules/@capgo/capacitor-social-login/Package.swift';
 const SOCIAL_LOGIN_PODSPEC = 'node_modules/@capgo/capacitor-social-login/CapgoCapacitorSocialLogin.podspec';
+const STALE_SWIFT_PACKAGE_RESOLVED_FILES = [
+  'ios/App/App.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved',
+  'ios/App/CapApp-SPM/Package.resolved',
+];
+const UNUSED_IOS_PACKAGE_IDENTITIES = new Set(['facebook-ios-sdk', 'alamofire']);
 
 function patchFile(path, patcher) {
   if (!existsSync(path)) {
@@ -55,3 +60,28 @@ patchFile(SOCIAL_LOGIN_PODSPEC, (source) => {
   next = next.replace(/\n\s*s\.dependency 'Alamofire', '~> 5\.10\.2'.*/g, "\n  # s.dependency 'Alamofire', '~> 5.10.2'  # Disabled: Apple login uses @capacitor-community/apple-sign-in");
   return next;
 });
+
+for (const path of STALE_SWIFT_PACKAGE_RESOLVED_FILES) {
+  if (!existsSync(path)) continue;
+
+  const before = readFileSync(path, 'utf8');
+  try {
+    const resolved = JSON.parse(before);
+    if (!Array.isArray(resolved.pins)) {
+      console.log(`WARN: ${path} has no pins array — leaving unchanged.`);
+      continue;
+    }
+
+    const pins = resolved.pins.filter((pin) => !UNUSED_IOS_PACKAGE_IDENTITIES.has(String(pin.identity).toLowerCase()));
+    if (pins.length === resolved.pins.length) {
+      console.log(`OK: ${path} already has no stale Facebook/Alamofire pins.`);
+      continue;
+    }
+
+    const after = `${JSON.stringify({ ...resolved, pins }, null, 2)}\n`;
+    writeFileSync(path, after);
+    console.log(`OK: removed stale Facebook/Alamofire pins from ${path}.`);
+  } catch (error) {
+    console.log(`WARN: could not parse ${path}; reset Xcode package caches manually. ${error.message}`);
+  }
+}
