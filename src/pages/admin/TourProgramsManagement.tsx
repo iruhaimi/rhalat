@@ -31,7 +31,7 @@ export default function TourProgramsManagement() {
     setLoading(true);
     const { data } = await supabase
       .from('tour_programs')
-      .select('*, tour_operators(company_name, email, is_verified)')
+      .select('*, tour_operators(company_name, is_verified)')
       .order('created_at', { ascending: false });
     setPrograms(data ?? []);
     setLoading(false);
