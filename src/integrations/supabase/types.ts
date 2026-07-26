@@ -2818,6 +2818,7 @@ export type Database = {
         Args: { check_email: string }
         Returns: number
       }
+      get_my_wallet_balance: { Args: never; Returns: number }
       get_profile_id: { Args: { _user_id: string }; Returns: string }
       get_secure_document_info: {
         Args: { doc_id: string }
