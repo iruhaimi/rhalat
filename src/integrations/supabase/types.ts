@@ -1943,13 +1943,6 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "tour_bookings_operator_id_fkey"
-            columns: ["operator_id"]
-            isOneToOne: false
-            referencedRelation: "tour_operators_self"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "tour_bookings_program_id_fkey"
             columns: ["program_id"]
             isOneToOne: false
@@ -2196,13 +2189,6 @@ export type Database = {
             columns: ["operator_id"]
             isOneToOne: false
             referencedRelation: "tour_operators_public"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "tour_programs_operator_id_fkey"
-            columns: ["operator_id"]
-            isOneToOne: false
-            referencedRelation: "tour_operators_self"
             referencedColumns: ["id"]
           },
         ]
@@ -2645,48 +2631,6 @@ export type Database = {
           website: string | null
           whatsapp_number: string | null
         }
-        Insert: {
-          address?: string | null
-          city?: string | null
-          company_name?: string | null
-          company_name_en?: string | null
-          country?: string | null
-          cover_image_url?: string | null
-          created_at?: string | null
-          description?: string | null
-          description_en?: string | null
-          email?: string | null
-          id?: string | null
-          is_active?: boolean | null
-          is_verified?: boolean | null
-          logo_url?: string | null
-          phone?: string | null
-          updated_at?: string | null
-          user_id?: string | null
-          website?: string | null
-          whatsapp_number?: string | null
-        }
-        Update: {
-          address?: string | null
-          city?: string | null
-          company_name?: string | null
-          company_name_en?: string | null
-          country?: string | null
-          cover_image_url?: string | null
-          created_at?: string | null
-          description?: string | null
-          description_en?: string | null
-          email?: string | null
-          id?: string | null
-          is_active?: boolean | null
-          is_verified?: boolean | null
-          logo_url?: string | null
-          phone?: string | null
-          updated_at?: string | null
-          user_id?: string | null
-          website?: string | null
-          whatsapp_number?: string | null
-        }
         Relationships: []
       }
     }
@@ -2817,6 +2761,39 @@ export type Database = {
       get_failed_attempts_count: {
         Args: { check_email: string }
         Returns: number
+      }
+      get_my_tour_operator: {
+        Args: never
+        Returns: {
+          address: string | null
+          admin_notes: string | null
+          city: string | null
+          company_name: string
+          company_name_en: string | null
+          country: string | null
+          cover_image_url: string | null
+          created_at: string
+          description: string | null
+          description_en: string | null
+          email: string | null
+          id: string
+          is_active: boolean
+          is_verified: boolean
+          logo_url: string | null
+          phone: string | null
+          updated_at: string
+          user_id: string
+          verified_at: string | null
+          verified_by: string | null
+          website: string | null
+          whatsapp_number: string | null
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "tour_operators"
+          isOneToOne: false
+          isSetofReturn: true
+        }
       }
       get_my_wallet_balance: { Args: never; Returns: number }
       get_profile_id: { Args: { _user_id: string }; Returns: string }
