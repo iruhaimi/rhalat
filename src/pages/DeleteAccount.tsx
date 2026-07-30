@@ -77,6 +77,10 @@ export default function DeleteAccount() {
               يمكنك حذف حسابك نهائياً في أي وقت، مع معرفة ما الذي سيتم حذفه وما الذي قد يتم الاحتفاظ به
               وفقاً للأنظمة المعمول بها.
             </p>
+            <p className="mx-auto mt-5 max-w-2xl rounded-xl border border-primary/20 bg-primary/5 px-4 py-3 text-sm font-medium leading-relaxed text-foreground">
+              حذف الحساب متاح مباشرةً من داخل التطبيق ومن الموقع: افتح «الملف الشخصي» ← «حذف الحساب»،
+              ولا حاجة لإرسال أي طلب أو انتظار موافقة.
+            </p>
           </div>
         </div>
       </header>
