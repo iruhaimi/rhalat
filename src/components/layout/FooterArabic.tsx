@@ -66,7 +66,11 @@ export default function FooterArabic() {
   const exploreLinks = uniqueLinks.filter((l: any) => !HELP_URLS.has(l.url));
   const helpLinksFromQuick = uniqueLinks.filter((l: any) => HELP_URLS.has(l.url));
   // Help column = support links + policy links combined
-  const helpLinks = [...helpLinksFromQuick, ...policiesSettings];
+  const helpLinksBase = [...helpLinksFromQuick, ...policiesSettings];
+  const hasDeleteAccount = helpLinksBase.some((l: any) => l.url === '/delete-account');
+  const helpLinks = hasDeleteAccount
+    ? helpLinksBase
+    : [...helpLinksBase, { id: 'policy-delete-account', value: 'حذف الحساب', url: '/delete-account' }];
 
   // Get specific general settings
   const companyName = generalSettings.find(s => s.key === 'company_name')?.value || 'عطلات رحلاتكم للسياحة والسفر';
