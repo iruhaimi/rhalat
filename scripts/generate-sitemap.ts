@@ -33,6 +33,7 @@ const staticEntries: SitemapEntry[] = [
   { path: "/terms", changefreq: "yearly", priority: "0.3" },
   { path: "/privacy", changefreq: "yearly", priority: "0.3" },
   { path: "/refund", changefreq: "yearly", priority: "0.3" },
+  { path: "/delete-account", changefreq: "yearly", priority: "0.4" },
 ];
 
 async function fetchTable(table: string, select: string, filter = "is_active=eq.true"): Promise<any[]> {

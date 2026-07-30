@@ -21,6 +21,8 @@ export const LEGAL = {
   vatNumber: '302009616300003',
   /** Brand domain shown in legal text. */
   domain: 'visafaster.com',
+  /** Support inbox shown on public pages (account deletion, contact). */
+  supportEmail: 'support@visafaster.com',
   /** Saudi MoFA official consular services page (used in disclaimers). */
   mofaUrl: 'https://www.mofa.gov.sa/ar/ConsularServices',
 } as const;

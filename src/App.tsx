@@ -31,6 +31,7 @@ const FAQ = lazy(() => import("@/pages/FAQ"));
 const Terms = lazy(() => import("@/pages/Terms"));
 const Privacy = lazy(() => import("@/pages/Privacy"));
 const Refund = lazy(() => import("@/pages/Refund"));
+const DeleteAccount = lazy(() => import("@/pages/DeleteAccount"));
 const TrackRefund = lazy(() => import("@/pages/TrackRefund"));
 const PaymentSuccess = lazy(() => import("@/pages/PaymentSuccess"));
 const PaymentFailed = lazy(() => import("@/pages/PaymentFailed"));
@@ -137,6 +138,7 @@ const App = () => (
                 <Route path="/terms" element={<Terms />} />
                 <Route path="/privacy" element={<Privacy />} />
                 <Route path="/refund" element={<Refund />} />
+                <Route path="/delete-account" element={<DeleteAccount />} />
                 <Route path="/track-refund" element={<TrackRefund />} />
                 <Route path="/payment-success" element={<PaymentSuccess />} />
                 <Route path="/payment-failed" element={<PaymentFailed />} />
