@@ -11,6 +11,7 @@ import { useRealtimeNotifications } from '@/hooks/useRealtimeNotifications';
 import { formatDistanceToNow } from 'date-fns';
 import { ar } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
+import { isSafeInternalPath } from '@/lib/safeRedirect';
 
 export function NotificationBell() {
   const { notifications, unreadCount, markAsRead, markAllAsRead } = useRealtimeNotifications();
@@ -20,8 +21,8 @@ export function NotificationBell() {
     if (!notification.is_read) {
       await markAsRead(notification.id);
     }
-    if (notification.action_url) {
-      window.location.href = notification.action_url;
+    if (isSafeInternalPath(notification.action_url)) {
+      window.location.href = notification.action_url as string;
     }
     setOpen(false);
   };

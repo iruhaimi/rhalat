@@ -3,6 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import type { Notification } from '@/types/database';
+import { isSafeInternalPath } from '@/lib/safeRedirect';
 
 export function useRealtimeNotifications() {
   const { profile, isAgent } = useAuth();
@@ -58,10 +59,10 @@ export function useRealtimeNotifications() {
           toast.info(newNotification.title, {
             description: newNotification.message,
             duration: 5000,
-            action: newNotification.action_url ? {
+            action: isSafeInternalPath(newNotification.action_url) ? {
               label: 'عرض',
               onClick: () => {
-                window.location.href = newNotification.action_url!;
+                window.location.href = newNotification.action_url as string;
               },
             } : undefined,
           });

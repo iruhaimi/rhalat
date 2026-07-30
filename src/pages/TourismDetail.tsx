@@ -31,7 +31,7 @@ export default function TourismDetail() {
     (async () => {
       const { data } = await supabase
         .from('tour_programs')
-        .select('*, tour_operators_public(company_name, logo_url, whatsapp_number)')
+        .select('*, tour_operators_public(company_name, logo_url)')
         .eq('id', id)
         .eq('status', 'approved')
         .maybeSingle();
