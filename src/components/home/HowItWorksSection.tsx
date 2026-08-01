@@ -54,7 +54,7 @@ export default function HowItWorksSection({ t }: HowItWorksSectionProps) {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 md:gap-10">
           {steps.map((step, i) => (
             <motion.div
               key={step.num}

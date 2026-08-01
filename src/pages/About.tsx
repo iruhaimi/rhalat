@@ -28,21 +28,21 @@ export default function About() {
 
   const stats = [
     { 
-      value: '50K+', 
-      labelAr: 'طلب تمت خدمته', 
-      labelEn: 'Applications Served',
+      value: '4', 
+      labelAr: 'خطوات لتجهيز الملف', 
+      labelEn: 'Steps to prepare a file',
       icon: Award
     },
     { 
-      value: '98%', 
-      labelAr: 'نسبة الموافقة', 
-      labelEn: 'Approval Rate',
+      value: '5', 
+      labelAr: 'أيام متوسط التجهيز', 
+      labelEn: 'Days avg. preparation',
       icon: CheckCircle2
     },
     { 
-      value: '150+', 
-      labelAr: 'دولة نخدمها', 
-      labelEn: 'Countries Served',
+      value: '50+', 
+      labelAr: 'دولة معلوماتها متاحة', 
+      labelEn: 'Countries covered',
       icon: Globe
     },
     { 
@@ -79,8 +79,8 @@ export default function About() {
       icon: Target,
       titleAr: 'الدقة',
       titleEn: 'Accuracy',
-      descAr: 'نحرص على دقة المعلومات والمستندات لضمان الموافقة',
-      descEn: 'We ensure accuracy of information and documents for approval'
+      descAr: 'نحرص على دقة المعلومات والمستندات وفق ما تطلبه الجهة الرسمية',
+      descEn: 'We ensure accuracy of information and documents per the official authority requirements'
     },
   ];
 
@@ -102,8 +102,8 @@ export default function About() {
     {
       nameAr: 'خالد العتيبي',
       nameEn: 'Khaled Al-Otaibi',
-      roleAr: 'رئيس قسم التأشيرات',
-      roleEn: 'Visa Department Head',
+      roleAr: 'مدير خدمات تجهيز الملفات',
+      roleEn: 'File Preparation Services Manager',
       image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face'
     },
   ];
@@ -123,7 +123,7 @@ export default function About() {
 
   return (
     <div className="min-h-screen bg-canvas">
-      <SEO title="من نحن — عطلات رحلاتكم" description="تعرّف على عطلات رحلاتكم: فريق متخصص في خدمات التأشيرات حول العالم بخبرة ودعم محلي في الرياض." path="/about" />
+      <SEO title="من نحن — عطلات رحلاتكم" description="عطلات رحلاتكم وكالة سفر خاصة تقدم خدمات تجهيز ومراجعة ملفات طلبات التأشيرة والمساعدة في المواعيد وخدمات السفر. لسنا جهة حكومية ولا نصدر التأشيرات." path="/about" />
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-navy via-navy/95 to-brand py-24 overflow-hidden">
         {/* Decorative Elements */}
@@ -223,19 +223,19 @@ export default function About() {
                 {isRTL ? 'قصتنا' : 'Our Story'}
               </Badge>
               <h2 className="text-3xl md:text-4xl font-bold mb-6">
-                {isRTL ? 'رحلة نجاح مستمرة' : 'A Continuous Success Journey'}
+                {isRTL ? 'قصتنا' : 'Our Story'}
               </h2>
               <div className="space-y-4 text-muted-foreground leading-relaxed">
                 <p>
                   {isRTL 
-                    ? 'بدأت عطلات رحلاتكم رحلتها في عام 2015 كمكتب صغير لخدمات التأشيرات في الرياض. ومنذ ذلك الحين، نمت الشركة لتصبح واحدة من أكبر شركات خدمات التأشيرات في المنطقة.'
-                    : 'Otolat Rahlatcom started its journey in 2015 as a small visa services office in Riyadh. Since then, the company has grown to become one of the largest visa services companies in the region.'
+                    ? 'بدأت عطلات رحلاتكم رحلتها في عام 2015 كمكتب سفر وسياحة في الرياض، ونقدم اليوم خدمات تجهيز ومراجعة ملفات طلبات التأشيرة والمساعدة في المواعيد وخدمات السفر.'
+                    : 'Otolat Rahlatcom started in 2015 as a travel and tourism office in Riyadh, and today provides visa application file preparation and review, appointment assistance and travel services.'
                   }
                 </p>
                 <p>
                   {isRTL
-                    ? 'نفخر بفريقنا المكون من أكثر من 50 متخصصاً في التأشيرات والسفر، يعملون على مدار الساعة لضمان حصول عملائنا على أفضل خدمة ممكنة.'
-                    : 'We are proud of our team of over 50 visa and travel specialists, working around the clock to ensure our clients receive the best possible service.'
+                    ? 'نفخر بفريقنا المتخصص في تجهيز ومراجعة ملفات طلبات التأشيرة والمساعدة في المواعيد وخدمات السفر.'
+                    : 'We are proud of our team specialized in preparing and reviewing visa application files, appointment assistance and travel services.'
                   }
                 </p>
                 <p>
