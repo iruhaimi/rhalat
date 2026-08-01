@@ -80,15 +80,19 @@ function shouldScanForPwaReferences(relativePath) {
 }
 
 function scanContent(content, relativePath) {
+  // `@lovable.dev/mcp-js` is a build-time npm package name (the MCP server SDK),
+  // not a runtime URL — it never redirects the native app to lovable.dev.
+  const sanitized = content.replace(/@lovable\.dev\/mcp-js(\/[a-z0-9/._-]*)?/gi, '@mcp-sdk');
+
   for (const { pattern, label } of forbiddenPatterns) {
-    if (pattern.test(content)) {
+    if (pattern.test(sanitized)) {
       failures.push(`${relativePath} contains forbidden native-build reference: ${label}`);
     }
   }
 
   if (shouldScanForPwaReferences(relativePath)) {
     for (const { pattern, label } of forbiddenPwaPatterns) {
-      if (pattern.test(content)) {
+      if (pattern.test(sanitized)) {
         failures.push(`${relativePath} contains forbidden native-build PWA/cache reference: ${label}`);
       }
     }
