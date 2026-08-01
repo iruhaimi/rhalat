@@ -2,6 +2,7 @@ import { Outlet } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
 import HeaderArabic from './HeaderArabic';
 import FooterArabic from './FooterArabic';
+import ComplianceDisclaimer from './ComplianceDisclaimer';
 import { useAuth } from '@/contexts/AuthContext';
 import { useDespiaDevice } from '@/hooks/useDespiaDevice';
 
@@ -15,6 +16,7 @@ export default function MainLayout() {
   return (
     <div className="flex min-h-screen flex-col" style={{ paddingLeft: 'var(--safe-area-left, 0px)', paddingRight: 'var(--safe-area-right, 0px)' }}>
       <HeaderArabic />
+      <ComplianceDisclaimer variant="banner" />
       <main className="flex-1">
         <Outlet />
       </main>

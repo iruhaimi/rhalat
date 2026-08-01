@@ -51,7 +51,6 @@ export default function HomeArabic() {
   return (
     <div className="flex flex-col">
       <SEO title="عطلات رحلاتكم — خدمات التأشيرات السياحية والأعمال" description="احصل على تأشيرتك بسرعة وأمان مع عطلات رحلاتكم. تأشيرات سياحية، أعمال، طلابية، وشنغن لجميع الجنسيات." path="/" />
-      <ComplianceDisclaimer variant="banner" />
       <HeroSection />
       <CountriesSection countries={countries} visaTypes={visaTypes} t={t} />
 
