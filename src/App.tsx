@@ -155,6 +155,7 @@ const App = () => (
 
               {/* Auth Routes */}
               <Route path="/auth" element={<Auth />} />
+              <Route path="/.lovable/oauth/consent" element={<OAuthConsent />} />
               <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/install" element={<Install />} />
               <Route path="/__gtag-check" element={<GTagCheck />} />
