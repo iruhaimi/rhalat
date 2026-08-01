@@ -8,7 +8,6 @@ import type { Country, VisaType } from '@/types/database';
 // Above-the-fold sections (eager)
 import HeroSection from '@/components/home/HeroSection';
 import CountriesSection from '@/components/home/CountriesSection';
-import ComplianceDisclaimer from '@/components/layout/ComplianceDisclaimer';
 
 // Below-the-fold sections (lazy)
 const HowItWorksSection = lazy(() => import('@/components/home/HowItWorksSection'));
