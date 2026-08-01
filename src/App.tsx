@@ -40,6 +40,7 @@ const MyApplications = lazy(() => import("@/pages/MyApplications"));
 const MyApplicationDetail = lazy(() => import("@/pages/MyApplicationDetail"));
 const SpecialOffers = lazy(() => import("@/pages/SpecialOffers"));
 const ResetPassword = lazy(() => import("@/pages/ResetPassword"));
+const OAuthConsent = lazy(() => import("@/pages/OAuthConsent"));
 const Install = lazy(() => import("@/pages/Install"));
 const Blog = lazy(() => import("@/pages/Blog"));
 const BlogPost = lazy(() => import("@/pages/BlogPost"));
