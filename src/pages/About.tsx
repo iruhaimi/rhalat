@@ -29,8 +29,8 @@ export default function About() {
   const stats = [
     { 
       value: '50K+', 
-      labelAr: 'تأشيرة تم إصدارها', 
-      labelEn: 'Visas Issued',
+      labelAr: 'طلب تمت خدمته', 
+      labelEn: 'Applications Served',
       icon: Award
     },
     { 
@@ -240,8 +240,8 @@ export default function About() {
                 </p>
                 <p>
                   {isRTL
-                    ? 'هدفنا هو جعل عملية الحصول على التأشيرة سهلة وخالية من المتاعب، حتى تتمكن من التركيز على الاستمتاع برحلتك.'
-                    : 'Our goal is to make the visa application process easy and hassle-free, so you can focus on enjoying your trip.'
+                    ? 'هدفنا هو تسهيل تجهيز طلب التأشيرة ومراجعة مستنداته، حتى تتمكن من التركيز على الاستمتاع برحلتك. قرار المنح يعود حصرياً للجهات الحكومية المختصة.'
+                    : 'Our goal is to simplify preparing and reviewing your visa application, so you can focus on enjoying your trip. Issuance decisions rest solely with the competent government authorities.'
                   }
                 </p>
               </div>

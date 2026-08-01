@@ -107,11 +107,11 @@ export default function LandingVisa() {
               <span>أكثر من 10,000 طلب ناجح</span>
             </span>
             <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">
-              طلب تأشيرتك القادم <span className="text-primary">بأيدٍ أمينة</span>
+              تجهيز طلب تأشيرتك القادم <span className="text-primary">بأيدٍ أمينة</span>
             </h1>
             <p className="text-lg text-muted-foreground mb-8">
               نتولى عنك تجهيز ومراجعة طلب التأشيرة بالكامل — شنغن، بريطانيا، أمريكا، وأكثر.
-              متابعة مباشرة حتى وصول التأشيرة.
+              متابعة مباشرة حتى صدور قرار الجهة الرسمية.
             </p>
             <div className="flex flex-col sm:flex-row gap-3">
               <Button
