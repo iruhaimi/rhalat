@@ -31,8 +31,8 @@ const translations: Record<Language, Record<string, string>> = {
     'nav.signOut': 'تسجيل الخروج',
     
     // Hero
-    'hero.title': 'قدّم على تأشيرتك بسهولة وأمان',
-    'hero.subtitle': 'خدمات إصدار التأشيرات لأكثر من 50 دولة حول العالم. نضمن لك تجربة سلسة وسريعة.',
+    'hero.title': 'خدمة تجهيز طلبات التأشيرة بسهولة وأمان',
+    'hero.subtitle': 'خدمات المساعدة في تجهيز طلبات التأشيرة لأكثر من 50 دولة حول العالم. قرار المنح يعود للجهات الرسمية.',
     'hero.cta': 'اختر وجهتك وابدأ',
     'hero.searchPlaceholder': 'ابحث عن الدولة...',
     'hero.trusted': 'موثوق من قبل أكثر من 10,000 مسافر',
@@ -45,7 +45,7 @@ const translations: Record<Language, Record<string, string>> = {
     
     // How it works
     'howItWorks.title': 'كيف نعمل',
-    'howItWorks.subtitle': 'احصل على تأشيرتك في 4 خطوات بسيطة',
+    'howItWorks.subtitle': 'جهز طلب التأشيرة في 4 خطوات بسيطة',
     'howItWorks.step1.title': 'اختر الدولة',
     'howItWorks.step1.desc': 'حدد وجهتك ونوع التأشيرة المطلوبة',
     'howItWorks.step2.title': 'املأ البيانات',
@@ -73,7 +73,7 @@ const translations: Record<Language, Record<string, string>> = {
     'countries.viewAll': 'عرض كل الدول',
     'countries.processingDays': 'يوم معالجة',
     'countries.startingFrom': 'يبدأ من',
-    'countries.applyNow': 'قدّم الآن',
+    'countries.applyNow': 'ابدأ طلب خدمة تجهيز التأشيرة',
     'countries.details': 'التفاصيل',
     
     // Pricing
@@ -161,7 +161,7 @@ const translations: Record<Language, Record<string, string>> = {
     'payment.downloadReceipt': 'تحميل الإيصال',
     
     // Footer
-    'footer.about': 'نحن شركة متخصصة في إصدار التأشيرات لجميع دول العالم. نقدم خدمات احترافية وسريعة.',
+    'footer.about': 'نحن وكالة سفر وسياحة تقدم خدمات المساعدة في تجهيز طلبات التأشيرات وحجوزات السفر.',
     'footer.quickLinks': 'روابط سريعة',
     'footer.policies': 'السياسات',
     'footer.terms': 'الشروط والأحكام',
@@ -236,8 +236,8 @@ const translations: Record<Language, Record<string, string>> = {
     'nav.signOut': 'Sign Out',
     
     // Hero
-    'hero.title': 'Apply for Your Visa with Ease and Security',
-    'hero.subtitle': 'Visa services for over 50 countries worldwide. We guarantee a smooth and fast experience.',
+    'hero.title': 'Visa Application Preparation Made Simple',
+    'hero.subtitle': 'Visa application preparation assistance for over 50 countries. Visa decisions rest solely with official authorities.',
     'hero.cta': 'Choose Your Destination',
     'hero.searchPlaceholder': 'Search for a country...',
     'hero.trusted': 'Trusted by over 10,000 travelers',
@@ -250,7 +250,7 @@ const translations: Record<Language, Record<string, string>> = {
     
     // How it works
     'howItWorks.title': 'How It Works',
-    'howItWorks.subtitle': 'Get your visa in 4 simple steps',
+    'howItWorks.subtitle': 'Prepare your visa application in 4 simple steps',
     'howItWorks.step1.title': 'Choose Country',
     'howItWorks.step1.desc': 'Select your destination and visa type',
     'howItWorks.step2.title': 'Fill Details',
@@ -278,7 +278,7 @@ const translations: Record<Language, Record<string, string>> = {
     'countries.viewAll': 'View All Countries',
     'countries.processingDays': 'Processing Days',
     'countries.startingFrom': 'Starting from',
-    'countries.applyNow': 'Apply Now',
+    'countries.applyNow': 'Start visa preparation request',
     'countries.details': 'Details',
     
     // Pricing
@@ -366,7 +366,7 @@ const translations: Record<Language, Record<string, string>> = {
     'payment.downloadReceipt': 'Download Receipt',
     
     // Footer
-    'footer.about': 'We specialize in visa services for countries worldwide. We provide professional and fast services.',
+    'footer.about': 'We are a travel and tourism agency providing visa application preparation assistance and travel booking services.',
     'footer.quickLinks': 'Quick Links',
     'footer.policies': 'Policies',
     'footer.terms': 'Terms & Conditions',

@@ -163,8 +163,8 @@ export default function About() {
             </h1>
             <p className="text-xl text-white/80 max-w-3xl mx-auto leading-relaxed">
               {isRTL 
-                ? 'عطلات رحلاتكم هي شركة رائدة في مجال خدمات التأشيرات، نساعد المسافرين من جميع أنحاء العالم في الحصول على تأشيراتهم بسهولة وأمان'
-                : 'Otolat Rahlatcom is a leading visa services company, helping travelers worldwide obtain their visas easily and securely'
+                ? 'عطلات رحلاتكم وكالة سفر وسياحة تقدم خدمات المساعدة في تجهيز طلبات التأشيرات وحجوزات السفر. نساعد المسافرين في تجهيز طلبات التأشيرة واستكمال متطلباتها وفق المعلومات الرسمية.'
+                : 'Otolat Rahlatcom is a travel and tourism agency providing visa application preparation assistance and travel bookings, helping travelers complete their application requirements based on official information.'
               }
             </p>
           </motion.div>
@@ -403,8 +403,8 @@ export default function About() {
             </h2>
             <p className="text-lg opacity-90 mb-8 max-w-2xl mx-auto">
               {isRTL 
-                ? 'تواصل معنا اليوم ودعنا نساعدك في الحصول على تأشيرتك بكل سهولة'
-                : 'Contact us today and let us help you get your visa with ease'
+                ? 'تواصل معنا اليوم ودعنا نساعدك في تجهيز طلب التأشيرة واستكمال متطلباته'
+                : 'Contact us today and let us help you prepare your visa application'
               }
             </p>
             <div className="flex flex-wrap justify-center gap-4">

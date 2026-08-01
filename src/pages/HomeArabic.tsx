@@ -49,7 +49,7 @@ export default function HomeArabic() {
 
   return (
     <div className="flex flex-col">
-      <SEO title="عطلات رحلاتكم — خدمات التأشيرات السياحية والأعمال" description="احصل على تأشيرتك بسرعة وأمان مع عطلات رحلاتكم. تأشيرات سياحية، أعمال، طلابية، وشنغن لجميع الجنسيات." path="/" />
+      <SEO title="عطلات رحلاتكم — خدمات التأشيرات السياحية والأعمال" description="احصل على المساعدة في تجهيز طلب التأشيرة مع عطلات رحلاتكم. وكالة سفر خاصة — لا نصدر التأشيرات ولا نمثل أي جهة حكومية." path="/" />
       <HeroSection />
       <CountriesSection countries={countries} visaTypes={visaTypes} t={t} />
 

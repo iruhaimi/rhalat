@@ -26,7 +26,7 @@ const destinations = [
 const steps = [
   { icon: FileCheck2, title: "ارفع مستنداتك", desc: "خطوات بسيطة عبر الموقع — أقل من 5 دقائق." },
   { icon: UserCheck, title: "يراجعها فريقنا", desc: "خبراء معتمدون يتأكدون من اكتمال طلبك قبل التقديم." },
-  { icon: Plane, title: "استلم تأشيرتك", desc: "متابعة مباشرة حتى وصول التأشيرة إلى بريدك." },
+  { icon: Plane, title: "متابعة الطلب", desc: "متابعة مباشرة لحالة طلبك حتى صدور قرار الجهة الرسمية." },
 ];
 
 const faqs = [
@@ -107,7 +107,7 @@ export default function LandingVisa() {
               <span>أكثر من 10,000 طلب ناجح</span>
             </span>
             <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">
-              تأشيرتك القادمة <span className="text-primary">بأيدٍ أمينة</span>
+              طلب تأشيرتك القادم <span className="text-primary">بأيدٍ أمينة</span>
             </h1>
             <p className="text-lg text-muted-foreground mb-8">
               نتولى عنك تجهيز ومراجعة طلب التأشيرة بالكامل — شنغن، بريطانيا، أمريكا، وأكثر.
@@ -195,7 +195,7 @@ export default function LandingVisa() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-10">
             <h2 className="text-3xl font-bold mb-2">كيف نعمل؟</h2>
-            <p className="text-muted-foreground">3 خطوات بسيطة وتأشيرتك في الطريق</p>
+            <p className="text-muted-foreground">3 خطوات بسيطة لتجهيز طلب التأشيرة</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {steps.map((s, i) => (
@@ -261,7 +261,7 @@ export default function LandingVisa() {
       <section className="py-16 bg-gradient-to-l from-primary to-primary/80 text-primary-foreground">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">جاهز تبدأ طلبك؟</h2>
-          <p className="text-lg mb-8 opacity-90">انضم لآلاف العملاء الذين ضمنوا تأشيراتهم معنا</p>
+          <p className="text-lg mb-8 opacity-90">انضم لآلاف العملاء الذين جهزوا طلبات تأشيراتهم معنا</p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Button asChild size="lg" variant="secondary" onClick={() => handleCtaClick("final_start")}>
               <Link to="/apply">
