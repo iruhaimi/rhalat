@@ -22,7 +22,7 @@ export default function HowItWorksSection({ t }: HowItWorksSectionProps) {
     },
     {
       num: '03',
-      title: t('howItWorks.step3.title') || (isRTL ? 'استلم تأشيرتك' : 'Receive your visa'),
+      title: t('howItWorks.step3.title') || (isRTL ? 'متابعة الطلب' : 'Track your application'),
       desc: t('howItWorks.step3.desc') || (isRTL ? 'سنعالج طلبك ونرسل التأشيرة إلكترونياً، خطوة بخطوة معك.' : 'We process and deliver — we’ll keep you posted at every step.'),
     },
   ];

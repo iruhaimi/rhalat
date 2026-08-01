@@ -318,7 +318,7 @@ export default function Destinations() {
                         </Button>
                         <Button size="sm" className="flex-1 rounded-xl h-8 text-xs gap-1 bg-navy hover:bg-navy/90 text-navy-foreground" asChild>
                           <Link to="/apply?country=SCHENGEN">
-                            قدّم الآن
+                            ابدأ الطلب
                             <ArrowIcon className="h-3 w-3" />
                           </Link>
                         </Button>
@@ -391,7 +391,7 @@ export default function Destinations() {
                           </Button>
                           <Button size="sm" className="flex-1 rounded-xl h-8 text-xs gap-1 bg-navy hover:bg-navy/90 text-navy-foreground" asChild>
                             <Link to={`/apply?country=${country.code}`}>
-                              قدّم الآن
+                              ابدأ الطلب
                               <ArrowIcon className="h-3 w-3" />
                             </Link>
                           </Button>

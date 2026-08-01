@@ -523,7 +523,7 @@ export default function Pricing() {
                                   <TableCell>
                                     <Button size="sm" className="rounded-xl" asChild>
                                       <Link to={`/apply?country=${countryCode}&visa=${visa.id}`}>
-                                        {isRTL ? 'قدّم الآن' : 'Apply'}
+                                        {isRTL ? 'ابدأ الطلب' : 'Start request'}
                                         <ArrowLeft className="h-4 w-4 mr-1" />
                                       </Link>
                                     </Button>
@@ -648,7 +648,7 @@ export default function Pricing() {
                               {/* Apply Button */}
                               <Button className="w-full rounded-xl" asChild>
                                 <Link to={`/apply?country=${countryCode}&visa=${visa.id}`}>
-                                  {isRTL ? 'قدّم الآن' : 'Apply Now'}
+                                  {isRTL ? 'ابدأ الطلب' : 'Start Request'}
                                   <ArrowLeft className="h-4 w-4 mr-1" />
                                 </Link>
                               </Button>

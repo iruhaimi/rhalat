@@ -153,7 +153,7 @@ export default function BlogPost() {
       )}
 
       <Card className="mt-10 p-6 bg-primary/5 border-primary/20">
-        <h3 className="font-bold text-xl mb-2">جاهز للحصول على تأشيرتك؟</h3>
+        <h3 className="font-bold text-xl mb-2">جاهز لتجهيز طلب التأشيرة؟</h3>
         <p className="text-muted-foreground mb-4">
           فريق عطلات رحلاتكم يساعدك في تجهيز ملف كامل ومراجعة شاملة قبل التقديم.
         </p>

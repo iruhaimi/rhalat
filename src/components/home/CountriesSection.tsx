@@ -176,7 +176,7 @@ export default function CountriesSection({ countries, visaTypes, t }: CountriesS
                   </Button>
                   <Button size="sm" className="flex-1 rounded-xl h-8 text-xs gap-1 bg-navy hover:bg-navy/90 text-navy-foreground" asChild>
                     <Link to={item.applyHref}>
-                      قدّم الآن
+                      ابدأ الطلب
                       <ArrowIcon className="h-3 w-3" />
                     </Link>
                   </Button>

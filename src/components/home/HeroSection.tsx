@@ -106,8 +106,8 @@ export default function HeroSection() {
 
               <p className="font-body-ar text-base md:text-lg text-muted-foreground max-w-lg leading-relaxed mb-10">
                 {getSetting('description',
-                  'نقدم لك خدمات التأشيرات والسفر بأعلى جودة وأفضل الأسعار. احصل على تأشيرتك بكل سهولة ويسر مع فريقنا المتخصص.',
-                  'We offer visa and travel services with the highest quality and best prices. Get your visa with ease.'
+                  'نقدم لك خدمات المساعدة في تجهيز طلبات التأشيرة والسفر بأعلى جودة. احصل على المساعدة في تجهيز طلب التأشيرة مع فريقنا المتخصص.',
+                  'We provide visa application preparation assistance and travel services. Get help preparing your visa application.'
                 )}
               </p>
 

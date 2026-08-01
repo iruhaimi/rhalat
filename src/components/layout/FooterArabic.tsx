@@ -240,7 +240,7 @@ export default function FooterArabic() {
         {/* Final bar: copyright + non-government notice */}
         <div className="mt-8 border-t border-border pt-6 flex flex-col items-center gap-2 text-center">
           <p className="text-xs text-muted-foreground">
-            هذا الموقع يقدم خدمات المساعدة في إصدار التأشيرات ولا يمثل أي سفارة أو جهة حكومية رسمية.
+            هذا الموقع يقدم خدمات المساعدة في تجهيز طلبات التأشيرات فقط، ولا يصدر التأشيرات ولا يمثل أي سفارة أو جهة حكومية رسمية.
           </p>
           <p className="text-sm text-muted-foreground">
             © {new Date().getFullYear()} {companyName}. {t('footer.rights')}.
