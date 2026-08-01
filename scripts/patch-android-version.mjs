@@ -11,8 +11,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-const VERSION_CODE = Number(process.env.ANDROID_VERSION_CODE || 2);
-const VERSION_NAME = process.env.ANDROID_VERSION_NAME || '1.0.1';
+const VERSION_CODE = Number(process.env.ANDROID_VERSION_CODE || 3);
+const VERSION_NAME = process.env.ANDROID_VERSION_NAME || '1.0.2';
 
 const gradlePath =
   process.env.ANDROID_BUILD_GRADLE_PATH || path.resolve('android/app/build.gradle');
