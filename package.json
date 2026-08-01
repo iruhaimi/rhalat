@@ -16,7 +16,8 @@
     "guard:mobile": "node scripts/guard-mobile-build.mjs",
     "android:patch": "node scripts/patch-android-mainactivity.mjs",
     "android:version": "node scripts/patch-android-version.mjs",
-    "android:release": "npm run build && npx cap sync android && npm run android:patch && npm run android:version",
+    "android:signing": "node scripts/patch-android-signing.mjs",
+    "android:release": "npm run build && npx cap sync android && npm run android:patch && npm run android:version && npm run android:signing",
     "ios:rebuild-clean": "bash scripts/rebuild-ios.sh"
   },
   "dependencies": {
