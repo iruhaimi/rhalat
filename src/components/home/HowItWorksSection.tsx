@@ -22,8 +22,13 @@ export default function HowItWorksSection({ t }: HowItWorksSectionProps) {
     },
     {
       num: '03',
-      title: t('howItWorks.step3.title') || (isRTL ? 'متابعة الطلب' : 'Track your application'),
-      desc: t('howItWorks.step3.desc') || (isRTL ? 'سنعالج طلبك ونرسل التأشيرة إلكترونياً، خطوة بخطوة معك.' : 'We process and deliver — we’ll keep you posted at every step.'),
+      title: t('howItWorks.step3.title') || (isRTL ? 'المراجعة والمواعيد' : 'Review & appointments'),
+      desc: t('howItWorks.step3.desc') || (isRTL ? 'نراجع مستنداتك ونساعدك في البحث عن المواعيد المتاحة وحجزها عند توفر الخدمة، دون ضمان توفر موعد.' : 'We review your documents and help search for and book available appointments where the service is offered, without guaranteeing availability.'),
+    },
+    {
+      num: '04',
+      title: t('howItWorks.step4.title') || (isRTL ? 'التقديم لدى الجهة الرسمية' : 'Submission to the official authority'),
+      desc: t('howItWorks.step4.desc') || (isRTL ? 'بعد اكتمال المراجعة، يتولى العميل تقديم الطلب إلى السفارة أو الجهة الرسمية المختصة، ويمكننا مساعدته في متابعة حالة الخدمة لدينا.' : 'After the review is complete, the client submits the application to the embassy or competent official authority; we can help follow up on the status of our service.'),
     },
   ];
 
