@@ -17,7 +17,7 @@
     "android:patch": "node scripts/patch-android-mainactivity.mjs",
     "android:version": "node scripts/patch-android-version.mjs",
     "android:signing": "node scripts/patch-android-signing.mjs",
-    "android:release": "npm run build && npx cap sync android && npm run android:patch && npm run android:version && npm run android:signing",
+    "android:release": "node scripts/build-android-release.mjs",
     "ios:rebuild-clean": "bash scripts/rebuild-ios.sh"
   },
   "dependencies": {

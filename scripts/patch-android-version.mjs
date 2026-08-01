@@ -6,13 +6,18 @@
  *
  * Usage:
  *   node scripts/patch-android-version.mjs            # uses defaults below
- *   ANDROID_VERSION_CODE=3 ANDROID_VERSION_NAME=1.0.2 node scripts/patch-android-version.mjs
+ *   ANDROID_VERSION_CODE=4 ANDROID_VERSION_NAME=1.0.3 node scripts/patch-android-version.mjs
  */
 import fs from 'node:fs';
 import path from 'node:path';
 
-const VERSION_CODE = Number(process.env.ANDROID_VERSION_CODE || 3);
-const VERSION_NAME = process.env.ANDROID_VERSION_NAME || '1.0.2';
+const VERSION_CODE = Number(process.env.ANDROID_VERSION_CODE || 4);
+const VERSION_NAME = process.env.ANDROID_VERSION_NAME || '1.0.3';
+
+if (!Number.isInteger(VERSION_CODE) || VERSION_CODE < 4) {
+  console.error('ANDROID_VERSION_CODE must be an integer of 4 or higher.');
+  process.exit(1);
+}
 
 const gradlePath =
   process.env.ANDROID_BUILD_GRADLE_PATH || path.resolve('android/app/build.gradle');
