@@ -32,8 +32,8 @@ export default function CTASection({ t }: CTASectionProps) {
             </h2>
             <p className="font-body-ar text-lg md:text-xl opacity-90 mb-10 leading-relaxed">
               {isRTL
-                ? 'أكثر من 10,000 عميل سعيد وثقوا بنا — فريقنا جاهز لمساعدتك بأسرع وقت.'
-                : 'Over 10,000 happy clients trusted us — our team is ready to help you fast.'}
+                ? 'خدمة اختيارية مدفوعة لتجهيز ومراجعة ملف طلبك — لا نصدر التأشيرات ولا نضمن قبولها.'
+                : 'An optional paid service to prepare and review your application file — we do not issue visas or guarantee approval.'}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg" className="h-14 px-10 rounded-2xl bg-white text-brand hover:bg-white/95 hover:scale-[1.02] transition-transform font-jakarta font-extrabold text-base shadow-xl">

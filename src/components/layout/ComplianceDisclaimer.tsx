@@ -12,27 +12,20 @@ export default function ComplianceDisclaimer({ variant = 'banner' }: { variant?:
   const { direction } = useLanguage();
   const isRTL = direction === 'rtl';
 
+  const fullAr = 'هذا تطبيق تابع لوكالة سفر خاصة وليس تطبيقًا حكوميًا، ولا يمثل أو يتبع أو يحظى بتأييد أي سفارة أو قنصلية أو جهة حكومية. نقدم خدمات اختيارية مدفوعة لتجهيز ومراجعة ملفات الطلبات. لا نصدر التأشيرات ولا نضمن قبولها أو إصدارها، والقرار النهائي حصريًا للجهة الرسمية المختصة.';
+  const fullEn = 'This app belongs to a private travel agency. It is not a government app and is not affiliated with, endorsed by, or representing any embassy, consulate or government entity. We provide optional paid services to prepare and review application files. We do not issue visas and do not guarantee their approval or issuance; the final decision rests solely with the competent official authority.';
+
   if (variant === 'banner') {
     return (
       <div className="w-full bg-muted/60 border-b border-border">
         <div className="container-section py-2.5 flex items-start gap-2 text-xs md:text-sm text-muted-foreground">
           <Info className="h-4 w-4 mt-0.5 flex-shrink-0 text-brand" aria-hidden="true" />
           <p className="leading-relaxed">
-            {isRTL ? (
-              <>
-                <strong className="text-foreground">Visafaster</strong> وكالة خاصة مستقلة تقدّم خدمات استشارية وتجهيز ملفات التأشيرات مقابل رسوم. لسنا جهة حكومية ولا تابعين لأي سفارة.{' '}
-                <Link to="/official-embassies" className="font-semibold text-brand hover:underline">
-                  روابط المواقع الرسمية للسفارات →
-                </Link>
-              </>
-            ) : (
-              <>
-                <strong className="text-foreground">Visafaster</strong> is a private independent agency providing consultancy and visa file preparation for a fee. We are not a government entity or affiliated with any embassy.{' '}
-                <Link to="/official-embassies" className="font-semibold text-brand hover:underline">
-                  Official embassy links →
-                </Link>
-              </>
-            )}
+            <strong className="text-foreground">{isRTL ? 'تنبيه:' : 'Notice:'}</strong>{' '}
+            {isRTL ? fullAr : fullEn}{' '}
+            <Link to="/official-embassies" className="font-semibold text-brand hover:underline">
+              {isRTL ? 'روابط المواقع الحكومية الرسمية →' : 'Official government links →'}
+            </Link>
           </p>
         </div>
       </div>
@@ -48,10 +41,10 @@ export default function ComplianceDisclaimer({ variant = 'banner' }: { variant?:
           {isRTL ? (
             <>
               <p>
-                <strong className="text-foreground">إخلاء مسؤولية:</strong> موقع <span dir="ltr">{LEGAL.domain}</span> هو منصة تابعة لـ {LEGAL.companyNameAr}، وكالة سفر خاصة تقدم خدمات استشارية ومساعدة في تجهيز ملفات التأشيرة مقابل رسوم إضافية. لسنا جهة حكومية ولا تابعين لأي سفارة.
+                <strong className="text-foreground">إخلاء مسؤولية:</strong> {fullAr} تُشغَّل المنصة <span dir="ltr">{LEGAL.domain}</span> بواسطة {LEGAL.companyNameAr}.
               </p>
               <p>
-                <strong className="text-foreground">شفافية الرسوم:</strong> الرسوم المدفوعة لنا هي مقابل خدمة التنسيق والاستشارة وتجهيز الملف، وليست رسوم التأشيرة الحكومية الرسمية. يمكنك الحصول على التأشيرة مباشرة عبر المواقع الحكومية الرسمية بتكلفة أقل أو مجاناً.
+                <strong className="text-foreground">شفافية الرسوم:</strong> رسوم خدمتنا منفصلة عن رسوم الجهات الحكومية، وأي رسوم حكومية تخضع لشروط وآلية الدفع التي تحددها الجهة الرسمية المختصة. يمكنك التقديم مباشرة عبر المواقع الحكومية الرسمية دون الاستعانة بنا.
               </p>
               <p>
                 <Link to="/official-embassies" className="font-semibold text-brand hover:underline">
@@ -71,7 +64,7 @@ export default function ComplianceDisclaimer({ variant = 'banner' }: { variant?:
           ) : (
             <>
               <p>
-                <strong className="text-foreground">Disclaimer:</strong> {LEGAL.domain} is operated by {LEGAL.companyNameEn}, a private travel agency providing third-party consultancy and visa application assistance for a fee. We are not a government entity or affiliated with any embassy.
+                <strong className="text-foreground">Disclaimer:</strong> {fullEn} {LEGAL.domain} is operated by {LEGAL.companyNameEn}.
               </p>
               <p>
                 <strong className="text-foreground">Fee transparency:</strong> Fees paid to us are for coordination, consultancy and file preparation — not the official government visa fees. Official services are available directly from government websites, typically at a lower cost or free.

@@ -368,7 +368,7 @@ export default function CountryDetail() {
           <div className="text-center mb-14">
             <h2 className="font-heading-ar text-3xl md:text-4xl font-extrabold text-navy mb-3 flex items-center justify-center gap-3">
               <ListChecks className="h-7 w-7 text-brand" />
-              {isRTL ? 'خطوات الحصول على التأشيرة' : 'Application Roadmap'}
+              {isRTL ? 'خطوات تجهيز ومراجعة الطلب' : 'Application Preparation Roadmap'}
             </h2>
             <p className="font-body-ar text-muted-foreground">
               {isRTL ? 'رحلة بسيطة وميسرة من الطلب حتى الاستلام' : 'A simple journey from application to delivery'}

@@ -143,7 +143,7 @@ export default function CountryApplicationsChart({ applications }: CountryApplic
                               <span className="font-medium">{data.pending}</span>
                             </div>
                             <div className="flex justify-between gap-4 pt-1 border-t">
-                              <span>نسبة النجاح:</span>
+                              <span>نسبة الطلبات المكتملة:</span>
                               <span className="font-medium">{data.approvalRate.toFixed(0)}%</span>
                             </div>
                           </div>

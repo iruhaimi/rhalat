@@ -679,12 +679,12 @@ export default function Auth() {
                 <div className="text-sm">{isRTL ? 'دولة' : 'Countries'}</div>
               </div>
               <div>
-                <div className="text-3xl font-bold text-white">+10K</div>
-                <div className="text-sm">{isRTL ? 'عميل سعيد' : 'Happy Clients'}</div>
+                <div className="text-3xl font-bold text-white">4</div>
+                <div className="text-sm">{isRTL ? 'خطوات لتجهيز الملف' : 'Steps to prepare'}</div>
               </div>
               <div>
-                <div className="text-3xl font-bold text-white">98%</div>
-                <div className="text-sm">{isRTL ? 'نسبة النجاح' : 'Success Rate'}</div>
+                <div className="text-3xl font-bold text-white">24/7</div>
+                <div className="text-sm">{isRTL ? 'دعم العملاء' : 'Customer Support'}</div>
               </div>
             </div>
           </div>

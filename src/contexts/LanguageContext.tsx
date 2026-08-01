@@ -35,25 +35,25 @@ const translations: Record<Language, Record<string, string>> = {
     'hero.subtitle': 'خدمات المساعدة في تجهيز طلبات التأشيرة لأكثر من 50 دولة حول العالم. قرار المنح يعود للجهات الرسمية.',
     'hero.cta': 'اختر وجهتك وابدأ',
     'hero.searchPlaceholder': 'ابحث عن الدولة...',
-    'hero.trusted': 'موثوق من قبل أكثر من 10,000 مسافر',
+    'hero.trusted': 'وكالة سفر خاصة لتجهيز ومراجعة ملفات طلبات التأشيرة',
     
     // Stats
     'stats.countries': 'دولة',
     'stats.clients': 'عميل سعيد',
-    'stats.successRate': 'نسبة النجاح',
+    'stats.successRate': 'أيام متوسط التجهيز',
     'stats.support': 'دعم متواصل',
     
     // How it works
     'howItWorks.title': 'كيف نعمل',
-    'howItWorks.subtitle': 'جهز طلب التأشيرة في 4 خطوات بسيطة',
+    'howItWorks.subtitle': 'تجهيز ومراجعة ملف طلب التأشيرة في 4 خطوات',
     'howItWorks.step1.title': 'اختر الدولة',
     'howItWorks.step1.desc': 'حدد وجهتك ونوع التأشيرة المطلوبة',
     'howItWorks.step2.title': 'املأ البيانات',
     'howItWorks.step2.desc': 'أدخل معلوماتك الشخصية وتفاصيل السفر',
     'howItWorks.step3.title': 'ارفع المستندات',
-    'howItWorks.step3.desc': 'قم برفع المستندات المطلوبة بسهولة',
-    'howItWorks.step4.title': 'ادفع وتابع',
-    'howItWorks.step4.desc': 'أتمم الدفع وتابع حالة طلبك',
+    'howItWorks.step3.desc': 'نراجع مستنداتك ونساعدك في البحث عن المواعيد المتاحة وحجزها عند توفر الخدمة، دون ضمان توفر موعد.',
+    'howItWorks.step4.title': 'التقديم لدى الجهة الرسمية',
+    'howItWorks.step4.desc': 'بعد اكتمال المراجعة، يتولى العميل تقديم الطلب إلى السفارة أو الجهة الرسمية المختصة، ويمكننا مساعدته في متابعة حالة الخدمة لدينا.',
     
     // Features
     'features.title': 'لماذا تختارنا؟',
@@ -240,12 +240,12 @@ const translations: Record<Language, Record<string, string>> = {
     'hero.subtitle': 'Visa application preparation assistance for over 50 countries. Visa decisions rest solely with official authorities.',
     'hero.cta': 'Choose Your Destination',
     'hero.searchPlaceholder': 'Search for a country...',
-    'hero.trusted': 'Trusted by over 10,000 travelers',
+    'hero.trusted': 'A private travel agency for preparing and reviewing visa application files',
     
     // Stats
     'stats.countries': 'Countries',
     'stats.clients': 'Happy Clients',
-    'stats.successRate': 'Success Rate',
+    'stats.successRate': 'Days avg. preparation',
     'stats.support': '24/7 Support',
     
     // How it works
@@ -256,9 +256,9 @@ const translations: Record<Language, Record<string, string>> = {
     'howItWorks.step2.title': 'Fill Details',
     'howItWorks.step2.desc': 'Enter your personal and travel information',
     'howItWorks.step3.title': 'Upload Documents',
-    'howItWorks.step3.desc': 'Upload required documents easily',
-    'howItWorks.step4.title': 'Pay & Track',
-    'howItWorks.step4.desc': 'Complete payment and track your application',
+    'howItWorks.step3.desc': 'We review your documents and help search for and book available appointments where the service is offered, without guaranteeing availability.',
+    'howItWorks.step4.title': 'Submission to the official authority',
+    'howItWorks.step4.desc': 'After the review is complete, the client submits the application to the embassy or competent official authority; we can help follow up on the status of our service.',
     
     // Features
     'features.title': 'Why Choose Us?',

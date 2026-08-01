@@ -107,15 +107,15 @@ export default function Home() {
         <div className="container-section relative z-10">
           <div className="mx-auto max-w-3xl text-center">
             <Badge className="mb-4 bg-white/20 text-white hover:bg-white/30">
-              Trusted by 10,000+ travelers
+              Private travel agency — application preparation & review
             </Badge>
             <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl">
               Your Gateway to <br />
               <span className="text-white/90">Seamless Travel</span>
             </h1>
             <p className="mt-6 text-lg leading-8 text-white/80">
-              Apply for visas to 50+ countries with our streamlined process. 
-              Fast processing, expert guidance, and real-time tracking.
+              We help you prepare and review visa application files for 50+ destinations.
+              We are not a government entity, we do not issue visas and we do not guarantee approval.
             </p>
 
             {/* Search Box */}
@@ -143,7 +143,7 @@ export default function Home() {
             <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-sm text-white/70">
               <div className="flex items-center gap-1">
                 <CheckCircle2 className="h-4 w-4" />
-                <span>98% Success Rate</span>
+                <span>Document review before submission</span>
               </div>
               <div className="flex items-center gap-1">
                 <Shield className="h-4 w-4" />
