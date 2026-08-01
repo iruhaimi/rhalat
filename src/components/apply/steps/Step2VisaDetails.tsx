@@ -336,7 +336,7 @@ export default function Step2VisaDetails() {
               <p className="text-xs text-muted-foreground leading-snug">
                 {direction === 'rtl'
                   ? 'ملاحظة: اختيارك لتاريخ السفر المتوقع ليس بالضرورة التزاماً بتوفير موعد يتناسب معه، حيث نقوم بحجز أقرب موعد متاح لدى السفارة.'
-                  : 'Note: Your selected expected travel date does not guarantee an appointment on that exact date. We will book the nearest available appointment at the embassy.'}
+                  : 'Note: We help you search for available appointments and book them where the service is offered, without guaranteeing that an appointment will be available.'}
               </p>
             </div>
           </div>

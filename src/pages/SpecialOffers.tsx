@@ -199,7 +199,7 @@ function OfferCard({ offer, index }: { offer: SpecialOffer; index: number }) {
               </span>
               <span className="flex items-center gap-1">
                 <ShieldCheck className="h-3.5 w-3.5 text-green-500" />
-                ضمان الموافقة
+                مراجعة المستندات
               </span>
             </div>
 

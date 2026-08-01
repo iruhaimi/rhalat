@@ -429,7 +429,7 @@ export default function VisaDetail() {
                       </div>
                       <div className="flex items-center gap-2 text-muted-foreground font-body-ar">
                         <Star className="h-4 w-4 text-brand" />
-                        <span>98% approval rate</span>
+                        <span>Document review before submission</span>
                       </div>
                       <div className="flex items-center gap-2 text-muted-foreground font-body-ar">
                         <Users className="h-4 w-4 text-brand" />

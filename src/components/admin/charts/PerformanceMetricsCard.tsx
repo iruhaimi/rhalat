@@ -72,7 +72,7 @@ export default function PerformanceMetricsCard({ applications }: PerformanceMetr
 
   const metrics = [
     {
-      title: 'نسبة الموافقة',
+      title: 'نسبة الطلبات المكتملة',
       value: approvalRate,
       displayValue: `${approvalRate.toFixed(1)}%`,
       icon: CheckCircle,

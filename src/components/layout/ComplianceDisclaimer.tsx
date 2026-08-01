@@ -51,7 +51,7 @@ export default function ComplianceDisclaimer({ variant = 'banner' }: { variant?:
                 <strong className="text-foreground">إخلاء مسؤولية:</strong> موقع <span dir="ltr">{LEGAL.domain}</span> هو منصة تابعة لـ {LEGAL.companyNameAr}، وكالة سفر خاصة تقدم خدمات استشارية ومساعدة في تجهيز ملفات التأشيرة مقابل رسوم إضافية. لسنا جهة حكومية ولا تابعين لأي سفارة.
               </p>
               <p>
-                <strong className="text-foreground">شفافية الرسوم:</strong> الرسوم المدفوعة لنا هي مقابل خدمة التنسيق والاستشارة وتجهيز الملف، وليست رسوم التأشيرة الحكومية الرسمية. يمكنك الحصول على التأشيرة مباشرة عبر المواقع الحكومية الرسمية بتكلفة أقل أو مجاناً.
+                <strong className="text-foreground">شفافية الرسوم:</strong> رسوم خدمتنا منفصلة عن رسوم الجهات الحكومية، وأي رسوم حكومية تخضع لشروط وآلية الدفع التي تحددها الجهة الرسمية المختصة. يمكنك التقديم مباشرة عبر المواقع الحكومية الرسمية دون الاستعانة بنا.
               </p>
               <p>
                 <Link to="/official-embassies" className="font-semibold text-brand hover:underline">

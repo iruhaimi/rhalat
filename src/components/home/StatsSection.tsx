@@ -31,10 +31,10 @@ export default function StatsSection() {
   const isRTL = direction === 'rtl';
 
   const stats = [
-    { value: 10000, suffix: '', label: isRTL ? 'عميل سنوياً' : 'Clients yearly' },
-    { value: 98, suffix: '%', label: isRTL ? 'معدل القبول' : 'Approval rate' },
-    { value: 50, suffix: '+', label: isRTL ? 'دولة مدعومة' : 'Countries served' },
-    { value: 24, suffix: '/7', label: isRTL ? 'دعم فني' : 'Live support' },
+    { value: 50, suffix: '+', label: isRTL ? 'دولة معلوماتها متاحة' : 'Countries covered' },
+    { value: 5, suffix: '', label: isRTL ? 'أيام متوسط التجهيز' : 'Days avg. preparation' },
+    { value: 4, suffix: '', label: isRTL ? 'خطوات لتجهيز الملف' : 'Steps to prepare a file' },
+    { value: 24, suffix: '/7', label: isRTL ? 'دعم العملاء' : 'Customer support' },
   ];
 
   return (

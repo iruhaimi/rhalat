@@ -223,7 +223,7 @@ Address: Riyadh - Al-Rabi' neighborhood - Ubay Bin Moaath Alansari Rd`
                 </li>
                 <li>
                   {isRTL
-                    ? 'يمكنك الحصول على التأشيرة مباشرة عبر المواقع الحكومية الرسمية بتكلفة أقل أو مجاناً.'
+                    ? 'يمكنك التقديم مباشرة عبر المواقع الحكومية الرسمية دون الاستعانة بنا.'
                     : 'You may obtain the visa directly via official government websites, typically at a lower cost or for free.'}
                 </li>
               </ul>

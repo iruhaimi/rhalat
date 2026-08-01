@@ -94,20 +94,20 @@ export default function HeroSection() {
             <div className="relative z-10">
               <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand/10 text-brand text-xs font-bold mb-8 font-jakarta">
                 <span className="h-2 w-2 rounded-full bg-brand animate-pulse" />
-                {getSetting('badge_text', 'خبير التأشيرات الأول في المملكة', 'Saudi Arabia’s leading visa expert')}
+                {getSetting('badge_text', 'وكالة سفر خاصة — خدمة تجهيز ومراجعة الطلبات', 'A private travel agency — application preparation & review')}
               </span>
 
               <h1 className="font-heading-ar text-5xl sm:text-6xl md:text-7xl font-extrabold leading-[1.1] tracking-tight text-navy mb-8">
-                {getSetting('main_title_line1', 'رحلتك تبدأ', 'Your journey starts')}
+                {getSetting('main_title_line1', 'خدمة تجهيز ومراجعة', 'Preparation & review service')}
                 <span className="block text-brand mt-2">
-                  {getSetting('main_title_line2', 'بلمسة واحدة', 'with one tap')}
+                  {getSetting('main_title_line2', 'طلبات التأشيرات', 'for visa applications')}
                 </span>
               </h1>
 
               <p className="font-body-ar text-base md:text-lg text-muted-foreground max-w-lg leading-relaxed mb-10">
                 {getSetting('description',
-                  'نقدم لك خدمات المساعدة في تجهيز طلبات التأشيرة والسفر بأعلى جودة. احصل على المساعدة في تجهيز طلب التأشيرة مع فريقنا المتخصص.',
-                  'We provide visa application preparation assistance and travel services. Get help preparing your visa application.'
+                  'نساعدك في تجهيز ملفك ومراجعة مستنداتك وترتيب موعدك قبل التقديم لدى السفارة أو مركز التأشيرات المعتمد. قرار منح التأشيرة يعود حصراً للسفارة أو الجهة الرسمية المختصة.',
+                  'We help you prepare your file, review your documents and arrange your appointment before submission to the embassy or the accredited visa centre. The visa decision rests solely with the embassy or the competent official authority.'
                 )}
               </p>
 
@@ -175,10 +175,10 @@ export default function HeroSection() {
                   loading="lazy"
                   className="w-10 h-10 rounded-full border-2 border-navy object-cover"
                 />
-                <div className="w-10 h-10 rounded-full border-2 border-navy bg-brand flex items-center justify-center text-[10px] font-display font-bold tabular-nums text-white">+10k</div>
+                <div className="w-10 h-10 rounded-full border-2 border-navy bg-brand flex items-center justify-center text-[10px] font-display font-bold text-white">24/7</div>
               </div>
               <p className="font-jakarta text-xs font-bold opacity-90">
-                {isRTL ? 'أكثر من 10,000 عميل سعيد' : '10,000+ happy travelers'}
+                {isRTL ? 'فريق متخصص في تجهيز ومراجعة الملفات' : 'A team specialized in preparing and reviewing files'}
               </p>
             </div>
 
@@ -189,13 +189,13 @@ export default function HeroSection() {
           <div className="md:col-span-3 bg-cream rounded-5xl p-8 flex flex-col justify-center items-center text-center min-h-[200px]">
             <ShieldCheck className="h-7 w-7 text-brand mb-3" strokeWidth={1.75} />
             <div className="font-display text-5xl md:text-6xl font-bold text-brand leading-none mb-2">
-              {getSetting('stat_success_rate', '98%', '98%')}
+              {isRTL ? 'مراجعة' : 'Review'}
             </div>
             <h4 className="font-heading-ar font-extrabold text-navy">
-              {isRTL ? 'معدل قبول الملفات' : 'File approval rate'}
+              {isRTL ? 'تدقيق المستندات قبل التقديم' : 'Document check before submission'}
             </h4>
-            <p className="font-body-ar text-xs text-navy/60 mt-2 max-w-[180px]">
-              {isRTL ? 'إحصائية تاريخية للملفات المؤهلة (لا يُعد ضماناً)' : 'Historical stat for eligible files (not a guarantee)'}
+            <p className="font-body-ar text-xs text-navy/60 mt-2 max-w-[200px]">
+              {isRTL ? 'لا نصدر التأشيرات ولا نضمن الموافقة؛ القرار للجهة الرسمية.' : 'We do not issue visas or guarantee approval; the decision rests with the official authority.'}
             </p>
           </div>
 
