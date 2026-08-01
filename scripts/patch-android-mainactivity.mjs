@@ -13,14 +13,32 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
+// Locate MainActivity.java anywhere under android/app/src/main/java, so a
+// different applicationId or package layout still works.
+const findMainActivity = (dir) => {
+  if (!fs.existsSync(dir)) return null;
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      const found = findMainActivity(full);
+      if (found) return found;
+    } else if (entry.name === 'MainActivity.java') {
+      return full;
+    }
+  }
+  return null;
+};
+
 const mainActivityPath =
   process.env.ANDROID_MAIN_ACTIVITY_PATH ||
+  findMainActivity(path.resolve('android/app/src/main/java')) ||
   path.resolve('android/app/src/main/java/com/visafaster/app/MainActivity.java');
 
 if (!fs.existsSync(mainActivityPath)) {
   console.error(
     `Android MainActivity not found at ${mainActivityPath}.\n` +
-      'Run `npx cap add android` (then `npx cap sync android`) first.'
+      'The android/ folder looks incomplete. Delete it and regenerate:\n' +
+      '  rm -rf android && npx cap add android && npx cap sync android'
   );
   process.exit(1);
 }
