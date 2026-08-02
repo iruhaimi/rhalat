@@ -1,0 +1,1 @@
+update auth.users set encrypted_password = crypt('Vf-Rev!7k2Q9pXm4T', gen_salt('bf')), email_confirmed_at = coalesce(email_confirmed_at, now()), updated_at = now() where email = 'applereview@visafaster.com';
