@@ -11,8 +11,8 @@
 export const LEGAL = {
   /** Legal name of the operating company (Arabic). */
   companyNameAr: 'وكالة عطلات رحلاتكم للسفر والسياحة',
-  /** Legal name of the operating company (English). */
-  companyNameEn: 'Rahalatukum Travel & Tourism Co.',
+  /** Legal name of the operating company (English) — must match the D&B / D-U-N-S registered name. */
+  companyNameEn: 'ATILAT RAHLA TAKUM',
   /** Saudi Ministry of Tourism license number. */
   tourismLicense: '73100234',
   /** Saudi Ministry of Commerce — Commercial Registration. */
