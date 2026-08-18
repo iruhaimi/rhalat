@@ -11,6 +11,8 @@ import { motion } from 'framer-motion';
 import CountryCodePicker from '@/components/ui/CountryCodePicker';
 import { openExternalUrl } from '@/lib/despia';
 import { filterArabicChars, filterNonNumeric } from '@/lib/inputFilters';
+import { getFullNameError, FULL_NAME_MAX } from '@/lib/nameValidation';
+import { buildE164Phone, isValidNationalPhone } from '@/lib/phone';
 import { 
   MapPin, 
   Phone, 
@@ -29,6 +31,7 @@ export default function Contact() {
   const { toast } = useToast();
   const isRTL = language === 'ar';
   
+  const [nameError, setNameError] = useState<string | null>(null);
   const [mapFailed, setMapFailed] = useState(false);
   const OFFICE_LAT = 24.7114;
   const OFFICE_LNG = 46.6854;
@@ -80,10 +83,32 @@ export default function Contact() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const fullNameErr = getFullNameError(formData.name, isRTL);
+    if (fullNameErr) {
+      setNameError(fullNameErr);
+      toast({ variant: 'destructive', title: isRTL ? 'خطأ في الاسم' : 'Name error', description: fullNameErr });
+      return;
+    }
+
+    if (formData.phone && !isValidNationalPhone(formData.countryCode, formData.phone)) {
+      toast({
+        variant: 'destructive',
+        title: isRTL ? 'رقم جوال غير صحيح' : 'Invalid phone number',
+        description: isRTL ? 'يرجى التحقق من رمز الدولة ورقم الجوال' : 'Please check the country code and phone number',
+      });
+      return;
+    }
+
     setIsSubmitting(true);
-    
-    // Simulate form submission
+
+    // Build the E.164 phone using the selected country code before submitting.
+    const fullPhone = formData.phone ? buildE164Phone(formData.countryCode, formData.phone) : '';
+    const submissionPayload = { ...formData, phone: fullPhone };
+
+    // Simulate form submission (payload uses the fully-qualified E.164 phone)
     await new Promise(resolve => setTimeout(resolve, 1500));
+    if (import.meta.env.DEV) console.debug('contact submission', submissionPayload);
     
     setIsSubmitting(false);
     setIsSubmitted(true);
@@ -100,6 +125,9 @@ export default function Contact() {
     const { name, value } = e.target;
     // Filter phone field to only allow numbers
     const processedValue = name === 'phone' ? filterNonNumeric(value) : value;
+    if (name === 'name') {
+      setNameError(value ? getFullNameError(value, isRTL) : null);
+    }
     setFormData(prev => ({
       ...prev,
       [name]: processedValue
@@ -380,8 +408,12 @@ export default function Contact() {
                           onChange={handleChange}
                           placeholder={isRTL ? 'أدخل اسمك' : 'Enter your name'}
                           className="rounded-xl"
+                          maxLength={FULL_NAME_MAX}
                           required
                         />
+                        {nameError && (
+                          <p className="text-sm font-medium text-destructive">{nameError}</p>
+                        )}
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="email">

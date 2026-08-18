@@ -118,7 +118,7 @@ const translations: Record<Language, Record<string, string>> = {
     'documents.uploaded': 'تم الرفع',
     'documents.pending': 'قيد الانتظار',
     'documents.maxSize': 'الحد الأقصى: 10 ميجابايت',
-    'documents.formats': 'PDF, JPG, PNG',
+    'documents.formats': 'PDF, JPG, PNG, WEBP',
     
     // Requirements
     'requirements.title': 'المتطلبات',
@@ -323,7 +323,7 @@ const translations: Record<Language, Record<string, string>> = {
     'documents.uploaded': 'Uploaded',
     'documents.pending': 'Pending',
     'documents.maxSize': 'Max size: 10MB',
-    'documents.formats': 'PDF, JPG, PNG',
+    'documents.formats': 'PDF, JPG, PNG, WEBP',
     
     // Requirements
     'requirements.title': 'Requirements',
