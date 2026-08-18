@@ -40,7 +40,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
-import { normalizeSaudiPhone, formatSaudiPhoneSpaced } from '@/lib/phone';
+import { parsePhoneWithCountry } from '@/lib/phone';
 import { trackConversion, setEnhancedConversionUserData, markConversionFired, wasConversionFired } from '@/lib/gtagEvents';
 
 const TERMS_VERSION = 'v2026.1';

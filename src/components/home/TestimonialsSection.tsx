@@ -4,16 +4,22 @@ import { useLanguage } from '@/contexts/LanguageContext';
 
 const testimonials = [
   {
-    name: 'محمد القحطاني',
-    role: 'رجل أعمال',
-    avatar: 'م',
-    content: 'تجربة احترافية للغاية. جهزوا لي ملف طلب تأشيرة شنغن وراجعوا المستندات خلال 4 أيام عمل فقط. الوضوح والشفافية في التعامل كانت رائعة.',
+    name: { ar: 'محمد القحطاني', en: 'Mohammed Al-Qahtani' },
+    role: { ar: 'رجل أعمال', en: 'Businessman' },
+    avatar: 'M',
+    content: {
+      ar: 'تجربة احترافية للغاية. جهزوا لي ملف طلب تأشيرة شنغن وراجعوا المستندات خلال 4 أيام عمل فقط. الوضوح والشفافية في التعامل كانت رائعة.',
+      en: 'A very professional experience. They prepared my Schengen visa application file and reviewed the documents in just 4 business days. The clarity and transparency were excellent.',
+    },
   },
   {
-    name: 'سارة الأحمد',
-    role: 'صانعة محتوى',
-    avatar: 'س',
-    content: 'أفضل خدمة عملاء تعاملت معها. كانوا معي لحظة بلحظة في تجهيز طلب تأشيرة تركيا ومتابعته حتى صدور قرار الجهة الرسمية. شكراً عطلات رحلاتكم!',
+    name: { ar: 'سارة الأحمد', en: 'Sarah Al-Ahmad' },
+    role: { ar: 'صانعة محتوى', en: 'Content Creator' },
+    avatar: 'S',
+    content: {
+      ar: 'أفضل خدمة عملاء تعاملت معها. كانوا معي لحظة بلحظة في تجهيز طلب تأشيرة تركيا ومتابعته حتى صدور قرار الجهة الرسمية. شكراً عطلات رحلاتكم!',
+      en: 'The best customer service I have dealt with. They were with me every step of the way preparing my Turkey visa application and following up until the official decision. Thank you Otolat Rahlatcom!',
+    },
   },
 ];
 
@@ -56,15 +62,15 @@ export default function TestimonialsSection() {
                 ))}
               </div>
               <p className="font-body-ar text-lg text-navy leading-relaxed mb-8 relative">
-                "{t.content}"
+                "{isRTL ? t.content.ar : t.content.en}"
               </p>
               <div className="flex items-center gap-4 relative">
                 <div className="w-14 h-14 rounded-full bg-gradient-to-br from-brand to-navy flex items-center justify-center font-display text-2xl font-bold text-white">
                   {t.avatar}
                 </div>
                 <div>
-                  <h5 className="font-heading-ar font-extrabold text-navy">{t.name}</h5>
-                  <p className="font-jakarta text-[11px] font-bold text-muted-foreground uppercase tracking-wider">{t.role}</p>
+                  <h5 className="font-heading-ar font-extrabold text-navy">{isRTL ? t.name.ar : t.name.en}</h5>
+                  <p className="font-jakarta text-[11px] font-bold text-muted-foreground uppercase tracking-wider">{isRTL ? t.role.ar : t.role.en}</p>
                 </div>
               </div>
             </motion.div>
