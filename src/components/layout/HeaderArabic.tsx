@@ -27,8 +27,8 @@ export default function HeaderArabic() {
   const navigation = [
     { name: t('nav.home'), href: '/' },
     { name: t('nav.destinations'), href: '/destinations' },
-    { name: 'العروض', href: '/offers' },
-    { name: 'البرامج السياحية', href: '/tourism' },
+    { name: language === 'ar' ? 'العروض' : 'Offers', href: '/offers' },
+    { name: language === 'ar' ? 'البرامج السياحية' : 'Tourism Programs', href: '/tourism' },
     { name: t('nav.pricing'), href: '/pricing' },
     { name: t('nav.track'), href: '/track' },
   ];
@@ -126,7 +126,7 @@ export default function HeaderArabic() {
                       <p className="text-xs text-muted-foreground">{user.email}</p>
                       {(isAdmin || isAgent) && (
                         <p className="text-xs font-medium text-primary">
-                          {isAdmin ? 'مشرف' : 'وكيل'}
+                          {isAdmin ? (language === 'ar' ? 'مشرف' : 'Admin') : (language === 'ar' ? 'وكيل' : 'Agent')}
                         </p>
                       )}
                     </div>
@@ -145,14 +145,14 @@ export default function HeaderArabic() {
                       <DropdownMenuItem asChild>
                         <Link to={isAdmin ? '/admin/applications' : '/agent/applications'} className="cursor-pointer">
                           <FileText className="h-4 w-4" />
-                          <span className="mr-2">إدارة الطلبات</span>
+                          <span className="mr-2">{language === 'ar' ? 'إدارة الطلبات' : 'Manage Applications'}</span>
                         </Link>
                       </DropdownMenuItem>
                       {isAdmin && (
                         <DropdownMenuItem asChild>
                           <Link to="/admin/users" className="cursor-pointer">
                             <User className="h-4 w-4" />
-                            <span className="mr-2">إدارة المستخدمين</span>
+                            <span className="mr-2">{language === 'ar' ? 'إدارة المستخدمين' : 'Manage Users'}</span>
                           </Link>
                         </DropdownMenuItem>
                       )}

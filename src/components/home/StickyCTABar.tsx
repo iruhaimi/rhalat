@@ -36,7 +36,8 @@ export default function StickyCTABar() {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 80, opacity: 0 }}
           transition={{ duration: 0.3, ease: 'easeOut' }}
-          className="fixed bottom-4 inset-x-4 md:inset-x-auto md:end-6 md:max-w-md z-40"
+          className="fixed inset-x-4 md:inset-x-auto md:end-6 md:max-w-md z-40"
+          style={{ bottom: 'calc(5.5rem + var(--safe-area-bottom, 0px))' }}
         >
           <div className="flex items-center gap-3 rounded-2xl bg-brand text-white shadow-2xl shadow-brand/30 px-4 py-3 border border-white/10">
             <div className="flex-1 min-w-0">

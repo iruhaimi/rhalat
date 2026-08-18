@@ -274,6 +274,16 @@ export default function PaymentSuccess() {
                 <p className="text-2xl font-mono font-bold text-primary tracking-wider">
                   {applicationNumber}
                 </p>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="mt-2 h-9 gap-1.5"
+                  onClick={() => copyToClipboard(applicationNumber, 'appNumber')}
+                >
+                  {copiedField === 'appNumber' ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                  <span className="text-xs">{direction === 'rtl' ? 'نسخ رقم التتبع' : 'Copy tracking number'}</span>
+                </Button>
               </div>
 
               {/* Amount */}
@@ -370,6 +380,10 @@ export default function PaymentSuccess() {
                     </Link>
                   </Button>
                 </div>
+                <Button variant="ghost" className="w-full gap-2 min-h-11" onClick={handleDownloadReceipt}>
+                  <Download className="w-4 h-4" />
+                  {direction === 'rtl' ? 'تحميل إيصال الطلب' : 'Download order receipt'}
+                </Button>
               </div>
             </CardContent>
           </Card>
