@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { motion } from 'framer-motion';
 import CountryCodePicker from '@/components/ui/CountryCodePicker';
+import { openExternalUrl } from '@/lib/despia';
 import { filterArabicChars, filterNonNumeric } from '@/lib/inputFilters';
 import { 
   MapPin, 
@@ -28,6 +29,11 @@ export default function Contact() {
   const { toast } = useToast();
   const isRTL = language === 'ar';
   
+  const [mapFailed, setMapFailed] = useState(false);
+  const OFFICE_LAT = 24.7114;
+  const OFFICE_LNG = 46.6854;
+  const GOOGLE_MAPS_URL = `https://www.google.com/maps/search/?api=1&query=${OFFICE_LAT},${OFFICE_LNG}`;
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [formData, setFormData] = useState({
@@ -486,24 +492,34 @@ export default function Contact() {
         >
           <Card className="overflow-hidden shadow-xl border-0">
             <div className="aspect-[21/9] bg-muted relative group">
-              <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3624.6837453874037!2d46.6854!3d24.7114!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjTCsDQyJzQxLjAiTiA0NsKwNDEnMDcuNCJF!5e0!3m2!1sar!2ssa!4v1234567890"
-                width="100%"
-                height="100%"
-                style={{ border: 0, position: 'absolute', inset: 0 }}
-                allowFullScreen
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-              />
-              <a
-                href="https://maps.app.goo.gl/hym4suBsGkWe3jLKA"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="absolute bottom-4 right-4 bg-primary text-primary-foreground px-4 py-2 rounded-xl shadow-lg flex items-center gap-2 opacity-90 hover:opacity-100 transition-opacity"
+              {!mapFailed ? (
+                <iframe
+                  title={isRTL ? 'خريطة موقع المكتب' : 'Office location map'}
+                  src={`https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3624.6837453874037!2d${OFFICE_LNG}!3d${OFFICE_LAT}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjTCsDQyJzQxLjAiTiA0NsKwNDEnMDcuNCJF!5e0!3m2!1sar!2ssa!4v1234567890`}
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0, position: 'absolute', inset: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  onError={() => setMapFailed(true)}
+                />
+              ) : (
+                <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-center p-6">
+                  <MapPin className="w-10 h-10 text-muted-foreground" />
+                  <p className="text-sm text-muted-foreground">
+                    {isRTL ? 'تعذر تحميل الخريطة' : 'The map could not be loaded'}
+                  </p>
+                </div>
+              )}
+              <button
+                type="button"
+                onClick={() => openExternalUrl(GOOGLE_MAPS_URL)}
+                className="absolute bottom-4 right-4 bg-primary text-primary-foreground px-4 py-2 rounded-xl shadow-lg flex items-center gap-2 opacity-90 hover:opacity-100 transition-opacity min-h-[44px]"
               >
                 <MapPin className="w-4 h-4" />
                 {isRTL ? 'فتح في خرائط جوجل' : 'Open in Google Maps'}
-              </a>
+              </button>
             </div>
           </Card>
         </motion.div>

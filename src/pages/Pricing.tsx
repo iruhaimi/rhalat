@@ -524,7 +524,7 @@ export default function Pricing() {
                                     <Button size="sm" className="rounded-xl" asChild>
                                       <Link to={`/apply?country=${countryCode}&visa=${visa.id}`}>
                                         {isRTL ? 'ابدأ الطلب' : 'Start request'}
-                                        <ArrowLeft className="h-4 w-4 mr-1" />
+                                        <ArrowLeft className="h-4 w-4 mr-1 rtl-flip" />
                                       </Link>
                                     </Button>
                                   </TableCell>
@@ -649,7 +649,7 @@ export default function Pricing() {
                               <Button className="w-full rounded-xl" asChild>
                                 <Link to={`/apply?country=${countryCode}&visa=${visa.id}`}>
                                   {isRTL ? 'ابدأ الطلب' : 'Start Request'}
-                                  <ArrowLeft className="h-4 w-4 mr-1" />
+                                  <ArrowLeft className="h-4 w-4 mr-1 rtl-flip" />
                                 </Link>
                               </Button>
                             </motion.div>

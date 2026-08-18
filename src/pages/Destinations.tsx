@@ -221,13 +221,13 @@ export default function Destinations() {
             <div className="flex items-center gap-3">
               <MapPin className="h-5 w-5 text-primary" />
               <p className="text-muted-foreground">
-                <span className="font-semibold text-foreground">{totalDestinations}</span> وجهة متاحة
+                <span className="font-semibold text-foreground">{totalDestinations}</span> {direction === 'rtl' ? 'وجهة متاحة' : 'destinations available'}
               </p>
             </div>
             {searchQuery && (
               <Button variant="ghost" size="sm" onClick={() => setSearchQuery('')} className="gap-2">
                 <X className="h-4 w-4" />
-                مسح البحث
+                {direction === 'rtl' ? 'مسح البحث' : 'Clear search'}
               </Button>
             )}
           </motion.div>
@@ -254,8 +254,8 @@ export default function Destinations() {
               <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center mx-auto mb-6">
                 <Search className="h-10 w-10 text-muted-foreground" />
               </div>
-              <h3 className="text-xl font-semibold mb-2">لا توجد نتائج</h3>
-              <p className="text-muted-foreground">جرب البحث بكلمة أخرى</p>
+              <h3 className="text-xl font-semibold mb-2">{direction === 'rtl' ? 'لا توجد نتائج' : 'No results found'}</h3>
+              <p className="text-muted-foreground">{direction === 'rtl' ? 'جرب البحث بكلمة أخرى' : 'Try a different search term'}</p>
             </motion.div>
           ) : (
             <motion.div 
@@ -290,7 +290,7 @@ export default function Destinations() {
                         {schengenProcessingDays && (
                           <Badge className="bg-navy/90 backdrop-blur-md text-white border-0 rounded-lg px-2 py-0.5 font-jakarta text-[10px] font-bold gap-1">
                             <Clock className="h-3 w-3" />
-                            {schengenProcessingDays} أيام
+                            {schengenProcessingDays} {direction === 'rtl' ? 'أيام' : 'days'}
                           </Badge>
                         )}
                       </div>
@@ -302,7 +302,7 @@ export default function Destinations() {
                       
                       {schengenMinPrice && (
                         <div className="flex items-baseline gap-1.5 mb-2">
-                          <span className="font-jakarta text-[10px] font-bold tracking-wider uppercase text-muted-foreground">يبدأ من</span>
+                          <span className="font-jakarta text-[10px] font-bold tracking-wider uppercase text-muted-foreground">{direction === 'rtl' ? 'يبدأ من' : 'From'}</span>
                           <span className="font-numeric text-lg font-extrabold tabular-nums text-brand flex items-center gap-1">
                             {schengenMinPrice}
                             <SARSymbol size="xs" className="text-brand" />
@@ -313,12 +313,12 @@ export default function Destinations() {
                       <div className="flex gap-1.5">
                         <Button variant="outline" size="sm" className="flex-1 rounded-xl h-8 text-xs border-border" asChild>
                           <Link to="/country/SCHENGEN">
-                            التفاصيل
+                            {direction === 'rtl' ? 'التفاصيل' : 'Details'}
                           </Link>
                         </Button>
                         <Button size="sm" className="flex-1 rounded-xl h-8 text-xs gap-1 bg-navy hover:bg-navy/90 text-navy-foreground" asChild>
                           <Link to="/apply?country=SCHENGEN">
-                            ابدأ الطلب
+                            {direction === 'rtl' ? 'ابدأ الطلب' : 'Apply now'}
                             <ArrowIcon className="h-3 w-3" />
                           </Link>
                         </Button>
@@ -357,14 +357,14 @@ export default function Destinations() {
                           {processingDays && (
                             <Badge className="bg-navy/90 backdrop-blur-md text-white border-0 rounded-lg px-2 py-0.5 font-jakarta text-[10px] font-bold gap-1">
                               <Clock className="h-3 w-3" />
-                              {processingDays} أيام
+                              {processingDays} {direction === 'rtl' ? 'أيام' : 'days'}
                             </Badge>
                           )}
                         </div>
                         
                         {visaCount > 0 && (
                           <Badge className="absolute top-2 start-2 bg-white/95 text-navy backdrop-blur-md rounded-lg px-2 py-0.5 font-jakarta text-[10px] font-bold">
-                            {visaCount} تأشيرة
+                            {visaCount} {direction === 'rtl' ? 'تأشيرة' : 'visas'}
                           </Badge>
                         )}
                       </div>
@@ -375,7 +375,7 @@ export default function Destinations() {
                         
                         {minPrice && (
                           <div className="flex items-baseline gap-1.5 mb-2">
-                            <span className="font-jakarta text-[10px] font-bold tracking-wider uppercase text-muted-foreground">يبدأ من</span>
+                            <span className="font-jakarta text-[10px] font-bold tracking-wider uppercase text-muted-foreground">{direction === 'rtl' ? 'يبدأ من' : 'From'}</span>
                             <span className="font-numeric text-lg font-extrabold tabular-nums text-brand flex items-center gap-1">
                               {minPrice}
                               <SARSymbol size="xs" className="text-brand" />
@@ -386,12 +386,12 @@ export default function Destinations() {
                         <div className="flex gap-1.5">
                           <Button variant="outline" size="sm" className="flex-1 rounded-xl h-8 text-xs border-border" asChild>
                             <Link to={`/country/${country.code}`}>
-                              التفاصيل
+                              {direction === 'rtl' ? 'التفاصيل' : 'Details'}
                             </Link>
                           </Button>
                           <Button size="sm" className="flex-1 rounded-xl h-8 text-xs gap-1 bg-navy hover:bg-navy/90 text-navy-foreground" asChild>
                             <Link to={`/apply?country=${country.code}`}>
-                              ابدأ الطلب
+                              {direction === 'rtl' ? 'ابدأ الطلب' : 'Apply now'}
                               <ArrowIcon className="h-3 w-3" />
                             </Link>
                           </Button>

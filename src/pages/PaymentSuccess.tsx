@@ -420,7 +420,11 @@ export default function PaymentSuccess() {
                 onClick={() => copyToClipboard(applicationNumber, 'appNumber')}
               >
                 {copiedField === 'appNumber' ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-                <span className="text-xs">{content.copySuccess}</span>
+                <span className="text-xs">
+                  {copiedField === 'appNumber'
+                    ? content.copySuccess
+                    : direction === 'rtl' ? 'نسخ رقم التتبع' : 'Copy tracking number'}
+                </span>
               </Button>
             </div>
 
@@ -492,7 +496,7 @@ export default function PaymentSuccess() {
                     </Link>
                   </Button>
                 ) : (
-                  <Button variant="outline" className="gap-2">
+                  <Button variant="outline" className="gap-2 min-h-11" onClick={handleDownloadReceipt}>
                     <Download className="w-4 h-4" />
                     {content.receiptBtn}
                   </Button>
