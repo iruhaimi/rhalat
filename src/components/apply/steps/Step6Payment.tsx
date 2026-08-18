@@ -88,9 +88,12 @@ export default function Step6Payment() {
     (user?.user_metadata as any)?.name ||
     '';
   const customerEmail = user?.email || '';
-  const customerPhone = normalizeSaudiPhone(profile?.phone);
-  const customerCountryCode = '+966';
-  const customerPhoneDisplay = formatSaudiPhoneSpaced(profile?.phone);
+  const parsedPhone = parsePhoneWithCountry(profile?.phone);
+  const customerCountryCode = parsedPhone.countryCode;
+  const customerPhone = parsedPhone.national;
+  const customerPhoneDisplay = customerPhone
+    ? `${customerCountryCode} ${customerPhone}`
+    : '';
   const [isProcessing, setIsProcessing] = useState(false);
   const [isSubmittingWhatsApp, setIsSubmittingWhatsApp] = useState(false);
   const navigate = useNavigate();
