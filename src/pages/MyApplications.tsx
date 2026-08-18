@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -65,6 +66,7 @@ const STATUS_PROGRESS: Record<ApplicationStatus, number> = {
 const MyApplications = () => {
   const { user, profile } = useAuth();
   const { direction } = useLanguage();
+  const { toast } = useToast();
   const isRTL = direction === 'rtl';
   
   const [applications, setApplications] = useState<ApplicationWithVisa[]>([]);
@@ -195,13 +197,6 @@ const MyApplications = () => {
     } catch {
       toast({ title: labels.trackingNumber, description: value });
     }
-  };
-
-  const unusedFormatDate = (dateString: string | null) => {
-    if (!dateString) return labels.notScheduled;
-    return format(new Date(dateString), 'dd MMM yyyy', { 
-      locale: isRTL ? ar : enUS 
-    });
   };
 
   if (!user) {
