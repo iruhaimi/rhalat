@@ -30,6 +30,7 @@ import type { ApplicationStatus } from '@/types/database';
 
 interface ApplicationWithVisa {
   id: string;
+  display_number: string | null;
   status: ApplicationStatus;
   travel_date: string | null;
   created_at: string;
@@ -76,6 +77,8 @@ const MyApplications = () => {
     startApplication: isRTL ? 'ابدأ طلب جديد' : 'Start New Application',
     viewDetails: isRTL ? 'عرض التفاصيل' : 'View Details',
     applicationId: isRTL ? 'رقم الطلب' : 'Application ID',
+    trackingNumber: isRTL ? 'رقم التتبع' : 'Tracking Number',
+    copied: isRTL ? 'تم نسخ الرقم' : 'Number copied',
     travelDate: isRTL ? 'تاريخ السفر' : 'Travel Date',
     submittedAt: isRTL ? 'تاريخ التقديم' : 'Submitted At',
     createdAt: isRTL ? 'تاريخ الإنشاء' : 'Created At',
@@ -141,6 +144,7 @@ const MyApplications = () => {
         .from('applications')
         .select(`
           id,
+          display_number,
           status,
           travel_date,
           created_at,
@@ -362,10 +366,17 @@ const MyApplications = () => {
 
                     {/* Details Row */}
                     <div className="mt-4 pt-4 border-t flex flex-wrap gap-4 text-sm text-muted-foreground">
-                      <div className="flex items-center gap-1">
+                      <button
+                        type="button"
+                        onClick={() => copyTracking(app.display_number || app.id)}
+                        className="flex items-center gap-1.5 rounded-lg bg-navy/5 px-3 py-1.5 font-mono text-navy hover:bg-navy/10 transition-colors"
+                        title={labels.trackingNumber}
+                      >
                         <FileText className="h-4 w-4" />
-                        <span>{app.id.slice(0, 8)}...</span>
-                      </div>
+                        <span className="font-semibold" dir="ltr">
+                          {app.display_number || `${app.id.slice(0, 8)}...`}
+                        </span>
+                      </button>
                       <div className="flex items-center gap-1">
                         <Calendar className="h-4 w-4" />
                         <span>
