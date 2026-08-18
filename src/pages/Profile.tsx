@@ -13,6 +13,8 @@ import { User, Phone, Save, Loader2, Camera, Upload, FileText, RotateCcw, Chevro
 import { Link } from 'react-router-dom';
 import CountryCodePicker from '@/components/ui/CountryCodePicker';
 import { filterNonNumeric as filterPhoneNonNumeric } from '@/lib/inputFilters';
+import { parsePhoneWithCountry, buildE164Phone, isValidNationalPhone } from '@/lib/phone';
+import { getFullNameError, FULL_NAME_MAX } from '@/lib/nameValidation';
 import NoIndex from '@/components/seo/NoIndex';
 import {
   AlertDialog,
@@ -46,31 +48,23 @@ const Profile = () => {
 
   useEffect(() => {
     if (profile) {
-      let countryCode = '+966';
-      let phoneNumber = profile.phone || '';
-      
-      if (phoneNumber.startsWith('+')) {
-        const codes = ['+966', '+971', '+973', '+974', '+965', '+968', '+20', '+962', '+961', '+963', '+964', '+967', '+970', '+212', '+213', '+216', '+218', '+249', '+90', '+44', '+1', '+33', '+49', '+91', '+92', '+60', '+62', '+86'];
-        for (const code of codes) {
-          if (phoneNumber.startsWith(code)) {
-            countryCode = code;
-            phoneNumber = phoneNumber.slice(code.length);
-            break;
-          }
-        }
-      }
-      
+      const { countryCode, national } = parsePhoneWithCountry(profile.phone, '+966');
       setFormData({
         full_name: profile.full_name || '',
-        phone: phoneNumber,
-        countryCode: countryCode,
+        phone: national,
+        countryCode,
       });
     }
   }, [profile]);
 
+  const [fullNameError, setFullNameError] = useState<string | null>(null);
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     const processedValue = name === 'phone' ? filterPhoneNonNumeric(value) : value;
+    if (name === 'full_name') {
+      setFullNameError(value ? getFullNameError(value, isRTL) : null);
+    }
     setFormData(prev => ({ ...prev, [name]: processedValue }));
   };
 
@@ -160,9 +154,27 @@ const Profile = () => {
     e.preventDefault();
     if (!profile) return;
 
+    if (formData.full_name) {
+      const nameError = getFullNameError(formData.full_name, isRTL);
+      if (nameError) {
+        setFullNameError(nameError);
+        toast({ title: isRTL ? 'خطأ في الاسم' : 'Name error', description: nameError, variant: 'destructive' });
+        return;
+      }
+    }
+
+    if (formData.phone && !isValidNationalPhone(formData.countryCode, formData.phone)) {
+      toast({
+        title: isRTL ? 'رقم جوال غير صحيح' : 'Invalid phone number',
+        description: isRTL ? 'يرجى التحقق من رمز الدولة ورقم الجوال' : 'Please check the country code and phone number',
+        variant: 'destructive',
+      });
+      return;
+    }
+
     setIsLoading(true);
     try {
-      const fullPhone = formData.phone ? `${formData.countryCode}${formData.phone}` : null;
+      const fullPhone = formData.phone ? buildE164Phone(formData.countryCode, formData.phone) : null;
       
       const { error } = await supabase
         .from('profiles')
@@ -340,7 +352,11 @@ const Profile = () => {
                   value={formData.full_name}
                   onChange={handleInputChange}
                   placeholder={labels.fullName}
+                  maxLength={FULL_NAME_MAX}
                 />
+                {fullNameError && (
+                  <p className="text-sm font-medium text-destructive">{fullNameError}</p>
+                )}
               </div>
               
               <div className="space-y-2">

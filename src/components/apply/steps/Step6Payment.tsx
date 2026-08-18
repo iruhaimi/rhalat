@@ -406,8 +406,10 @@ export default function Step6Payment() {
   const handlePayment = async () => {
     if (!docsComplete) {
       toast({
-        title: 'مستندات ناقصة',
-        description: 'يجب رفع جواز السفر والصورة الشخصية قبل الدفع',
+        title: direction === 'rtl' ? 'مستندات ناقصة' : 'Missing documents',
+        description: direction === 'rtl'
+          ? 'يجب رفع جميع المستندات المطلوبة قبل الدفع'
+          : 'All required documents must be uploaded before payment',
         variant: 'destructive',
       });
       return;
@@ -497,7 +499,7 @@ export default function Step6Payment() {
       setEnhancedConversionUserData({
         email: customerEmail || undefined,
         phone_number: customerPhone
-          ? `+966${customerPhone.replace(/^0+/, '')}`
+          ? `${customerCountryCode}${customerPhone.replace(/^0+/, '')}`
           : undefined,
         address: customerName
           ? {
