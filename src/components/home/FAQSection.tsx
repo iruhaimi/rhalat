@@ -7,20 +7,20 @@ import { useLanguage } from '@/contexts/LanguageContext';
 
 const faqs = [
   {
-    question: 'كم تستغرق معالجة طلب التأشيرة؟',
-    answer: 'تختلف مدة المعالجة حسب نوع التأشيرة والدولة. عادة ما تتراوح بين 3-14 يوم عمل. نوفر أيضاً خدمة المعالجة السريعة لبعض التأشيرات.',
+    question: { ar: 'كم تستغرق معالجة طلب التأشيرة؟', en: 'How long does visa application processing take?' },
+    answer: { ar: 'تختلف مدة المعالجة حسب نوع التأشيرة والدولة. عادة ما تتراوح بين 3-14 يوم عمل. نوفر أيضاً خدمة المعالجة السريعة لبعض التأشيرات.', en: 'Processing time varies by visa type and country, typically 3-14 business days. Express processing is available for some visas.' },
   },
   {
-    question: 'ما هي المستندات المطلوبة عادةً؟',
-    answer: 'تختلف المستندات حسب نوع التأشيرة. بشكل عام تحتاج: جواز سفر ساري، صور شخصية حديثة، كشف حساب بنكي، وحجوزات الطيران والفندق.',
+    question: { ar: 'ما هي المستندات المطلوبة عادةً؟', en: 'What documents are usually required?' },
+    answer: { ar: 'تختلف المستندات حسب نوع التأشيرة. بشكل عام تحتاج: جواز سفر ساري، صور شخصية حديثة، كشف حساب بنكي، وحجوزات الطيران والفندق.', en: 'Documents vary by visa type. Generally you need: a valid passport, recent photos, a bank statement, and flight and hotel bookings.' },
   },
   {
-    question: 'هل الأسعار شاملة لرسوم السفارة؟',
-    answer: 'نوضح في كل خدمة ما إذا كانت الرسوم شاملة أو غير شاملة لرسوم التأشيرة الحكومية. يمكنك رؤية التفاصيل الكاملة قبل الدفع.',
+    question: { ar: 'هل الأسعار شاملة لرسوم السفارة؟', en: 'Do prices include embassy fees?' },
+    answer: { ar: 'نوضح في كل خدمة ما إذا كانت الرسوم شاملة أو غير شاملة لرسوم التأشيرة الحكومية. يمكنك رؤية التفاصيل الكاملة قبل الدفع.', en: 'We clearly state for each service whether government visa fees are included or not. You can see the full details before paying.' },
   },
   {
-    question: 'ماذا لو تم رفض طلب التأشيرة؟',
-    answer: 'نقدم استشارة مجانية لفهم أسباب الرفض وكيفية تحسين طلبك. في بعض الحالات، نقدم استرداد جزئي حسب سياسة كل تأشيرة.',
+    question: { ar: 'ماذا لو تم رفض طلب التأشيرة؟', en: 'What if the visa application is rejected?' },
+    answer: { ar: 'نقدم استشارة مجانية لفهم أسباب الرفض وكيفية تحسين طلبك. في بعض الحالات، نقدم استرداد جزئي حسب سياسة كل تأشيرة.', en: 'We offer a free consultation to understand the rejection reasons and how to improve your application. In some cases, a partial refund is available depending on each visa policy.' },
   },
 ];
 
@@ -82,7 +82,7 @@ export default function FAQSection({ t }: FAQSectionProps) {
                       0{i + 1}
                     </span>
                     <h3 className={`font-heading-ar font-extrabold text-lg ${open === i ? 'text-brand' : 'text-navy'}`}>
-                      {faq.question}
+                      {isRTL ? faq.question.ar : faq.question.en}
                     </h3>
                   </div>
                   <motion.span
@@ -104,7 +104,7 @@ export default function FAQSection({ t }: FAQSectionProps) {
                       transition={{ duration: 0.25 }}
                     >
                       <p className="font-body-ar text-muted-foreground leading-relaxed px-6 pb-6 ps-[4.5rem]">
-                        {faq.answer}
+                        {isRTL ? faq.answer.ar : faq.answer.en}
                       </p>
                     </motion.div>
                   )}

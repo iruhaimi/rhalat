@@ -17,7 +17,7 @@ export default function MainLayout() {
     <div className="flex min-h-screen flex-col" style={{ paddingLeft: 'var(--safe-area-left, 0px)', paddingRight: 'var(--safe-area-right, 0px)' }}>
       <HeaderArabic />
       <ComplianceDisclaimer variant="banner" />
-      <main className="flex-1">
+      <main className="flex-1" style={{ paddingBottom: 'calc(4.5rem + var(--safe-area-bottom, 0px))' }}>
         <Outlet />
       </main>
       <FooterArabic />

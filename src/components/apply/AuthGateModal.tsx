@@ -17,6 +17,7 @@ import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import { Shield, Loader2, LogIn, UserPlus, Eye, EyeOff, Mail, KeyRound, User } from 'lucide-react';
+import { fullNameSchema, FULL_NAME_MAX } from '@/lib/nameValidation';
 
 const filterArabicChars = (value: string): string =>
   value.replace(/[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]/g, '');
@@ -96,7 +97,7 @@ function SignUpPanel({ defaultEmail, defaultName }: { defaultEmail?: string; def
   const [loading, setLoading] = useState(false);
 
   const schema = z.object({
-    fullName: z.string().min(3, isRTL ? 'الاسم مطلوب' : 'Name required'),
+    fullName: fullNameSchema(isRTL),
     email: z.string().email(isRTL ? 'بريد إلكتروني غير صحيح' : 'Invalid email'),
     password: z.string().min(8, isRTL ? 'كلمة المرور 8 أحرف على الأقل' : 'Min 8 chars'),
   });
@@ -132,7 +133,7 @@ function SignUpPanel({ defaultEmail, defaultName }: { defaultEmail?: string; def
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <div className="space-y-2">
         <Label htmlFor="gate-signup-name" className="flex items-center gap-2"><User className="w-4 h-4" />{isRTL ? 'الاسم الكامل' : 'Full Name'}</Label>
-        <Input id="gate-signup-name" {...register('fullName')} className="h-12" />
+        <Input id="gate-signup-name" {...register('fullName')} className="h-12" maxLength={FULL_NAME_MAX} />
         {errors.fullName && <p className="text-sm text-destructive">{errors.fullName.message}</p>}
       </div>
       <div className="space-y-2">

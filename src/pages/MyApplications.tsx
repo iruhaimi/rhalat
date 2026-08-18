@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -30,6 +31,7 @@ import type { ApplicationStatus } from '@/types/database';
 
 interface ApplicationWithVisa {
   id: string;
+  display_number: string | null;
   status: ApplicationStatus;
   travel_date: string | null;
   created_at: string;
@@ -64,6 +66,7 @@ const STATUS_PROGRESS: Record<ApplicationStatus, number> = {
 const MyApplications = () => {
   const { user, profile } = useAuth();
   const { direction } = useLanguage();
+  const { toast } = useToast();
   const isRTL = direction === 'rtl';
   
   const [applications, setApplications] = useState<ApplicationWithVisa[]>([]);
@@ -76,6 +79,8 @@ const MyApplications = () => {
     startApplication: isRTL ? 'ابدأ طلب جديد' : 'Start New Application',
     viewDetails: isRTL ? 'عرض التفاصيل' : 'View Details',
     applicationId: isRTL ? 'رقم الطلب' : 'Application ID',
+    trackingNumber: isRTL ? 'رقم التتبع' : 'Tracking Number',
+    copied: isRTL ? 'تم نسخ الرقم' : 'Number copied',
     travelDate: isRTL ? 'تاريخ السفر' : 'Travel Date',
     submittedAt: isRTL ? 'تاريخ التقديم' : 'Submitted At',
     createdAt: isRTL ? 'تاريخ الإنشاء' : 'Created At',
@@ -141,6 +146,7 @@ const MyApplications = () => {
         .from('applications')
         .select(`
           id,
+          display_number,
           status,
           travel_date,
           created_at,
@@ -179,9 +185,18 @@ const MyApplications = () => {
 
   const formatDate = (dateString: string | null) => {
     if (!dateString) return labels.notScheduled;
-    return format(new Date(dateString), 'dd MMM yyyy', { 
-      locale: isRTL ? ar : enUS 
+    return format(new Date(dateString), 'dd MMM yyyy', {
+      locale: isRTL ? ar : enUS
     });
+  };
+
+  const copyTracking = async (value: string) => {
+    try {
+      await navigator.clipboard.writeText(value);
+      toast({ title: labels.copied, description: value });
+    } catch {
+      toast({ title: labels.trackingNumber, description: value });
+    }
   };
 
   if (!user) {
@@ -362,10 +377,17 @@ const MyApplications = () => {
 
                     {/* Details Row */}
                     <div className="mt-4 pt-4 border-t flex flex-wrap gap-4 text-sm text-muted-foreground">
-                      <div className="flex items-center gap-1">
+                      <button
+                        type="button"
+                        onClick={() => copyTracking(app.display_number || app.id)}
+                        className="flex items-center gap-1.5 rounded-lg bg-navy/5 px-3 py-1.5 font-mono text-navy hover:bg-navy/10 transition-colors"
+                        title={labels.trackingNumber}
+                      >
                         <FileText className="h-4 w-4" />
-                        <span>{app.id.slice(0, 8)}...</span>
-                      </div>
+                        <span className="font-semibold" dir="ltr">
+                          {app.display_number || `${app.id.slice(0, 8)}...`}
+                        </span>
+                      </button>
                       <div className="flex items-center gap-1">
                         <Calendar className="h-4 w-4" />
                         <span>

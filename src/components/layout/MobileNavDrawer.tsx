@@ -44,7 +44,7 @@ const navIcons: Record<string, React.ElementType> = {
 
 export default function MobileNavDrawer({ isOpen, onClose }: MobileNavDrawerProps) {
   const { user, profile, isAdmin, isAgent, signOut } = useAuth();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -68,8 +68,8 @@ export default function MobileNavDrawer({ isOpen, onClose }: MobileNavDrawerProp
   const navigation = [
     { name: t('nav.home'), href: '/' },
     { name: t('nav.destinations'), href: '/destinations' },
-    { name: 'العروض الخاصة', href: '/offers' },
-    { name: 'البرامج السياحية', href: '/tourism' },
+    { name: language === 'ar' ? 'العروض الخاصة' : 'Special Offers', href: '/offers' },
+    { name: language === 'ar' ? 'البرامج السياحية' : 'Tourism Programs', href: '/tourism' },
     { name: t('nav.pricing'), href: '/pricing' },
     { name: t('nav.track'), href: '/track' },
     { name: t('nav.faq'), href: '/faq' },
@@ -125,7 +125,7 @@ export default function MobileNavDrawer({ isOpen, onClose }: MobileNavDrawerProp
           >
             {/* Header */}
             <div className="flex items-center justify-between p-4 border-b border-border/50">
-              <h2 className="text-lg font-bold text-foreground">القائمة</h2>
+              <h2 className="text-lg font-bold text-foreground">{language === 'ar' ? 'القائمة' : 'Menu'}</h2>
               <Button
                 variant="ghost"
                 size="icon"
@@ -155,7 +155,7 @@ export default function MobileNavDrawer({ isOpen, onClose }: MobileNavDrawerProp
                     </Avatar>
                     <div className="flex-1 min-w-0">
                       <p className="font-bold text-foreground truncate">
-                        {profile?.full_name || 'المستخدم'}
+                        {profile?.full_name || (language === 'ar' ? 'المستخدم' : 'User')}
                       </p>
                       <p className="text-sm text-muted-foreground truncate">{user.email}</p>
                     </div>

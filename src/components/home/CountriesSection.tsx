@@ -112,7 +112,7 @@ export default function CountriesSection({ countries, visaTypes, t }: CountriesS
           </div>
           <Button asChild variant="outline" className="rounded-2xl h-12 px-6 border-border hover:bg-brand hover:text-brand-foreground hover:border-brand">
             <Link to="/destinations" className="font-jakarta font-bold">
-              عرض كافة الدول
+              {direction === 'rtl' ? 'عرض كافة الدول' : 'View all countries'}
               <ArrowLeft className="h-4 w-4 ms-1 rtl-flip" />
             </Link>
           </Button>
@@ -145,13 +145,13 @@ export default function CountriesSection({ countries, visaTypes, t }: CountriesS
                   {item.processingDays && (
                     <Badge className="bg-navy/90 backdrop-blur-md text-white border-0 rounded-lg px-2 py-0.5 font-jakarta text-[10px] font-bold gap-1">
                       <Clock className="h-3 w-3" />
-                      {item.processingDays} أيام
+                      {item.processingDays} {direction === 'rtl' ? 'أيام' : 'days'}
                     </Badge>
                   )}
                 </div>
                 {!item.isSchengen && item.visaCount > 0 && (
                   <Badge className="absolute top-2 start-2 bg-white/95 text-navy backdrop-blur-md rounded-lg px-2 py-0.5 font-jakarta text-[10px] font-bold">
-                    {item.visaCount} تأشيرة
+                    {item.visaCount} {direction === 'rtl' ? 'تأشيرة' : 'visas'}
                   </Badge>
                 )}
               </div>
@@ -160,23 +160,23 @@ export default function CountriesSection({ countries, visaTypes, t }: CountriesS
 
                 {item.minPrice ? (
                   <div className="flex items-baseline gap-1.5 mb-2">
-                    <span className="font-jakarta text-[10px] font-bold tracking-wider uppercase text-muted-foreground">يبدأ من</span>
+                    <span className="font-jakarta text-[10px] font-bold tracking-wider uppercase text-muted-foreground">{direction === 'rtl' ? 'يبدأ من' : 'From'}</span>
                     <span className="font-numeric text-lg font-extrabold tabular-nums text-brand flex items-center gap-1">
                       {item.minPrice}
                       <SARSymbol size="xs" className="text-brand" />
                     </span>
                   </div>
                 ) : (
-                  <div className="mb-2 text-xs text-muted-foreground">حسب الطلب</div>
+                  <div className="mb-2 text-xs text-muted-foreground">{direction === 'rtl' ? 'حسب الطلب' : 'On request'}</div>
                 )}
 
                 <div className="flex gap-1.5">
                   <Button variant="outline" size="sm" className="flex-1 rounded-xl h-8 text-xs border-border" asChild>
-                    <Link to={item.href}>التفاصيل</Link>
+                    <Link to={item.href}>{direction === 'rtl' ? 'التفاصيل' : 'Details'}</Link>
                   </Button>
                   <Button size="sm" className="flex-1 rounded-xl h-8 text-xs gap-1 bg-navy hover:bg-navy/90 text-navy-foreground" asChild>
                     <Link to={item.applyHref}>
-                      ابدأ الطلب
+                      {direction === 'rtl' ? 'ابدأ الطلب' : 'Apply now'}
                       <ArrowIcon className="h-3 w-3" />
                     </Link>
                   </Button>

@@ -48,7 +48,7 @@ export default function HomeArabic() {
   });
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col" style={{ paddingBottom: 'calc(5rem + var(--safe-area-bottom, 0px))' }}>
       <SEO title="عطلات رحلاتكم — تجهيز ومراجعة ملفات طلبات التأشيرة" description="وكالة سفر خاصة تقدم خدمات تجهيز ومراجعة ملفات طلبات التأشيرة والمساعدة في المواعيد وخدمات السفر. لا نصدر التأشيرات ولا نضمن قبولها." path="/" />
       <HeroSection />
       <CountriesSection countries={countries} visaTypes={visaTypes} t={t} />

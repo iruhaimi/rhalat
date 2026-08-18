@@ -13,6 +13,9 @@ import {
 import { MapPin, Loader2, Plane, Calendar, ArrowRight } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
+import CountryCodePicker from '@/components/ui/CountryCodePicker';
+import { getFullNameError } from '@/lib/nameValidation';
+import { buildE164Phone, isValidNationalPhone } from '@/lib/phone';
 
 export default function TourismDetail() {
   const { id } = useParams();
@@ -25,6 +28,7 @@ export default function TourismDetail() {
     customer_name: '', customer_phone: '', customer_email: '',
     travelers_count: 1, preferred_date: '', notes: '',
   });
+  const [countryCode, setCountryCode] = useState('+966');
 
   useEffect(() => {
     if (!id) return;
@@ -44,12 +48,24 @@ export default function TourismDetail() {
   const handleBook = async () => {
     if (!user) { toast.error('يرجى تسجيل الدخول للحجز'); return; }
     if (!form.customer_name || !form.customer_phone) { toast.error('الاسم ورقم الجوال مطلوبان'); return; }
+
+    const nameError = getFullNameError(form.customer_name, true);
+    if (nameError) { toast.error(nameError); return; }
+
+    if (!isValidNationalPhone(countryCode, form.customer_phone)) {
+      toast.error('رقم الجوال غير صحيح، يرجى التحقق من رمز الدولة والرقم');
+      return;
+    }
+
+    const fullPhone = buildE164Phone(countryCode, form.customer_phone);
+
     setSubmitting(true);
     const { error } = await supabase.from('tour_bookings').insert({
       program_id: program.id,
       operator_id: program.operator_id,
       user_id: user.id,
       ...form,
+      customer_phone: fullPhone,
       travelers_count: Number(form.travelers_count) || 1,
     });
     setSubmitting(false);
@@ -167,7 +183,19 @@ export default function TourismDetail() {
                     <div><Label>الاسم الكامل</Label>
                       <Input value={form.customer_name} onChange={e => setForm({ ...form, customer_name: e.target.value })} /></div>
                     <div><Label>رقم الجوال</Label>
-                      <Input value={form.customer_phone} onChange={e => setForm({ ...form, customer_phone: e.target.value })} /></div>
+                      <div className="flex flex-row-reverse gap-2">
+                        <CountryCodePicker value={countryCode} onChange={setCountryCode} isRTL />
+                        <Input
+                          className="flex-1 text-left"
+                          dir="ltr"
+                          inputMode="numeric"
+                          maxLength={9}
+                          value={form.customer_phone}
+                          onChange={e => setForm({ ...form, customer_phone: e.target.value.replace(/\D/g, '').slice(0, 9) })}
+                          placeholder="5XXXXXXXX"
+                        />
+                      </div>
+                    </div>
                     <div><Label>البريد الإلكتروني (اختياري)</Label>
                       <Input type="email" value={form.customer_email} onChange={e => setForm({ ...form, customer_email: e.target.value })} /></div>
                     <div><Label>عدد المسافرين</Label>

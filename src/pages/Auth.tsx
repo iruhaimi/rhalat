@@ -18,6 +18,7 @@ import { getExternalAuthOrigin, isIOSApp, isNativeMobileApp } from '@/lib/platfo
 import NoIndex from '@/components/seo/NoIndex';
 import { createClient } from '@supabase/supabase-js';
 import { resolvePostAuthRedirect, consumePendingRedirect, sanitizeRedirect } from '@/lib/safeRedirect';
+import { fullNameSchema, FULL_NAME_MAX } from '@/lib/nameValidation';
 
 const REQUIRED_PROFILE_FIELDS = [
   'full_name', 'phone', 'date_of_birth', 'nationality',
@@ -50,8 +51,8 @@ const forgotPasswordSchema = z.object({
 
 type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
 
-const signUpSchema = z.object({
-  fullName: z.string().min(2, 'الاسم يجب أن يكون حرفين على الأقل').max(100),
+const buildSignUpSchema = (isRTL: boolean) => z.object({
+  fullName: fullNameSchema(isRTL),
   email: z.string().email('يرجى إدخال بريد إلكتروني صحيح'),
   password: z.string().min(6, 'كلمة المرور يجب أن تكون 6 أحرف على الأقل'),
   confirmPassword: z.string(),
@@ -61,7 +62,7 @@ const signUpSchema = z.object({
 });
 
 type SignInFormData = z.infer<typeof signInSchema>;
-type SignUpFormData = z.infer<typeof signUpSchema>;
+type SignUpFormData = z.infer<ReturnType<typeof buildSignUpSchema>>;
 
 
 const createEphemeralAuthClient = () => {
@@ -171,7 +172,7 @@ export default function Auth() {
   });
 
   const signUpForm = useForm<SignUpFormData>({
-    resolver: zodResolver(signUpSchema),
+    resolver: zodResolver(buildSignUpSchema(isRTL)),
     defaultValues: {
       fullName: '',
       email: '',
@@ -450,7 +451,7 @@ export default function Auth() {
                 <form onSubmit={signUpForm.handleSubmit(handleSignUp)} className="space-y-4">
                   <div className="space-y-2">
                     <Label>{isRTL ? 'الاسم الكامل' : 'Full Name'}</Label>
-                    <Input placeholder={isRTL ? 'محمد أحمد' : 'John Doe'} {...signUpForm.register('fullName')} />
+                    <Input placeholder={isRTL ? 'محمد أحمد' : 'John Doe'} maxLength={FULL_NAME_MAX} {...signUpForm.register('fullName')} />
                     {signUpForm.formState.errors.fullName?.message && (
                       <p className="text-sm font-medium text-destructive">
                         {String(signUpForm.formState.errors.fullName.message)}

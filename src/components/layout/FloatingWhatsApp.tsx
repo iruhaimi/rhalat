@@ -1,10 +1,15 @@
 import { MessageCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { trackConversion } from '@/lib/gtagEvents';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export default function FloatingWhatsApp() {
+  const { direction } = useLanguage();
+  const isRTL = direction === 'rtl';
   const phoneNumber = '966562525665';
-  const message = 'مرحباً، أرغب في الاستفسار عن خدمات التأشيرات';
+  const message = isRTL
+    ? 'مرحباً، أرغب في الاستفسار عن خدمات التأشيرات'
+    : 'Hello, I would like to ask about visa services';
   
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
 
@@ -25,14 +30,14 @@ export default function FloatingWhatsApp() {
       transition={{ delay: 1, type: 'spring', stiffness: 260, damping: 20 }}
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
-      aria-label="تواصل معنا عبر واتساب"
+      aria-label={isRTL ? 'تواصل معنا عبر واتساب' : 'Contact us on WhatsApp'}
     >
       {/* Pulse animation */}
       <span className="absolute inset-0 rounded-full bg-[#25D366] animate-ping opacity-25" />
       
       <MessageCircle className="h-6 w-6 relative z-10" />
       <span className="hidden sm:inline-block font-medium relative z-10">
-        تواصل معنا
+        {isRTL ? 'تواصل معنا' : 'Contact us'}
       </span>
     </motion.a>
   );

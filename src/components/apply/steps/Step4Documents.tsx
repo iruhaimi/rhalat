@@ -20,6 +20,7 @@ import {
   AlertTriangle
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { toast } from 'sonner';
 
 interface VisaRequirement {
   id: string;
@@ -128,18 +129,31 @@ export default function Step4Documents() {
   // Magic-byte sniffing — reject files whose header does not match the claimed MIME.
   const sniffMatchesMime = async (file: File): Promise<boolean> => {
     try {
-      const buf = new Uint8Array(await file.slice(0, 8).arrayBuffer());
+      const buf = new Uint8Array(await file.slice(0, 12).arrayBuffer());
       const isPDF = buf[0] === 0x25 && buf[1] === 0x50 && buf[2] === 0x44 && buf[3] === 0x46; // %PDF
       const isJPG = buf[0] === 0xff && buf[1] === 0xd8 && buf[2] === 0xff;
       const isPNG = buf[0] === 0x89 && buf[1] === 0x50 && buf[2] === 0x4e && buf[3] === 0x47;
+      // RIFF....WEBP
+      const isWEBP = buf[0] === 0x52 && buf[1] === 0x49 && buf[2] === 0x46 && buf[3] === 0x46
+        && buf[8] === 0x57 && buf[9] === 0x45 && buf[10] === 0x42 && buf[11] === 0x50;
       if (file.type === 'application/pdf') return isPDF;
       if (file.type === 'image/jpeg' || file.type === 'image/jpg') return isJPG;
       if (file.type === 'image/png') return isPNG;
+      if (file.type === 'image/webp') return isWEBP;
       return false;
     } catch {
       return false;
     }
   };
+
+  const ACCEPTED_MIME_EXTENSIONS: Record<string, string[]> = {
+    'application/pdf': ['pdf'],
+    'image/jpeg': ['jpg', 'jpeg'],
+    'image/png': ['png'],
+    'image/webp': ['webp'],
+  };
+  const ACCEPTED_MIME_TYPES = Object.keys(ACCEPTED_MIME_EXTENSIONS);
+  const ACCEPT_ATTR = '.pdf,.jpg,.jpeg,.png,.webp,application/pdf,image/jpeg,image/png,image/webp';
 
   // Ensure a draft application exists so uploads can be attached to it.
   const ensureDraftId = async (): Promise<string | null> => {
@@ -160,43 +174,45 @@ export default function Step4Documents() {
   const handleFileSelect = useCallback(async (slot: ExpandedRequirement, file: File) => {
     const docType = slot.slotId;
     const maxSize = 10 * 1024 * 1024; // 10MB
-    const extByMime: Record<string, string> = {
-      'application/pdf': 'pdf',
-      'image/jpeg': 'jpg',
-      'image/jpg': 'jpg',
-      'image/png': 'png',
-    };
+    const extByMime = ACCEPTED_MIME_EXTENSIONS;
 
-    if (!extByMime[file.type]) {
+    const rejectFile = (error: string) => {
       setUploads(prev => ({
         ...prev,
-        [docType]: { file: null, progress: 0, status: 'error',
-          error: direction === 'rtl' ? 'نوع الملف غير مدعوم' : 'File type not supported' },
+        [docType]: { file: null, progress: 0, status: 'error', error },
       }));
+      toast.error(direction === 'rtl' ? `تعذّر رفع "${slot.name}"` : `Could not upload "${slot.name}"`, {
+        description: error,
+      });
+    };
+
+    if (file.size === 0) {
+      rejectFile(direction === 'rtl' ? 'الملف فارغ (0 بايت)، يرجى اختيار ملف صالح' : 'The file is empty (0 bytes); please choose a valid file');
+      return;
+    }
+    if (!ACCEPTED_MIME_TYPES.includes(file.type)) {
+      rejectFile(direction === 'rtl'
+        ? 'نوع الملف غير مدعوم. الصيغ المقبولة: PDF, JPG, PNG, WEBP'
+        : 'File type not supported. Accepted formats: PDF, JPG, PNG, WEBP');
       return;
     }
     if (file.size > maxSize) {
-      setUploads(prev => ({
-        ...prev,
-        [docType]: { file: null, progress: 0, status: 'error',
-          error: direction === 'rtl' ? 'حجم الملف كبير جداً (الحد 10MB)' : 'File too large (max 10MB)' },
-      }));
+      rejectFile(direction === 'rtl' ? 'حجم الملف كبير جداً (الحد 10MB)' : 'File too large (max 10MB)');
+      return;
+    }
+    const fileExt = file.name.split('.').pop()?.toLowerCase() || '';
+    if (!extByMime[file.type]?.includes(fileExt)) {
+      rejectFile(direction === 'rtl'
+        ? 'امتداد الملف لا يطابق نوعه الفعلي'
+        : 'The file extension does not match its actual type');
       return;
     }
     if (!(await sniffMatchesMime(file))) {
-      setUploads(prev => ({
-        ...prev,
-        [docType]: { file: null, progress: 0, status: 'error',
-          error: direction === 'rtl' ? 'محتوى الملف لا يطابق امتداده' : 'File content does not match its type' },
-      }));
+      rejectFile(direction === 'rtl' ? 'محتوى الملف لا يطابق امتداده' : 'File content does not match its type');
       return;
     }
     if (!user) {
-      setUploads(prev => ({
-        ...prev,
-        [docType]: { file: null, progress: 0, status: 'error',
-          error: direction === 'rtl' ? 'يجب تسجيل الدخول لرفع المستندات' : 'Sign in required to upload' },
-      }));
+      rejectFile(direction === 'rtl' ? 'يجب تسجيل الدخول لرفع المستندات' : 'Sign in required to upload');
       return;
     }
 
@@ -206,7 +222,7 @@ export default function Step4Documents() {
       const appId = await ensureDraftId();
       if (!appId) throw new Error('draft_unavailable');
 
-      const ext = extByMime[file.type];
+      const ext = extByMime[file.type][0];
       const uuid = (crypto as any)?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(36).slice(2)}`;
       // RLS on `documents` requires first path segment == auth.uid().
       const path = `${user.id}/${appId}/${slot.reqId}/${docType}-${uuid}.${ext}`;
@@ -363,7 +379,7 @@ export default function Step4Documents() {
               {req.requiresUpload && (
                 <input
                   type="file"
-                  accept=".pdf,.jpg,.jpeg,.png"
+                  accept={ACCEPT_ATTR}
                   className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                   onChange={(e) => {
                     const file = e.target.files?.[0];

@@ -36,7 +36,8 @@ export default function StickyCTABar() {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 80, opacity: 0 }}
           transition={{ duration: 0.3, ease: 'easeOut' }}
-          className="fixed bottom-4 inset-x-4 md:inset-x-auto md:end-6 md:max-w-md z-40"
+          className="fixed inset-x-4 md:inset-x-auto md:end-6 md:max-w-md z-40"
+          style={{ bottom: 'calc(5.5rem + var(--safe-area-bottom, 0px))' }}
         >
           <div className="flex items-center gap-3 rounded-2xl bg-brand text-white shadow-2xl shadow-brand/30 px-4 py-3 border border-white/10">
             <div className="flex-1 min-w-0">
@@ -57,7 +58,7 @@ export default function StickyCTABar() {
               type="button"
               onClick={() => setDismissed(true)}
               aria-label={isRTL ? 'إغلاق' : 'Dismiss'}
-              className="h-8 w-8 inline-flex items-center justify-center rounded-lg hover:bg-white/10 transition-colors shrink-0"
+              className="h-11 w-11 min-h-[44px] min-w-[44px] inline-flex items-center justify-center rounded-lg hover:bg-white/10 transition-colors shrink-0"
             >
               <X className="h-4 w-4" />
             </button>

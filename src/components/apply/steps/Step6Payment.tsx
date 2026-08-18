@@ -40,7 +40,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
-import { normalizeSaudiPhone, formatSaudiPhoneSpaced } from '@/lib/phone';
+import { parsePhoneWithCountry } from '@/lib/phone';
 import { trackConversion, setEnhancedConversionUserData, markConversionFired, wasConversionFired } from '@/lib/gtagEvents';
 
 const TERMS_VERSION = 'v2026.1';
@@ -88,9 +88,12 @@ export default function Step6Payment() {
     (user?.user_metadata as any)?.name ||
     '';
   const customerEmail = user?.email || '';
-  const customerPhone = normalizeSaudiPhone(profile?.phone);
-  const customerCountryCode = '+966';
-  const customerPhoneDisplay = formatSaudiPhoneSpaced(profile?.phone);
+  const parsedPhone = parsePhoneWithCountry(profile?.phone);
+  const customerCountryCode = parsedPhone.countryCode;
+  const customerPhone = parsedPhone.national;
+  const customerPhoneDisplay = customerPhone
+    ? `${customerCountryCode} ${customerPhone}`
+    : '';
   const [isProcessing, setIsProcessing] = useState(false);
   const [isSubmittingWhatsApp, setIsSubmittingWhatsApp] = useState(false);
   const navigate = useNavigate();
@@ -403,8 +406,10 @@ export default function Step6Payment() {
   const handlePayment = async () => {
     if (!docsComplete) {
       toast({
-        title: 'مستندات ناقصة',
-        description: 'يجب رفع جواز السفر والصورة الشخصية قبل الدفع',
+        title: direction === 'rtl' ? 'مستندات ناقصة' : 'Missing documents',
+        description: direction === 'rtl'
+          ? 'يجب رفع جميع المستندات المطلوبة قبل الدفع'
+          : 'All required documents must be uploaded before payment',
         variant: 'destructive',
       });
       return;
@@ -494,7 +499,7 @@ export default function Step6Payment() {
       setEnhancedConversionUserData({
         email: customerEmail || undefined,
         phone_number: customerPhone
-          ? `+966${customerPhone.replace(/^0+/, '')}`
+          ? `${customerCountryCode}${customerPhone.replace(/^0+/, '')}`
           : undefined,
         address: customerName
           ? {
@@ -562,9 +567,13 @@ export default function Step6Payment() {
             : 'All required documents must be uploaded before submission')
         : raw.includes('invalid_status_transition')
           ? (direction === 'rtl' ? 'حالة الطلب لا تسمح بالإرسال' : 'Application status does not allow submission')
-          : (raw || (direction === 'rtl' ? 'فشلت عملية الدفع، حاول مرة أخرى' : 'Payment failed, please try again'));
+          : raw.includes('applications_submission_method_check')
+            ? (direction === 'rtl'
+                ? 'طريقة الدفع المختارة غير مدعومة حالياً، يرجى اختيار طريقة أخرى'
+                : 'The selected payment method is not supported, please choose another one')
+            : (raw || (direction === 'rtl' ? 'فشلت عملية الدفع، حاول مرة أخرى' : 'Payment failed, please try again'));
       toast({
-        title: 'خطأ',
+        title: direction === 'rtl' ? 'خطأ' : 'Error',
         description: friendly,
         variant: 'destructive',
       });

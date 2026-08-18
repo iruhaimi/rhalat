@@ -4,6 +4,7 @@ import SEO from '@/components/seo/SEO';
 import { supabase } from '@/integrations/supabase/client';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { LEGAL } from '@/config/legal';
+import { openExternalUrl } from '@/lib/despia';
 
 interface CountryRow {
   id: string;
@@ -94,7 +95,8 @@ export default function OfficialEmbassies() {
         href={LEGAL.mofaUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="mb-8 flex items-center justify-between gap-3 rounded-xl border-2 border-primary/40 bg-primary/5 p-5 hover:bg-primary/10 transition-colors"
+        onClick={(e) => { e.preventDefault(); openExternalUrl(LEGAL.mofaUrl); }}
+        className="mb-8 flex items-center justify-between gap-3 rounded-xl border-2 border-primary/40 bg-primary/5 p-5 hover:bg-primary/10 transition-colors min-h-[44px]"
       >
         <div>
           <div className="font-bold text-foreground text-base mb-1">
@@ -122,6 +124,10 @@ export default function OfficialEmbassies() {
                 href={url || `https://www.google.com/search?q=${encodeURIComponent(c.name + ' official visa government website')}`}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={(e) => {
+                  e.preventDefault();
+                  openExternalUrl(url || `https://www.google.com/search?q=${encodeURIComponent(c.name + ' official visa government website')}`);
+                }}
                 className="flex items-center justify-between gap-3 rounded-lg border border-border bg-card p-4 hover:border-brand hover:shadow-sm transition-all min-h-[60px]"
               >
                 <span className="font-semibold text-foreground">{displayName}</span>
