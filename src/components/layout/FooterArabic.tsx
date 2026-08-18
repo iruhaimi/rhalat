@@ -29,7 +29,8 @@ const getIconComponent = (iconName: string | null, className: string = "h-4 w-4"
 };
 
 export default function FooterArabic() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const isRTL = language === 'ar';
   const { data: footerSettings } = useFooterSettings();
 
   // Group settings by category
@@ -40,12 +41,18 @@ export default function FooterArabic() {
    const policiesSettings = footerSettings?.filter(s => s.category === 'policies') || [];
 
   // Curated browse links (Explore column)
-  const exploreFallback: Array<{ id: string; value: string; url: string }> = [
+  const exploreFallback: Array<{ id: string; value: string; url: string }> = isRTL ? [
     { id: 'mv-home', value: 'الرئيسية', url: '/' },
     { id: 'mv-destinations', value: 'الوجهات', url: '/destinations' },
     { id: 'mv-pricing', value: 'الأسعار', url: '/pricing' },
     { id: 'mv-tourism', value: 'برامج سياحية', url: '/tourism' },
     { id: 'mv-about', value: 'من نحن', url: '/about' },
+  ] : [
+    { id: 'mv-home', value: 'Home', url: '/' },
+    { id: 'mv-destinations', value: 'Destinations', url: '/destinations' },
+    { id: 'mv-pricing', value: 'Pricing', url: '/pricing' },
+    { id: 'mv-tourism', value: 'Tourism Programs', url: '/tourism' },
+    { id: 'mv-about', value: 'About Us', url: '/about' },
   ];
   // URLs that belong in the "Help" column instead of "Explore"
   const HELP_URLS = new Set(['/faq', '/track', '/track-order', '/track-application', '/support']);
@@ -70,10 +77,10 @@ export default function FooterArabic() {
   const hasDeleteAccount = helpLinksBase.some((l: any) => l.url === '/delete-account');
   const helpLinks = hasDeleteAccount
     ? helpLinksBase
-    : [...helpLinksBase, { id: 'policy-delete-account', value: 'حذف الحساب', url: '/delete-account' }];
+    : [...helpLinksBase, { id: 'policy-delete-account', value: isRTL ? 'حذف الحساب' : 'Delete Account', url: '/delete-account' }];
 
   // Get specific general settings
-  const companyName = generalSettings.find(s => s.key === 'company_name')?.value || 'عطلات رحلاتكم للسياحة والسفر';
+  const companyName = generalSettings.find(s => s.key === 'company_name')?.value || (isRTL ? 'عطلات رحلاتكم للسياحة والسفر' : "Otolat Rahlatcom Travel & Tourism");
   const description = generalSettings.find(s => s.key === 'description')?.value || t('footer.about');
 
   return (
@@ -117,7 +124,7 @@ export default function FooterArabic() {
 
           {/* Explore */}
           <div>
-            <h3 className="font-semibold text-foreground">استكشف</h3>
+            <h3 className="font-semibold text-foreground">{isRTL ? 'استكشف' : 'Explore'}</h3>
             <ul className="mt-4 space-y-3">
               {exploreLinks.map((link: any) => (
                 <li key={link.id}>
@@ -134,7 +141,7 @@ export default function FooterArabic() {
 
           {/* Help & Policies */}
           <div>
-            <h3 className="font-semibold text-foreground">مساعدة</h3>
+            <h3 className="font-semibold text-foreground">{isRTL ? 'مساعدة' : 'Help'}</h3>
             <ul className="mt-4 space-y-3">
               {helpLinks.map((link: any) => (
                 <li key={link.id}>
@@ -151,14 +158,14 @@ export default function FooterArabic() {
 
           {/* Contact - Dynamic from DB */}
           <div>
-            <h3 className="font-semibold text-foreground">تواصل معنا</h3>
+            <h3 className="font-semibold text-foreground">{isRTL ? 'تواصل معنا' : 'Contact Us'}</h3>
             <div className="mt-4 space-y-3">
               {contactSettings.map((item) => {
                 const icon = getIconComponent(item.icon, "h-4 w-4 flex-shrink-0");
 
                 if (item.key === 'working_hours') {
                   const parsed = parseWorkingHours(item.value);
-                  const lines = parsed ? formatWorkingHours(parsed, 'ar') : [item.value];
+                  const lines = parsed ? formatWorkingHours(parsed, isRTL ? 'ar' : 'en') : [item.value];
                   return (
                     <div
                       key={item.id}
@@ -182,7 +189,7 @@ export default function FooterArabic() {
                       className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
                     >
                       {icon}
-                      <span dir={item.key === 'phone' ? 'ltr' : 'rtl'}>{item.value}</span>
+                      <span dir={item.key === 'phone' ? 'ltr' : (isRTL ? 'rtl' : 'ltr')}>{item.value}</span>
                     </a>
                   );
                 }
@@ -209,25 +216,25 @@ export default function FooterArabic() {
                 <BadgeCheck className="h-5 w-5 text-primary" />
               </div>
               <div>
-                <p className="text-sm font-bold text-primary">مرخصون رسمياً</p>
-                <p className="text-xs text-muted-foreground mt-0.5">المملكة العربية السعودية</p>
+                <p className="text-sm font-bold text-primary">{isRTL ? 'مرخصون رسمياً' : 'Officially Licensed'}</p>
+                <p className="text-xs text-muted-foreground mt-0.5">{isRTL ? 'المملكة العربية السعودية' : 'Kingdom of Saudi Arabia'}</p>
               </div>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 lg:gap-2 flex-1 lg:max-w-3xl">
               <div className="rounded-xl bg-background border border-border px-3 py-2.5 text-center">
-                <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wide">فئة الترخيص</div>
-                <div className="text-xs font-bold text-foreground mt-1">وكالة سفر وسياحة</div>
+                <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wide">{isRTL ? 'فئة الترخيص' : 'License Category'}</div>
+                <div className="text-xs font-bold text-foreground mt-1">{isRTL ? 'وكالة سفر وسياحة' : 'Travel & Tourism Agency'}</div>
               </div>
               <div className="rounded-xl bg-background border border-border px-3 py-2.5 text-center">
-                <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wide">وزارة السياحة</div>
+                <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wide">{isRTL ? 'وزارة السياحة' : 'Ministry of Tourism'}</div>
                 <div dir="ltr" className="text-xs font-bold text-foreground mt-1 tabular-nums">{LEGAL.tourismLicense}</div>
               </div>
               <div className="rounded-xl bg-background border border-border px-3 py-2.5 text-center">
-                <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wide">السجل التجاري</div>
+                <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wide">{isRTL ? 'السجل التجاري' : 'Commercial Registration'}</div>
                 <div dir="ltr" className="text-xs font-bold text-foreground mt-1 tabular-nums">{LEGAL.commercialRegistration}</div>
               </div>
               <div className="rounded-xl bg-background border border-border px-3 py-2.5 text-center">
-                <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wide">الرقم الضريبي (VAT)</div>
+                <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wide">{isRTL ? 'الرقم الضريبي (VAT)' : 'VAT Number'}</div>
                 <div dir="ltr" className="text-xs font-bold text-foreground mt-1 tabular-nums">{LEGAL.vatNumber}</div>
               </div>
             </div>
@@ -240,7 +247,9 @@ export default function FooterArabic() {
         {/* Final bar: copyright + non-government notice */}
         <div className="mt-8 border-t border-border pt-6 flex flex-col items-center gap-2 text-center">
           <p className="text-xs text-muted-foreground">
-            هذا الموقع يقدم خدمات المساعدة في تجهيز طلبات التأشيرات فقط، ولا يصدر التأشيرات ولا يمثل أي سفارة أو جهة حكومية رسمية.
+            {isRTL
+              ? 'هذا الموقع يقدم خدمات المساعدة في تجهيز طلبات التأشيرات فقط، ولا يصدر التأشيرات ولا يمثل أي سفارة أو جهة حكومية رسمية.'
+              : 'This website only provides visa application preparation assistance services; it does not issue visas and does not represent any embassy or official government entity.'}
           </p>
           <p className="text-sm text-muted-foreground">
             © {new Date().getFullYear()} {companyName}. {t('footer.rights')}.
