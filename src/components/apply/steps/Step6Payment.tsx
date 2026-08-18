@@ -567,9 +567,13 @@ export default function Step6Payment() {
             : 'All required documents must be uploaded before submission')
         : raw.includes('invalid_status_transition')
           ? (direction === 'rtl' ? 'حالة الطلب لا تسمح بالإرسال' : 'Application status does not allow submission')
-          : (raw || (direction === 'rtl' ? 'فشلت عملية الدفع، حاول مرة أخرى' : 'Payment failed, please try again'));
+          : raw.includes('applications_submission_method_check')
+            ? (direction === 'rtl'
+                ? 'طريقة الدفع المختارة غير مدعومة حالياً، يرجى اختيار طريقة أخرى'
+                : 'The selected payment method is not supported, please choose another one')
+            : (raw || (direction === 'rtl' ? 'فشلت عملية الدفع، حاول مرة أخرى' : 'Payment failed, please try again'));
       toast({
-        title: 'خطأ',
+        title: direction === 'rtl' ? 'خطأ' : 'Error',
         description: friendly,
         variant: 'destructive',
       });
