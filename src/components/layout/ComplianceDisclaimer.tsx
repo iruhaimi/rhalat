@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { Info } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { LEGAL } from '@/config/legal';
+import { openExternalUrl } from '@/lib/despia';
 
 /**
  * Google Ads compliance disclaimer banner.
@@ -55,7 +56,8 @@ export default function ComplianceDisclaimer({ variant = 'banner' }: { variant?:
                   href={LEGAL.mofaUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-semibold text-brand hover:underline"
+                  onClick={(e) => { e.preventDefault(); openExternalUrl(LEGAL.mofaUrl); }}
+                  className="font-semibold text-brand hover:underline min-h-[44px] inline-flex items-center"
                 >
                   وزارة الخارجية السعودية ↗
                 </a>
@@ -78,7 +80,8 @@ export default function ComplianceDisclaimer({ variant = 'banner' }: { variant?:
                   href={LEGAL.mofaUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-semibold text-brand hover:underline"
+                  onClick={(e) => { e.preventDefault(); openExternalUrl(LEGAL.mofaUrl); }}
+                  className="font-semibold text-brand hover:underline min-h-[44px] inline-flex items-center"
                 >
                   Saudi MoFA ↗
                 </a>

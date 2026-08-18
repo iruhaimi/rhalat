@@ -23,6 +23,8 @@ export const LEGAL = {
   domain: 'visafaster.com',
   /** Support inbox shown on public pages (account deletion, contact). */
   supportEmail: 'support@visafaster.com',
-  /** Saudi MoFA official consular services page (used in disclaimers). */
-  mofaUrl: 'https://www.mofa.gov.sa/ar/ConsularServices',
+  /** Saudi MoFA official homepage (used in disclaimers) — canonical, always resolves. */
+  mofaUrl: 'https://www.mofa.gov.sa/',
+  /** Saudi MoFA visa-specific portal. */
+  mofaVisaUrl: 'https://visa.mofa.gov.sa/',
 } as const;

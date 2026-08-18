@@ -26,6 +26,7 @@ import {
 import { motion } from 'framer-motion';
 import { BANK_ACCOUNT, BANK_VERIFICATION_MINUTES } from '@/lib/bankAccount';
 import { useToast } from '@/hooks/use-toast';
+import { generateReceiptPDF } from '@/lib/generateReceiptPDF';
 
 export default function PaymentSuccess() {
   const [searchParams] = useSearchParams();
@@ -165,6 +166,26 @@ export default function PaymentSuccess() {
         variant: 'destructive',
       });
     }
+  };
+
+  const handleDownloadReceipt = () => {
+    const ok = generateReceiptPDF({
+      applicationNumber,
+      amount: amountParam,
+      currency: currencyParam,
+      method: isBankTransfer ? 'bank_transfer' : isWhatsApp ? 'whatsapp' : 'online',
+    });
+    toast({
+      title: ok
+        ? direction === 'rtl' ? 'تم تحميل الإيصال' : 'Receipt downloaded'
+        : direction === 'rtl' ? 'تعذّر تحميل الإيصال' : 'Could not download receipt',
+      description: ok
+        ? undefined
+        : direction === 'rtl'
+          ? 'يرجى المحاولة مرة أخرى أو التواصل مع الدعم'
+          : 'Please try again or contact support',
+      variant: ok ? undefined : 'destructive',
+    });
   };
 
   // Bank transfer view
@@ -391,6 +412,16 @@ export default function PaymentSuccess() {
               <p className="text-2xl font-mono font-bold text-primary tracking-wider">
                 {applicationNumber}
               </p>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="mt-2 h-9 gap-1.5"
+                onClick={() => copyToClipboard(applicationNumber, 'appNumber')}
+              >
+                {copiedField === 'appNumber' ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                <span className="text-xs">{content.copySuccess}</span>
+              </Button>
             </div>
 
             {/* WhatsApp non-payment notice */}
