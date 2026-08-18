@@ -183,6 +183,22 @@ const MyApplications = () => {
 
   const formatDate = (dateString: string | null) => {
     if (!dateString) return labels.notScheduled;
+    return format(new Date(dateString), 'dd MMM yyyy', {
+      locale: isRTL ? ar : enUS
+    });
+  };
+
+  const copyTracking = async (value: string) => {
+    try {
+      await navigator.clipboard.writeText(value);
+      toast({ title: labels.copied, description: value });
+    } catch {
+      toast({ title: labels.trackingNumber, description: value });
+    }
+  };
+
+  const unusedFormatDate = (dateString: string | null) => {
+    if (!dateString) return labels.notScheduled;
     return format(new Date(dateString), 'dd MMM yyyy', { 
       locale: isRTL ? ar : enUS 
     });
