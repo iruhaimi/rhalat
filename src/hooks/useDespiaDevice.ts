@@ -19,11 +19,17 @@ export function useDespiaDevice(userId: string | undefined) {
   useEffect(() => {
     if (!userId || !isDespia()) return;
 
-    const registerDevice = async () => {
+    let cancelled = false;
+    let attempts = 0;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+
+    const registerDevice = async (): Promise<boolean> => {
       const uuid = window.despia?.uuid;
       const playerId = window.despia?.onesignalplayerid;
 
-      if (!uuid || !playerId) return;
+      // The native bridge injects these asynchronously after the webview boots,
+      // so they are frequently missing on first render.
+      if (!uuid || !playerId) return false;
 
       try {
         await (supabase as any)
@@ -40,11 +46,26 @@ export function useDespiaDevice(userId: string | undefined) {
             },
             { onConflict: 'device_uuid' }
           );
+        return true;
       } catch (error) {
         console.error('Failed to register Despia device:', error);
+        return false;
       }
     };
 
-    registerDevice();
+    // Retry for ~30s (every 2s) until the bridge exposes the push identifiers.
+    const attempt = async () => {
+      if (cancelled) return;
+      const ok = await registerDevice();
+      if (ok || cancelled || attempts >= 15) return;
+      attempts += 1;
+      timer = setTimeout(attempt, 2000);
+    };
+    attempt();
+
+    return () => {
+      cancelled = true;
+      if (timer) clearTimeout(timer);
+    };
   }, [userId]);
 }
