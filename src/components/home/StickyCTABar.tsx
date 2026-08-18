@@ -58,7 +58,7 @@ export default function StickyCTABar() {
               type="button"
               onClick={() => setDismissed(true)}
               aria-label={isRTL ? 'إغلاق' : 'Dismiss'}
-              className="h-8 w-8 inline-flex items-center justify-center rounded-lg hover:bg-white/10 transition-colors shrink-0"
+              className="h-11 w-11 min-h-[44px] min-w-[44px] inline-flex items-center justify-center rounded-lg hover:bg-white/10 transition-colors shrink-0"
             >
               <X className="h-4 w-4" />
             </button>
