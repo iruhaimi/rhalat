@@ -7,7 +7,7 @@ export default function PublicLayout() {
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
-      <main className="flex-1">
+      <main className="flex-1" style={{ paddingBottom: 'calc(4.5rem + var(--safe-area-bottom, 0px))' }}>
         <Outlet />
       </main>
       <Footer />
