@@ -364,10 +364,13 @@ export default function SecureStaffAuth() {
 
       if (pendingSession.needsRecoveryCodes) {
         const codes = await generateAndSaveRecoveryCodes(pendingUserId);
-        setGeneratedCodes(codes);
-        setShowRecoveryCodes(true);
-        setShow2FA(false);
-        return true;
+        if (codes.length > 0) {
+          setGeneratedCodes(codes);
+          setShowRecoveryCodes(true);
+          setShow2FA(false);
+          return true;
+        }
+        // Codes already exist for this account — continue normal login.
       }
 
       toast.success('تم تسجيل الدخول بنجاح');
@@ -434,6 +437,8 @@ export default function SecureStaffAuth() {
       body: {},
     });
     if (error) {
+      const status = (error as any)?.context?.status;
+      if (status === 409) return []; // already issued earlier
       console.error('Failed to generate recovery codes:', error);
       throw new Error('Failed to generate recovery codes');
     }
