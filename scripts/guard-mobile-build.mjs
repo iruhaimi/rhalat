@@ -33,6 +33,8 @@ const ignoredDirectories = new Set([
 const ignoredFiles = new Set([
   'guard-mobile-build.mjs',
   'nativeSafety.ts',
+  // Platform-generated preview-only auth storage (never edit; inactive in native builds).
+  'previewAuthStorage.ts',
   'package-lock.json',
   'bun.lockb',
   'tsconfig.app.tsbuildinfo',
