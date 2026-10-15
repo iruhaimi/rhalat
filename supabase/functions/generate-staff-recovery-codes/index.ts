@@ -86,8 +86,9 @@ Deno.serve(async (req) => {
       })
     }
     if (existing && existing.length > 0) {
-      return new Response(JSON.stringify({ error: 'Recovery codes already exist for this account' }), {
-        status: 409, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      // Already issued — not an error; the client continues the normal login.
+      return new Response(JSON.stringify({ success: true, codes: [], alreadyExists: true }), {
+        status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       })
     }
 
