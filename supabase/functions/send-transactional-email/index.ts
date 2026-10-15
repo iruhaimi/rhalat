@@ -65,7 +65,12 @@ Deno.serve(async (req) => {
   // ---- Role-based auth gate ----
   const authHeader = req.headers.get('Authorization') || ''
   const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : ''
-  const { role: callerRole, email: callerEmail, sub: callerSub } = decodeJwtRole(token)
+  const decoded = decodeJwtRole(token)
+  const envServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || ''
+  // Service keys may be non-JWT (sb_secret_...) after key rotation — match exactly.
+  const isServiceKey = !!token && !!envServiceKey && token === envServiceKey
+  const callerRole = isServiceKey ? 'service_role' : decoded.role
+  const { email: callerEmail, sub: callerSub } = decoded
 
   if (callerRole !== 'service_role' && callerRole !== 'authenticated') {
     return new Response(
