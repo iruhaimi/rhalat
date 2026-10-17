@@ -2,12 +2,13 @@ import * as React from 'npm:react@18.3.1'
 import { renderAsync } from 'npm:@react-email/components@0.0.22'
 import { EmailAPIError, sendLovableEmail } from 'npm:@lovable.dev/email-js@0.3.1'
 import { TEMPLATES } from './registry.ts'
+import { recordEmailOutcome } from '../email-send-audit.ts'
 
 // Server-only: reads LOVABLE_API_KEY. Import from edge functions only — never
 // expose sending to the browser.
 
 // Configuration baked in at scaffold time
-const SITE_NAME = "visa-faster"
+const SITE_NAME = "عطلات رحلاتكم"
 // SENDER_DOMAIN is the verified sender subdomain FQDN (e.g., "notify.example.com").
 // It MUST match the subdomain delegated to Lovable's nameservers. NEVER use the root domain.
 const SENDER_DOMAIN = "notify.visafaster.com"
@@ -84,10 +85,13 @@ export async function sendTemplateEmail(
     )
   } catch (error) {
     if (error instanceof EmailAPIError && error.code === 'recipient_suppressed') {
+      await recordEmailOutcome(templateName, recipient, 'suppressed')
       return { sent: false, reason: 'recipient_suppressed' }
     }
+    await recordEmailOutcome(templateName, recipient, 'failed', error instanceof Error ? error.message : String(error))
     throw error
   }
 
+  await recordEmailOutcome(templateName, recipient, 'sent')
   return { sent: true }
 }

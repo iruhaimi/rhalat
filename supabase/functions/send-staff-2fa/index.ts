@@ -1,5 +1,6 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { getCorsHeaders } from "../_shared/cors.ts";
+import { sendTemplateEmail } from '../_shared/transactional-email-templates/send-email.ts';
 
 interface Send2FARequest {
   email: string;
@@ -167,7 +168,7 @@ const handler = async (req: Request): Promise<Response> => {
     console.log(`2FA code created for user: ${userId}`);
 
     // ============================================================
-    // EMAIL SENDING (via backend built-in email queue)
+    // EMAIL SENDING
     // ============================================================
     const TWILIO_ACCOUNT_SID = Deno.env.get("TWILIO_ACCOUNT_SID");
     const TWILIO_AUTH_TOKEN = Deno.env.get("TWILIO_AUTH_TOKEN");
@@ -180,33 +181,12 @@ const handler = async (req: Request): Promise<Response> => {
     };
 
     try {
-      // Use service_role for server-to-server invocation. The send-transactional-email
-      // function's JWT gate allows service_role to send any template to any recipient.
-      const emailResponse = await fetch(`${supabaseUrl}/functions/v1/send-transactional-email`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${supabaseServiceKey}`,
-          apikey: supabaseServiceKey,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          templateName: "staff-2fa",
-          recipientEmail: targetEmail,
-          idempotencyKey: `staff-2fa-${userId}-${Date.now()}`,
-          templateData: { code },
-        }),
+      const result = await sendTemplateEmail('staff-2fa', normalizedEmail, {
+        idempotencyKey: `staff-2fa-${userId}-${expiresAt.toISOString()}`,
+        templateData: { code },
       });
-
-      if (!emailResponse.ok) {
-        const errorText = await emailResponse.text();
-        console.error("email invoke error:", emailResponse.status, errorText);
-        results.errors?.push(`Email error: ${emailResponse.status} ${errorText}`);
-      } else {
-        const invokeData = await emailResponse.json().catch(() => null);
-        emailSent = true;
-        results.email = true;
-        console.log("2FA email enqueued successfully", invokeData);
-      }
+      emailSent = result.sent;
+      results.email = result.sent;
     } catch (emailError: unknown) {
       console.error("Email sending failed:", emailError);
       const errorMessage = emailError instanceof Error ? emailError.message : "Unknown error";
