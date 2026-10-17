@@ -12,14 +12,19 @@ export default function CTASection({ t }: CTASectionProps) {
   const { direction } = useLanguage();
   const isRTL = direction === 'rtl';
 
+  const fadeUp = {
+    hidden: { opacity: 0, y: 22 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' as const } },
+  };
+
   return (
     <section className="py-20 bg-canvas">
       <div className="container-section">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.25 }}
+          variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.1 } } }}
           id="final-cta"
           className="relative bg-gradient-to-br from-brand via-brand to-navy rounded-3xl p-12 md:p-20 text-center overflow-hidden shadow-[0_30px_80px_-20px] shadow-brand/40"
         >
@@ -27,15 +32,15 @@ export default function CTASection({ t }: CTASectionProps) {
           <div className="absolute -bottom-20 -start-20 w-80 h-80 bg-navy/20 rounded-full blur-3xl" />
 
           <div className="relative z-10 max-w-2xl mx-auto text-white">
-            <h2 className="font-heading-ar text-4xl md:text-6xl font-extrabold mb-6 leading-tight">
+            <motion.h2 variants={fadeUp} className="font-heading-ar text-4xl md:text-6xl font-extrabold mb-6 leading-tight">
               {isRTL ? 'احجز موعدك خلال 60 ثانية' : 'Book your appointment in 60 seconds'}
-            </h2>
-            <p className="font-body-ar text-lg md:text-xl opacity-90 mb-10 leading-relaxed">
+            </motion.h2>
+            <motion.p variants={fadeUp} className="font-body-ar text-lg md:text-xl opacity-90 mb-10 leading-relaxed">
               {isRTL
                 ? 'خدمة اختيارية مدفوعة لتجهيز ومراجعة ملف طلبك — لا نصدر التأشيرات ولا نضمن قبولها.'
                 : 'An optional paid service to prepare and review your application file — we do not issue visas or guarantee approval.'}
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            </motion.p>
+            <motion.div variants={fadeUp} className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg" className="h-14 px-10 rounded-2xl bg-white text-brand hover:bg-white/95 hover:scale-[1.02] transition-transform font-jakarta font-extrabold text-base shadow-xl">
                 <Link to="/apply">
                   {isRTL ? 'ابدأ بتقديم طلبك' : 'Start your application'}
@@ -48,12 +53,12 @@ export default function CTASection({ t }: CTASectionProps) {
                   {isRTL ? 'تواصل مع خبير' : 'Talk to an expert'}
                 </a>
               </Button>
-            </div>
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm font-body-ar text-white/80">
+            </motion.div>
+            <motion.div variants={fadeUp} className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm font-body-ar text-white/80">
               <span className="inline-flex items-center gap-2"><ShieldCheck className="h-4 w-4" />{isRTL ? 'بدون وسطاء' : 'No middlemen'}</span>
               <span className="inline-flex items-center gap-2"><Users className="h-4 w-4" />{isRTL ? 'ضمان استرداد' : 'Refund guarantee'}</span>
               <span className="inline-flex items-center gap-2"><Clock className="h-4 w-4" />{isRTL ? 'دعم 24/7' : '24/7 support'}</span>
-            </div>
+            </motion.div>
           </div>
         </motion.div>
       </div>
