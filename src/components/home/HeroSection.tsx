@@ -97,7 +97,7 @@ export default function HeroSection() {
                 {getSetting('badge_text', 'وكالة سفر خاصة — خدمة تجهيز ومراجعة الطلبات', 'A private travel agency — application preparation & review')}
               </span>
 
-              <h1 className="font-heading-ar text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold leading-[1.55] tracking-normal text-navy mb-8 break-words">
+              <h1 className="font-heading-ar text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold leading-[1.55] sm:leading-[1.55] lg:leading-[1.55] xl:leading-[1.55] tracking-normal text-navy mb-8 break-words">
                 <span className="block">
                   {getSetting('main_title_line1', 'خدمة تجهيز ومراجعة', 'Preparation & review service')}
                 </span>
@@ -190,7 +190,7 @@ export default function HeroSection() {
           {/* Success rate tile */}
           <div className="md:col-span-3 bg-cream rounded-5xl p-8 flex flex-col justify-center items-center text-center min-h-[200px]">
             <ShieldCheck className="h-7 w-7 text-brand mb-3" strokeWidth={1.75} />
-            <div className="font-heading-ar text-4xl lg:text-5xl font-bold text-brand leading-[1.6] mb-2 break-words max-w-full">
+            <div className="font-heading-ar text-4xl lg:text-5xl font-bold text-brand leading-[1.6] lg:leading-[1.6] mb-2 break-words max-w-full">
               {isRTL ? 'مراجعة' : 'Review'}
             </div>
             <h4 className="font-heading-ar font-extrabold text-navy">
