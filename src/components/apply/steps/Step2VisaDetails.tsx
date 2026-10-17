@@ -123,7 +123,12 @@ export default function Step2VisaDetails() {
           childPrice: childPrice,
           infantPrice: infantPrice,
           visaFeesIncluded: isFeesIncluded,
-          governmentFees: isFeesIncluded ? 0 : Math.round(basePrice * 0.3),
+          governmentFees: isFeesIncluded ? 0 : Number(selectedVisa.government_fees ?? 0),
+          governmentFeesByAge: {
+            adults: Number(selectedVisa.gov_fee_adult ?? selectedVisa.government_fees ?? 0),
+            children: Number(selectedVisa.gov_fee_child ?? selectedVisa.government_fees ?? 0),
+            infants: Number(selectedVisa.gov_fee_infant ?? selectedVisa.government_fees ?? 0),
+          },
           priceNotes: selectedVisa.price_notes || '',
           priceNotesEn: selectedVisa.price_notes_en || '',
         });
