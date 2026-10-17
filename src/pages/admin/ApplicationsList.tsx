@@ -198,6 +198,7 @@ export default function ApplicationsList() {
       draft: 'مسودة',
       pending_payment: 'بانتظار الدفع',
       submitted: 'مقدم',
+      whatsapp_pending: 'بانتظار واتساب',
       under_review: 'قيد المراجعة',
       documents_required: 'مستندات مطلوبة',
       processing: 'قيد المعالجة',
