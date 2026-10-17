@@ -209,6 +209,7 @@ export default function HeroSection() {
           {/* Featured destination tile */}
           <div className="md:col-span-6 rounded-5xl relative overflow-hidden group min-h-[220px] md:min-h-[260px]">
             <img
+              key={featuredDestination.image_url}
               src={featuredDestination.image_url}
               alt={isRTL ? featuredDestination.name : (featuredDestination.name_en || featuredDestination.name)}
               loading="eager"
