@@ -6,6 +6,11 @@ import { Input } from '@/components/ui/input';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import libertyImage from '@/assets/ads/landmark-liberty.jpg';
+import parisImage from '@/assets/destination-paris.jpg';
+import istanbulImage from '@/assets/destination-istanbul.jpg';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { UserRound } from 'lucide-react';
 
 interface HeroDestination {
   id: string;
@@ -159,24 +164,24 @@ export default function HeroSection() {
 
             <div className="relative z-10 pt-6 border-t border-white/10">
               <div className="flex -space-x-3 rtl:space-x-reverse mb-3" dir="ltr">
-                <img
+                <Avatar className="w-10 h-10 border-2 border-navy"><AvatarImage
                   src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=80&h=80&fit=crop&crop=faces&auto=format&q=80"
                   alt=""
                   loading="lazy"
                   className="w-10 h-10 rounded-full border-2 border-navy object-cover"
-                />
-                <img
+                /><AvatarFallback className="bg-navy text-navy-foreground"><UserRound className="h-4 w-4" /></AvatarFallback></Avatar>
+                <Avatar className="w-10 h-10 border-2 border-navy"><AvatarImage
                   src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&fit=crop&crop=faces&auto=format&q=80"
                   alt=""
                   loading="lazy"
                   className="w-10 h-10 rounded-full border-2 border-navy object-cover"
-                />
-                <img
+                /><AvatarFallback className="bg-navy text-navy-foreground"><UserRound className="h-4 w-4" /></AvatarFallback></Avatar>
+                <Avatar className="w-10 h-10 border-2 border-navy"><AvatarImage
                   src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=faces&auto=format&q=80"
                   alt=""
                   loading="lazy"
                   className="w-10 h-10 rounded-full border-2 border-navy object-cover"
-                />
+                /><AvatarFallback className="bg-navy text-navy-foreground"><UserRound className="h-4 w-4" /></AvatarFallback></Avatar>
                 <div className="w-10 h-10 rounded-full border-2 border-navy bg-brand flex items-center justify-center text-[10px] font-display font-bold text-white">24/7</div>
               </div>
               <p className="font-jakarta text-xs font-bold opacity-90">
@@ -211,7 +216,12 @@ export default function HeroSection() {
               fetchPriority="high"
               className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
               onError={(e) => {
-                (e.target as HTMLImageElement).src = `https://flagcdn.com/w2560/${featuredDestination.country.toLowerCase()}.jpg`;
+                const image = e.currentTarget;
+                if (image.dataset.fallbackApplied) return;
+                image.dataset.fallbackApplied = 'true';
+                const destination = `${featuredDestination.name_en ?? ''} ${featuredDestination.country_en ?? ''} ${featuredDestination.name} ${featuredDestination.country}`.toLowerCase();
+                image.src = /new york|america|نيويورك|أمريكا/.test(destination) ? libertyImage
+                  : /turkey|istanbul|تركيا|اسطنبول/.test(destination) ? istanbulImage : parisImage;
               }}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-navy via-navy/40 to-transparent" />

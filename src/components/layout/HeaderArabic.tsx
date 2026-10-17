@@ -20,6 +20,7 @@ import { assetUrl } from '@/lib/assetUrl';
 
 export default function HeaderArabic() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [logoFailed, setLogoFailed] = useState(false);
   const { user, profile, isAdmin, isAgent, signOut } = useAuth();
   const { language, setLanguage, t, direction } = useLanguage();
   const navigate = useNavigate();
@@ -71,11 +72,14 @@ export default function HeaderArabic() {
         <nav className="container-section flex h-16 lg:h-20 items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3 group">
-            <img 
+            {logoFailed ? (
+              <span className="font-heading-ar font-bold text-xl text-primary">عطلات رحلاتكم</span>
+            ) : <img 
               src={assetUrl(logo.url)} 
               alt="عطلات رحلاتكم" 
               className="h-14 w-auto object-contain transition-transform group-hover:scale-105"
-            />
+              onError={() => setLogoFailed(true)}
+            />}
           </Link>
 
           {/* Desktop Navigation */}
