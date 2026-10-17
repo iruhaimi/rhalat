@@ -26,12 +26,13 @@ export const RecoveryEmail = ({
     <Head>
       <style>{darkModeCss}</style>
     </Head>
-    <Preview>Reset your password for {siteName}</Preview>
+    <Preview>Reset your password for {'عطلات رحلاتكم'}</Preview>
     <Body style={main}>
       <Container style={container}>
+        <Text style={{ color: "#1e3a5f", fontWeight: "bold", fontSize: "18px" }}>عطلات رحلاتكم</Text>
         <Heading style={h1}>Reset your password</Heading>
         <Text style={text}>
-          We received a request to reset your password for {siteName}. Click
+          We received a request to reset your password for {'عطلات رحلاتكم'}. Click
           the button below to choose a new password.
         </Text>
         <Button className="dm-btn" style={button} href={confirmationUrl}>
@@ -49,11 +50,11 @@ export const RecoveryEmail = ({
 export default RecoveryEmail
 
 const main = { backgroundColor: '#ffffff', fontFamily: 'Arial, sans-serif' }
-const container = { padding: '20px 25px' }
+const container = { padding: '28px 25px', maxWidth: '600px', margin: '0 auto' }
 const h1 = {
   fontSize: '22px',
   fontWeight: 'bold' as const,
-  color: '#000000',
+  color: '#1e3a5f',
   margin: '0 0 20px',
 }
 const text = {
@@ -63,10 +64,10 @@ const text = {
   margin: '0 0 25px',
 }
 const button = {
-  backgroundColor: '#000000',
+  backgroundColor: '#3b82f6',
   color: '#ffffff',
   fontSize: '14px',
-  border: '1px solid #000000',
+  border: '1px solid #3b82f6',
   borderRadius: '8px',
   padding: '12px 20px',
   textDecoration: 'none',

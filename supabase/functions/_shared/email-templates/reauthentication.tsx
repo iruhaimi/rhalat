@@ -22,6 +22,7 @@ export const ReauthenticationEmail = ({ token }: ReauthenticationEmailProps) => 
     <Preview>Your verification code</Preview>
     <Body style={main}>
       <Container style={container}>
+        <Text style={{ color: "#1e3a5f", fontWeight: "bold", fontSize: "18px" }}>عطلات رحلاتكم</Text>
         <Heading style={h1}>Confirm reauthentication</Heading>
         <Text style={text}>Use the code below to confirm your identity:</Text>
         <Text style={codeStyle}>{token}</Text>
@@ -37,11 +38,11 @@ export const ReauthenticationEmail = ({ token }: ReauthenticationEmailProps) => 
 export default ReauthenticationEmail
 
 const main = { backgroundColor: '#ffffff', fontFamily: 'Arial, sans-serif' }
-const container = { padding: '20px 25px' }
+const container = { padding: '28px 25px', maxWidth: '600px', margin: '0 auto' }
 const h1 = {
   fontSize: '22px',
   fontWeight: 'bold' as const,
-  color: '#000000',
+  color: '#1e3a5f',
   margin: '0 0 20px',
 }
 const text = {
@@ -54,7 +55,7 @@ const codeStyle = {
   fontFamily: 'Courier, monospace',
   fontSize: '22px',
   fontWeight: 'bold' as const,
-  color: '#000000',
+  color: '#1e3a5f',
   margin: '0 0 30px',
 }
 const footer = { fontSize: '12px', color: '#999999', margin: '30px 0 0' }
