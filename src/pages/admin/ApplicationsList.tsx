@@ -325,6 +325,39 @@ export default function ApplicationsList() {
         </CardContent>
       </Card>
 
+      {/* Status chips */}
+      <div className="flex flex-wrap items-center gap-2">
+        {statusChips.map((chip) => {
+          const isActive = statusFilter === chip.value;
+          return (
+            <button
+              key={chip.value}
+              type="button"
+              onClick={() => {
+                setStatusFilter(chip.value);
+                setSelectedIds(new Set());
+              }}
+              className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+                isActive
+                  ? 'bg-primary text-primary-foreground shadow-sm'
+                  : 'bg-card text-foreground border border-border hover:bg-muted'
+              }`}
+            >
+              {chip.label}
+              <span
+                className={`rounded-full px-2 py-0.5 text-xs tabular-nums ${
+                  isActive
+                    ? 'bg-primary-foreground/20 text-primary-foreground'
+                    : 'bg-muted text-muted-foreground'
+                }`}
+              >
+                {chip.count}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+
       {/* Applications Table */}
       <Card>
         <CardHeader className="flex-row items-center justify-between">
