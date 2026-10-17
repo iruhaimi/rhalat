@@ -30,6 +30,7 @@ import { ar } from 'date-fns/locale';
 import { exportToExcel } from '@/lib/exportToExcel';
 import { BulkAssignDialog } from '@/components/admin/BulkAssignDialog';
 import { PageHeader } from '@/components/admin/PageHeader';
+import { isApplicationOverdue } from '@/lib/applicationOverdue';
 
 const STATUS_OPTIONS = [
   { value: 'all', label: 'جميع الحالات' },
@@ -55,6 +56,8 @@ interface Application {
   id: string;
   status: string;
   created_at: string;
+  updated_at: string | null;
+  application_status_history: { created_at: string }[];
   travel_date: string | null;
   user_id: string;
   assigned_agent_id: string | null;
@@ -96,6 +99,8 @@ export default function ApplicationsList() {
           id,
           status,
           created_at,
+          updated_at,
+          application_status_history(created_at),
           travel_date,
           user_id,
           assigned_agent_id,
@@ -111,7 +116,9 @@ export default function ApplicationsList() {
             full_name
           )
         `)
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: false })
+        .order('created_at', { referencedTable: 'application_status_history', ascending: false })
+        .limit(1, { referencedTable: 'application_status_history' });
 
       if (assignmentFilter === 'unassigned') {
         query = query.is('assigned_agent_id', null);
@@ -419,7 +426,17 @@ export default function ApplicationsList() {
                       </TableCell>
                       <TableCell className="align-middle">
                         <div className="min-w-0">
-                          <p className="font-medium truncate">{app.profile?.full_name || 'غير محدد'}</p>
+                          <div className="flex min-w-0 items-center gap-2">
+                            <p className="min-w-0 truncate font-medium">{app.profile?.full_name || 'غير محدد'}</p>
+                            {isApplicationOverdue(app) && (
+                              <span
+                                className="shrink-0 rounded px-1.5 py-0.5 text-xs font-semibold bg-destructive text-destructive-foreground"
+                                title="لم تتغير حالة الطلب منذ أكثر من ٣ أيام"
+                              >
+                                متأخر
+                              </span>
+                            )}
+                          </div>
                           <p className="text-xs text-muted-foreground tabular-nums truncate" dir="ltr">{app.profile?.phone || '-'}</p>
                         </div>
                       </TableCell>
