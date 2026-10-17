@@ -12,7 +12,7 @@ export async function recordEmailEvent(event: {
   const url = Deno.env.get('SUPABASE_URL')
   const key = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
   if (!url || !key) throw new Error('Missing event audit configuration')
-  const admin = createClient(url, key)
+  const admin = createClient(url, key, { auth: { autoRefreshToken: false, persistSession: false } })
   // Stable UUID keyed by event ID makes append-only logging retry-safe without a new table.
   const digest = new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(event.event_id)))
   digest[6] = (digest[6] & 15) | 80

@@ -25,7 +25,7 @@ for (const outcome of ['sent', 'suppressed', 'failed'] as const) {
       assert(payload.sender_domain === 'notify.visafaster.com', 'Verified sender domain must be preserved')
       assert(payload.idempotency_key === 'test-event-1', 'Trigger deduplication key must survive')
       if (outcome === 'sent') return Response.json({ success: true })
-      return Response.json({ error: outcome === 'suppressed' ? 'recipient_suppressed' : 'send_failed', message: 'Test refusal' }, { status: outcome === 'suppressed' ? 403 : 500 })
+      return Response.json({ type: outcome === 'suppressed' ? 'recipient_suppressed' : 'send_failed', message: 'Test refusal' }, { status: outcome === 'suppressed' ? 403 : 500 })
     }
     try {
       let threw = false

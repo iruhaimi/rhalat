@@ -11,7 +11,7 @@ export async function recordEmailOutcome(
     const url = Deno.env.get('SUPABASE_URL')
     const key = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
     if (!url || !key) throw new Error('Missing email audit configuration')
-    const { error } = await createClient(url, key).from('email_send_log').insert({
+    const { error } = await createClient(url, key, { auth: { autoRefreshToken: false, persistSession: false } }).from('email_send_log').insert({
       template_name: templateName,
       recipient_email: recipient,
       status,
