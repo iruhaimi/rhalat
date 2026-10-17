@@ -112,10 +112,6 @@ export default function ApplicationsList() {
         `)
         .order('created_at', { ascending: false });
 
-      if (statusFilter !== 'all') {
-        query = query.eq('status', statusFilter as any);
-      }
-
       if (assignmentFilter === 'unassigned') {
         query = query.is('assigned_agent_id', null);
       } else if (assignmentFilter === 'assigned') {
