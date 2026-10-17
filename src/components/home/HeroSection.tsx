@@ -90,16 +90,18 @@ export default function HeroSection() {
       <div className="container-section relative">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-5 animate-in fade-in slide-in-from-bottom-4 duration-500">
           {/* Main Brand Tile */}
-          <div className="md:col-span-8 bg-card border border-border rounded-5xl p-8 md:p-12 relative overflow-hidden flex flex-col justify-center min-h-[460px]">
-            <div className="relative z-10">
-              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand/10 text-brand text-xs font-bold mb-8 font-jakarta">
-                <span className="h-2 w-2 rounded-full bg-brand animate-pulse" />
+          <div className="md:col-span-8 min-w-0 bg-card border border-border rounded-5xl p-6 sm:p-8 lg:p-12 relative overflow-hidden flex flex-col justify-center min-h-[460px]">
+            <div className="relative z-10 min-w-0">
+              <span className="inline-flex max-w-full items-center gap-2 px-4 py-2 rounded-full bg-brand/10 text-brand text-xs leading-relaxed font-bold mb-8 font-jakarta">
+                <span className="h-2 w-2 shrink-0 rounded-full bg-brand animate-pulse" />
                 {getSetting('badge_text', 'وكالة سفر خاصة — خدمة تجهيز ومراجعة الطلبات', 'A private travel agency — application preparation & review')}
               </span>
 
-              <h1 className="font-heading-ar text-5xl sm:text-6xl md:text-7xl font-extrabold leading-[1.1] tracking-tight text-navy mb-8">
-                {getSetting('main_title_line1', 'خدمة تجهيز ومراجعة', 'Preparation & review service')}
-                <span className="block text-brand mt-2">
+              <h1 className="font-heading-ar text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold leading-[1.55] sm:leading-[1.55] lg:leading-[1.55] xl:leading-[1.55] tracking-normal text-navy mb-8 break-words">
+                <span className="block">
+                  {getSetting('main_title_line1', 'خدمة تجهيز ومراجعة', 'Preparation & review service')}
+                </span>
+                <span className="block text-brand">
                   {getSetting('main_title_line2', 'طلبات التأشيرات', 'for visa applications')}
                 </span>
               </h1>
@@ -188,7 +190,7 @@ export default function HeroSection() {
           {/* Success rate tile */}
           <div className="md:col-span-3 bg-cream rounded-5xl p-8 flex flex-col justify-center items-center text-center min-h-[200px]">
             <ShieldCheck className="h-7 w-7 text-brand mb-3" strokeWidth={1.75} />
-            <div className="font-display text-5xl md:text-6xl font-bold text-brand leading-none mb-2">
+            <div className="font-heading-ar text-4xl lg:text-5xl font-bold text-brand leading-[1.6] lg:leading-[1.6] mb-2 break-words max-w-full">
               {isRTL ? 'مراجعة' : 'Review'}
             </div>
             <h4 className="font-heading-ar font-extrabold text-navy">
