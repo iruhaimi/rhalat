@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -130,7 +130,30 @@ export default function ApplicationsList() {
     }
   };
 
+  const statusCounts = useMemo(() => {
+    const counts = new Map<string, number>();
+    applications.forEach(app => {
+      counts.set(app.status, (counts.get(app.status) || 0) + 1);
+    });
+    return counts;
+  }, [applications]);
+
+  // One chip for "الكل" plus one per status actually present in the data
+  const statusChips = useMemo(() => {
+    const ordered = STATUS_OPTIONS.filter(
+      opt => opt.value === 'all' || statusCounts.has(opt.value)
+    );
+    const extras = Array.from(statusCounts.keys())
+      .filter(s => !STATUS_OPTIONS.some(opt => opt.value === s))
+      .map(s => ({ value: s, label: s }));
+    return [...ordered, ...extras].map(opt => ({
+      ...opt,
+      count: opt.value === 'all' ? applications.length : (statusCounts.get(opt.value) || 0),
+    }));
+  }, [statusCounts, applications]);
+
   const filteredApplications = applications.filter(app => {
+    if (statusFilter !== 'all' && app.status !== statusFilter) return false;
     if (!searchQuery) return true;
     const searchLower = searchQuery.toLowerCase();
     return (
