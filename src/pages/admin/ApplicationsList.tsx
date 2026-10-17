@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -84,7 +84,7 @@ export default function ApplicationsList() {
 
   useEffect(() => {
     fetchApplications();
-  }, [statusFilter, assignmentFilter]);
+  }, [assignmentFilter]);
 
   const fetchApplications = async () => {
     setLoading(true);
@@ -112,10 +112,6 @@ export default function ApplicationsList() {
         `)
         .order('created_at', { ascending: false });
 
-      if (statusFilter !== 'all') {
-        query = query.eq('status', statusFilter as any);
-      }
-
       if (assignmentFilter === 'unassigned') {
         query = query.is('assigned_agent_id', null);
       } else if (assignmentFilter === 'assigned') {
@@ -134,7 +130,30 @@ export default function ApplicationsList() {
     }
   };
 
+  const statusCounts = useMemo(() => {
+    const counts = new Map<string, number>();
+    applications.forEach(app => {
+      counts.set(app.status, (counts.get(app.status) || 0) + 1);
+    });
+    return counts;
+  }, [applications]);
+
+  // One chip for "الكل" plus one per status actually present in the data
+  const statusChips = useMemo(() => {
+    const ordered = STATUS_OPTIONS.filter(
+      opt => opt.value === 'all' || statusCounts.has(opt.value)
+    );
+    const extras = Array.from(statusCounts.keys())
+      .filter(s => !STATUS_OPTIONS.some(opt => opt.value === s))
+      .map(s => ({ value: s, label: s }));
+    return [...ordered, ...extras].map(opt => ({
+      ...opt,
+      count: opt.value === 'all' ? applications.length : (statusCounts.get(opt.value) || 0),
+    }));
+  }, [statusCounts, applications]);
+
   const filteredApplications = applications.filter(app => {
+    if (statusFilter !== 'all' && app.status !== statusFilter) return false;
     if (!searchQuery) return true;
     const searchLower = searchQuery.toLowerCase();
     return (
@@ -305,6 +324,39 @@ export default function ApplicationsList() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Status chips */}
+      <div className="flex flex-wrap items-center gap-2">
+        {statusChips.map((chip) => {
+          const isActive = statusFilter === chip.value;
+          return (
+            <button
+              key={chip.value}
+              type="button"
+              onClick={() => {
+                setStatusFilter(chip.value);
+                setSelectedIds(new Set());
+              }}
+              className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+                isActive
+                  ? 'bg-primary text-primary-foreground shadow-sm'
+                  : 'bg-card text-foreground border border-border hover:bg-muted'
+              }`}
+            >
+              {chip.label}
+              <span
+                className={`rounded-full px-2 py-0.5 text-xs tabular-nums ${
+                  isActive
+                    ? 'bg-primary-foreground/20 text-primary-foreground'
+                    : 'bg-muted text-muted-foreground'
+                }`}
+              >
+                {chip.count}
+              </span>
+            </button>
+          );
+        })}
+      </div>
 
       {/* Applications Table */}
       <Card>
