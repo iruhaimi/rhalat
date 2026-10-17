@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
+import { calculateApplicationPricing } from '@/lib/applicationPricing';
 
 const GUEST_DRAFT_KEY = 'vf_guest_draft_v1';
 
@@ -29,6 +30,7 @@ export interface ApplicationData {
   infantPrice: number;
   visaFeesIncluded: boolean;
   governmentFees: number;
+  governmentFeesByAge?: { adults: number; children: number; infants: number };
   priceNotes: string;
   priceNotesEn: string;
   
@@ -167,6 +169,7 @@ export function ApplicationProvider({ children }: { children: React.ReactNode })
           infantPrice: applicationData.infantPrice,
           visaFeesIncluded: applicationData.visaFeesIncluded,
           governmentFees: applicationData.governmentFees,
+          governmentFeesByAge: applicationData.governmentFeesByAge,
           priceNotes: applicationData.priceNotes,
           priceNotesEn: applicationData.priceNotesEn,
           checkedRequirements: applicationData.checkedRequirements,
@@ -220,26 +223,7 @@ export function ApplicationProvider({ children }: { children: React.ReactNode })
   }, []);
 
   const calculateTotal = useCallback(() => {
-    const { travelers, adultPrice, childPrice, infantPrice, governmentFees, visaFeesIncluded } = applicationData;
-    
-    const adultsTotal = travelers.adults * adultPrice;
-    const childrenTotal = travelers.children * childPrice;
-    const infantsTotal = travelers.infants * infantPrice;
-    const serviceTotal = adultsTotal + childrenTotal + infantsTotal;
-    
-    const totalTravelers = travelers.adults + travelers.children + travelers.infants;
-    const governmentTotal = visaFeesIncluded ? 0 : (governmentFees * totalTravelers);
-    
-    return {
-      serviceTotal,
-      governmentTotal,
-      grandTotal: serviceTotal + governmentTotal,
-      breakdown: {
-        adults: adultsTotal,
-        children: childrenTotal,
-        infants: infantsTotal,
-      },
-    };
+    return calculateApplicationPricing(applicationData);
   }, [applicationData]);
 
   const goToNextStep = useCallback(() => {

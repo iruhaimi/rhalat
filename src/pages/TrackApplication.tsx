@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import SEO from '@/components/seo/SEO';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -153,7 +154,8 @@ export default function TrackApplication() {
   const { language } = useLanguage();
   const isRTL = language === 'ar';
   
-  const [applicationNumber, setApplicationNumber] = useState('');
+  const [searchParams] = useSearchParams();
+  const [applicationNumber, setApplicationNumber] = useState(() => searchParams.get('app')?.trim().toUpperCase() ?? '');
   const [searchType, setSearchType] = useState<'phone' | 'email'>('phone');
   const [searchValue, setSearchValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -542,7 +544,7 @@ export default function TrackApplication() {
                         <div>
                           <p className="text-xs text-muted-foreground">{isRTL ? 'رقم الطلب' : 'App ID'}</p>
                           <p className="font-medium text-sm font-mono">
-                            {result.id.slice(0, 8)}...
+                            {result.display_number || result.id}
                           </p>
                         </div>
                       </div>
@@ -571,7 +573,8 @@ export default function TrackApplication() {
                         <div className="text-center">
                           {(() => {
                             const processingDays = result.visa_type?.processing_days || 7;
-                            const daysElapsed = differenceInDays(new Date(), new Date(result.submitted_at!));
+                            if (!result.submitted_at) return null;
+                            const daysElapsed = differenceInDays(new Date(), new Date(result.submitted_at));
                             const daysRemaining = Math.max(0, processingDays - daysElapsed);
                             const progressPercent = Math.min(100, (daysElapsed / processingDays) * 100);
                             

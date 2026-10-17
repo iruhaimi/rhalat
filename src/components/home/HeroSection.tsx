@@ -1,11 +1,16 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Search, ArrowLeft, Globe, Sparkles, Clock, ShieldCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import libertyImage from '@/assets/ads/landmark-liberty.jpg';
+import parisImage from '@/assets/destination-paris.jpg';
+import istanbulImage from '@/assets/destination-istanbul.jpg';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { UserRound } from 'lucide-react';
 
 interface HeroDestination {
   id: string;
@@ -34,6 +39,8 @@ export default function HeroSection() {
   const { direction } = useLanguage();
   const isRTL = direction === 'rtl';
   const [searchQuery, setSearchQuery] = useState('');
+  const navigate = useNavigate();
+  const searchDestinations = () => navigate(`/destinations${searchQuery.trim() ? `?search=${encodeURIComponent(searchQuery.trim())}` : ''}`);
 
   const { data: dbDestinations } = useQuery({
     queryKey: ['hero-destinations'],
@@ -113,7 +120,7 @@ export default function HeroSection() {
                 )}
               </p>
 
-              <div className="flex flex-col sm:flex-row gap-3">
+              <form onSubmit={(event) => { event.preventDefault(); searchDestinations(); }} className="flex flex-col sm:flex-row gap-3">
                 <div className="relative flex-1">
                   <Search className="absolute start-5 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                   <Input
@@ -124,13 +131,11 @@ export default function HeroSection() {
                     className="h-14 ps-12 bg-canvas border-border rounded-2xl text-base focus-visible:ring-4 focus-visible:ring-brand/15"
                   />
                 </div>
-                <Button asChild size="lg" className="h-14 px-8 rounded-2xl bg-navy hover:bg-navy/90 text-navy-foreground font-bold text-base shadow-lg shadow-navy/10">
-                  <Link to="/destinations">
+                <Button type="submit" size="lg" className="h-14 px-8 rounded-2xl bg-navy hover:bg-navy/90 text-navy-foreground font-bold text-base shadow-lg shadow-navy/10">
                     {getSetting('search_button', 'ابحث الآن', 'Search now')}
                     <ArrowLeft className="h-4 w-4 ms-1 rtl-flip" />
-                  </Link>
                 </Button>
-              </div>
+              </form>
             </div>
 
             <div className="absolute -bottom-24 -end-24 w-96 h-96 bg-brand/5 rounded-full blur-[100px]" />
@@ -159,24 +164,24 @@ export default function HeroSection() {
 
             <div className="relative z-10 pt-6 border-t border-white/10">
               <div className="flex -space-x-3 rtl:space-x-reverse mb-3" dir="ltr">
-                <img
+                <Avatar className="w-10 h-10 border-2 border-navy"><AvatarImage
                   src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=80&h=80&fit=crop&crop=faces&auto=format&q=80"
                   alt=""
                   loading="lazy"
                   className="w-10 h-10 rounded-full border-2 border-navy object-cover"
-                />
-                <img
+                /><AvatarFallback className="bg-navy text-navy-foreground"><UserRound className="h-4 w-4" /></AvatarFallback></Avatar>
+                <Avatar className="w-10 h-10 border-2 border-navy"><AvatarImage
                   src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&fit=crop&crop=faces&auto=format&q=80"
                   alt=""
                   loading="lazy"
                   className="w-10 h-10 rounded-full border-2 border-navy object-cover"
-                />
-                <img
+                /><AvatarFallback className="bg-navy text-navy-foreground"><UserRound className="h-4 w-4" /></AvatarFallback></Avatar>
+                <Avatar className="w-10 h-10 border-2 border-navy"><AvatarImage
                   src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=faces&auto=format&q=80"
                   alt=""
                   loading="lazy"
                   className="w-10 h-10 rounded-full border-2 border-navy object-cover"
-                />
+                /><AvatarFallback className="bg-navy text-navy-foreground"><UserRound className="h-4 w-4" /></AvatarFallback></Avatar>
                 <div className="w-10 h-10 rounded-full border-2 border-navy bg-brand flex items-center justify-center text-[10px] font-display font-bold text-white">24/7</div>
               </div>
               <p className="font-jakarta text-xs font-bold opacity-90">
@@ -204,6 +209,7 @@ export default function HeroSection() {
           {/* Featured destination tile */}
           <div className="md:col-span-6 rounded-5xl relative overflow-hidden group min-h-[220px] md:min-h-[260px]">
             <img
+              key={featuredDestination.image_url}
               src={featuredDestination.image_url}
               alt={isRTL ? featuredDestination.name : (featuredDestination.name_en || featuredDestination.name)}
               loading="eager"
@@ -211,7 +217,12 @@ export default function HeroSection() {
               fetchPriority="high"
               className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
               onError={(e) => {
-                (e.target as HTMLImageElement).src = `https://flagcdn.com/w2560/${featuredDestination.country.toLowerCase()}.jpg`;
+                const image = e.currentTarget;
+                if (image.dataset.fallbackApplied) return;
+                image.dataset.fallbackApplied = 'true';
+                const destination = `${featuredDestination.name_en ?? ''} ${featuredDestination.country_en ?? ''} ${featuredDestination.name} ${featuredDestination.country}`.toLowerCase();
+                image.src = /new york|america|نيويورك|أمريكا/.test(destination) ? libertyImage
+                  : /turkey|istanbul|تركيا|اسطنبول/.test(destination) ? istanbulImage : parisImage;
               }}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-navy via-navy/40 to-transparent" />

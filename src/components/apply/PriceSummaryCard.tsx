@@ -25,8 +25,8 @@ export default function PriceSummaryCard({ className, showDetails = true, onNext
   
   // Get the appropriate price note based on language
   const displayPriceNote = direction === 'rtl' 
-    ? (priceNotes || 'شامل رسوم التأشيرة')
-    : (priceNotesEn || 'Visa fees included');
+    ? (priceNotes || (visaFeesIncluded ? 'شامل رسوم التأشيرة' : 'الرسوم الحكومية تُدفع مباشرة للجهة الرسمية ولا تدخل في الإجمالي'))
+    : (priceNotesEn || (visaFeesIncluded ? 'Visa fees included' : 'Government fees are paid directly to the official authority and excluded from the total'));
   
   const totalTravelers = travelers.adults + travelers.children + travelers.infants;
 

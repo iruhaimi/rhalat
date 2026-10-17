@@ -11,6 +11,7 @@ import {
   Mail
 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { LEGAL } from '@/config/legal';
 
 export default function PaymentFailed() {
   const { direction } = useLanguage();
@@ -94,7 +95,7 @@ export default function PaymentFailed() {
               <h4 className="font-medium mb-2">{content.supportTitle}</h4>
               <p className="text-sm text-muted-foreground mb-3">{content.supportDesc}</p>
               <div className="flex flex-wrap gap-3 text-sm">
-                <a href="tel:562525665" className="flex items-center gap-1 text-primary hover:underline">
+                <a href="tel:+966562525665" className="flex items-center gap-1 text-primary hover:underline">
                   <Phone className="w-3 h-3" />
                   562525665
                 </a>
@@ -107,15 +108,19 @@ export default function PaymentFailed() {
 
             {/* Action Buttons */}
             <div className="space-y-3">
-              <Button className="w-full h-12 gap-2">
-                <RefreshCw className="w-4 h-4" />
-                {content.tryAgain}
+              <Button asChild className="w-full h-12 gap-2">
+                <Link to="/my-applications">
+                  <RefreshCw className="w-4 h-4" />
+                  {content.tryAgain}
+                </Link>
               </Button>
               
               <div className="grid grid-cols-2 gap-3">
-                <Button variant="outline" className="gap-2">
-                  <MessageCircle className="w-4 h-4" />
-                  {content.contactSupport}
+                <Button variant="outline" asChild className="gap-2">
+                  <a href={`mailto:${LEGAL.supportEmail}`}>
+                    <MessageCircle className="w-4 h-4" />
+                    {content.contactSupport}
+                  </a>
                 </Button>
                 <Button variant="outline" asChild className="gap-2">
                   <Link to="/">
