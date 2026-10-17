@@ -1,18 +1,20 @@
 import { createEmailWebhookHandler } from 'npm:@lovable.dev/email-js@0.3.1'
+import { recordEmailEvent } from '../_shared/email-event-audit.ts'
+
+const apiKey = Deno.env.get('LOVABLE_API_KEY')
+if (!apiKey) throw new Error('Missing email webhook configuration')
 
 const handler = createEmailWebhookHandler({
-  apiKey: Deno.env.get('LOVABLE_API_KEY')!,
+  apiKey,
   on: {
-    // Placeholder handlers — replace each log with the feature's reaction.
-    // Throw on failure so the delivery is retried.
     'email.bounced': async (event) => {
-      console.log('Email bounced', { event_id: event.event_id })
+      await recordEmailEvent(event, 'bounce')
     },
     'email.complaint': async (event) => {
-      console.log('Email complaint', { event_id: event.event_id })
+      await recordEmailEvent(event, 'complaint')
     },
     'email.unsubscribed': async (event) => {
-      console.log('Email unsubscribed', { event_id: event.event_id })
+      await recordEmailEvent(event, 'unsubscribe')
     },
   },
 })
