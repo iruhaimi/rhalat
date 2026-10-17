@@ -1,6 +1,7 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
 
 import { getCorsHeaders } from "../_shared/cors.ts";
+import { sendComposedEmail } from '../_shared/send-composed-email.ts';
 Deno.serve(async (req) => {
   
   const corsHeaders = getCorsHeaders(req);
@@ -62,21 +63,19 @@ if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders }
         <p style="font-size:12px; color:#64748b;">هذه رسالة تلقائية من نظام عطلات رحلاتكم.</p>
       </div>`;
 
-    // Use enqueue_email if available; ignore failures so rotation still succeeds
+    // Email failure must not roll back a completed portal rotation.
     for (const email of emails) {
       try {
-        await admin.rpc('enqueue_email', {
-          queue_name: 'transactional_emails',
-          payload: {
+        await sendComposedEmail({
             to: email,
             subject: '🔐 تحديث رابط بوابة الموظفين',
             html,
-            template_name: 'portal_rotation',
-            idempotency_key: `portal-rotate-${data.new_path}-${email}`,
-          },
+            text: `تم تدوير رابط بوابة الموظفين\nعزيزي الموظف، تم تحديث الرابط السري لدخول بوابة فريق العمل. الرابط الجديد: ${newUrl}\nالرابط القديم لم يعد صالحاً، وتم تسجيل خروجك تلقائياً. الرجاء استخدام الرابط الجديد لإعادة الدخول.\nإذا لم تطلب هذا التغيير، تواصل مع الإدارة فوراً.\nهذه رسالة تلقائية من نظام عطلات رحلاتكم.`,
+            label: 'portal_rotation',
+            idempotencyKey: `portal-rotate-${data.new_path}-${email}`,
         });
       } catch (e) {
-        console.error('email enqueue failed', email, e);
+        console.error('Portal notification failed', e instanceof Error ? e.message : 'Unknown error');
       }
     }
 

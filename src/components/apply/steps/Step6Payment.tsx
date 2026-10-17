@@ -193,17 +193,16 @@ export default function Step6Payment() {
     appNumber: string,
     method: 'online' | 'whatsapp',
     paymentMethodLabel?: string,
+    applicationId?: string | null,
   ) => {
-    if (!customerEmail) return;
+    if (!customerEmail || !applicationId) return;
     try {
       const travelDateStr = applicationData.travelDate
         ? format(applicationData.travelDate, 'PPP', { locale: ar })
         : '';
-      await supabase.functions.invoke('send-transactional-email', {
+      const { error } = await supabase.functions.invoke('send-application-confirmation', {
         body: {
-          templateName: 'application-confirmation',
-          recipientEmail: customerEmail,
-          idempotencyKey: `app-confirm-${appNumber}-${method}`,
+          applicationId,
           templateData: {
             applicationNumber: appNumber,
             fullName: customerName,
@@ -225,6 +224,7 @@ export default function Step6Payment() {
           },
         },
       });
+      if (error) throw error;
     } catch (e) {
       console.error('Failed to send confirmation email:', e);
     }
@@ -338,7 +338,7 @@ export default function Step6Payment() {
       const appNumber = displayNumber || `VF-${Date.now().toString(36).toUpperCase()}`;
 
       // Send confirmation email (non-blocking)
-      await sendConfirmationEmail(appNumber, 'whatsapp');
+      await sendConfirmationEmail(appNumber, 'whatsapp', undefined, appId);
 
       const message = buildWhatsAppMessage(appNumber);
       const whatsappUrl = `https://wa.me/966562525665?text=${encodeURIComponent(message)}`;
@@ -492,7 +492,8 @@ export default function Step6Payment() {
       await sendConfirmationEmail(
         appNumber,
         isBankTransfer ? 'whatsapp' : 'online',
-        methodLabel
+        methodLabel,
+        appId
       );
 
       // Enhanced Conversions: attach hashed identifiers before purchase fires

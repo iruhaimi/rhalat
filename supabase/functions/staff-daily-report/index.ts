@@ -1,6 +1,7 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
 
 import { getCorsHeaders } from "../_shared/cors.ts";
+import { sendComposedEmail } from '../_shared/send-composed-email.ts';
 Deno.serve(async (req) => {
   
   const corsHeaders = getCorsHeaders(req);
@@ -157,20 +158,17 @@ if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders }
     let sent = 0;
     for (const email of recipientEmails) {
       try {
-        await admin.rpc('enqueue_email', {
-          queue_name: 'transactional_emails',
-          payload: {
+        const result = await sendComposedEmail({
             to: email,
             subject: `📊 تقرير دخول الموظفين - ${new Date().toLocaleDateString('ar-SA')}`,
             html,
             text,
-            template_name: 'staff_daily_report',
-            idempotency_key: `daily-report-${new Date().toISOString().slice(0, 13)}-${email}`,
-          },
+            label: 'staff_daily_report',
+            idempotencyKey: `daily-report-${new Date().toISOString().slice(0, 13)}-${email}`,
         });
-        sent++;
+        if (result.sent) sent++;
       } catch (e) {
-        console.error('enqueue failed', email, e);
+        console.error('Report email failed', e instanceof Error ? e.message : 'Unknown error');
       }
     }
 
