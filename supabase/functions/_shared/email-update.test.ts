@@ -14,13 +14,14 @@ for (const outcome of ['sent', 'suppressed', 'failed'] as const) {
       saved.set(key, Deno.env.get(key)); Deno.env.set(key, value)
     }
     globalThis.fetch = async (input, init) => {
+      const options = init as { body?: unknown }
       const url = input instanceof Request ? input.url : String(input)
       if (url.includes('email_send_log')) {
-        rows.push(JSON.parse(String(init?.body)))
+        rows.push(JSON.parse(String(options?.body)))
         return new Response(null, { status: 201 })
       }
       assert(url === 'https://email.test/send', 'No legacy transport may be called')
-      const payload = JSON.parse(String(init?.body))
+      const payload = JSON.parse(String(options?.body))
       assert(payload.sender_domain === 'notify.visafaster.com', 'Verified sender domain must be preserved')
       assert(payload.idempotency_key === 'test-event-1', 'Trigger deduplication key must survive')
       if (outcome === 'sent') return Response.json({ success: true })
@@ -47,11 +48,12 @@ Deno.test('Bounce events store bounce reason and bounced status and deduplicate 
   let log: Record<string, unknown> | undefined
   let writes = 0
   globalThis.fetch = async (input, init) => {
+    const options = init as { body?: unknown; method?: string }
     const request = input instanceof Request ? input : undefined
     const url = request?.url ?? String(input)
-    const method = init?.method ?? request?.method ?? 'GET'
+    const method = options?.method ?? request?.method ?? 'GET'
     if (method === 'GET') return Response.json(log ? { id: log.id } : null)
-    const row = JSON.parse(String(init?.body))
+    const row = JSON.parse(String(options?.body))
     if (url.includes('suppressed_emails')) assert(row.reason === 'bounce' && row.metadata === null, 'Legacy CHECK accepts bounce, not bounced')
     else { assert(row.status === 'bounced' && row.template_name === 'system', 'Preserve event log contract'); log = row }
     writes++
