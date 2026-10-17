@@ -84,7 +84,7 @@ export default function ApplicationsList() {
 
   useEffect(() => {
     fetchApplications();
-  }, [statusFilter, assignmentFilter]);
+  }, [assignmentFilter]);
 
   const fetchApplications = async () => {
     setLoading(true);
