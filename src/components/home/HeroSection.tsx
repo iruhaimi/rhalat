@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Search, ArrowLeft, Globe, Sparkles, Clock, ShieldCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -34,6 +34,8 @@ export default function HeroSection() {
   const { direction } = useLanguage();
   const isRTL = direction === 'rtl';
   const [searchQuery, setSearchQuery] = useState('');
+  const navigate = useNavigate();
+  const searchDestinations = () => navigate(`/destinations${searchQuery.trim() ? `?search=${encodeURIComponent(searchQuery.trim())}` : ''}`);
 
   const { data: dbDestinations } = useQuery({
     queryKey: ['hero-destinations'],
@@ -113,7 +115,7 @@ export default function HeroSection() {
                 )}
               </p>
 
-              <div className="flex flex-col sm:flex-row gap-3">
+              <form onSubmit={(event) => { event.preventDefault(); searchDestinations(); }} className="flex flex-col sm:flex-row gap-3">
                 <div className="relative flex-1">
                   <Search className="absolute start-5 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                   <Input
@@ -124,13 +126,11 @@ export default function HeroSection() {
                     className="h-14 ps-12 bg-canvas border-border rounded-2xl text-base focus-visible:ring-4 focus-visible:ring-brand/15"
                   />
                 </div>
-                <Button asChild size="lg" className="h-14 px-8 rounded-2xl bg-navy hover:bg-navy/90 text-navy-foreground font-bold text-base shadow-lg shadow-navy/10">
-                  <Link to="/destinations">
+                <Button type="submit" size="lg" className="h-14 px-8 rounded-2xl bg-navy hover:bg-navy/90 text-navy-foreground font-bold text-base shadow-lg shadow-navy/10">
                     {getSetting('search_button', 'ابحث الآن', 'Search now')}
                     <ArrowLeft className="h-4 w-4 ms-1 rtl-flip" />
-                  </Link>
                 </Button>
-              </div>
+              </form>
             </div>
 
             <div className="absolute -bottom-24 -end-24 w-96 h-96 bg-brand/5 rounded-full blur-[100px]" />

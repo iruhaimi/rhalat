@@ -34,7 +34,7 @@ export default function Destinations() {
   const [countries, setCountries] = useState<Country[]>([]);
   const [visaTypes, setVisaTypes] = useState<VisaType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState(() => searchParams.get('search') ?? '');
   const [showSchengenCountries, setShowSchengenCountries] = useState(false);
 
   const ArrowIcon = direction === 'rtl' ? ArrowLeft : ArrowRight;
