@@ -8,5 +8,5 @@
 # Email update
 
 - [x] Survey legacy senders and preserve existing content, permissions, SMS fallback, and operational notices.
-- [ ] Convert senders and outcome logging, verify replacements, and remove legacy email files from the repository only.
-- [ ] Deploy and verify the new email functions; leave publication to the user.
+- [x] Convert senders and outcome logging; replacement functions typecheck and four email outcome tests pass; remove legacy email files from the repository only.
+- [x] Deploy the new email functions; deployed confirmation and event receivers reject unauthorized requests. Publication remains the user's choice; no actual recipient email was sent during verification.
