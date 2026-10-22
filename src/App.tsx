@@ -163,6 +163,7 @@ const App = () => (
 
               {/* Landing Pages (no main layout, for Google Ads campaigns) */}
               <Route path="/lp/visa" element={<LandingVisa />} />
+              <Route path="/ads-visa" element={<LandingVisa />} />
 
               {/* Admin Routes */}
               <Route 
