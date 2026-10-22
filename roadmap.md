@@ -10,3 +10,9 @@
 - [x] Survey legacy senders and preserve existing content, permissions, SMS fallback, and operational notices.
 - [x] Convert senders and outcome logging; replacement functions typecheck and four email outcome tests pass; remove legacy email files from the repository only.
 - [x] Deploy the new email functions; deployed confirmation and event receivers reject unauthorized requests. Publication remains the user's choice; no actual recipient email was sent during verification.
+
+# Google Ads landing page
+
+- [ ] Replace the legacy campaign page with the uploaded Arabic brief, dedicated WhatsApp, private-agency disclosure and existing legal/contact information.
+- [ ] Verify campaign links, click-only tracking, desktop/mobile layout and main homepage preservation.
+- [ ] Activate dedicated Google Ads conversion reporting. Blocked: requires the actual AW conversion ID and conversion label; the supplied number identifies an account, not a conversion.
