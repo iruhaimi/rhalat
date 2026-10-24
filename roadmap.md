@@ -13,6 +13,6 @@
 
 # Google Ads landing page
 
-- [ ] Replace the legacy campaign page with the uploaded Arabic brief, dedicated WhatsApp, private-agency disclosure and existing legal/contact information.
-- [ ] Verify campaign links, click-only tracking, desktop/mobile layout and main homepage preservation.
+- [x] Replace the legacy campaign page with the uploaded Arabic brief, dedicated WhatsApp, private-agency disclosure and existing legal/contact information; available at /ads-visa and /lp/visa.
+- [x] Verify campaign links, click-only tracking, desktop/mobile layout and main homepage preservation; three campaign tests pass, no browser runtime errors, build OK.
 - [ ] Activate dedicated Google Ads conversion reporting. Blocked: requires the actual AW conversion ID and conversion label; the supplied number identifies an account, not a conversion.
