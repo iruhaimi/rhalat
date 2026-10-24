@@ -52,7 +52,7 @@ export default function ConnectAI() {
 
   return (
     <div className="container-section space-y-6 py-10">
-      <SEO title="ربط المساعد الذكي | عطلات رحلاتكم" description="اربط ChatGPT أو Claude بحسابك في عطلات رحلاتكم." />
+      <SEO title="ربط المساعد الذكي | عطلات رحلاتكم" description="اربط ChatGPT أو Claude بحسابك في عطلات رحلاتكم." path="/connect" />
       <header className="space-y-2">
         <h1 className="text-3xl font-bold">ربط المساعد الذكي بحسابك</h1>
         <p className="text-muted-foreground">يتيح لك المساعد الاطلاع على الدول والتأشيرات وحالة طلباتك بعد تسجيل دخولك.</p>
