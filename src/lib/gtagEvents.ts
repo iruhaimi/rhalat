@@ -9,7 +9,7 @@
  * in sync with the labels created in Google Ads → Tools → Conversions.
  */
 
-const GOOGLE_ADS_ID = 'AW-16509107883';
+const GOOGLE_ADS_ID = 'AW-18502036693';
 
 /**
  * Conversion labels from Google Ads → Tools → Conversions.
@@ -20,7 +20,7 @@ const GOOGLE_ADS_ID = 'AW-16509107883';
  */
 // ⚠️ TODO: استبدل REPLACE_ME بـ Conversion Label من Google Ads
 // Tools → Conversions → افتح كل تحويل → انسخ Conversion ID/Label
-// مثال نهائي: 'AW-16509107883/abCdEfGhIjK'
+// مثال نهائي: 'AW-18502036693/abCdEfGhIjK'
 const CONVERSION_LABELS: Partial<Record<ConversionEvent, string>> = {
   // purchase: `${GOOGLE_ADS_ID}/REPLACE_ME_PURCHASE`,
   // submit_application: `${GOOGLE_ADS_ID}/REPLACE_ME_SUBMIT`,

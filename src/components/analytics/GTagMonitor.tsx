@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { isDespiaIOS } from "@/lib/despia";
 
-const GTAG_ID = "AW-16509107883";
+const GTAG_ID = "AW-18502036693";
 const SCRIPT_MATCH = `googletagmanager.com/gtag/js?id=${GTAG_ID}`;
 
 type CheckResult = { name: string; ok: boolean; detail?: string };

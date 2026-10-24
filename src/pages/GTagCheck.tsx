@@ -51,7 +51,7 @@ export default function GTagCheck() {
         Google Ads Tag Diagnostic
       </h1>
       <p style={{ color: "#555", marginBottom: 16 }}>
-        AW-16509107883 — auto-refreshing ({tick})
+        AW-18502036693 — auto-refreshing ({tick})
       </p>
 
       <div
@@ -80,7 +80,7 @@ export default function GTagCheck() {
         </div>
         <div style={{ fontSize: 13, color: "#475569", marginBottom: 10 }}>
           When ON, Consent Mode defaults are set to <code>granted</code> so Google Tag
-          Assistant can detect AW-16509107883 reliably. Turn OFF for normal browsing.
+          Assistant can detect AW-18502036693 reliably. Turn OFF for normal browsing.
         </div>
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
           <button
