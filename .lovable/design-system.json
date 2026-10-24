@@ -1,0 +1,1761 @@
+{
+  "meta": {
+    "name": "visa-faster",
+    "package": "@ws-gklbmiodsavvxlpchx6f/616b2e7f-7e45-4cdc-90ea-1c048e4da3b0",
+    "version": "1.0.0",
+    "framework": "react",
+    "css_framework": "tailwind",
+    "starter_template": "custom_design_system_tailwind",
+    "theme_files": [
+      "src/index.css"
+    ],
+    "source_type": "local",
+    "source_manifest": {
+      "#enrichment": "d4bcd7703ad23f1b8d2d67ef50d68695a1d7b3fa59b423ec01de9fa764f0f527",
+      ".gitignore": "d9566700e8535935d03c1583474d790c",
+      ".gitleaksignore": "b7fda0d2dc4d561413c841758b7bcea1",
+      ".lovable/mcp/manifest.json": "303c89a43aed1d31bee9e31cfde9d417",
+      ".lovable/plan.md": "17339fdded4e3a3f70489a6fd1ea2429",
+      "ADS_GUIDE.md": "08e3e70eeacafa07cce0279b9cb6352a",
+      "AGENTS.md": "d37d71362932fdf180aa6273cc642f04",
+      "README.md": "7cef4bea4577c4fe4c4817d505afab1d",
+      "SECURITY_AUDIT_REPORT.md": "5698e69ac4fd5271ccb97f37c2523258",
+      "capacitor.config.ts": "3fb4cffe62e971f5e0783bf60dcce287",
+      "components.json": "a547944ace00dc5d5373aaca70a40bc4",
+      "docs/APP_STORE_REVIEW_NOTES.md": "7f0b372ea62648e8f66cd0c1fc7f50eb",
+      "docs/GOOGLE_PLAY_LISTING_AR.md": "612caee2b2dc9be7e7fa0bddea5069fa",
+      "eslint.config.js": "31c0881fdd8500aa4d0aa963079713ae",
+      "index.html": "1df4d4cdfcb6baaba48f3647a9143efa",
+      "ios/.gitignore": "69c89789e7f8884ad5562bc7d3b0dde7",
+      "ios/App/App.xcodeproj/project.pbxproj": "602a43dd23435e59a6a1f5157a374f09",
+      "ios/App/App.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist": "117105d2f2ee718eb485a07574a219b6",
+      "ios/App/App.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved": "1b84bf0daf9df0a09d789986c0bdab42",
+      "ios/App/App/App.entitlements": "86ea4278e8a8442eb775e2d318aef0b1",
+      "ios/App/App/AppDelegate.swift": "b2865a48d0e54c1613fa58272418bf98",
+      "ios/App/App/Assets.xcassets/AppIcon.appiconset/AppIcon-512@2x.png": "79bc832c81108ac336d1e9d6ca1e9345",
+      "ios/App/App/Assets.xcassets/AppIcon.appiconset/Contents.json": "7453c3002126811a57c38b2740f990cf",
+      "ios/App/App/Assets.xcassets/Contents.json": "31cc68f34934a99c0b0c1bebde56309c",
+      "ios/App/App/Assets.xcassets/Splash.imageset/Contents.json": "1162e1cddd7ea769bcacdd1aa7b4ac72",
+      "ios/App/App/Assets.xcassets/Splash.imageset/splash-2732x2732-1.png": "ac93b961e26cd9f54b6d2ddcd289ba00",
+      "ios/App/App/Assets.xcassets/Splash.imageset/splash-2732x2732-2.png": "ac93b961e26cd9f54b6d2ddcd289ba00",
+      "ios/App/App/Assets.xcassets/Splash.imageset/splash-2732x2732.png": "ac93b961e26cd9f54b6d2ddcd289ba00",
+      "ios/App/App/Base.lproj/LaunchScreen.storyboard": "5d11af4a0b01a8b581983f257b20d8ee",
+      "ios/App/App/Base.lproj/Main.storyboard": "6c57c4610eefae7a0c82635a2b17251a",
+      "ios/App/App/Info.plist": "4c4583afc1a31a213a01b307c7ccd054",
+      "ios/App/CapApp-SPM/.gitignore": "6feaa4e5eec39ee11bc38d770ab78999",
+      "ios/App/CapApp-SPM/Package.swift": "5ec61aab46fdaa8045fdd9f13cd179bc",
+      "ios/App/CapApp-SPM/README.md": "d256f6b5922d4249607779141357d565",
+      "ios/App/CapApp-SPM/Sources/CapApp-SPM/CapApp-SPM.swift": "0d92cb44a62bc3f2d73464a2e4f9a890",
+      "ios/debug.xcconfig": "2dec6c90d02c4a57336888fdc2708716",
+      "package.json": "a836e0e5642b6c3b95c92f9d98dcd294",
+      "postcss.config.js": "c735540bb63936a123bc867d950c9f69",
+      "public/app-icon-1024.png": "79bc832c81108ac336d1e9d6ca1e9345",
+      "public/apple-touch-icon.png": "f3f604b4ca5bb7da8af55d2ad119664c",
+      "public/favicon-32.png": "87e8c55879905bdcdc93a79cc661ac58",
+      "public/favicon.ico": "f04fa33fe85f5ea65724612ae03efa57",
+      "public/llms.txt": "a7a7a9f3d92ea8bf439dc96ff8c7cee6",
+      "public/placeholder.svg": "35707bd9960ba5281c72af927b79291f",
+      "public/pwa-192x192.png": "48df060e35eea6c59331415eec8bc4fc",
+      "public/pwa-512x512.png": "2062bdef9976ec3e3cdbfd167080bd05",
+      "public/robots.txt": "178ac7b12de6beb0bedfbc9e7ed150d8",
+      "public/sitemap.xml": "5a9861e89dec0e2b9477bdc0178eb8e5",
+      "resources/icon.png": "79bc832c81108ac336d1e9d6ca1e9345",
+      "resources/splash-dark.png": "ac93b961e26cd9f54b6d2ddcd289ba00",
+      "resources/splash.png": "ac93b961e26cd9f54b6d2ddcd289ba00",
+      "roadmap.md": "69c4eb0045b1895d7c32d7023a6a1f54",
+      "scripts/build-android-release.mjs": "b9c17e73cd21a550ca2c042a742c0477",
+      "scripts/generate-sitemap.ts": "20e9cf98dee75213278ea9c444d4dc7f",
+      "scripts/guard-mobile-build.mjs": "c234b9e27b738db17ed1066e33c106b0",
+      "scripts/patch-android-mainactivity.mjs": "126c795a426aa09f5e425604cc69c4f2",
+      "scripts/patch-android-signing.mjs": "8e716a026b7c72bd2dd5c4f57fda3a3c",
+      "scripts/patch-android-version.mjs": "4c83eea1d980c500065c9d0798f017b6",
+      "scripts/patch-ios-infoplist.mjs": "ae83d7952286ee273b1c233ea8cfa697",
+      "scripts/patch-ios-native-deps.mjs": "cdddaace95222635cfc1d76368bb1306",
+      "scripts/rebuild-ios.sh": "ac2410ec80af39803c687f529160fa5a",
+      "self-hosted/CLAUDE_MASTER_REBUILD_PROMPT.md": "74a45486da2358d5eda43bd46698c27c",
+      "self-hosted/Caddyfile": "e476bbf4f9a2045e1ba066506f62c0da",
+      "self-hosted/README.md": "4523a25c06d7c7f3ec8ff493444d8510",
+      "self-hosted/SELF_HOSTED_REBUILD_PROMPT.md": "1b2b9b74d72d89bc52ccf086067d2036",
+      "self-hosted/backend/Dockerfile": "0de12c5cdfb4e08da3b4631a7fa653f1",
+      "self-hosted/backend/package.json": "07fb842d5daa5e223ce531acbed7ff24",
+      "self-hosted/backend/prisma/migrations/0001_init/migration.sql": "482cec5026f91e4019cd9b05d309fdb1",
+      "self-hosted/backend/prisma/schema.prisma": "191114c83ce3a512525f01889593d2cd",
+      "self-hosted/backend/src/auth/routes.ts": "dde6cd1d79b64994910fc3477e92b09a",
+      "self-hosted/backend/src/jobs/email-queue.ts": "d03c836a1a43ab923514f03131cf3fcf",
+      "self-hosted/backend/src/lib/db.ts": "c90da7a066056581cead6806e039e333",
+      "self-hosted/backend/src/lib/lucia.ts": "fcbdb032696d415f298defb2577f324a",
+      "self-hosted/backend/src/lib/mailer.ts": "ebbf6a62c3f88e0d40176a96096837a2",
+      "self-hosted/backend/src/lib/minio.ts": "9c51fe29c29c9b7c1499f7b87102122e",
+      "self-hosted/backend/src/lib/redis.ts": "62a2e78a9356869c64e538f532cc17d4",
+      "self-hosted/backend/src/middleware/rbac.ts": "2bb6ba66aaad70c1288c9bcb9a67ee91",
+      "self-hosted/backend/src/modules/applications/routes.ts": "8d6b8c1fddb6ac168b1e0e9d230de51b",
+      "self-hosted/backend/src/modules/files/routes.ts": "457eaf2268d2aece74dc447c78376558",
+      "self-hosted/backend/src/server.ts": "365cf684954b67b187b66191f89f69d4",
+      "self-hosted/backend/tsconfig.json": "c9e1475fab65bb06fddef47b2ffa89e9",
+      "self-hosted/docker-compose.yml": "0b29be1963001bb347db591b80f39ac3",
+      "self-hosted/docs/ARCHITECTURE.md": "32e1a2d3708fe2bdd58a47a675456379",
+      "self-hosted/docs/DEPLOYMENT.md": "4c089473490cc6e1916f7fb9d1fdbae3",
+      "self-hosted/docs/DISASTER_RECOVERY.md": "a74f2308451ec2461f2e4c1fe05945c2",
+      "self-hosted/docs/SECURITY.md": "6cf3fd4f68d778f8710423326c3f1b2e",
+      "self-hosted/frontend/Dockerfile": "25e9f3ce0ca3f585b5f278b5510acbaf",
+      "self-hosted/frontend/index.html": "319ff34f97b3173c582815b464c1c8ae",
+      "self-hosted/frontend/nginx.conf": "38bbee569bd0831f0f3eb46f6580169f",
+      "self-hosted/frontend/package.json": "b509463a3339b9018c3784a6cafb9516",
+      "self-hosted/frontend/src/App.tsx": "1b5a4e0aa3106580418d5c4bd455a56e",
+      "self-hosted/frontend/src/lib/api.ts": "a86656ca38f27cbdb0d24e91fd93e982",
+      "self-hosted/frontend/src/main.tsx": "290a209d913db0c6b5b5bf53e1a1eb0d",
+      "self-hosted/frontend/src/pages/Dashboard.tsx": "0a5cca1f7412e7cb51ca9ab8cf292024",
+      "self-hosted/frontend/src/pages/Files.tsx": "791197c5da148a7eff4f826e31a4c580",
+      "self-hosted/frontend/src/pages/Login.tsx": "e9f363bf4a876c484e4a15b44bfd22f1",
+      "self-hosted/frontend/src/pages/Register.tsx": "88709b8ec02a40acac99552e701db8d8",
+      "self-hosted/frontend/src/pages/TwoFactor.tsx": "c9268b19101a9b13e3f6b11e220cac43",
+      "self-hosted/frontend/tsconfig.json": "7aa02964070790f99038e1a452bf3d7e",
+      "self-hosted/frontend/vite.config.ts": "2568662d403eb86c1ceec15f200bdc79",
+      "self-hosted/infrastructure/backups/backup.sh": "dcf382503c4e17cb65e1797208fd3154",
+      "self-hosted/infrastructure/backups/disaster-recovery.sh": "45447cee06770dbd81d6e0131f555f89",
+      "self-hosted/infrastructure/backups/restore.sh": "94a6a8e24f20f0befb8673b1da9ff862",
+      "self-hosted/infrastructure/ci/.gitea/workflows/deploy.yml": "def84a8ee91e1a44b11db75e7cd8533a",
+      "self-hosted/infrastructure/ci/deploy.sh": "46c4040b56836213794a0d4b99442063",
+      "self-hosted/infrastructure/minio/init-buckets.sh": "db5c109f5d07aa34046f313ee026e5e7",
+      "self-hosted/infrastructure/monitoring/docker-compose.monitoring.yml": "d7435139d1846488b84ad9bf41ec9f81",
+      "self-hosted/infrastructure/monitoring/loki-config.yml": "782072e3d16fb3c96251b64b40538552",
+      "self-hosted/infrastructure/monitoring/prometheus.yml": "90fb0da8fea183b0ae8e30e0878a927d",
+      "self-hosted/infrastructure/monitoring/promtail-config.yml": "3b438193c1d8b7172f65b86d36e483fa",
+      "src/App.css": "3061aee6b63300763d91be8ff5432a42",
+      "src/App.tsx": "4ee62e5c9045854a187463b3d678cf47",
+      "src/assets/ads/ad-landscape-passport.jpg": "d2844d61234e3eb00ff512694b7e7a27",
+      "src/assets/ads/ad-landscape-schengen.jpg": "81692cf384d6512893fbb0ae28cc27e3",
+      "src/assets/ads/ad-landscape-team.jpg": "9e20f4ce8ca72ac743d71e64714f9e96",
+      "src/assets/ads/ad-landscape-uk.jpg": "e05cffd4b89bd049c44c3d6298e96b4e",
+      "src/assets/ads/ad-square-passport.jpg": "0a03268ae4ceed8d46b24e23a40eb454",
+      "src/assets/ads/ad-square-schengen.jpg": "13c95405a1104b57c01dbcbd2f5780f7",
+      "src/assets/ads/ad-square-team.jpg": "670909a4466402dd8062365e1aeb1a89",
+      "src/assets/ads/ad-square-uk.jpg": "672bcf2d0a6738092491990372a02ab6",
+      "src/assets/ads/campaign-paris.jpg": "115fb276d07255488d66f8cf23f17071",
+      "src/assets/ads/landmark-bigben.jpg": "00436ac40e9900a92642da35ab652aec",
+      "src/assets/ads/landmark-eiffel.jpg": "013d364fb56633addc364efd2a8db01b",
+      "src/assets/ads/landmark-liberty.jpg": "484f47354074159e9fa3e3fe67d44efc",
+      "src/assets/destination-dubai.jpg": "56b695d0a2f95b60a37450d70e81b446",
+      "src/assets/destination-istanbul.jpg": "5f4e1e19e8d1cd4e857042fd6d472074",
+      "src/assets/destination-london.jpg": "f407c59dc3b05fd929974ac8e6a46e4e",
+      "src/assets/destination-paris.jpg": "e14affc148462c5033dcd878f9997d06",
+      "src/assets/hero-bg.jpg": "2b60b5b3cd58395e338d8e2b2450055d",
+      "src/assets/logo.png.asset.json": "8727bdedb0163c46b27f6a323b747072",
+      "src/assets/sar-symbol.svg": "8ffea0488abbe494e8a3db35953f9744",
+      "src/components/DynamicPortalRoute.tsx": "8da9016c4a1c46080790b8f39504fc82",
+      "src/components/NavLink.tsx": "8f7c178b4776787e58e1011855ca28f6",
+      "src/components/admin/AddRoleDialog.tsx": "8ed073f13a3e276e24abe6591936313b",
+      "src/components/admin/AdminLayout.tsx": "cd8425a85f2b547e562f8bbae302b05c",
+      "src/components/admin/AdminTable.tsx": "2d358d67471df0d31abad22e768c6324",
+      "src/components/admin/BulkAssignDialog.tsx": "43510866cbcc4d8964ce9d311f335f17",
+      "src/components/admin/CreateStaffDialog.tsx": "41f57b48537718625a121d7ae5809ab8",
+      "src/components/admin/CustomersTable.tsx": "b22e0dae90f103c2a6d2cc35dcade09e",
+      "src/components/admin/DeleteStaffDialog.tsx": "1bd9c48e50bf9ed4ed46caf6f677c652",
+      "src/components/admin/EditPermissionsDialog.tsx": "4840901f874c5afb02b0618bac50bfbf",
+      "src/components/admin/NotesHistory.tsx": "702fbfd987a4c867ac2931581d7c49f6",
+      "src/components/admin/PageHeader.tsx": "71e952ddba6f7b12b6c3b40509890c2f",
+      "src/components/admin/ProtectedRoute.tsx": "4dc8f064b569821bc20688f0f71993f4",
+      "src/components/admin/QuickActionsPanel.tsx": "a61ea49d38c4c9812b143d8c1f691029",
+      "src/components/admin/SortableDestinationRow.tsx": "e90fe42888205f1a4b907abd6471ea4a",
+      "src/components/admin/StaffUsersTable.tsx": "013961731bfa82082b7d46d2ee4ae374",
+      "src/components/admin/StatCard.tsx": "d278945dec30837cbaeb6272587ba74e",
+      "src/components/admin/UrgentTasksDashboard.tsx": "5702a2a5130b6537456acb0b125f63a6",
+      "src/components/admin/UserProfileDialog.tsx": "8ae22381a6000783b085464c7a6e063b",
+      "src/components/admin/WorkSubmissionsSection.tsx": "97e3011eb611a13fa162073fc093dc7e",
+      "src/components/admin/WorkingHoursEditor.tsx": "01a2e50f09b10ca55e2206b1cf024ee2",
+      "src/components/admin/charts/AgentNotesPerformance.tsx": "3c4fdde90623981d46c18fed7a74d354",
+      "src/components/admin/charts/AgentPerformanceCard.tsx": "a4e6e24baa958d3f48107d01c97f32aa",
+      "src/components/admin/charts/AgentPerformanceChart.tsx": "b0a5a6786dc516852de0f56b96c0ade2",
+      "src/components/admin/charts/AgentPerformanceReport.tsx": "1a66794ff80d80bd8f2e628f4d3adcec",
+      "src/components/admin/charts/AgentsComparisonTable.tsx": "4f2a06bf245a0a2e8a2f21a121c59b89",
+      "src/components/admin/charts/ApplicationTrendsChart.tsx": "b8cf5080bb80ebd29e86a6b98ec61e86",
+      "src/components/admin/charts/CountryApplicationsChart.tsx": "c769e5f0391265ff5e7197ed1ee05598",
+      "src/components/admin/charts/PerformanceMetricsCard.tsx": "afd692fdb13cda056a13356410869825",
+      "src/components/admin/charts/RecentActivityFeed.tsx": "24c213231430414f72c5676df4dcc0e0",
+      "src/components/admin/charts/RevenueStatsCard.tsx": "4d7f8c0ca454a3810b22b370612bb291",
+      "src/components/admin/charts/StatusDistributionChart.tsx": "0de62335651f30371665aa71bdd48ec3",
+      "src/components/admin/security/IdleWarningDialog.tsx": "8bce9f0fa4a44d86c53cda604c04a4d6",
+      "src/components/admin/settings/CountriesManagement.tsx": "9499bea563e060b842f8af53a0a04443",
+      "src/components/admin/settings/PermissionsSettings.tsx": "1e08e749ff0eaa33e282c3711a9c9bc3",
+      "src/components/admin/settings/VisaTypesManagement.tsx": "9737590d9881ca9c9aff302e0c91da0e",
+      "src/components/agent/AgentLayout.tsx": "2547b8cd7767a2849d1db5a8597316d7",
+      "src/components/agent/AgentPerformanceReport.tsx": "299626aaf9cd4bc81d425334ef7edd05",
+      "src/components/agent/AgentRequestsHistory.tsx": "0165eef0cbe10d1c68ba6a3d28e5d6a1",
+      "src/components/agent/TransferRequestDialog.tsx": "7291ac2f0835b2c7cb90dcc83701dd5c",
+      "src/components/agent/WorkSubmissionDialog.tsx": "63f003e7089fecdb221a1f972acb9c23",
+      "src/components/analytics/GTagMonitor.tsx": "f8cf714cef4a7505085f4e87582813b1",
+      "src/components/apply/AuthGateModal.tsx": "04eaeabd2a4bbb09ae3818cc7807dcb3",
+      "src/components/apply/PathChoiceCard.tsx": "09cc8c8867b3274b164def684bdaad4c",
+      "src/components/apply/PriceSummaryCard.tsx": "c7b5f50d2fa8db2648bc25046b926e59",
+      "src/components/apply/ProcessingProgressBar.tsx": "16b16e23622cb42a12f442dc48e33ed1",
+      "src/components/apply/TravelerCounter.tsx": "9d3299a694e408dc0aebe7093231556d",
+      "src/components/apply/WizardStepper.tsx": "acc3e3ec4918996b722346be9ec023f9",
+      "src/components/apply/steps/Step2VisaDetails.tsx": "27e95dd7b4953fb1c5217ae7340f0ba4",
+      "src/components/apply/steps/Step4Documents.tsx": "43f317be8529eb8108df6ad03f7a7b7c",
+      "src/components/apply/steps/Step6Payment.tsx": "bdf9d3ae6c64f65068cb691631316418",
+      "src/components/auth/AdvancedCaptcha.tsx": "ca6eceec6a6defc4e9de4a057c3c82cf",
+      "src/components/auth/AppleSignInButton.tsx": "5f13b8aed52e962243309bb646b7cb7e",
+      "src/components/auth/GoogleSignInButton.tsx": "15669e933a0e82e1dd66b9386947ca5c",
+      "src/components/auth/RecoveryCodeVerification.tsx": "333aaee6f8a7c5c2c719314ead707d06",
+      "src/components/auth/RecoveryCodesDisplay.tsx": "dfaada1198fc8275706cdb513478567c",
+      "src/components/auth/SimpleCaptcha.tsx": "34f46b058c691e4bad2d890497618431",
+      "src/components/auth/TwoFactorVerification.tsx": "5db92f7bf69040144ca6a55e08ca361c",
+      "src/components/auth/UnlockRequestForm.tsx": "70076d22113ab86b877e35b53512a1a7",
+      "src/components/home/CTASection.tsx": "aa23f3d8129dd8a24a2e040b3508f6c0",
+      "src/components/home/CountriesSection.tsx": "52fc0158b5720a007f967c16954b6e7e",
+      "src/components/home/FAQSection.tsx": "bf8000983653e0edc2b844c357dca725",
+      "src/components/home/FeaturesSection.tsx": "078c2671bb7165a73ad0afd8927ea3f4",
+      "src/components/home/HeroSection.tsx": "2715e71e197934d9152c15d1ceb0d5e3",
+      "src/components/home/HowItWorksSection.tsx": "2a7a51801de994746737aefa7d2844eb",
+      "src/components/home/MiniCTA.tsx": "db8b430545eb87ded54f8766ddf8441f",
+      "src/components/home/PartnersSection.tsx": "ae0393432e1d5532bc2e08f21a761801",
+      "src/components/home/StatsSection.tsx": "34bad45c2edbaf959d301fedba473b1d",
+      "src/components/home/StickyCTABar.tsx": "c9207095538438a2e71be460815e9a44",
+      "src/components/home/TestimonialsSection.tsx": "618e084069922786bbc6704a3b4aa7e4",
+      "src/components/layout/ComplianceDisclaimer.tsx": "104723e0229a67002c863fb9def61a67",
+      "src/components/layout/CookieConsent.tsx": "183654698feba84f5120b021a9899839",
+      "src/components/layout/FloatingWhatsApp.tsx": "1aeaad0a75cde4025679c554fb4e2947",
+      "src/components/layout/Footer.tsx": "c2267b0a0422594a21dee0c4c7f76a94",
+      "src/components/layout/FooterArabic.tsx": "b56f0498ff7a7e9e4944a2bc0b84f579",
+      "src/components/layout/Header.tsx": "86440e33e58d4f73fe5f48dfbf729208",
+      "src/components/layout/HeaderArabic.tsx": "95abcc96da70630a98ccd195d602e092",
+      "src/components/layout/LanguageSwitcher.tsx": "e97e93cf5f1a43bd21136160b1d0d899",
+      "src/components/layout/MainLayout.tsx": "99e1408004c787e0d51d85f078a7cc4c",
+      "src/components/layout/MobileNavDrawer.tsx": "cfd0c7eb44a8d736b87645f757efeb94",
+      "src/components/layout/PublicLayout.tsx": "2b29133a05920a9364aa7aeaba90f705",
+      "src/components/messages/ApplicationMessages.tsx": "808a589aebdd5809f716115b47f1b310",
+      "src/components/notifications/NotificationBell.tsx": "efd040e1b120cb08acec3c033fa6e74d",
+      "src/components/seo/NoIndex.tsx": "3a16c8d2d4e46ff617213ea1a81bb932",
+      "src/components/seo/SEO.tsx": "2fe1450268be2baa542024c43f2f7068",
+      "src/components/tourism/TourOperatorLayout.tsx": "6602c6cb4593128f70cfb7822fd935ec",
+      "src/components/ui/CountryCityPicker.tsx": "fb1b8d77d6ca2c60550861f2cbb61229",
+      "src/components/ui/CountryCodePicker.tsx": "8de36e27f5e92895d3a103bac2d27295",
+      "src/components/ui/DatePicker.tsx": "b2536a65afd6efd05957cb6b1a2a797e",
+      "src/components/ui/FilePreview.tsx": "138d1a3b9ce63b41e50493ec52eca511",
+      "src/components/ui/SARSymbol.tsx": "6da7e467f294840bd49ae67677200764",
+      "src/components/ui/accordion.tsx": "f9ebb6ee913b44e5f3e06fe1d9679784",
+      "src/components/ui/alert-dialog.tsx": "2ee6c5e5e070315114319bc060d17a52",
+      "src/components/ui/alert.tsx": "354d0206f924d48bcebbb023c3940a6b",
+      "src/components/ui/aspect-ratio.tsx": "c5c364545e1b25a94e9e752cd67ad048",
+      "src/components/ui/avatar.tsx": "53921dca0903c74cd72fada89388d9f8",
+      "src/components/ui/badge.tsx": "8db4e6d330f88f4041f81e7cde43782b",
+      "src/components/ui/breadcrumb.tsx": "c200fc41e9b214ebb6ccd19a300c42c5",
+      "src/components/ui/button.tsx": "fdc4394465ef5afb7073bb15b3950edc",
+      "src/components/ui/calendar.tsx": "bfb46ecb59eba66b5ed564621ca8bee8",
+      "src/components/ui/card.tsx": "202402023747c80d975f48b906e6eb1b",
+      "src/components/ui/carousel.tsx": "63a7442a3088b58113c8a8cfc1defe26",
+      "src/components/ui/chart.tsx": "29cfd7470f3197deccd58b2b4f00fbae",
+      "src/components/ui/checkbox.tsx": "cb12d2f3410761f7a678add95c90ac5d",
+      "src/components/ui/collapsible.tsx": "934b00582dae08af749fb55469081de6",
+      "src/components/ui/command.tsx": "e911f182b4136a63c601c3fc48b2e9c7",
+      "src/components/ui/context-menu.tsx": "9b8e8efdf0456cd542e32d341b071cac",
+      "src/components/ui/dialog.tsx": "fc3a9626ba52435552c93ac3a74374ec",
+      "src/components/ui/drawer.tsx": "05e2b536fe11649e9b4c6e73678e32a6",
+      "src/components/ui/dropdown-menu.tsx": "f308eb98a2e21bf8bd1e30dbcb741dc0",
+      "src/components/ui/form.tsx": "4bb820d59aad3ee5bc78097596298ace",
+      "src/components/ui/hover-card.tsx": "f77f80ed64ff8f3549e5d7e9d837e08e",
+      "src/components/ui/input-otp.tsx": "3fb5994635434d5168bee869689fc2aa",
+      "src/components/ui/input.tsx": "b8279d768c2a1ce78a05a369a0502877",
+      "src/components/ui/label.tsx": "cd2b2255bbe519cb0865dfeaa6615797",
+      "src/components/ui/menubar.tsx": "163c3fa58a2b4ea2caa00166f4d862c7",
+      "src/components/ui/navigation-menu.tsx": "77e94b0c299d10c3763d2755bf556916",
+      "src/components/ui/pagination.tsx": "a3ced9f9b19826b467d788b1bf01746f",
+      "src/components/ui/popover.tsx": "c056d22288a642b756b77c7691ad4532",
+      "src/components/ui/progress.tsx": "9a8b05beca19e008a562a10e489f5968",
+      "src/components/ui/radio-group.tsx": "3773798b5b2f334a5db0dc9c8d06f1b8",
+      "src/components/ui/resizable.tsx": "ec681e92cbe705b5571ded11b5227a2a",
+      "src/components/ui/scroll-area.tsx": "cfbc224001af0e6daba676de225a2a47",
+      "src/components/ui/select.tsx": "25de64d0126624cbd8efa50cfb64bd21",
+      "src/components/ui/separator.tsx": "ed1101f185e9dc801712593e3330a75d",
+      "src/components/ui/sheet.tsx": "3660be09e2e40467a22fd46b354c1b50",
+      "src/components/ui/sidebar.tsx": "9eab1256b1ffe3f1336eebfd07b319c9",
+      "src/components/ui/skeleton.tsx": "c55f76f4faa1d6e888dbc51d41eaa586",
+      "src/components/ui/slider.tsx": "e3bf7b6116ddbdbe8c7b3597d07daee0",
+      "src/components/ui/sonner.tsx": "88644703cc00886c56e0e3b7df0e21d8",
+      "src/components/ui/switch.tsx": "eccd8c41c46e782eaaa1f8be0111e089",
+      "src/components/ui/table.tsx": "d0ff87c4734c23839337811378ad07df",
+      "src/components/ui/tabs.tsx": "26b15e1ffce0f831be4da95b8f8a43df",
+      "src/components/ui/textarea.tsx": "29ab470ee59e9da5070d4fba251bce81",
+      "src/components/ui/toast.tsx": "7c08b5cb6026058514672a4ebc53847e",
+      "src/components/ui/toaster.tsx": "1903846ab268620de6356ef667e3fa21",
+      "src/components/ui/toggle-group.tsx": "e82bf234e3877ad708ea3d1dba614def",
+      "src/components/ui/toggle.tsx": "ff7a7deebff23c3488e79ad72ee47e4b",
+      "src/components/ui/tooltip.tsx": "d7e923341b9e91d77db45ba5f2fa0cf9",
+      "src/components/ui/use-toast.ts": "4f094014a1315ca1081cbdc7f78d55cc",
+      "src/components/visa/VisaCard.tsx": "7557648abbbddc97608519cbaf3ab7c4",
+      "src/config/adsCampaign.ts": "8ef2c4ecc0149432469206a6e0b1a34e",
+      "src/config/legal.ts": "b99a7b1bd15baccdb4e3fe13407cb12c",
+      "src/contexts/ApplicationContext.tsx": "a8c43356969a6cc3662df06d14ad5cb2",
+      "src/contexts/AuthContext.tsx": "59ab891c7ca9f693ffdc7c325e67adda",
+      "src/contexts/LanguageContext.tsx": "58f2d717235fcd8597819cd3bbfbc386",
+      "src/hooks/use-mobile.tsx": "c0a0bdd4638c391a1dd06ac82074e60b",
+      "src/hooks/use-toast.ts": "e706bc004c87e17db559a113637eddea",
+      "src/hooks/useAdminNotifications.ts": "64b916e2c1b971dba228be23f1cf25e7",
+      "src/hooks/useAdminUIPrefs.ts": "ed2e5a9c422b5f17c6b3c0cbcbf3c013",
+      "src/hooks/useAgentPerformance.ts": "c3397f67471fcb0f4f20f605a2d46665",
+      "src/hooks/useApplicationMessages.ts": "5c9ee8ac046ae486bbcf17cd991b21f9",
+      "src/hooks/useDebounce.ts": "fb258d097bbc4ee977edcda4b4baf48b",
+      "src/hooks/useDespiaDevice.ts": "2725c988e61dbb284afee334dd9449b3",
+      "src/hooks/useDocumentAccessLog.ts": "94dab43f1f0ea67f3adb8159a0dc81a3",
+      "src/hooks/useDraftApplication.ts": "84be3b853165b57d02c1a3a758a6d7b9",
+      "src/hooks/useFooterSettings.ts": "4654f391def92afe961ce1bee4dc44dd",
+      "src/hooks/useIdleTimeout.ts": "feb90aeea99bc09c9b3f032c9f63c09f",
+      "src/hooks/usePartners.ts": "359e40d89dc1464accdc84907ddd5a08",
+      "src/hooks/usePermissions.ts": "4a65898888d36a605f091dd87aa9edf2",
+      "src/hooks/useRealtimeNotifications.ts": "c7ff4f9b172011d572c0b02ea5cb93eb",
+      "src/hooks/useSensitiveOperations.ts": "9d8044bf80310b965d5290107fef9499",
+      "src/hooks/useSpecialOffers.ts": "1d3fc8c65b84bb48c8417d3304a11165",
+      "src/hooks/useSystemBackups.ts": "33e146212f1dd0f65f4615c2087e8906",
+      "src/hooks/useUrgentTasks.ts": "badffb35d03b7a2a77fc6217fd6c6fe0",
+      "src/index.css": "63877d9022864f6e8f7c3cb0225bca17",
+      "src/integrations/supabase/client.ts": "ea731aa7f857b1b89542717c662d05c0",
+      "src/integrations/supabase/previewAuthStorage.ts": "315e4ae3473d92766e0d6d4d83945aef",
+      "src/integrations/supabase/types.ts": "656d3495b134d8918fe49cd847efdecd",
+      "src/lib/applicationOverdue.ts": "ff6ce76dbf6be0abd56ba0f2ac819537",
+      "src/lib/applicationPricing.ts": "67c89d7a00852df73cb83643a177fdd8",
+      "src/lib/assetUrl.ts": "6f59de38f82e356e3cf868cf46e966ba",
+      "src/lib/bankAccount.ts": "696102468a51658032c0b5334ccebb5a",
+      "src/lib/despia.ts": "0a8874367239206b30f683f699e1356b",
+      "src/lib/exportToExcel.ts": "d4c54ec99514121ee0c5a109e23bd155",
+      "src/lib/flagUtils.ts": "3fde2edab000f02ea311dd5a38d3ac8e",
+      "src/lib/generateApplicationPDF.ts": "1b3b9575070a0beaa2a035bf1e9bb6a4",
+      "src/lib/generateReceiptPDF.ts": "ced5deb0cf1698f227b9424c6265108c",
+      "src/lib/googleIdentity.ts": "abaae54eff604b7db73695ff90f2b91c",
+      "src/lib/gtagEvents.ts": "92d6f288d87a69b7037b70c7d0f84129",
+      "src/lib/inputFilters.ts": "2a17202f5c31e56e4312930020c8f5e9",
+      "src/lib/mcp/index.ts": "c46b2f48933c6b42984aa1f2603e1e0d",
+      "src/lib/mcp/supabase.ts": "501da369c76557a702b7765e92752e8c",
+      "src/lib/mcp/tools/get-application-status.ts": "7ed8a2363e8d3f78275e8abceb8a9352",
+      "src/lib/mcp/tools/list-countries.ts": "5b116e6d2879ee8d540774f3358bd58c",
+      "src/lib/mcp/tools/list-my-applications.ts": "d7da5f776d7f6124c8f720573cfb2011",
+      "src/lib/mcp/tools/list-visa-types.ts": "be66f67e999c40f7248b9da1568c51ed",
+      "src/lib/nameValidation.ts": "66a09924dbddff8a4524c1d9160ed31f",
+      "src/lib/nativeSafety.ts": "bd489213deecd94ecdb7f6cc3e7e4220",
+      "src/lib/phone.ts": "c8f981c4cdba05aa50df6b0a6cd01544",
+      "src/lib/platform.ts": "0c9d082e8b71a5add25fb0a8ed042654",
+      "src/lib/recoveryCodeUtils.ts": "b51e0cda5fd987d7c9ec334b3d5d1418",
+      "src/lib/safeRedirect.ts": "7ec97acb8bf9e1fd2cd840d76c874454",
+      "src/lib/schengenCountries.ts": "f528146d943d4787a30026d937184f0e",
+      "src/lib/utils.ts": "d9837f38cc05303254571985e3164050",
+      "src/lib/workingHours.ts": "a43ac4ebf645f9ef1a3ee659e15fe368",
+      "src/main.tsx": "da25a0e9a4e3c49b6cd6275063bd12c2",
+      "src/pages/About.tsx": "34d046fef30d15181d3c5fc2738e5269",
+      "src/pages/Apply.tsx": "3772e202524b5e60061b5032087fbc75",
+      "src/pages/Auth.tsx": "a375a9d1c7c9030640b70de2ad5e3111",
+      "src/pages/Blog.tsx": "b7458b19070286b61a459dac3cc009fc",
+      "src/pages/BlogPost.tsx": "4e53efd8e1bf9102a3e4ca36daf6b47d",
+      "src/pages/Contact.tsx": "7b1441e8d3549ba5488acaa6267d1783",
+      "src/pages/CountryDetail.tsx": "9e226aa0c2a46b0035bcd039c27faa6e",
+      "src/pages/DeleteAccount.tsx": "1f54436e1be5606dcdce41ecb4b42374",
+      "src/pages/Destinations.tsx": "38cd05d6b3c4ce20d8a3f0cc18187fa7",
+      "src/pages/FAQ.tsx": "c90b8cb078c409d4e0d80407e2bdf156",
+      "src/pages/GTagCheck.tsx": "be92ab0f1da12e16ed78b0c8092c7b16",
+      "src/pages/Home.tsx": "f8125e0058d0341fc67cd7751f4aa0bd",
+      "src/pages/HomeArabic.tsx": "c95cd9adc843d4bf81be844764289720",
+      "src/pages/Index.tsx": "63680c181c2a92e346fe348a5353fd39",
+      "src/pages/Install.tsx": "bf2fe3c765edc54248469339b5e93428",
+      "src/pages/LandingVisa.tsx": "9b2a96da574d177ea64d4d8e34c65792",
+      "src/pages/MyApplicationDetail.tsx": "3848cee6e2e185743ce5886d3a626e41",
+      "src/pages/MyApplications.tsx": "725a8a3b1a25d7da3840880b2211f4af",
+      "src/pages/NotFound.tsx": "378c02d6f024f0b360eb262e211e2cfb",
+      "src/pages/OAuthConsent.tsx": "a47749b3a02b2f2ab295283d3b102e6f",
+      "src/pages/OfficialEmbassies.tsx": "7b0f943c7733c3d6ebf93b8e6ab50fbe",
+      "src/pages/PaymentFailed.tsx": "952594f0a25d30c303429bcfaa9122e1",
+      "src/pages/PaymentSuccess.tsx": "85192ffdc4c7991afc07048f000ec186",
+      "src/pages/Pricing.tsx": "b5167e80c8d1f86a27ddbac3e3863888",
+      "src/pages/Privacy.tsx": "a8bf96dd81b0696271c3b0331eb1e87b",
+      "src/pages/Profile.tsx": "5c3c0bb728403043bf6a977a9ee978ae",
+      "src/pages/Refund.tsx": "a2dff934f875f817f8c79ac33eed14cf",
+      "src/pages/ResetPassword.tsx": "4611bf21d71a7b4f17b033f2e1a65df6",
+      "src/pages/SchengenDetail.tsx": "a1a89d464eb217e5c0e033a3b119fcaa",
+      "src/pages/SecureStaffAuth.tsx": "0d91afe96cc455f65028d4dbfd162bf9",
+      "src/pages/SpecialOffers.tsx": "946a1b0eeea7d9d308da0c18abe4f296",
+      "src/pages/Terms.tsx": "431d8dcb1b44df233db990841051955f",
+      "src/pages/Tourism.tsx": "18e6f2aad44f9a8afcbc937bee25178e",
+      "src/pages/TourismDetail.tsx": "abefb05592f6fa4ad04cc579dadec338",
+      "src/pages/TrackApplication.tsx": "152eb4ad106ea56b8392347346092291",
+      "src/pages/TrackRefund.tsx": "0052e4316e01584937ce70d2bcb830df",
+      "src/pages/VisaDetail.tsx": "fb59e4339a32d3355e55e3d11a7f1a56",
+      "src/pages/VisaServices.tsx": "f8ee0d5736ff7143c375d48d9fe229be",
+      "src/pages/admin/AIAssistant.tsx": "b45e67b8930ac023f07cc269935078e7",
+      "src/pages/admin/AIAssistantHistory.tsx": "ef04796c754ad5007528096953e72381",
+      "src/pages/admin/AIToolAuditLog.tsx": "1c2c34304bec82cf50fa09d3f8349208",
+      "src/pages/admin/AdminDashboard.tsx": "6a45e0a2d83be9d5fb96f8a579d66034",
+      "src/pages/admin/AgentRequestsManagement.tsx": "0a56d355202977aab9733f8bd3419eaa",
+      "src/pages/admin/ApplicationDetail.tsx": "d08a7e07d8584e7bf2274ed3c5f71b40",
+      "src/pages/admin/ApplicationsList.tsx": "cca851efffe9dbdbd6c6e8db38e3e37f",
+      "src/pages/admin/BlogManagement.tsx": "a649ad54a6db12f925c0da394c1a9e02",
+      "src/pages/admin/BlogPostEditor.tsx": "79bf31419de14559cb4baacab06d56ab",
+      "src/pages/admin/DocumentAccessLogs.tsx": "4c5de7a614a547417888c0a7edcf8fd1",
+      "src/pages/admin/EmailLogsManagement.tsx": "3e0aa18d758b84c1001757536297f09a",
+      "src/pages/admin/FooterManagement.tsx": "e86c34ec637c1c130e83bf4a436ffe6e",
+      "src/pages/admin/HeroManagement.tsx": "91323dc30a0d6a903d392ff5d361f2c5",
+      "src/pages/admin/LoginAttemptsManagement.tsx": "e0780184c31e9b55f37b46ba4456237d",
+      "src/pages/admin/OffersManagement.tsx": "b4a3f29899e34c77715299f149ae81cd",
+      "src/pages/admin/OwnerSettings.tsx": "155e0c9e21ce41c38b30fc7eeeee15de",
+      "src/pages/admin/PartnersManagement.tsx": "641d46112412f6d9dcc76443a238ee81",
+      "src/pages/admin/PortalSecurity.tsx": "1a44c6c1bc789c13639844979d4936d2",
+      "src/pages/admin/QuickSettings.tsx": "0c98072ac142c95cf0d57785e474fa94",
+      "src/pages/admin/RefundRequestsManagement.tsx": "3ed30a37541035f6afbbe29708e0d386",
+      "src/pages/admin/SEOContentManagement.tsx": "819a13dba1d134db982df2f54537c8cd",
+      "src/pages/admin/SecurityStatus.tsx": "cf97f0927c1ca2a0e856e9dd65e7481f",
+      "src/pages/admin/SensitiveOperations.tsx": "1a517a528638ff1acabe110572be584a",
+      "src/pages/admin/Settings.tsx": "cb3d89b138b67b0a354ba46cffd0c6d1",
+      "src/pages/admin/StaffAuditLog.tsx": "cfc5ffae75b384148e417ab4f4309c2e",
+      "src/pages/admin/TourOperatorsApproval.tsx": "2d8e1c4145e7a9ebaeb5cdd2f700969d",
+      "src/pages/admin/TourProgramsManagement.tsx": "21079777f9b085b3bbf9a20886561d0b",
+      "src/pages/admin/UnlockRequestsManagement.tsx": "0171ef577c814524d5feefd3572688e9",
+      "src/pages/admin/UsersManagement.tsx": "ad53abfba1af534bacdffd870e5bbb34",
+      "src/pages/admin/VisaRequirementsManagement.tsx": "8a10dcc40937268a823f3c29869f998c",
+      "src/pages/agent/AgentApplicationDetail.tsx": "ef06477e82b240e381d5f587508320fd",
+      "src/pages/agent/AgentApplicationsList.tsx": "fccd1c25b4d32fedb0d6609d6d2dedb1",
+      "src/pages/agent/AgentDashboard.tsx": "10e6e08f37756b7523ba6a6b88a6ba09",
+      "src/pages/tourism-portal/CompanyProfile.tsx": "73828785460578e881d1d55eebf1aa76",
+      "src/pages/tourism-portal/Dashboard.tsx": "39b752ef4790a86f573aac0b8b2adacc",
+      "src/pages/tourism-portal/MyBookings.tsx": "f1370990eda0c39e25cd79fa88343057",
+      "src/pages/tourism-portal/MyPrograms.tsx": "7bef1908f5e2770ce7ee1572233291fd",
+      "src/test/adsCampaign.test.ts": "683781c55acd5ebea5001cfeda943ea0",
+      "src/test/applicationOverdue.test.ts": "72051df198f97135c46d1da5418bad78",
+      "src/test/applicationPricing.test.ts": "0510a7c8c40a7a7cc7d7c492a2c51882",
+      "src/test/example.test.ts": "f7aec10728902324d57cf05ee8a8e57e",
+      "src/test/setup.ts": "3ed816a7adf0e76610ce76bd32744ea0",
+      "src/types/database.ts": "1bb55b1e8ab85fadccedd606e1ed0802",
+      "src/types/messages.ts": "05f28478714b2a0bc1826ddccdfbcc2a",
+      "src/types/sensitiveOperations.ts": "1377471858e27216ad66f57fb0eb9fbd",
+      "src/vite-env.d.ts": "0352474ba2918efe13895edbc3780d94",
+      "supabase/config.toml": "2e5ba965bed55f2295fa2f418006d041",
+      "supabase/functions/_shared/cors.ts": "4f6e3beb379658aeb3db10ca00ab1108",
+      "supabase/functions/_shared/email-event-audit.ts": "7a57f999f22aa254596d365d1161875c",
+      "supabase/functions/_shared/email-send-audit.ts": "06756279dbd402f0db26a441fe767056",
+      "supabase/functions/_shared/email-templates/email-change.tsx": "2e7c4a657998c7d31b2490a8051901bb",
+      "supabase/functions/_shared/email-templates/invite.tsx": "3a8d6f4a6f7af3c4dc9114fc70f8725d",
+      "supabase/functions/_shared/email-templates/magic-link.tsx": "18481cbec005b7d0cf755392efc3d1ac",
+      "supabase/functions/_shared/email-templates/reauthentication.tsx": "c68d729eeb3e9875cb6210738aef361b",
+      "supabase/functions/_shared/email-templates/recovery.tsx": "4fde6eb2c431125f59c1c36cc042aa47",
+      "supabase/functions/_shared/email-templates/signup.tsx": "618e64eb5347f70a0b9f305426d1978c",
+      "supabase/functions/_shared/email-update.test.ts": "2bd1bf992b2067d69e1a99b9aea211e8",
+      "supabase/functions/_shared/send-composed-email.ts": "716a72a5cfe36f46c1f658659a078c6d",
+      "supabase/functions/_shared/transactional-email-templates/application-confirmation.tsx": "2065a0b29ff7b426b8caf318a4609f6b",
+      "supabase/functions/_shared/transactional-email-templates/registry.ts": "b3b37235840ed0b07972f0e348790d96",
+      "supabase/functions/_shared/transactional-email-templates/send-email.ts": "9a70a0949d223830a82b8facbcae9c35",
+      "supabase/functions/_shared/transactional-email-templates/staff-2fa.tsx": "7149c615205011baa318cf3b2cc3dcb3",
+      "supabase/functions/admin-ai-agent/index.ts": "4f34db4f4fb56a87910bdd4b18e619c8",
+      "supabase/functions/auth-email-hook/deno.json": "49c76feeb30a2d17f086296c45c282d4",
+      "supabase/functions/auth-email-hook/index.ts": "a52daab32e80d32800041d6a14607db3",
+      "supabase/functions/create-staff-user/index.ts": "f4e0e42ee0828f13d0953e0089a6e38f",
+      "supabase/functions/delete-account/index.ts": "6b7ba404b065d8bf5b2c3ad59731c25f",
+      "supabase/functions/delete-staff-user/index.ts": "1fb04edb8b75719a7c24de42c253f1df",
+      "supabase/functions/generate-staff-recovery-codes/index.ts": "836fc20540d6255e0068f4d9a2af7eda",
+      "supabase/functions/handle-email-events/deno.json": "8a80554c91d9fca8acb82f023de02f11",
+      "supabase/functions/handle-email-events/index.ts": "0584271cf5214ab19df6746edef8b2dc",
+      "supabase/functions/mcp/index.ts": "593a19a769aaf22c75e5666ce00d6ff6",
+      "supabase/functions/preview-transactional-email/deno.json": "49c76feeb30a2d17f086296c45c282d4",
+      "supabase/functions/preview-transactional-email/index.ts": "e00f62f7b1c6fcd72c6be716fc6f25b9",
+      "supabase/functions/rotate-portal-secret/index.ts": "b5d6e67c6921a34387b15d2a7f8a32e5",
+      "supabase/functions/send-application-confirmation/deno.json": "49c76feeb30a2d17f086296c45c282d4",
+      "supabase/functions/send-application-confirmation/index.ts": "e31100333ccee0cdf6f5bcb9eefd09ac",
+      "supabase/functions/send-push-notification/index.ts": "432bcfbbb67197d289d3d2cdfba7e0fa",
+      "supabase/functions/send-staff-2fa/deno.json": "49c76feeb30a2d17f086296c45c282d4",
+      "supabase/functions/send-staff-2fa/index.ts": "35870a1815bd42d47a4e5c2a80c23324",
+      "supabase/functions/staff-daily-report/index.ts": "bb44e785c03acf62b2339afdeaa1cac9",
+      "supabase/migrations/20260125200416_607e25ec-b916-4021-800e-3e073332d143.sql": "29e10c0be1553a67ad3c6b74006d888d",
+      "supabase/migrations/20260125200433_7dfca0fe-7748-41e8-aa9d-2d6ae687222c.sql": "822de33b47a4fa32dddc3ee46987f1a3",
+      "supabase/migrations/20260126193831_755e743c-8f6d-4be8-81bf-73c18a645ee1.sql": "c4946db009dac09012d1c00a2ebd1445",
+      "supabase/migrations/20260126195619_75c81b7c-e0a4-4364-861c-17079069d299.sql": "f4542228af65d1f2d3bf51d361d9dbda",
+      "supabase/migrations/20260126202506_46009a99-d886-4695-a67d-2f1a0ec8ca5a.sql": "df8359f587205917578b8757bbd2c052",
+      "supabase/migrations/20260127072904_670cd4b4-0d04-424f-9649-4445048895f7.sql": "b3ca4bc03385f7e72f879775313b7024",
+      "supabase/migrations/20260127113641_79286f65-b824-4bb9-8393-81dacc5ac50b.sql": "959d1411179e0ef257de22a58f9ad0aa",
+      "supabase/migrations/20260127195936_9ff272a3-3f10-41e0-b86e-273f0902462d.sql": "22bef0c44921cabf26c94847e511ee63",
+      "supabase/migrations/20260127201116_9ac726f0-abc8-465e-9be9-02c980ffa0cf.sql": "f13fbf13b5e81b4f5aeec4c55230bba2",
+      "supabase/migrations/20260127202109_0d1ba5ce-5f38-4362-a416-a18b816e8387.sql": "b98bdc6d606733c47403db359646fdfe",
+      "supabase/migrations/20260127204018_9acb2c2c-e3c9-47ac-a1a0-521f7b9273d7.sql": "f3d48ee7ecb31d0576609a65a008c366",
+      "supabase/migrations/20260128052040_af25bea3-9d6a-49ab-bd87-cee0dcce0289.sql": "4d54fe08aeaf2d0f8515be589ca6f2d4",
+      "supabase/migrations/20260128052504_358ae8e6-175d-4619-b740-d5da3bb0b8c6.sql": "e6a04523e976f9fae0f949003590106e",
+      "supabase/migrations/20260129080058_9589cd55-a2b1-40b7-9d3f-1104ceb2fcc7.sql": "f5f721daf8cdf18643627b2d015be709",
+      "supabase/migrations/20260129084255_48781beb-a422-4b00-861c-6d33c9313240.sql": "35e700820cf49e994de355ec07ba6562",
+      "supabase/migrations/20260129102722_5293b2e1-5a83-4235-a9a4-e57bbc7f7c1f.sql": "f60c81a54f9fcc5d9f6fa2ec03569e77",
+      "supabase/migrations/20260129103829_6b87fef8-edce-4d0e-bc2a-c5eb09e811e3.sql": "ed7e8ebd75a1ef70db22afb78817d62d",
+      "supabase/migrations/20260129112336_a16f230e-c340-4f40-a825-b2725e1978fc.sql": "f653fcd5a56299faf42a168bc025a9f2",
+      "supabase/migrations/20260129170227_874a0346-352f-4fb5-9330-365ca7705da9.sql": "b79c698f48bbf195d1299c1ba39f9c15",
+      "supabase/migrations/20260130213432_378163d1-9390-4404-83dc-acb2dc119e63.sql": "ca0652884c763e4f0fab4d5dda419883",
+      "supabase/migrations/20260130215321_ad1f8d52-3c83-49a0-b18b-00ad10372e9b.sql": "b65a34923272bcbfe5b9738d6a0edb06",
+      "supabase/migrations/20260130223512_76691151-8913-4e28-80c6-e971f39be774.sql": "d78e885e468d830ac04d46d92523a6f4",
+      "supabase/migrations/20260130231039_dc78ec8b-81b3-4261-a8e8-b903352aeb67.sql": "bdf03896dbd9deaa9237d197e6215fd8",
+      "supabase/migrations/20260130231413_bfb656d0-a7df-484a-93d6-1b5b3552ca5e.sql": "75f8ac1142f87212da3d02024f22ab84",
+      "supabase/migrations/20260131134822_c6852a86-115c-43e0-9d20-d42dcbfc6934.sql": "410701fc919ec4538d910e5217d3dcc8",
+      "supabase/migrations/20260131140900_9314fa4d-bca6-4067-a3eb-347dbfa7766e.sql": "07095cc07222ef06e277ee28871e7fbf",
+      "supabase/migrations/20260131145832_757cd267-db24-4ea1-90ff-f7f1a0024e31.sql": "1cccef4acb258c6d2b8fc7134a7f772d",
+      "supabase/migrations/20260131150402_67b2678b-f5af-4d46-a75f-e33ae8486f2d.sql": "a526083c23336a0e12d62441d88d5dec",
+      "supabase/migrations/20260131150736_b3542be0-33ad-4a71-a207-2752d0fe7895.sql": "1b24bf7fb6338aaf00eab5ff3f5b005c",
+      "supabase/migrations/20260131155431_36633353-f13f-451c-97c1-3f9a2c700e6e.sql": "1a17ec9b3983e661865060c193116584",
+      "supabase/migrations/20260131160017_1f788470-c06b-4873-9c3f-408effe6e4a1.sql": "ff8c54c09c9a1400790776cc6ebca3b7",
+      "supabase/migrations/20260131164327_f6935fb2-aeb7-4e67-a677-dcc3ebf25e86.sql": "d38e05c93eeced87af1698f62f0b2a9f",
+      "supabase/migrations/20260131171923_d05ce187-34de-4558-9344-69770e93a206.sql": "bb416d826e8c37c8f9c5447cc9e32751",
+      "supabase/migrations/20260131191042_4390cd68-6902-4052-ba94-c10c4e751bfa.sql": "cfda3cc16fd0dfef6b10ecfa6c212aff",
+      "supabase/migrations/20260131195112_6f35f553-6253-4cda-b440-27dad8d6ea4c.sql": "ad1770dce0aec4b23d9966cfea251600",
+      "supabase/migrations/20260131195321_1f775515-c59b-4465-956b-d60570239cae.sql": "b36eefc8b35eaee7a5fd0c5a4cafc2ae",
+      "supabase/migrations/20260131200108_3e4913f4-e798-481d-9f62-6a4e41d0768f.sql": "87d0e8d832f7cc324dbd16c2d81c5736",
+      "supabase/migrations/20260131201426_b8d61548-6f64-49e8-bb77-3d23f8d9b6bf.sql": "b1fc958f3af1f04c1a97a9653491e90c",
+      "supabase/migrations/20260131201924_d3f43afa-4782-4a06-95b8-272aa2a6714f.sql": "ba9a5dc202e8f5fc7d9437d58dbc6137",
+      "supabase/migrations/20260204181359_fc13fcc0-fc3c-416a-9186-b14aa5baee39.sql": "3106b829bb80dac4840372b1830dd451",
+      "supabase/migrations/20260205095251_2b83c11a-0256-4292-bc5d-fa56444fab3c.sql": "172b330ca2eeee069c809d6fbb81a623",
+      "supabase/migrations/20260409205705_84b250e6-fb24-4877-94ef-51e680508a54.sql": "cdb4c271dd13f29c2f123515daa52c19",
+      "supabase/migrations/20260409210545_c378a0cf-8c45-4f23-ad91-a9591c296756.sql": "733dca94e146b9c9d88739969457572d",
+      "supabase/migrations/20260410114820_9b5f4357-1a27-4ee0-b354-216e367c50ce.sql": "e358a673466c78eff4d04092ede2365a",
+      "supabase/migrations/20260410115423_ec600d90-2e16-43b5-a438-f8200518ca03.sql": "d642a89f91201e3f6b384c3b24ba9c39",
+      "supabase/migrations/20260410115432_c5ba89b3-e608-4218-9bfc-2931c1457341.sql": "73eda80d7d0544a91d22a1b1e081e3ed",
+      "supabase/migrations/20260410224840_65bca5c8-49e4-4f79-9ac9-914cf2267501.sql": "9737630e6b534a5c5852ab048de62f22",
+      "supabase/migrations/20260429085353_05b598f4-4a5b-4f44-b1fa-69fce84f0134.sql": "f704439d003954e7733ca8a6605c4be2",
+      "supabase/migrations/20260501221008_1c92f99f-5dbd-426c-86a1-f2b0addbaa37.sql": "feea9e81b0f2289f069d956b510bdb06",
+      "supabase/migrations/20260501221630_12036ef4-8a46-451f-936b-1751c0b47adb.sql": "496c33c52a8dccb9232a7a876ac0bfeb",
+      "supabase/migrations/20260501221657_71d59d58-5576-4234-83ad-40b2867fb353.sql": "f719de23e447c24f5cd133fe1bb3cfa5",
+      "supabase/migrations/20260509105504_4e5011d7-c1ed-4374-b519-d8eaf291790d.sql": "01467f4cccc365969ddcda4c85d78c14",
+      "supabase/migrations/20260509110557_ed2b8b80-1608-48bc-b1b1-1a73ffe1613c.sql": "73cd6bc719e543472fe9f63a7855be88",
+      "supabase/migrations/20260509143258_f4497e28-d021-49a1-8579-e80e872a07ef.sql": "e3eddec500c1b8f232848b32732ca68b",
+      "supabase/migrations/20260509165340_5d3f420a-63cd-4d19-b724-60d88c191f17.sql": "873176a5738aeac4646ccb24e22b5666",
+      "supabase/migrations/20260509170148_1f4ade63-1944-43a3-a34a-61b524d9468e.sql": "36e4e95d9f553af8275e702d9411a8bf",
+      "supabase/migrations/20260509183322_5451e6f8-266a-4377-9056-b610e5bd96e6.sql": "f06273508c4bfd510ce48afe05bdf625",
+      "supabase/migrations/20260509184730_95b223b6-6485-42b6-b9b0-3e0d5b9b3189.sql": "a596a35895cee5a0716c7f13e57cf174",
+      "supabase/migrations/20260511103914_e2fc8a4c-b8e3-49f8-b7c5-d3a77af97166.sql": "3246a2fc6f548db1d1e9f2d890e7315f",
+      "supabase/migrations/20260511111727_2c79e4b7-2fbb-47e7-971b-9ea7e6dc1eb3.sql": "ad4ee693217720ee3595b675c089a3ed",
+      "supabase/migrations/20260511120735_d544d068-4ecd-439d-a48a-4235abce7dc8.sql": "56c8d151534bafb0e572ce5bc414a441",
+      "supabase/migrations/20260511120836_d57a90fa-b433-4f4e-9bc7-4cb07f13225c.sql": "eed4e35d20b0b9ab727e6f1070ca75fb",
+      "supabase/migrations/20260511121343_a7a0730c-ceba-40d8-9a9b-2321d8d8b55c.sql": "7e4ee999d572bf37e611dc71337d03e5",
+      "supabase/migrations/20260511122152_4d2be101-b7e2-41f9-80dd-2551d21b357f.sql": "386235f10c71f856d6dc1eb801789d80",
+      "supabase/migrations/20260511122646_d2eaeb4f-2cc3-495e-ae9a-8759c7d77379.sql": "d310aab3358d899a5caa473ad572177f",
+      "supabase/migrations/20260511125537_ec074a71-6e41-4bd0-8246-3e7dec697b6f.sql": "74c62867bb454b3fc976a4e172cb3a12",
+      "supabase/migrations/20260530094616_898b4125-12a3-4886-b1a6-90d4a1c61daa.sql": "bd33c8f1e29ecd335ae2cd44bb37d19a",
+      "supabase/migrations/20260530144439_2babec31-8548-4507-8dfa-b41880eab6b4.sql": "6cf6b485646abf911d85300608417039",
+      "supabase/migrations/20260601095440_83d57402-48a5-4a6a-9505-937497cbebf4.sql": "06e390011e6dc8d4ef60dc3f46eeafba",
+      "supabase/migrations/20260601101627_3b0dd087-3c41-482a-a154-900fdee7d314.sql": "bd1aba8161d248d35b2aa5b11e1a9e74",
+      "supabase/migrations/20260605133146_fecac536-b44d-4a91-8b69-380af86beb56.sql": "2ec5e3e1244ebdf92dc46fd9fcf23d65",
+      "supabase/migrations/20260606080602_9b29679f-2c84-4658-8cf4-06c28e25f46c.sql": "de4baeaa903eacb79f5e9eb382a30482",
+      "supabase/migrations/20260606080614_f2e6ce00-5636-4658-b50a-68821fba0919.sql": "e5a0ca00b81185cfed7d89603377cbe1",
+      "supabase/migrations/20260606080632_fcc82b0d-60b4-48ea-8093-6dea2fb2bfaf.sql": "82456aa49398d5fb41f47f7b39795500",
+      "supabase/migrations/20260606080706_6414e053-226c-4180-a957-e6ee2760cb8b.sql": "f3186567fbf8c6c5789bd1b4d429dad6",
+      "supabase/migrations/20260606081125_bd01b1e7-c095-4d57-8b13-2cf04189cb1b.sql": "3bd4a1d924ffa36238dee33ca735ca63",
+      "supabase/migrations/20260606081155_16a404d2-ae7c-4d3b-b33e-74190bd3053a.sql": "7a4e4bdcbaa8f9a5e12b4012cc12276c",
+      "supabase/migrations/20260606101303_44462c8b-9467-420c-a60c-e1d75d4a9e5b.sql": "64097bf2a752b7320378e09426b4ed72",
+      "supabase/migrations/20260606133008_5128ac35-1e39-426d-90d5-0621e0d3d524.sql": "936d247285b67faff5c5e6a4be6a8eae",
+      "supabase/migrations/20260611122713_89ff578d-0e70-49a0-93c5-9f80f06ed0b7.sql": "abaf46efe6d9fbc326b9fb3818693ff6",
+      "supabase/migrations/20260611123033_5e02858c-0064-46e2-98f2-215f817752e3.sql": "44703f346d4f6ec639cd2ef727ce966e",
+      "supabase/migrations/20260611214426_83125377-0843-4b71-8152-e9ff870a9ca2.sql": "ecf0114f489c55d94f530fd2f02c280f",
+      "supabase/migrations/20260611215433_89a2e372-81be-40c7-aa3c-3f1f8f245fd7.sql": "4520f324347343a1e3119e65f194f895",
+      "supabase/migrations/20260611221240_060850b8-8fa0-4dfb-8fd7-2597924c4fa1.sql": "16b58704c2254286b824b66df219af9f",
+      "supabase/migrations/20260612114627_28763b77-a65a-40cd-956b-f0f933efe929.sql": "a6e9b9fa397c66aba4b0856f3ba443f0",
+      "supabase/migrations/20260614200747_4f2d1277-970d-4a1c-a11d-cba63e4673f7.sql": "92337d49f60c4d91614cc211d6f88c0e",
+      "supabase/migrations/20260614201724_cbb73c6d-6357-4627-99e6-3b67ce3d3900.sql": "1ce95f83d107d7170563769424fe8c59",
+      "supabase/migrations/20260614202631_ede617d5-d9f1-4cfc-8fd4-de40c6ea5e1b.sql": "1147de1738bc8476f70aef473a842037",
+      "supabase/migrations/20260618164459_2a9e2acc-ab05-4b3d-99be-3a195c7fc5ba.sql": "78939d8c30c775a506948b112812bcf5",
+      "supabase/migrations/20260618203746_ea8f1faa-ff77-4cdd-ab05-f49fb54d0d51.sql": "9df19c95ac88a2997d0dde26b6cea516",
+      "supabase/migrations/20260618205128_1342f07d-3aac-4dcd-861a-b769a5a1b789.sql": "c7990166daa891c6b7243f3b565c8535",
+      "supabase/migrations/20260619134400_9259119a-c6a0-49f2-bf6c-090ff0a77f3d.sql": "a4f31aacfb364894d950cb0480e9b5e4",
+      "supabase/migrations/20260619135911_7bc0d00d-77c1-422c-9ac2-467a6e90bd2b.sql": "f30a5426e0528d24138cf8222af0b498",
+      "supabase/migrations/20260619154548_936f9220-f913-47ad-8a7a-d2c1193d5113.sql": "9d543da4ca4f255b9231cfb893bdbf43",
+      "supabase/migrations/20260619223926_29e90b34-2bd2-45c0-856a-30c67b23e836.sql": "69cb4b97bfb8c14a22ce4a48ff25bfdf",
+      "supabase/migrations/20260620100122_db16ae4e-92c6-4784-a822-f8a1e600894b.sql": "c0a25bee3060d369e28a77522886a245",
+      "supabase/migrations/20260718205908_e3c71b55-cc00-4b51-b09f-e02c2df5854c.sql": "ec01b3a8d71127650a0974623723cb8f",
+      "supabase/migrations/20260719171825_563d9ff7-326b-4072-8df2-6883c9e2b161.sql": "c4de166c6809f27d0878bcb3dee88fe6",
+      "supabase/migrations/20260719181434_9bf794b4-bfa8-4157-9081-31b3a39c65eb.sql": "16706dcc36bb940d19ba56f15659fd30",
+      "supabase/migrations/20260720115118_a119a7fc-e8fe-462c-a8c2-a16c7e0233cd.sql": "41a66217e317c300ba655078d4302ea9",
+      "supabase/migrations/20260722094540_2afae290-6ef8-48bc-ad04-ea6080c86456.sql": "718c37d805b9fce91462ce194810ab6d",
+      "supabase/migrations/20260722094728_fe73237e-a3b4-46d1-8157-22b93e3c30b1.sql": "c111be53b5c7876779e54ea3b5f49727",
+      "supabase/migrations/20260723214230_410c607a-c25e-4ef3-83bc-d7046a44a43b.sql": "59e5af81b65a306c38b8946adb791198",
+      "supabase/migrations/20260723221703_f0a87a38-8c41-4112-83af-64cd66b1847b.sql": "e8a9ba90275113e8a5864094912caec9",
+      "supabase/migrations/20260725165351_ea54ad28-8636-4a37-baab-fee7153043df.sql": "8bfc7937808644f30329fe4d4339f507",
+      "supabase/migrations/20260725181727_5b0b0432-19fd-4f02-9c02-d65b5d0aa70c.sql": "747b5be98041f968afa97174a6d22c8e",
+      "supabase/migrations/20260725185253_86f14b38-0799-4d2e-aaa7-762c88e90bb4.sql": "a3c49188864801701256043f9d925716",
+      "supabase/migrations/20260725220044_f70878c8-0806-4958-b3cb-66a682487ee4.sql": "5db4551889bf65aec671172c2a27fce3",
+      "supabase/migrations/20260725220451_242a329a-69a8-4ce1-8b87-708902a32dd9.sql": "bb29f3a340a9eae8dbde0976ad38f42f",
+      "supabase/migrations/20260725220923_52caff58-7705-4d59-86d3-c74831226349.sql": "7f2f6634a9d04816df9d4d07b0f994fe",
+      "supabase/migrations/20260725220954_87147cee-13c7-4351-97c7-881f4cd9676d.sql": "4c3c3e30d31e11cf0f35d31917fb7723",
+      "supabase/migrations/20260725221418_653fecfa-c56d-4151-a3b2-515a10241fcb.sql": "f81c005e1eff60930372472814731bde",
+      "supabase/migrations/20260725221440_18392fea-8e1d-4614-9fb2-73fbf1f8beaf.sql": "368868f1a56eafd9df3f5e4f4351f0ee",
+      "supabase/migrations/20260726140011_b3a172fb-8c3f-416b-ab8f-fef646c99aac.sql": "ba1be3ef4c81edf161655b561876edfc",
+      "supabase/migrations/20260726144204_960b3870-635d-4995-96cc-09fdc1147896.sql": "979bc7c5e91542f78d973d167864086e",
+      "supabase/migrations/20260726154453_8871c559-f3f8-4032-a9df-e36633cc9ac8.sql": "7be115a69154e42c8f3706d5e6b3b26e",
+      "supabase/migrations/20260726154822_ab38d602-b5bd-4fc4-b2a4-be6aaf23b0b2.sql": "31548f3778354b9e9d817ce71ae4e31d",
+      "supabase/migrations/20260726160000_deep_rls_hardening.sql": "dff623b5ea09684bc5d480a2dba67ded",
+      "supabase/migrations/20260730100811_ccddcd0e-ed5b-48ef-b216-46f39d599f18.sql": "388dcd29e860774230439c4edd59c0b9",
+      "supabase/migrations/20260730104311_b61affa8-b437-4672-88d6-c9a95a65107b.sql": "0f64ff6dfbc61a2db2f3652e1bc88fa4",
+      "supabase/migrations/20260730205336_87089a88-de9c-4a78-9c57-3883ac3411f1.sql": "895c82eda0090303985a582e84f8458f",
+      "supabase/migrations/20260801142632_0a065246-e690-4f57-a967-43c6e936e44d.sql": "8d6ab4f4dfb2aff7f815f149171d902a",
+      "supabase/migrations/20260801150615_875330c4-588c-48aa-937e-4a5e41f315e1.sql": "d356e9750a5da509c64fa63eac867e0e",
+      "supabase/migrations/20260801153722_d1ab37f5-e794-44e2-8208-9c9352722e24.sql": "85fb4fe969463b2e7cf7339c23a908ae",
+      "supabase/migrations/20260801172541_7f585f84-cbdd-4a5d-aa84-f33859496e1c.sql": "ba1e9488a8ff868b8d0a1587ca4df37d",
+      "supabase/migrations/20260802213437_472b82e2-18d7-40c0-beb6-0b3b6e21d9e7.sql": "6f16d0d07fc3c07a0cf5fbba7af3166c",
+      "supabase/migrations/20260808124146_521f5644-a234-4acf-8e62-9934fc9b4fed.sql": "2283f1da72a5f2890cbd2676b181f1fd",
+      "supabase/migrations/20260815122500_74bc79c6-3224-48d9-894c-1fea7a4d8b7b.sql": "0d611f1a08690b212a61aee47bcc8e8b",
+      "supabase/migrations/20260818045659_45523521-ef06-4363-9c2e-1f8b08d2000e.sql": "82edefbabaf40115d17cc8e5c5056bc2",
+      "supabase/tests/rls_pentest.sql": "9d95cac20e8b5c05990adc968c876dfb",
+      "tailwind.config.ts": "f09cce33dc132493e0d9fecedac8e8ed",
+      "tsconfig.app.json": "9036c95ea413f9a07f9aa5c7650861a6",
+      "tsconfig.json": "bb72695c901d34a52a46196ba258371d",
+      "tsconfig.node.json": "1417fb05378a1d1102f085e60b20db0e",
+      "vite.config.ts": "e782197db61f8f04d7d759dc089ec322",
+      "vitest.config.ts": "9285ab80c07d5cd1a71aa20c1687352a"
+    },
+    "pipeline_version": 8
+  },
+  "tokens": {
+    "color": [
+      {
+        "name": "--background",
+        "raw": "210 20% 98%",
+        "source": "src/index.css"
+      },
+      {
+        "name": "--foreground",
+        "raw": "222 47% 11%",
+        "source": "src/index.css"
+      },
+      {
+        "name": "--card",
+        "raw": "0 0% 100%",
+        "source": "src/index.css"
+      },
+      {
+        "name": "--card-foreground",
+        "raw": "222 47% 11%",
+        "source": "src/index.css"
+      },
+      {
+        "name": "--popover",
+        "raw": "0 0% 100%",
+        "source": "src/index.css"
+      },
+      {
+        "name": "--popover-foreground",
+        "raw": "222 47% 11%",
+        "source": "src/index.css"
+      },
+      {
+        "name": "--primary",
+        "raw": "215 51% 25%",
+        "source": "src/index.css"
+      },
+      {
+        "name": "--primary-foreground",
+        "raw": "210 40% 98%",
+        "source": "src/index.css"
+      },
+      {
+        "name": "--secondary",
+        "raw": "210 40% 96%",
+        "source": "src/index.css"
+      },
+      {
+        "name": "--secondary-foreground",
+        "raw": "222 47% 11%",
+        "source": "src/index.css"
+      },
+      {
+        "name": "--muted",
+        "raw": "210 40% 96%",
+        "source": "src/index.css"
+      },
+      {
+        "name": "--muted-foreground",
+        "raw": "215 19% 35%",
+        "source": "src/index.css"
+      },
+      {
+        "name": "--accent",
+        "raw": "210 100% 96%",
+        "source": "src/index.css"
+      },
+      {
+        "name": "--accent-foreground",
+        "raw": "215 51% 25%",
+        "source": "src/index.css"
+      },
+      {
+        "name": "--destructive",
+        "raw": "0 84% 60%",
+        "source": "src/index.css"
+      },
+      {
+        "name": "--destructive-foreground",
+        "raw": "210 40% 98%",
+        "source": "src/index.css"
+      },
+      {
+        "name": "--success",
+        "raw": "142 76% 36%",
+        "source": "src/index.css"
+      },
+      {
+        "name": "--success-foreground",
+        "raw": "210 40% 98%",
+        "source": "src/index.css"
+      },
+      {
+        "name": "--warning",
+        "raw": "38 92% 50%",
+        "source": "src/index.css"
+      },
+      {
+        "name": "--warning-foreground",
+        "raw": "222 47% 11%",
+        "source": "src/index.css"
+      },
+      {
+        "name": "--info",
+        "raw": "199 89% 48%",
+        "source": "src/index.css"
+      },
+      {
+        "name": "--info-foreground",
+        "raw": "210 40% 98%",
+        "source": "src/index.css"
+      },
+      {
+        "name": "--border",
+        "raw": "214 32% 91%",
+        "source": "src/index.css"
+      },
+      {
+        "name": "--input",
+        "raw": "214 32% 91%",
+        "source": "src/index.css"
+      },
+      {
+        "name": "--ring",
+        "raw": "215 51% 25%",
+        "source": "src/index.css"
+      },
+      {
+        "name": "--brand",
+        "raw": "217 91% 60%",
+        "source": "src/index.css"
+      },
+      {
+        "name": "--brand-foreground",
+        "raw": "0 0% 100%",
+        "source": "src/index.css"
+      },
+      {
+        "name": "--navy",
+        "raw": "215 51% 25%",
+        "source": "src/index.css"
+      },
+      {
+        "name": "--navy-foreground",
+        "raw": "210 40% 98%",
+        "source": "src/index.css"
+      },
+      {
+        "name": "--cream",
+        "raw": "215 20% 92%",
+        "source": "src/index.css"
+      },
+      {
+        "name": "--cream-foreground",
+        "raw": "215 51% 25%",
+        "source": "src/index.css"
+      },
+      {
+        "name": "--canvas",
+        "raw": "210 17% 98%",
+        "source": "src/index.css"
+      },
+      {
+        "name": "--sidebar-background",
+        "raw": "222 47% 11%",
+        "source": "src/index.css"
+      },
+      {
+        "name": "--sidebar-foreground",
+        "raw": "210 40% 98%",
+        "source": "src/index.css"
+      },
+      {
+        "name": "--sidebar-primary",
+        "raw": "217 91% 60%",
+        "source": "src/index.css"
+      },
+      {
+        "name": "--sidebar-primary-foreground",
+        "raw": "210 40% 98%",
+        "source": "src/index.css"
+      },
+      {
+        "name": "--sidebar-accent",
+        "raw": "217 32% 17%",
+        "source": "src/index.css"
+      },
+      {
+        "name": "--sidebar-accent-foreground",
+        "raw": "210 40% 98%",
+        "source": "src/index.css"
+      },
+      {
+        "name": "--sidebar-border",
+        "raw": "217 32% 20%",
+        "source": "src/index.css"
+      },
+      {
+        "name": "--sidebar-ring",
+        "raw": "217 91% 60%",
+        "source": "src/index.css"
+      },
+      {
+        "name": "--chart-1",
+        "raw": "217 91% 40%",
+        "source": "src/index.css"
+      },
+      {
+        "name": "--chart-2",
+        "raw": "142 76% 36%",
+        "source": "src/index.css"
+      },
+      {
+        "name": "--chart-3",
+        "raw": "38 92% 50%",
+        "source": "src/index.css"
+      },
+      {
+        "name": "--chart-4",
+        "raw": "0 84% 60%",
+        "source": "src/index.css"
+      },
+      {
+        "name": "--chart-5",
+        "raw": "199 89% 48%",
+        "source": "src/index.css"
+      },
+      {
+        "name": "--campaign-scrim",
+        "raw": "0 0% 100%",
+        "source": "src/index.css"
+      }
+    ],
+    "radius": [
+      {
+        "name": "--radius",
+        "raw": "0.5rem",
+        "source": "src/index.css"
+      }
+    ],
+    "other": [
+      {
+        "name": "--safe-area-top",
+        "raw": "env(safe-area-inset-top, 0px)",
+        "source": "src/index.css"
+      },
+      {
+        "name": "--safe-area-bottom",
+        "raw": "env(safe-area-inset-bottom, 0px)",
+        "source": "src/index.css"
+      },
+      {
+        "name": "--safe-area-left",
+        "raw": "env(safe-area-inset-left, 0px)",
+        "source": "src/index.css"
+      },
+      {
+        "name": "--safe-area-right",
+        "raw": "env(safe-area-inset-right, 0px)",
+        "source": "src/index.css"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "DynamicPortalRoute",
+      "file": "src/components/DynamicPortalRoute",
+      "import_path": "",
+      "is_default": true
+    },
+    {
+      "name": "AdminLayout",
+      "file": "src/components/admin/AdminLayout",
+      "import_path": "",
+      "is_default": true
+    },
+    {
+      "name": "ProtectedRoute",
+      "file": "src/components/admin/ProtectedRoute",
+      "import_path": "",
+      "is_default": true,
+      "props": [
+        {
+          "name": "children",
+          "type": "any",
+          "required": true
+        },
+        {
+          "name": "allowedRoles",
+          "type": "any",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "WorkingHoursEditor",
+      "file": "src/components/admin/WorkingHoursEditor",
+      "import_path": "",
+      "is_default": true,
+      "props": [
+        {
+          "name": "open",
+          "type": "boolean",
+          "required": true
+        },
+        {
+          "name": "initialValue",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "saving",
+          "type": "boolean"
+        },
+        {
+          "name": "onClose",
+          "type": "function",
+          "required": true
+        },
+        {
+          "name": "onSave",
+          "type": "function",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "AgentNotesPerformance",
+      "file": "src/components/admin/charts/AgentNotesPerformance",
+      "import_path": "",
+      "is_default": true
+    },
+    {
+      "name": "AgentPerformanceCard",
+      "file": "src/components/admin/charts/AgentPerformanceCard",
+      "import_path": "",
+      "is_default": true
+    },
+    {
+      "name": "AgentPerformanceChart",
+      "file": "src/components/admin/charts/AgentPerformanceChart",
+      "import_path": "",
+      "is_default": true
+    },
+    {
+      "name": "AgentsComparisonTable",
+      "file": "src/components/admin/charts/AgentsComparisonTable",
+      "import_path": "",
+      "is_default": true
+    },
+    {
+      "name": "ApplicationTrendsChart",
+      "file": "src/components/admin/charts/ApplicationTrendsChart",
+      "import_path": "",
+      "is_default": true,
+      "props": [
+        {
+          "name": "applications",
+          "type": "any",
+          "required": true
+        },
+        {
+          "name": "days",
+          "type": "number",
+          "default": "30"
+        }
+      ]
+    },
+    {
+      "name": "CountryApplicationsChart",
+      "file": "src/components/admin/charts/CountryApplicationsChart",
+      "import_path": "",
+      "is_default": true,
+      "props": [
+        {
+          "name": "applications",
+          "type": "any",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "PerformanceMetricsCard",
+      "file": "src/components/admin/charts/PerformanceMetricsCard",
+      "import_path": "",
+      "is_default": true,
+      "props": [
+        {
+          "name": "applications",
+          "type": "any",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "RecentActivityFeed",
+      "file": "src/components/admin/charts/RecentActivityFeed",
+      "import_path": "",
+      "is_default": true,
+      "props": [
+        {
+          "name": "activities",
+          "type": "any",
+          "required": true
+        },
+        {
+          "name": "onRefresh",
+          "type": "function"
+        }
+      ]
+    },
+    {
+      "name": "RevenueStatsCard",
+      "file": "src/components/admin/charts/RevenueStatsCard",
+      "import_path": "",
+      "is_default": true,
+      "props": [
+        {
+          "name": "payments",
+          "type": "any",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "StatusDistributionChart",
+      "file": "src/components/admin/charts/StatusDistributionChart",
+      "import_path": "",
+      "is_default": true,
+      "props": [
+        {
+          "name": "applications",
+          "type": "object",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "IdleWarningDialog",
+      "file": "src/components/admin/security/IdleWarningDialog",
+      "import_path": "",
+      "is_default": true,
+      "props": [
+        {
+          "name": "open",
+          "type": "boolean",
+          "required": true
+        },
+        {
+          "name": "onExtend",
+          "type": "function",
+          "required": true
+        },
+        {
+          "name": "onLogout",
+          "type": "function",
+          "required": true
+        },
+        {
+          "name": "countdownSeconds",
+          "type": "number",
+          "default": "120"
+        }
+      ]
+    },
+    {
+      "name": "AgentLayout",
+      "file": "src/components/agent/AgentLayout",
+      "import_path": "",
+      "is_default": true
+    },
+    {
+      "name": "GTagMonitor",
+      "file": "src/components/analytics/GTagMonitor",
+      "import_path": "",
+      "is_default": true
+    },
+    {
+      "name": "AuthGateModal",
+      "file": "src/components/apply/AuthGateModal",
+      "import_path": "",
+      "is_default": true
+    },
+    {
+      "name": "PathChoiceCard",
+      "file": "src/components/apply/PathChoiceCard",
+      "import_path": "",
+      "is_default": true,
+      "props": [
+        {
+          "name": "onBack",
+          "type": "function",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "PriceSummaryCard",
+      "file": "src/components/apply/PriceSummaryCard",
+      "import_path": "",
+      "is_default": true,
+      "props": [
+        {
+          "name": "className",
+          "type": "string",
+          "default": "font-heading-ar font-black text-base sm:text-lg mb-2 text-navy"
+        },
+        {
+          "name": "showDetails",
+          "type": "boolean",
+          "default": "true"
+        },
+        {
+          "name": "onNext",
+          "type": "function"
+        },
+        {
+          "name": "canProceed",
+          "type": "boolean"
+        },
+        {
+          "name": "nextLabel",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "ProcessingProgressBar",
+      "file": "src/components/apply/ProcessingProgressBar",
+      "import_path": "",
+      "is_default": true,
+      "props": [
+        {
+          "name": "status",
+          "type": "any",
+          "required": true
+        },
+        {
+          "name": "processingDays",
+          "type": "number",
+          "required": true
+        },
+        {
+          "name": "submittedAt",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "default": "flex items-center justify-between mb-4"
+        }
+      ]
+    },
+    {
+      "name": "TravelerCounter",
+      "file": "src/components/apply/TravelerCounter",
+      "import_path": "",
+      "is_default": true,
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "value",
+          "type": "number",
+          "required": true
+        },
+        {
+          "name": "price",
+          "type": "number",
+          "required": true
+        },
+        {
+          "name": "min",
+          "type": "number",
+          "default": "0"
+        },
+        {
+          "name": "max",
+          "type": "number",
+          "default": "10"
+        },
+        {
+          "name": "onChange",
+          "type": "function",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "WizardStepper",
+      "file": "src/components/apply/WizardStepper",
+      "import_path": "",
+      "is_default": true,
+      "props": [
+        {
+          "name": "currentStep",
+          "type": "number",
+          "required": true
+        },
+        {
+          "name": "totalSteps",
+          "type": "number",
+          "required": true
+        },
+        {
+          "name": "onStepClick",
+          "type": "function"
+        }
+      ]
+    },
+    {
+      "name": "Step2VisaDetails",
+      "file": "src/components/apply/steps/Step2VisaDetails",
+      "import_path": "",
+      "is_default": true
+    },
+    {
+      "name": "Step4Documents",
+      "file": "src/components/apply/steps/Step4Documents",
+      "import_path": "",
+      "is_default": true
+    },
+    {
+      "name": "Step6Payment",
+      "file": "src/components/apply/steps/Step6Payment",
+      "import_path": "",
+      "is_default": true
+    },
+    {
+      "name": "AdvancedCaptcha",
+      "file": "src/components/auth/AdvancedCaptcha",
+      "import_path": "",
+      "is_default": true,
+      "props": [
+        {
+          "name": "onVerified",
+          "type": "function",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "AppleSignInButton",
+      "file": "src/components/auth/AppleSignInButton",
+      "import_path": "",
+      "is_default": true,
+      "props": [
+        {
+          "name": "iconOnly",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "label",
+          "type": "string"
+        },
+        {
+          "name": "redirectPath",
+          "type": "string"
+        },
+        {
+          "name": "onStart",
+          "type": "function"
+        }
+      ]
+    },
+    {
+      "name": "GoogleSignInButton",
+      "file": "src/components/auth/GoogleSignInButton",
+      "import_path": "",
+      "is_default": true,
+      "props": [
+        {
+          "name": "iconOnly",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "label",
+          "type": "string"
+        },
+        {
+          "name": "redirectPath",
+          "type": "string"
+        },
+        {
+          "name": "onStart",
+          "type": "function"
+        }
+      ]
+    },
+    {
+      "name": "RecoveryCodeVerification",
+      "file": "src/components/auth/RecoveryCodeVerification",
+      "import_path": "",
+      "is_default": true,
+      "props": [
+        {
+          "name": "email",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "onVerify",
+          "type": "function",
+          "required": true
+        },
+        {
+          "name": "onCancel",
+          "type": "function",
+          "required": true
+        },
+        {
+          "name": "onRequestUnlock",
+          "type": "function",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "RecoveryCodesDisplay",
+      "file": "src/components/auth/RecoveryCodesDisplay",
+      "import_path": "",
+      "is_default": true,
+      "props": [
+        {
+          "name": "codes",
+          "type": "any",
+          "required": true
+        },
+        {
+          "name": "onComplete",
+          "type": "function",
+          "required": true
+        },
+        {
+          "name": "isFirstTime",
+          "type": "boolean",
+          "default": "true"
+        }
+      ]
+    },
+    {
+      "name": "SimpleCaptcha",
+      "file": "src/components/auth/SimpleCaptcha",
+      "import_path": "",
+      "is_default": true,
+      "props": [
+        {
+          "name": "onVerified",
+          "type": "function",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "TwoFactorVerification",
+      "file": "src/components/auth/TwoFactorVerification",
+      "import_path": "",
+      "is_default": true,
+      "props": [
+        {
+          "name": "email",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "onVerify",
+          "type": "function",
+          "required": true
+        },
+        {
+          "name": "onResend",
+          "type": "function",
+          "required": true
+        },
+        {
+          "name": "onCancel",
+          "type": "function",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "UnlockRequestForm",
+      "file": "src/components/auth/UnlockRequestForm",
+      "import_path": "",
+      "is_default": true,
+      "props": [
+        {
+          "name": "email",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "userId",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "onSuccess",
+          "type": "function",
+          "required": true
+        },
+        {
+          "name": "onCancel",
+          "type": "function",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "CTASection",
+      "file": "src/components/home/CTASection",
+      "import_path": "",
+      "is_default": true,
+      "props": [
+        {
+          "name": "t",
+          "type": "function",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "CountriesSection",
+      "file": "src/components/home/CountriesSection",
+      "import_path": "",
+      "is_default": true,
+      "props": [
+        {
+          "name": "countries",
+          "type": "any",
+          "required": true
+        },
+        {
+          "name": "visaTypes",
+          "type": "any",
+          "required": true
+        },
+        {
+          "name": "t",
+          "type": "function",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "FAQSection",
+      "file": "src/components/home/FAQSection",
+      "import_path": "",
+      "is_default": true,
+      "props": [
+        {
+          "name": "t",
+          "type": "function",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "FeaturesSection",
+      "file": "src/components/home/FeaturesSection",
+      "import_path": "",
+      "is_default": true,
+      "props": [
+        {
+          "name": "t",
+          "type": "function",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "HeroSection",
+      "file": "src/components/home/HeroSection",
+      "import_path": "",
+      "is_default": true
+    },
+    {
+      "name": "HowItWorksSection",
+      "file": "src/components/home/HowItWorksSection",
+      "import_path": "",
+      "is_default": true,
+      "props": [
+        {
+          "name": "t",
+          "type": "function",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "MiniCTA",
+      "file": "src/components/home/MiniCTA",
+      "import_path": "",
+      "is_default": true
+    },
+    {
+      "name": "PartnersSection",
+      "file": "src/components/home/PartnersSection",
+      "import_path": "",
+      "is_default": true
+    },
+    {
+      "name": "StatsSection",
+      "file": "src/components/home/StatsSection",
+      "import_path": "",
+      "is_default": true
+    },
+    {
+      "name": "StickyCTABar",
+      "file": "src/components/home/StickyCTABar",
+      "import_path": "",
+      "is_default": true
+    },
+    {
+      "name": "TestimonialsSection",
+      "file": "src/components/home/TestimonialsSection",
+      "import_path": "",
+      "is_default": true
+    },
+    {
+      "name": "ComplianceDisclaimer",
+      "file": "src/components/layout/ComplianceDisclaimer",
+      "import_path": "",
+      "is_default": true
+    },
+    {
+      "name": "CookieConsent",
+      "file": "src/components/layout/CookieConsent",
+      "import_path": "",
+      "is_default": true
+    },
+    {
+      "name": "FloatingWhatsApp",
+      "file": "src/components/layout/FloatingWhatsApp",
+      "import_path": "",
+      "is_default": true
+    },
+    {
+      "name": "Footer",
+      "file": "src/components/layout/Footer",
+      "import_path": "",
+      "is_default": true
+    },
+    {
+      "name": "FooterArabic",
+      "file": "src/components/layout/FooterArabic",
+      "import_path": "",
+      "is_default": true
+    },
+    {
+      "name": "Header",
+      "file": "src/components/layout/Header",
+      "import_path": "",
+      "is_default": true
+    },
+    {
+      "name": "HeaderArabic",
+      "file": "src/components/layout/HeaderArabic",
+      "import_path": "",
+      "is_default": true
+    },
+    {
+      "name": "MainLayout",
+      "file": "src/components/layout/MainLayout",
+      "import_path": "",
+      "is_default": true
+    },
+    {
+      "name": "MobileNavDrawer",
+      "file": "src/components/layout/MobileNavDrawer",
+      "import_path": "",
+      "is_default": true,
+      "props": [
+        {
+          "name": "isOpen",
+          "type": "boolean",
+          "required": true
+        },
+        {
+          "name": "onClose",
+          "type": "function",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "PublicLayout",
+      "file": "src/components/layout/PublicLayout",
+      "import_path": "",
+      "is_default": true
+    },
+    {
+      "name": "NoIndex",
+      "file": "src/components/seo/NoIndex",
+      "import_path": "",
+      "is_default": true
+    },
+    {
+      "name": "TourOperatorLayout",
+      "file": "src/components/tourism/TourOperatorLayout",
+      "import_path": "",
+      "is_default": true
+    },
+    {
+      "name": "CountryCodePicker",
+      "file": "src/components/ui/CountryCodePicker",
+      "import_path": "",
+      "is_default": true,
+      "props": [
+        {
+          "name": "value",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "onChange",
+          "type": "function",
+          "required": true
+        },
+        {
+          "name": "isRTL",
+          "type": "boolean",
+          "default": "true"
+        }
+      ]
+    },
+    {
+      "name": "SARSymbol",
+      "file": "src/components/ui/SARSymbol",
+      "import_path": "",
+      "is_default": true,
+      "props": [
+        {
+          "name": "className",
+          "type": "string"
+        },
+        {
+          "name": "size",
+          "type": "enum",
+          "values": [
+            "xs",
+            "sm",
+            "md",
+            "lg",
+            "xl"
+          ],
+          "default": "md"
+        }
+      ]
+    }
+  ],
+  "assets": [
+    {
+      "file": "src/assets/ads/ad-landscape-passport.jpg",
+      "kind": "image",
+      "format": "jpg"
+    },
+    {
+      "file": "src/assets/ads/ad-landscape-schengen.jpg",
+      "kind": "image",
+      "format": "jpg"
+    },
+    {
+      "file": "src/assets/ads/ad-landscape-team.jpg",
+      "kind": "image",
+      "format": "jpg"
+    },
+    {
+      "file": "src/assets/ads/ad-landscape-uk.jpg",
+      "kind": "image",
+      "format": "jpg"
+    },
+    {
+      "file": "src/assets/ads/ad-square-passport.jpg",
+      "kind": "image",
+      "format": "jpg"
+    },
+    {
+      "file": "src/assets/ads/ad-square-schengen.jpg",
+      "kind": "image",
+      "format": "jpg"
+    },
+    {
+      "file": "src/assets/ads/ad-square-team.jpg",
+      "kind": "image",
+      "format": "jpg"
+    },
+    {
+      "file": "src/assets/ads/ad-square-uk.jpg",
+      "kind": "image",
+      "format": "jpg"
+    },
+    {
+      "file": "src/assets/ads/campaign-paris.jpg",
+      "kind": "image",
+      "format": "jpg"
+    },
+    {
+      "file": "src/assets/ads/landmark-bigben.jpg",
+      "kind": "image",
+      "format": "jpg"
+    },
+    {
+      "file": "src/assets/ads/landmark-eiffel.jpg",
+      "kind": "image",
+      "format": "jpg"
+    },
+    {
+      "file": "src/assets/ads/landmark-liberty.jpg",
+      "kind": "image",
+      "format": "jpg"
+    },
+    {
+      "file": "src/assets/destination-dubai.jpg",
+      "kind": "image",
+      "format": "jpg"
+    },
+    {
+      "file": "src/assets/destination-istanbul.jpg",
+      "kind": "image",
+      "format": "jpg"
+    },
+    {
+      "file": "src/assets/destination-london.jpg",
+      "kind": "image",
+      "format": "jpg"
+    },
+    {
+      "file": "src/assets/destination-paris.jpg",
+      "kind": "image",
+      "format": "jpg"
+    },
+    {
+      "file": "src/assets/hero-bg.jpg",
+      "kind": "image",
+      "format": "jpg"
+    },
+    {
+      "file": "src/assets/logo.png.asset.json",
+      "kind": "logo",
+      "format": "png",
+      "pointer": true
+    },
+    {
+      "file": "src/assets/sar-symbol.svg",
+      "kind": "image",
+      "format": "svg"
+    }
+  ]
+}
