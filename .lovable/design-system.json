@@ -2,7 +2,7 @@
   "meta": {
     "name": "visa-faster",
     "package": "@ws-gklbmiodsavvxlpchx6f/616b2e7f-7e45-4cdc-90ea-1c048e4da3b0",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "framework": "react",
     "css_framework": "tailwind",
     "starter_template": "custom_design_system_tailwind",
@@ -15,7 +15,9 @@
       ".gitignore": "d9566700e8535935d03c1583474d790c",
       ".gitleaksignore": "b7fda0d2dc4d561413c841758b7bcea1",
       ".lovable/mcp/manifest.json": "303c89a43aed1d31bee9e31cfde9d417",
+      ".lovable/meta.yaml": "954a981e8847ec1692669dbb04ae9ae9",
       ".lovable/plan.md": "17339fdded4e3a3f70489a6fd1ea2429",
+      ".lovable/sources.yaml": "85650baf848ef209adbcf704cd10bef1",
       "ADS_GUIDE.md": "08e3e70eeacafa07cce0279b9cb6352a",
       "AGENTS.md": "d37d71362932fdf180aa6273cc642f04",
       "README.md": "7cef4bea4577c4fe4c4817d505afab1d",
