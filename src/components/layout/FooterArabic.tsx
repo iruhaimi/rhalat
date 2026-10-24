@@ -78,6 +78,7 @@ export default function FooterArabic() {
   const helpLinks = hasDeleteAccount
     ? helpLinksBase
     : [...helpLinksBase, { id: 'policy-delete-account', value: isRTL ? 'حذف الحساب' : 'Delete Account', url: '/delete-account' }];
+  helpLinks.push({ id: 'help-connect-ai', value: isRTL ? 'ربط المساعد الذكي' : 'Connect an AI assistant', url: '/connect' } as any);
 
   // Get specific general settings
   const companyName = generalSettings.find(s => s.key === 'company_name')?.value || (isRTL ? 'عطلات رحلاتكم للسياحة والسفر' : "Otolat Rahlatcom Travel & Tourism");
