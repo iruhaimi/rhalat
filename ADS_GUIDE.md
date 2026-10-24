@@ -57,7 +57,7 @@ https://visafaster.com/lp/visa?utm_source=google&utm_medium=cpc&utm_campaign=vis
 | Submit Application | Submit lead form | Don't use value | عند تقديم الطلب |
 | Lead Contact | Contact | Don't use value | ضغط CTA / واتساب |
 
-4. لكل تحويل، انسخ **Conversion ID/Label** (يكون بشكل: `AW-16509107883/AbCdEfGhIjK`)
+4. لكل تحويل، انسخ **Conversion ID/Label** (يكون بشكل: `AW-18502036693/AbCdEfGhIjK`)
 
 5. الصق القيم في `src/lib/gtagEvents.ts` (السطور 21–27) واستبدل `REPLACE_ME_*`:
 
