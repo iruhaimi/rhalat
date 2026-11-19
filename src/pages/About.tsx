@@ -123,7 +123,11 @@ export default function About() {
 
   return (
     <div className="min-h-screen bg-canvas">
-      <SEO title="من نحن — عطلات رحلاتكم" description="عطلات رحلاتكم وكالة سفر خاصة تقدم خدمات تجهيز ومراجعة ملفات طلبات التأشيرة والمساعدة في المواعيد وخدمات السفر. لسنا جهة حكومية ولا نصدر التأشيرات." path="/about" />
+      <SEO title="من نحن — عطلات رحلاتكم" description="عطلات رحلاتكم وكالة سفر خاصة تقدم خدمات تجهيز ومراجعة ملفات طلبات التأشيرة والمساعدة في المواعيد وخدمات السفر. لسنا جهة حكومية ولا نصدر التأشيرات." path="/about" jsonLd={{
+        '@context': 'https://schema.org', '@type': 'AboutPage',
+        name: 'من نحن — عطلات رحلاتكم', url: 'https://visafaster.com/about',
+        about: { '@id': 'https://visafaster.com/#agency' },
+      }} />
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-navy via-navy/95 to-brand py-24 overflow-hidden">
         {/* Decorative Elements */}
@@ -257,7 +261,7 @@ export default function About() {
               <div className="relative rounded-3xl overflow-hidden shadow-2xl">
                 <img 
                   src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600&h=400&fit=crop"
-                  alt={isRTL ? 'فريق العمل' : 'Our team'}
+                  alt={isRTL ? 'فريق يتعاون على مراجعة مستندات العمل في المكتب' : 'Colleagues collaborating on document review in an office'}
                   width={600}
                   height={400}
                   loading="lazy"

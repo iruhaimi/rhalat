@@ -86,10 +86,30 @@
     <priority>0.4</priority>
   </url>
   <url>
+    <loc>https://visafaster.com/official-embassies</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://visafaster.com/connect</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://visafaster.com/ads-visa</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
     <loc>https://visafaster.com/country/AT</loc>
     <lastmod>2026-03-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://visafaster.com/apply/AT</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://visafaster.com/country/CH</loc>
@@ -98,10 +118,20 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://visafaster.com/apply/CH</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://visafaster.com/country/PT</loc>
     <lastmod>2026-03-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://visafaster.com/apply/PT</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://visafaster.com/country/NO</loc>
@@ -110,10 +140,20 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://visafaster.com/apply/NO</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://visafaster.com/country/CZ</loc>
     <lastmod>2026-03-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://visafaster.com/apply/CZ</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://visafaster.com/country/PL</loc>
@@ -122,10 +162,20 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://visafaster.com/apply/PL</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://visafaster.com/country/FR</loc>
     <lastmod>2026-04-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://visafaster.com/apply/FR</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://visafaster.com/country/US</loc>
@@ -134,10 +184,20 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://visafaster.com/apply/US</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://visafaster.com/country/JP</loc>
     <lastmod>2026-03-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://visafaster.com/apply/JP</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://visafaster.com/country/GB</loc>
@@ -146,10 +206,20 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://visafaster.com/apply/GB</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://visafaster.com/country/ES</loc>
     <lastmod>2026-03-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://visafaster.com/apply/ES</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://visafaster.com/country/DE</loc>
@@ -158,10 +228,20 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://visafaster.com/apply/DE</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://visafaster.com/country/IT</loc>
     <lastmod>2026-03-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://visafaster.com/apply/IT</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://visafaster.com/country/GR</loc>
@@ -170,40 +250,20 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://visafaster.com/apply/GR</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://visafaster.com/country/NL</loc>
     <lastmod>2026-03-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://visafaster.com/visa/2118a8c6-c2f1-48c3-b17e-b0ea0faae6a9</loc>
-    <lastmod>2026-04-03</lastmod>
+    <loc>https://visafaster.com/apply/NL</loc>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://visafaster.com/visa/1aa03529-78ca-47ca-8083-da4e1cf3f52c</loc>
-    <lastmod>2026-05-09</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://visafaster.com/visa/7da694d4-d1d1-4bde-82a2-f2ef95afad02</loc>
-    <lastmod>2026-05-09</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://visafaster.com/visa/0a6b92e5-d1e8-4e2a-bc53-4813015cebc6</loc>
-    <lastmod>2026-05-09</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://visafaster.com/visa/df3e8f6a-1e6c-4802-a58b-9da7a4b28849</loc>
-    <lastmod>2026-04-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://visafaster.com/blog/asbab-rafd-fiza-schengen</loc>

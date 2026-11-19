@@ -2,7 +2,7 @@ import { writeFileSync } from "fs";
 import { resolve } from "path";
 
 // Runs before `vite dev` and `vite build` via predev/prebuild npm scripts.
-// Outputs public/sitemap.xml with static routes + dynamic country/visa pages.
+// Outputs public/sitemap.xml with indexable public routes and published content.
 
 const BASE_URL = "https://visafaster.com";
 const SUPABASE_URL = "https://hgxvwziiumjxifpgpjce.supabase.co";
@@ -34,6 +34,9 @@ const staticEntries: SitemapEntry[] = [
   { path: "/privacy", changefreq: "yearly", priority: "0.3" },
   { path: "/refund", changefreq: "yearly", priority: "0.3" },
   { path: "/delete-account", changefreq: "yearly", priority: "0.4" },
+  { path: "/official-embassies", changefreq: "monthly", priority: "0.6" },
+  { path: "/connect", changefreq: "monthly", priority: "0.3" },
+  { path: "/ads-visa", changefreq: "monthly", priority: "0.5" },
 ];
 
 async function fetchTable(table: string, select: string, filter = "is_active=eq.true"): Promise<any[]> {
@@ -92,14 +95,21 @@ async function main() {
       changefreq: "weekly",
       priority: "0.8",
     });
+    all.push({
+      path: `/apply/${String(c.code).toUpperCase()}`,
+      changefreq: "monthly",
+      priority: "0.6",
+    });
   }
 
-  const visas = await fetchTable("visa_types", "id,updated_at");
-  for (const v of visas) {
-    if (!v?.id) continue;
+  // Visa types are displayed on country pages; /visa/:id is not an app route.
+  // Account and payment-result routes are not indexable and stay out of this file.
+  const programs = await fetchTable("tour_programs", "id,updated_at", "status=eq.approved");
+  for (const program of programs) {
+    if (!program?.id) continue;
     all.push({
-      path: `/visa/${v.id}`,
-      lastmod: v.updated_at ? String(v.updated_at).slice(0, 10) : undefined,
+      path: `/tourism/${program.id}`,
+      lastmod: program.updated_at ? String(program.updated_at).slice(0, 10) : undefined,
       changefreq: "monthly",
       priority: "0.7",
     });
@@ -116,9 +126,10 @@ async function main() {
     });
   }
 
-  writeFileSync(resolve("public/sitemap.xml"), generateSitemap(all));
+  const unique = [...new Map(all.map(entry => [entry.path, entry])).values()];
+  writeFileSync(resolve("public/sitemap.xml"), generateSitemap(unique));
   console.log(
-    `sitemap.xml written (${all.length} entries — ${staticEntries.length} static, ${countries.length} countries, ${visas.length} visas, ${posts.length} posts)`,
+    `sitemap.xml written (${unique.length} entries — ${staticEntries.length} static, ${countries.length} countries, ${programs.length} programs, ${posts.length} posts)`,
   );
 }
 

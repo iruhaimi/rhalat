@@ -144,7 +144,11 @@ export default function Destinations() {
 
   return (
     <div className="min-h-screen bg-canvas">
-      <SEO title="الوجهات والدول — عطلات رحلاتكم" description="تصفح جميع الدول وأنواع التأشيرات المتاحة مع رسوم وتفاصيل التقديم لكل وجهة." path="/destinations" />
+      <SEO title="الوجهات والدول — عطلات رحلاتكم" description="تصفح جميع الدول وأنواع التأشيرات المتاحة مع رسوم وتفاصيل التقديم لكل وجهة." path="/destinations" jsonLd={{
+        '@context': 'https://schema.org', '@type': 'CollectionPage',
+        name: 'الوجهات والدول — عطلات رحلاتكم', url: 'https://visafaster.com/destinations',
+        about: { '@id': 'https://visafaster.com/#agency' },
+      }} />
       {/* Hero */}
       <section className="relative bg-gradient-to-br from-navy via-navy/95 to-brand py-10 sm:py-12 overflow-hidden">
         {/* Decorative Elements */}
@@ -201,7 +205,7 @@ export default function Destinations() {
                     onChange={(e) => setSearchQuery(e.target.value)}
                   />
                 </div>
-                <Button size="sm" className="rounded-xl px-4 h-10 bg-navy hover:bg-navy/90 text-navy-foreground">
+                <Button size="sm" aria-label={direction === 'rtl' ? 'البحث عن وجهة' : 'Search destinations'} className="rounded-xl px-4 h-10 bg-navy hover:bg-navy/90 text-navy-foreground">
                   <Search className="h-4 w-4" />
                 </Button>
               </div>

@@ -1,5 +1,13 @@
 # Customer experience audit
 
+# SEO corrections
+
+- [x] Correct content labels and sitemap; add TravelAgency, AboutPage and CollectionPage metadata without exposing private account pages.
+- [x] Verify phone/desktop public pages and 55 unique sitemap URLs; mark the content and sitemap findings fixed pending rescan.
+- [ ] Page-specific social previews remain blocked by the static hosting architecture; requires an approved rendering upgrade.
+- [ ] Structured-data finding remains partial: FAQ schema is not added as an SEO-only improvement, and no unverified business image or price range is invented.
+- [ ] Tourism sitemap completeness remains unverified: the existing public data access returns 401; no permissions changed for this SEO task.
+
 - [x] Review the public customer journey in the browser and inspect reported source issues.
 - [x] Fix destination search, payment recovery links, tracking number continuity, missing-image fallbacks, and pricing inconsistencies with the existing fee policy.
 - [x] Verify public search → destination → application entry, tracking prefill, recovery links, and homepage images; 11 pricing/delay tests pass.
