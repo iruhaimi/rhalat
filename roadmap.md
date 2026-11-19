@@ -15,4 +15,10 @@
 
 - [x] Replace the legacy campaign page with the uploaded Arabic brief, dedicated WhatsApp, private-agency disclosure and existing legal/contact information; available at /ads-visa and /lp/visa.
 - [x] Verify campaign links, click-only tracking, desktop/mobile layout and main homepage preservation; three campaign tests pass, no browser runtime errors, build OK.
-- [ ] Activate dedicated Google Ads conversion reporting. Blocked: requires the actual AW conversion ID and conversion label; the supplied number identifies an account, not a conversion.
+- [ ] Activate dedicated Google Ads conversion reporting. Blocked: Ads ID AW-18502036693 is installed; the conversion label is still required.
+
+# Campaign Tag Manager update
+
+- [x] Add GTM-TVXFHMFW to the campaign head without replacing existing Ads or consent settings.
+- [x] Verify campaign loading, consent choices and iOS exclusion; eight tests and browser acceptance/restoration checks pass.
+- [x] Prepared verified changes for saving and publication; deployment completion must be confirmed separately.

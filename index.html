@@ -80,6 +80,17 @@
       }
     </script>
 
+    <!-- Google Tag Manager — campaign only; consent defaults are queued above. -->
+    <script>
+      if (!__isDespiaIOS && /^\/(ads-visa|lp\/visa)\/?$/.test(window.location.pathname)) {
+        window.dataLayer.push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+        var __gtm = document.createElement('script');
+        __gtm.async = true;
+        __gtm.src = 'https://www.googletagmanager.com/gtm.js?id=GTM-TVXFHMFW';
+        document.head.appendChild(__gtm);
+      }
+    </script>
+
     <!-- Google tag (gtag.js) — Google Ads AW-18502036693 -->
     <script>
       // Skip loading gtag.js entirely on Despia iOS (see block above).
