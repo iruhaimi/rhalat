@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link } from '@/lib/router-compat';
 import SEO from '@/components/seo/SEO';
 import { LEGAL } from '@/config/legal';
 import { Button } from '@/components/ui/button';

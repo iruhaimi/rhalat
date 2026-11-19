@@ -1,5 +1,5 @@
-import { useEffect, useState, lazy, Suspense } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useEffect, useState, lazy, Suspense, type ReactElement } from 'react';
+import { useLocation } from '@/lib/router-compat';
 import { supabase } from '@/integrations/supabase/client';
 
 const SecureStaffAuth = lazy(() => import('@/pages/SecureStaffAuth'));
@@ -9,7 +9,7 @@ const SecureStaffAuth = lazy(() => import('@/pages/SecureStaffAuth'));
  * If matches → render SecureStaffAuth.
  * If not    → render NotFound.
  */
-export default function DynamicPortalRoute({ fallback }: { fallback: JSX.Element }) {
+export default function DynamicPortalRoute({ fallback }: { fallback: ReactElement }) {
   const location = useLocation();
   const [status, setStatus] = useState<'loading' | 'match' | 'no-match'>('loading');
 

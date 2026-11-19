@@ -10,7 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { Sparkles, Send, Loader2, Plus, AlertTriangle, Wrench } from 'lucide-react';
 import { toast } from 'sonner';
 import ReactMarkdown from 'react-markdown';
-import { Link } from 'react-router-dom';
+import { Link } from '@/lib/router-compat';
 
 const MAX_LEN = 4000;
 const sanitize = (s: string) => s.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '').slice(0, MAX_LEN);

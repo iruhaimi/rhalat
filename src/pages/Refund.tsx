@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { Link } from 'react-router-dom';
+import { Link } from '@/lib/router-compat';
 import { filterArabicChars, filterNonNumeric } from '@/lib/inputFilters';
 import { 
   RotateCcw, 
@@ -628,7 +628,7 @@ export default function Refund() {
                       </Label>
                       <select
                         id="reason"
-                        className="w-full h-10 px-3 py-2 border border-input bg-background rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                        className="w-full h-10 px-3 py-2 border border-input bg-background rounded-md text-sm focus:outline-hidden focus:ring-2 focus:ring-ring"
                         value={formData.reason}
                         onChange={(e) => handleFormChange('reason', e.target.value)}
                         required

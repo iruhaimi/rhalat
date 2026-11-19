@@ -20,7 +20,7 @@ import {
   ExternalLink,
   RefreshCw
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link } from '@/lib/router-compat';
 import { useUrgentTasks } from '@/hooks/useUrgentTasks';
 import { formatDistanceToNow } from 'date-fns';
 import { ar } from 'date-fns/locale';

@@ -1,0 +1,16 @@
+{"functions":[
+{"name":"admin-ai-agent","classification":"external caller","signal":"called from src/ and from store-installed mobile app builds that keep the current URL","outcome":"left"},
+{"name":"auth-email-hook","classification":"webhook receiver","signal":"no src/ caller; invoked by the sign-in email system","outcome":"left"},
+{"name":"create-staff-user","classification":"external caller","signal":"called from src/ and from store-installed mobile app builds","outcome":"left"},
+{"name":"delete-account","classification":"external caller","signal":"required account-deletion endpoint used by store-installed mobile app builds","outcome":"left"},
+{"name":"delete-staff-user","classification":"external caller","signal":"called from src/ and from store-installed mobile app builds","outcome":"left"},
+{"name":"generate-staff-recovery-codes","classification":"external caller","signal":"referenced in database migrations and used by installed app builds","outcome":"left"},
+{"name":"handle-email-events","classification":"webhook receiver","signal":"no src/ caller; receives email delivery events","outcome":"left"},
+{"name":"mcp","classification":"MCP server","signal":"AI connection endpoint with a fixed public URL","outcome":"left"},
+{"name":"preview-transactional-email","classification":"external caller","signal":"no src/ caller; platform email preview endpoint","outcome":"left"},
+{"name":"rotate-portal-secret","classification":"external caller","signal":"staff security operation used by installed app builds; project rule keeps email-sending functions authenticated on the backend","outcome":"left"},
+{"name":"send-application-confirmation","classification":"external caller","signal":"project rule keeps feature emails in authenticated backend functions; used by installed app builds","outcome":"left"},
+{"name":"send-push-notification","classification":"unknown","signal":"no src/ caller; default external","outcome":"left"},
+{"name":"send-staff-2fa","classification":"external caller","signal":"referenced in database migrations; project rule keeps email sending on backend functions","outcome":"left"},
+{"name":"staff-daily-report","classification":"cron target","signal":"no src/ caller; daily-named scheduled report","outcome":"left"}
+]}

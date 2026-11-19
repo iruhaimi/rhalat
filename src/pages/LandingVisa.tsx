@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link } from '@/lib/router-compat';
 import { motion, useReducedMotion } from 'framer-motion';
 import { CalendarCheck, FileText, Plane, ShieldCheck, MessageCircle, ArrowLeft, Mail, MapPin, Clock, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';

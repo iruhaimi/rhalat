@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation } from "@/lib/router-compat";
 import { isDespiaIOS } from "@/lib/despia";
 
 const GTAG_ID = "AW-18502036693";

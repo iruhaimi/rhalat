@@ -1,9 +1,7 @@
-import { readFileSync } from 'node:fs';
 import { runInNewContext } from 'node:vm';
 import { describe, expect, it } from 'vitest';
 
-const html = readFileSync('index.html', 'utf8');
-const scripts = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(match => match[1]);
+import { HEAD_SCRIPTS_IN_ORDER as scripts } from '@/lib/headScripts';
 
 function initialize(pathname: string, userAgent = 'Mozilla/5.0') {
   const loaded: string[] = [];

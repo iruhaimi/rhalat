@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { ar } from 'date-fns/locale';
-import { Link } from 'react-router-dom';
+import { Link } from '@/lib/router-compat';
 import {
   DropdownMenu,
   DropdownMenuContent,

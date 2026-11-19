@@ -1,0 +1,16 @@
+{"customizations":[
+{"token":"HSL semantic colors light and dark","source":"src/index.css","reappliedIn":"src/styles.css"},
+{"token":"success/warning/info colors","source":"src/index.css","reappliedIn":"src/styles.css"},
+{"token":"brand/navy/cream/canvas colors","source":"src/index.css","reappliedIn":"src/styles.css"},
+{"token":"custom sidebar and chart colors","source":"src/index.css","reappliedIn":"src/styles.css"},
+{"token":"rounded-4xl through rounded-7xl","source":"tailwind.config.ts","reappliedIn":"src/styles.css"},
+{"token":"brand font families","source":"tailwind.config.ts","reappliedIn":"src/styles.css"},
+{"token":"fade-in and slide-in-right animations","source":"tailwind.config.ts","reappliedIn":"src/styles.css"},
+{"token":"centered container","source":"tailwind.config.ts","reappliedIn":"src/styles.css"},
+{"token":"RTL/LTR typography utilities","source":"src/index.css","reappliedIn":"src/styles.css"},
+{"token":"layout, card, gradient and RTL flip utilities","source":"src/index.css","reappliedIn":"src/styles.css"},
+{"token":"wizard, counter, dropzone and timeline components","source":"src/index.css","reappliedIn":"src/styles.css"},
+{"token":"safe-area variables and scrollbar styling","source":"src/index.css","reappliedIn":"src/styles.css"},
+{"token":"admin preference toggles","source":"src/index.css","reappliedIn":"src/styles.css"},
+{"token":"isolated campaign styling","source":"src/index.css","reappliedIn":"src/styles.css"}
+]}

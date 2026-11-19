@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link } from '@/lib/router-compat';
 import { Info } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { LEGAL } from '@/config/legal';

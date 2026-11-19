@@ -1,0 +1,259 @@
+/*
+ * Tailwind v4 entry: config lives here, with no tailwind.config.js or PostCSS plugin.
+ * Web fonts load from the document head; this file only names their families.
+ * Brand tokens stay HSL channel triplets so existing hsl(var(--token)) styles keep working.
+ */
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-4xl: 2rem;
+  --radius-5xl: 2.5rem;
+  --radius-6xl: 3rem;
+  --radius-7xl: 3.5rem;
+
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --color-ring-offset-background: hsl(var(--background));
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-success: hsl(var(--success));
+  --color-success-foreground: hsl(var(--success-foreground));
+  --color-warning: hsl(var(--warning));
+  --color-warning-foreground: hsl(var(--warning-foreground));
+  --color-info: hsl(var(--info));
+  --color-info-foreground: hsl(var(--info-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-sidebar: hsl(var(--sidebar-background));
+  --color-sidebar-foreground: hsl(var(--sidebar-foreground));
+  --color-sidebar-primary: hsl(var(--sidebar-primary));
+  --color-sidebar-primary-foreground: hsl(var(--sidebar-primary-foreground));
+  --color-sidebar-accent: hsl(var(--sidebar-accent));
+  --color-sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));
+  --color-sidebar-border: hsl(var(--sidebar-border));
+  --color-sidebar-ring: hsl(var(--sidebar-ring));
+  --color-chart-1: hsl(var(--chart-1));
+  --color-chart-2: hsl(var(--chart-2));
+  --color-chart-3: hsl(var(--chart-3));
+  --color-chart-4: hsl(var(--chart-4));
+  --color-chart-5: hsl(var(--chart-5));
+  --color-brand: hsl(var(--brand));
+  --color-brand-foreground: hsl(var(--brand-foreground));
+  --color-navy: hsl(var(--navy));
+  --color-navy-foreground: hsl(var(--navy-foreground));
+  --color-cream: hsl(var(--cream));
+  --color-cream-foreground: hsl(var(--cream-foreground));
+  --color-canvas: hsl(var(--canvas));
+
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-display: 'Syne', 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-numeric: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+  --font-jakarta: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+  --font-cairo: 'Cairo', 'IBM Plex Sans Arabic', system-ui, sans-serif;
+  --font-tajawal: 'Tajawal', 'IBM Plex Sans Arabic', system-ui, sans-serif;
+  --font-heading-ar: 'Cairo', 'IBM Plex Sans Arabic', system-ui, sans-serif;
+
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+  --animate-fade-in: fade-in 0.5s ease-out;
+  --animate-slide-in-right: slide-in-right 0.3s ease-out;
+}
+
+@keyframes accordion-down { from { height: 0; } to { height: var(--radix-accordion-content-height); } }
+@keyframes accordion-up { from { height: var(--radix-accordion-content-height); } to { height: 0; } }
+@keyframes fade-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes slide-in-right { from { transform: translateX(100%); } to { transform: translateX(0); } }
+
+@utility container {
+  margin-inline: auto;
+  padding-inline: 2rem;
+  @media (width >= 96rem) { max-width: 1400px; }
+}
+
+:root {
+  --background: 210 20% 98%;
+  --foreground: 222 47% 11%;
+  --card: 0 0% 100%;
+  --card-foreground: 222 47% 11%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222 47% 11%;
+  --primary: 215 51% 25%;
+  --primary-foreground: 210 40% 98%;
+  --secondary: 210 40% 96%;
+  --secondary-foreground: 222 47% 11%;
+  --muted: 210 40% 96%;
+  --muted-foreground: 215 19% 35%;
+  --accent: 210 100% 96%;
+  --accent-foreground: 215 51% 25%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 210 40% 98%;
+  --success: 142 76% 36%;
+  --success-foreground: 210 40% 98%;
+  --warning: 38 92% 50%;
+  --warning-foreground: 222 47% 11%;
+  --info: 199 89% 48%;
+  --info-foreground: 210 40% 98%;
+  --border: 214 32% 91%;
+  --input: 214 32% 91%;
+  --ring: 215 51% 25%;
+  --radius: 0.5rem;
+  --brand: 217 91% 60%;
+  --brand-foreground: 0 0% 100%;
+  --navy: 215 51% 25%;
+  --navy-foreground: 210 40% 98%;
+  --cream: 215 20% 92%;
+  --cream-foreground: 215 51% 25%;
+  --canvas: 210 17% 98%;
+  --sidebar-background: 222 47% 11%;
+  --sidebar-foreground: 210 40% 98%;
+  --sidebar-primary: 217 91% 60%;
+  --sidebar-primary-foreground: 210 40% 98%;
+  --sidebar-accent: 217 32% 17%;
+  --sidebar-accent-foreground: 210 40% 98%;
+  --sidebar-border: 217 32% 20%;
+  --sidebar-ring: 217 91% 60%;
+  --chart-1: 217 91% 40%;
+  --chart-2: 142 76% 36%;
+  --chart-3: 38 92% 50%;
+  --chart-4: 0 84% 60%;
+  --chart-5: 199 89% 48%;
+  --safe-area-top: env(safe-area-inset-top, 0px);
+  --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-area-left: env(safe-area-inset-left, 0px);
+  --safe-area-right: env(safe-area-inset-right, 0px);
+}
+
+.dark {
+  --background: 222 47% 5%;
+  --foreground: 210 40% 98%;
+  --card: 222 47% 8%;
+  --card-foreground: 210 40% 98%;
+  --popover: 222 47% 8%;
+  --popover-foreground: 210 40% 98%;
+  --primary: 217 91% 60%;
+  --primary-foreground: 222 47% 5%;
+  --secondary: 217 32% 17%;
+  --secondary-foreground: 210 40% 98%;
+  --muted: 217 32% 17%;
+  --muted-foreground: 215 20% 65%;
+  --accent: 217 32% 17%;
+  --accent-foreground: 210 40% 98%;
+  --destructive: 0 62% 30%;
+  --destructive-foreground: 210 40% 98%;
+  --success: 142 76% 30%;
+  --success-foreground: 210 40% 98%;
+  --warning: 38 92% 40%;
+  --warning-foreground: 210 40% 98%;
+  --info: 199 89% 40%;
+  --info-foreground: 210 40% 98%;
+  --border: 217 32% 17%;
+  --input: 217 32% 17%;
+  --ring: 217 91% 60%;
+  --sidebar-background: 222 47% 3%;
+  --sidebar-foreground: 210 40% 98%;
+  --sidebar-primary: 217 91% 60%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 217 32% 12%;
+  --sidebar-accent-foreground: 210 40% 98%;
+  --sidebar-border: 217 32% 12%;
+  --sidebar-ring: 217 91% 60%;
+}
+
+@layer base {
+  * { border-color: var(--color-border); }
+  body { background-color: var(--color-background); color: var(--color-foreground); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+  html[dir="rtl"] body { font-family: 'IBM Plex Sans Arabic', system-ui, -apple-system, sans-serif; }
+  html[dir="ltr"] body { font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+  h1, h2, h3, h4, h5, h6 { font-weight: 600; letter-spacing: -0.025em; }
+  html[dir="rtl"] h1, html[dir="rtl"] h2, html[dir="rtl"] h3, html[dir="rtl"] h4, html[dir="rtl"] h5, html[dir="rtl"] h6 { letter-spacing: 0; }
+  button:not(:disabled), [role="button"]:not(:disabled) { cursor: pointer; }
+}
+
+@utility font-display { font-family: 'Syne', 'Plus Jakarta Sans', system-ui, sans-serif; font-feature-settings: 'ss01', 'tnum'; }
+@utility font-heading-ar {
+  html[dir="rtl"] & { font-family: 'Cairo', 'IBM Plex Sans Arabic', system-ui, sans-serif; }
+  html[dir="ltr"] & { font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif; }
+}
+@utility font-body-ar {
+  html[dir="rtl"] & { font-family: 'Tajawal', 'IBM Plex Sans Arabic', system-ui, sans-serif; }
+  html[dir="ltr"] & { font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif; }
+}
+@utility container-section { max-width: 80rem; margin-inline: auto; padding-inline: 1rem; @media (width >= 40rem) { padding-inline: 1.5rem; } @media (width >= 64rem) { padding-inline: 2rem; } }
+@utility glass-card { background-color: color-mix(in oklab, var(--color-card) 80%, transparent); backdrop-filter: blur(4px); border: 1px solid color-mix(in oklab, var(--color-border) 50%, transparent); box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); }
+@utility gradient-primary { background-image: linear-gradient(to right, var(--color-primary), color-mix(in oklab, var(--color-primary) 80%, transparent)); }
+@utility gradient-hero {
+  background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(217 91% 30%) 100%);
+  html[dir="rtl"] & { background: linear-gradient(-135deg, hsl(var(--primary)) 0%, hsl(217 91% 30%) 100%); }
+}
+@utility rtl-flip { html[dir="rtl"] & { transform: scaleX(-1); } }
+
+@layer components {
+  .trust-badge { @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-success/10 text-success text-sm font-medium; }
+  .wizard-step { @apply flex items-center gap-3; }
+  .wizard-step-circle { @apply flex h-10 w-10 items-center justify-center rounded-full border-2 text-sm font-semibold transition-all; }
+  .wizard-step-circle.active { @apply border-primary bg-primary text-primary-foreground; }
+  .wizard-step-circle.completed { @apply border-success bg-success text-success-foreground; }
+  .wizard-step-circle.pending { @apply border-border bg-background text-muted-foreground; }
+  .counter-btn { @apply flex h-10 w-10 items-center justify-center rounded-full border border-border bg-background text-foreground transition-all hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed; }
+  html[dir="rtl"] .space-x-2 > * + * { margin-right: 0.5rem; margin-left: 0; }
+  html[dir="rtl"] .space-x-4 > * + * { margin-right: 1rem; margin-left: 0; }
+  html[dir="rtl"] .ml-auto { margin-left: 0; margin-right: auto; }
+  html[dir="rtl"] .mr-auto { margin-right: 0; margin-left: auto; }
+  .dropzone { @apply relative rounded-lg border-2 border-dashed border-border bg-muted/30 p-8 text-center transition-all hover:border-primary/50 hover:bg-muted/50; }
+  .dropzone.active { @apply border-primary bg-primary/5; }
+  .timeline-item { @apply relative pb-8 last:pb-0; }
+  .timeline-item::before { content: ''; @apply absolute top-4 bottom-0 w-0.5 bg-border; }
+  html[dir="ltr"] .timeline-item::before { left: 1rem; }
+  html[dir="rtl"] .timeline-item::before { right: 1rem; }
+  .timeline-item:last-child::before { display: none; }
+}
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background-color: color-mix(in oklab, var(--color-muted) 50%, transparent); }
+::-webkit-scrollbar-thumb { background-color: color-mix(in oklab, var(--color-muted-foreground) 30%, transparent); border-radius: 9999px; }
+::-webkit-scrollbar-thumb:hover { background-color: color-mix(in oklab, var(--color-muted-foreground) 50%, transparent); }
+
+html.admin-compact main .p-6 { padding: 1rem; }
+html.admin-compact main .space-y-6 > * + * { margin-top: 1rem; }
+html.admin-compact main .gap-6 { gap: 1rem; }
+html.admin-compact main .py-12 { padding-top: 2rem; padding-bottom: 2rem; }
+html.admin-no-motion *, html.admin-no-motion *::before, html.admin-no-motion *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+html.admin-hide-stats main [data-admin-stats="true"] { display: none !important; }
+html.admin-hide-role-badges main [data-role-badge="true"] { display: none !important; }
+html.admin-hide-urgent main [data-urgent-banner="true"] { display: none !important; }
+
+.ads-campaign {
+  --success: 145 65% 28%;
+  --success-foreground: 0 0% 100%;
+  --campaign-scrim: 0 0% 100%;
+  font-family: 'IBM Plex Sans Arabic', system-ui, sans-serif;
+  letter-spacing: 0;
+  padding-bottom: calc(5.5rem + var(--safe-area-bottom, 0px));
+}
+.ads-campaign h1, .ads-campaign h2, .ads-campaign h3 { letter-spacing: 0; }
+.ads-hero-scrim { background: hsl(var(--campaign-scrim) / 0.82); }
+.ads-mobile-cta { padding-bottom: calc(0.75rem + var(--safe-area-bottom, 0px)); }
+@media (min-width: 768px) {
+  .ads-campaign { padding-bottom: 0; }
+  .ads-hero-scrim { background: hsl(var(--campaign-scrim) / 0.67); }
+}

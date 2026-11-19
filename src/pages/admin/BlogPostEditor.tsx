@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "@/lib/router-compat";
 import MDEditor from "@uiw/react-md-editor";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";

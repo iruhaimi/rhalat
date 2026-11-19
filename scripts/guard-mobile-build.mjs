@@ -95,6 +95,7 @@ function scanContent(content, relativePath) {
     for (const name of [
       '@lovable.dev/vite-plugin-dev-server-bridge',
       '@lovable.dev/vite-plugin-hmr-gate',
+      '@lovable.dev/vite-tanstack-config',
     ]) {
       if (Object.hasOwn(manifest.devDependencies ?? {}, name)) {
         manifest.devDependencies[name.replace('@lovable.dev/', '@preview-tooling/')] = manifest.devDependencies[name];
@@ -144,7 +145,8 @@ function scanDirectory(directory) {
 
 for (const target of scanTargets) {
   const fullPath = join(root, target);
-  const stats = statSync(fullPath);
+  let stats;
+  try { stats = statSync(fullPath); } catch { continue; }
   if (stats.isDirectory()) {
     scanDirectory(fullPath);
   } else if (stats.isFile()) {

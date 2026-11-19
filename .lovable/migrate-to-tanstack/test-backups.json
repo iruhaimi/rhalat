@@ -1,0 +1,1 @@
+{ "files": ["adsCampaign.test.ts","applicationOverdue.test.ts","applicationPricing.test.ts","example.test.ts","setup.ts","campaignTagManager.test.ts","nativeBuildGuard.test.ts"] }

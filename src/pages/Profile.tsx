@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from '@/lib/router-compat';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { User, Phone, Save, Loader2, Camera, Upload, FileText, RotateCcw, ChevronRight, ChevronLeft, Trash2, AlertTriangle } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link } from '@/lib/router-compat';
 import CountryCodePicker from '@/components/ui/CountryCodePicker';
 import { filterNonNumeric as filterPhoneNonNumeric } from '@/lib/inputFilters';
 import { parsePhoneWithCountry, buildE164Phone, isValidNationalPhone } from '@/lib/phone';

@@ -40,7 +40,7 @@ import { format } from 'date-fns';
 import { ar } from 'date-fns/locale';
 import { toast } from 'sonner';
 import { useAuth } from '@/contexts/AuthContext';
-import { Link } from 'react-router-dom';
+import { Link } from '@/lib/router-compat';
 import JSZip from 'jszip';
 import { AgentPerformanceReport } from '@/components/admin/charts/AgentPerformanceReport';
 import { UrgentTasksDashboard } from '@/components/admin/UrgentTasksDashboard';

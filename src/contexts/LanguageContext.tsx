@@ -426,18 +426,24 @@ const translations: Record<Language, Record<string, string>> = {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [language, setLanguageState] = useState<Language>(() => {
-    const saved = localStorage.getItem('language');
-    return (saved as Language) || 'ar';
-  });
+  // Server render uses Arabic; the saved choice is restored after the page loads.
+  const [language, setLanguageState] = useState<Language>('ar');
+  const [restored, setRestored] = useState(false);
 
   const direction: Direction = language === 'ar' ? 'rtl' : 'ltr';
 
   useEffect(() => {
+    const saved = localStorage.getItem('language');
+    if (saved === 'ar' || saved === 'en') setLanguageState(saved);
+    setRestored(true);
+  }, []);
+
+  useEffect(() => {
+    if (!restored) return;
     localStorage.setItem('language', language);
     document.documentElement.lang = language;
     document.documentElement.dir = direction;
-  }, [language, direction]);
+  }, [language, direction, restored]);
 
   const setLanguage = (lang: Language) => {
     setLanguageState(lang);

@@ -52,7 +52,7 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
           "text-foreground/80 hover:text-foreground",
           "transition-all duration-200 ease-out",
           "hover:bg-accent hover:scale-110",
-          "focus:outline-none focus:ring-2 focus:ring-primary/30 focus:ring-offset-1",
+          "focus:outline-hidden focus:ring-2 focus:ring-primary/30 focus:ring-offset-1",
           "aria-selected:opacity-100"
         ),
         day_range_end: "day-range-end",

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import SEO from '@/components/seo/SEO';
-import { Link } from 'react-router-dom';
+import { Link } from '@/lib/router-compat';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';

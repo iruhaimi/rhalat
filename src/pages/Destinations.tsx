@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import SEO from '@/components/seo/SEO';
-import { useSearchParams, Link } from 'react-router-dom';
+import { useSearchParams, Link } from '@/lib/router-compat';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Search, 
