@@ -193,7 +193,16 @@ export default function FAQ() {
 
   return (
     <div className="min-h-screen bg-canvas">
-      <SEO title="الأسئلة الشائعة — عطلات رحلاتكم" description="إجابات على أكثر الأسئلة شيوعًا حول التقديم على التأشيرات، المستندات، الأسعار، وأوقات المعالجة." path="/faq" />
+      <SEO title="الأسئلة الشائعة — عطلات رحلاتكم" description="إجابات على أكثر الأسئلة شيوعًا حول التقديم على التأشيرات، المستندات، الأسعار، وأوقات المعالجة." path="/faq" jsonLd={{
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        inLanguage: "ar",
+        mainEntity: categories.flatMap((c) => c.questions.map((q) => ({
+          "@type": "Question",
+          name: q.qAr,
+          acceptedAnswer: { "@type": "Answer", text: q.aAr },
+        }))),
+      }} />
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-navy via-navy/95 to-brand py-20 overflow-hidden">
         {/* Decorative Elements */}
