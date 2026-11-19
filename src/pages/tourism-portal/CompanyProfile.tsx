@@ -111,7 +111,7 @@ export default function TourismCompanyProfile() {
         <CardContent className="space-y-4">
           <div className="flex items-center gap-4">
             {op.logo_url && (
-              <img src={op.logo_url} alt="logo" className="h-20 w-20 rounded-lg object-cover border" />
+              <img src={op.logo_url} alt={`شعار ${op.company_name ?? "الشركة"}`} className="h-20 w-20 rounded-lg object-cover border" />
             )}
             <Label className="cursor-pointer">
               <input type="file" accept="image/*" className="hidden" onChange={handleLogoUpload} />

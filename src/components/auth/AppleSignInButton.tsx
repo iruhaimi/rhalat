@@ -7,7 +7,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
 import { Capacitor } from '@capacitor/core';
-import { SignInWithApple, type SignInWithAppleOptions } from '@capacitor-community/apple-sign-in';
+import type { SignInWithAppleOptions } from '@capacitor-community/apple-sign-in';
 import { cn } from '@/lib/utils';
 import { APP_PUBLIC_ORIGIN, getExternalAuthOrigin, isNativeMobileApp } from '@/lib/platform';
 import { sanitizeRedirect, resolvePostAuthRedirect, stashPendingRedirect } from '@/lib/safeRedirect';
@@ -65,6 +65,8 @@ export default function AppleSignInButton({
           scopes: 'email name',
           state: Math.random().toString(36).slice(2),
         };
+        if (import.meta.env.SSR) return;
+        const { SignInWithApple } = await import('@capacitor-community/apple-sign-in');
         const res = await SignInWithApple.authorize(options);
         const idToken = res.response?.identityToken;
         if (!idToken) {

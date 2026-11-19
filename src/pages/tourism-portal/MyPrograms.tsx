@@ -315,7 +315,7 @@ export default function MyPrograms() {
                 <Label>صورة الغلاف</Label>
                 <div className="flex items-center gap-3">
                   {editing.cover_image_url && (
-                    <img src={editing.cover_image_url} className="h-16 w-24 object-cover rounded border" alt="cover" />
+                    <img src={editing.cover_image_url} className="h-16 w-24 object-cover rounded border" alt={editing.title ? `صورة غلاف برنامج ${editing.title}` : "صورة غلاف البرنامج"} />
                   )}
                   <Label className="cursor-pointer">
                     <input type="file" accept="image/*" className="hidden" onChange={handleCover} />

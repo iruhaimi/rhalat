@@ -7,7 +7,10 @@ import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
 import { Capacitor } from '@capacitor/core';
-import { SocialLogin } from '@capgo/capacitor-social-login';
+const loadSocialLogin = async () => {
+  if (import.meta.env.SSR) throw new Error('Native sign-in is browser-only');
+  return (await import('@capgo/capacitor-social-login')).SocialLogin;
+};
 import { cn } from '@/lib/utils';
 import { isNativeMobileApp, isIOSApp, isAndroidApp } from '@/lib/platform';
 import { sanitizeRedirect, resolvePostAuthRedirect, stashPendingRedirect } from '@/lib/safeRedirect';
@@ -70,7 +73,7 @@ export default function GoogleSignInButton({
       // Play Store best-practice on Android).
       if (Capacitor.isNativePlatform() && (Capacitor.getPlatform() === 'ios' || Capacitor.getPlatform() === 'android')) {
         try {
-          await SocialLogin.initialize({
+          await (await loadSocialLogin()).initialize({
             google: {
               iOSClientId: '96772078009-k6qa0s0hg6r62dmgg5vptjmuik28vkp6.apps.googleusercontent.com',
               iOSServerClientId: GOOGLE_WEB_CLIENT_ID,
@@ -84,7 +87,7 @@ export default function GoogleSignInButton({
 
         const requestNativeGoogleToken = async () => {
           const { nonce, hashedNonce } = await generateNonce();
-          const res = await SocialLogin.login({
+          const res = await (await loadSocialLogin()).login({
             provider: 'google',
             options: {
               scopes: ['email', 'profile', 'openid'],
@@ -102,7 +105,7 @@ export default function GoogleSignInButton({
 
         const clearGoogleSession = async () => {
           try {
-            await SocialLogin.logout({ provider: 'google' });
+            await (await loadSocialLogin()).logout({ provider: 'google' });
           } catch {
             // Nothing to clear, or the native SDK was not signed in yet.
           }

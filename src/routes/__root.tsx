@@ -51,7 +51,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:title", content: SITE_TITLE },
       { property: "og:description", content: SOCIAL_DESCRIPTION },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: "https://visafaster.com/" },
       { property: "og:site_name", content: "عطلات رحلاتكم" },
       { property: "og:locale", content: "ar_SA" },
       { name: "twitter:card", content: "summary_large_image" },
