@@ -49,7 +49,7 @@ import { useAdminNotifications } from '@/hooks/useAdminNotifications';
 
 interface Agent {
   id: string;
-  full_name: string;
+  full_name: string | null;
   avatar_url: string | null;
 }
 
@@ -58,12 +58,12 @@ interface PendingTransfer {
   application_id: string;
   reason: string;
   created_at: string;
-  from_agent: { full_name: string } | null;
-  to_agent: { full_name: string } | null;
+  from_agent: { full_name: string | null } | null;
+  to_agent: { full_name: string | null } | null;
   application: {
     id: string;
     visa_type: { name: string; country: { name: string } } | null;
-    profile: { full_name: string } | null;
+    profile: { full_name: string | null } | null;
   } | null;
 }
 
@@ -74,11 +74,11 @@ interface PendingWork {
   file_path: string;
   notes: string | null;
   created_at: string;
-  agent: { full_name: string } | null;
+  agent: { full_name: string | null } | null;
   application: {
     id: string;
     visa_type: { name: string; country: { name: string } } | null;
-    profile: { full_name: string } | null;
+    profile: { full_name: string | null } | null;
   } | null;
 }
 
@@ -88,7 +88,7 @@ interface UnassignedApp {
   created_at: string;
   submitted_at: string | null;
   visa_type: { name: string; country: { name: string } } | null;
-  profile: { full_name: string } | null;
+  profile: { full_name: string | null } | null;
 }
 
 interface AgentNote {
@@ -100,7 +100,7 @@ interface AgentNote {
   application: {
     id: string;
     visa_type: { name: string; country: { name: string } } | null;
-    profile: { full_name: string } | null;
+    profile: { full_name: string | null } | null;
   } | null;
 }
 
@@ -470,14 +470,15 @@ export function QuickActionsPanel() {
   const handleReplyNote = async () => {
     if (!selectedNote || !replyContent.trim()) return;
     
+    if (!profile) return;
     setActionLoading('reply');
     try {
       const { error } = await supabase
         .from('application_notes')
         .insert({
           application_id: selectedNote.application_id,
-          author_id: profile?.id,
-          author_name: profile?.full_name || 'مشرف',
+          author_id: profile.id,
+          author_name: profile.full_name || 'مشرف',
           content: replyContent,
           note_type: 'admin',
         });

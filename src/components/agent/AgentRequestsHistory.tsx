@@ -28,7 +28,7 @@ interface TransferRequest {
   admin_notes: string | null;
   created_at: string;
   reviewed_at: string | null;
-  to_agent: { full_name: string } | null;
+  to_agent: { full_name: string | null } | null;
 }
 
 interface WorkSubmission {

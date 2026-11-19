@@ -278,7 +278,7 @@ const Profile = () => {
             <Avatar className="h-24 w-24 ring-4 ring-white/20">
               <AvatarImage src={profile?.avatar_url || ''} />
               <AvatarFallback className="text-2xl bg-white/15 text-white font-display font-black">
-                {getInitials(profile?.full_name)}
+                {getInitials(profile?.full_name ?? null)}
               </AvatarFallback>
             </Avatar>
             

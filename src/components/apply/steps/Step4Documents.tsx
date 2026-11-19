@@ -163,7 +163,7 @@ export default function Step4Documents() {
       p_visa_type_id: applicationData.visaTypeId,
       p_travel_date: applicationData.travelDate
         ? applicationData.travelDate.toISOString().split('T')[0]
-        : null,
+        : undefined,
       p_draft_data: {},
     });
     if (error || !newId) return null;

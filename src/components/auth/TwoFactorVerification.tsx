@@ -64,6 +64,7 @@ export default function TwoFactorVerification({
       const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
       return () => clearTimeout(timer);
     }
+    return undefined;
   }, [countdown]);
 
   const handleChange = (index: number, value: string) => {
@@ -187,7 +188,7 @@ export default function TwoFactorVerification({
               {code.map((digit, index) => (
                 <Input
                   key={index}
-                  ref={(el) => (inputRefs.current[index] = el)}
+                  ref={(el) => { inputRefs.current[index] = el; }}
                   type="text"
                   inputMode="numeric"
                   maxLength={6}

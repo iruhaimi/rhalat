@@ -56,7 +56,7 @@ export function TransferRequestDialog({
     try {
       // Use the security definer function to get agents
       const { data, error } = await supabase
-        .rpc('get_agents_for_transfer', { exclude_profile_id: profile?.id || null });
+        .rpc('get_agents_for_transfer', profile?.id ? { exclude_profile_id: profile.id } : {});
 
       if (error) {
         console.error('Error fetching agents:', error);

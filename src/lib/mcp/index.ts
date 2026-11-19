@@ -16,6 +16,5 @@ export default defineMcp({
     issuer: `https://${projectRef}.supabase.co/auth/v1`,
     acceptedAudiences: "authenticated",
   }),
-  // @ts-expect-error mcp-js tool definitions omit undefined on optional fields under exactOptionalPropertyTypes
   tools: [listCountriesTool, listVisaTypesTool, listMyApplicationsTool, getApplicationStatusTool],
 });

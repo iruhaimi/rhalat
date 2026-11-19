@@ -143,6 +143,7 @@ export default function OwnerSettings() {
   // Revoke owner permission (through sensitive operations)
   const requestRevokeMutation = useMutation({
     mutationFn: async (targetUserId: string) => {
+      if (!user) throw new Error('يجب تسجيل الدخول');
       // Check if this is the last owner
       if (owners.length <= 1) {
         throw new Error('لا يمكن إزالة صلاحية المالك من آخر مالك في النظام');
@@ -154,7 +155,7 @@ export default function OwnerSettings() {
         .insert({
           operation_type: 'remove_manage_staff_permission',
           target_user_id: targetUserId,
-          requested_by: user?.id,
+          requested_by: user.id,
           request_reason: 'طلب إزالة صلاحية المالك'
         });
 
@@ -490,7 +491,7 @@ export default function OwnerSettings() {
                             <Calendar className="h-3 w-3" />
                             {format(new Date(backup.created_at), 'dd MMM yyyy - HH:mm', { locale: ar })}
                             <span>•</span>
-                            <span>{(backup.file_size / 1024).toFixed(1)} KB</span>
+                            <span>{((backup.file_size ?? 0) / 1024).toFixed(1)} KB</span>
                           </div>
                           {backup.notes && (
                             <p className="text-xs text-muted-foreground mt-1">{backup.notes}</p>

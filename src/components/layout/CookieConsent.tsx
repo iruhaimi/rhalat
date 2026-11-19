@@ -48,6 +48,7 @@ export default function CookieConsent() {
         updateConsentMode({ analytics: !!saved.analytics, marketing: !!saved.marketing });
       } catch {}
     }
+    return undefined;
   }, []);
 
   const handleAcceptAll = () => {

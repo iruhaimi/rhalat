@@ -92,6 +92,7 @@ export default function MyApplicationDetail() {
   }, [applicationId, user]);
 
   const fetchApplication = async () => {
+    if (!applicationId) return;
     try {
       const { data, error } = await supabase
         .from('applications')

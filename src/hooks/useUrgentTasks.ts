@@ -11,10 +11,10 @@ interface UrgentTask {
   created_at: string;
   days_pending: number;
   priority: 'high' | 'medium' | 'low';
-  applicant_name?: string;
+  applicant_name?: string | null;
   country?: string;
   visa_type?: string;
-  agent_name?: string;
+  agent_name?: string | null;
 }
 
 interface AgentWorkload {

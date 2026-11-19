@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from '@/lib/router-compat';
 import { supabase } from '@/integrations/supabase/client';
+import type { TablesUpdate } from '@/integrations/supabase/types';
 import { useAuth } from '@/contexts/AuthContext';
 import { useDocumentAccessLog } from '@/hooks/useDocumentAccessLog';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -212,7 +213,7 @@ export default function AgentApplicationDetail() {
 
     setUpdating(true);
     try {
-      const updates: Record<string, unknown> = { status: newStatus };
+      const updates: TablesUpdate<'applications'> = { status: newStatus as TablesUpdate<'applications'>['status'] };
       
       if (newStatus === 'rejected') {
         updates.rejection_reason = rejectionReason;

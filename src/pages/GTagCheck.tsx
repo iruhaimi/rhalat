@@ -3,7 +3,8 @@ import { Helmet } from "react-helmet-async";
 import { runGTagChecks } from "@/components/analytics/GTagMonitor";
 
 export default function GTagCheck() {
-  const [results, setResults] = useState(() => runGTagChecks());
+  // Checks read the browser, so they start after the page loads.
+  const [results, setResults] = useState<ReturnType<typeof runGTagChecks>>([]);
   const [tick, setTick] = useState(0);
   const [taDebug, setTaDebug] = useState<boolean>(() => {
     try { return localStorage.getItem("ta_debug") === "1"; } catch { return false; }
@@ -11,6 +12,7 @@ export default function GTagCheck() {
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
+    setResults(runGTagChecks());
     const id = window.setInterval(() => {
       setResults(runGTagChecks());
       setTick((t) => t + 1);
@@ -18,8 +20,8 @@ export default function GTagCheck() {
     return () => window.clearInterval(id);
   }, []);
 
-  const dl = (window as any).dataLayer ?? [];
-  const allOk = results.every((r) => r.ok);
+  const dl = typeof window === "undefined" ? [] : ((window as any).dataLayer ?? []);
+  const allOk = results.length > 0 && results.every((r) => r.ok);
   const debugUrl = "https://visafaster.com/?ta_debug=1";
 
   const toggleTaDebug = () => {

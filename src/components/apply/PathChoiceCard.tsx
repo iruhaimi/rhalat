@@ -182,7 +182,8 @@ export default function PathChoiceCard({ onBack }: Props) {
       }));
       const { data, error } = await supabase.rpc('create_whatsapp_order', {
         p_visa_type_id: applicationData.visaTypeId,
-        p_travel_date: applicationData.travelDate ? applicationData.travelDate.toISOString().split('T')[0] : null,
+        // Generated types mark this required; the database function accepts NULL when no date is chosen.
+        p_travel_date: (applicationData.travelDate ? applicationData.travelDate.toISOString().split('T')[0] : null) as string,
         p_meta: meta,
         p_terms: termsPayload,
       });

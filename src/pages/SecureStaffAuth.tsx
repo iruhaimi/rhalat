@@ -127,7 +127,7 @@ export default function SecureStaffAuth() {
       await supabase.rpc('record_login_attempt', {
         p_email: email.trim().toLowerCase(),
         p_success: success,
-        p_failure_reason: reason || null,
+        ...(reason ? { p_failure_reason: reason } : {}),
         p_user_agent: navigator.userAgent,
       });
     } catch (err) {

@@ -729,7 +729,6 @@ function BackgroundManagement({ isRTL }: { isRTL: boolean }) {
           .from('hero_settings')
           .insert({
             key: 'background_image',
-            label: 'صورة الخلفية',
             value: imageUrl,
             value_en: imageUrl,
             category: 'background',

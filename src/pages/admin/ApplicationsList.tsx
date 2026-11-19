@@ -68,11 +68,11 @@ interface Application {
     };
   };
   profile: {
-    full_name: string;
-    phone: string;
+    full_name: string | null;
+    phone: string | null;
   };
   assigned_agent?: {
-    full_name: string;
+    full_name: string | null;
   } | null;
 }
 

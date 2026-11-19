@@ -310,7 +310,7 @@ export default function Step6Payment() {
         // Create draft via SECURITY DEFINER RPC to bypass RLS
         const { data: newId, error: rpcError } = await supabase.rpc('create_application_draft', {
           p_visa_type_id: applicationData.visaTypeId,
-          p_travel_date: applicationData.travelDate ? applicationData.travelDate.toISOString().split('T')[0] : null,
+          p_travel_date: applicationData.travelDate ? applicationData.travelDate.toISOString().split('T')[0] : undefined,
           p_draft_data: {},
         });
         if (rpcError) throw rpcError;
@@ -450,7 +450,7 @@ export default function Step6Payment() {
       if (!appId && profile) {
         const { data: newId, error: rpcError } = await supabase.rpc('create_application_draft', {
           p_visa_type_id: applicationData.visaTypeId,
-          p_travel_date: applicationData.travelDate ? applicationData.travelDate.toISOString().split('T')[0] : null,
+          p_travel_date: applicationData.travelDate ? applicationData.travelDate.toISOString().split('T')[0] : undefined,
           p_draft_data: {},
         });
         if (rpcError) throw rpcError;
@@ -477,8 +477,9 @@ export default function Step6Payment() {
             termsAccepted: applicationData.termsAccepted,
           } as any,
           p_terms_version: TERMS_VERSION,
-          p_terms_ip: consentIp,
-          p_terms_user_agent: consentUA,
+          // The function stores NULL when the browser could not report these values.
+          p_terms_ip: consentIp as string,
+          p_terms_user_agent: consentUA as string,
         });
         if (error) throw error;
         const row = Array.isArray(data) ? data[0] : data;

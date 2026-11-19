@@ -110,7 +110,7 @@ export function useDraftApplication() {
         // resolve to the same profile that get_profile_id() returns.
         const { data: newId, error: rpcError } = await supabase.rpc('create_application_draft', {
           p_visa_type_id: applicationData.visaTypeId,
-          p_travel_date: draftPayload.travel_date,
+          p_travel_date: draftPayload.travel_date ?? undefined,
           p_draft_data: {} as any,
         });
         if (rpcError) throw rpcError;

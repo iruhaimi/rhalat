@@ -9,6 +9,8 @@ export default defineConfig({
     globals: true,
     setupFiles: ["./src/test/setup.ts"],
     include: ["src/**/*.{test,spec}.{ts,tsx}"],
+    // Markdown editor packages import their own CSS; let Vite handle them instead of Node.
+    server: { deps: { inline: [/@uiw\//] } },
   },
   resolve: {
     alias: { "@": path.resolve(__dirname, "./src") },

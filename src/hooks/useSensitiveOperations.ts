@@ -38,7 +38,7 @@ export function useSensitiveOperations() {
         operation_data: op.operation_data as Record<string, unknown>,
         target_user_name: nameMap.get(op.target_user_id) || 'غير معروف',
         requester_name: nameMap.get(op.requested_by) || 'غير معروف',
-        approver_name: op.approved_by ? nameMap.get(op.approved_by) || 'غير معروف' : null,
+        approver_name: op.approved_by ? nameMap.get(op.approved_by) || 'غير معروف' : undefined,
       }));
 
       setOperations(enhanced);

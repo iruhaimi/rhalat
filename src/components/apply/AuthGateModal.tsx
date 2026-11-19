@@ -169,6 +169,10 @@ function SignUpPanel({ defaultEmail, defaultName }: { defaultEmail?: string; def
   );
 }
 
+// Server render has no browser address; sign-in buttons only use this after a click.
+const currentPath = () =>
+  typeof window === 'undefined' ? '/apply' : `${window.location.pathname}${window.location.search}`;
+
 export default function AuthGateModal() {
   const { direction } = useLanguage();
   const { showAuthGate, setShowAuthGate, applicationData } = useApplication();
@@ -224,12 +228,12 @@ export default function AuthGateModal() {
               {(!isNativeMobileApp() || isIOSApp()) && (
                 <AppleSignInButton
                   className="w-full h-12 bg-black text-white hover:bg-black/90 border-black"
-                  redirectPath={`${window.location.pathname}${window.location.search}`}
+                  redirectPath={currentPath()}
                 />
               )}
               <GoogleSignInButton
                 className="w-full h-12"
-                redirectPath={`${window.location.pathname}${window.location.search}`}
+                redirectPath={currentPath()}
               />
             </div>
           </>

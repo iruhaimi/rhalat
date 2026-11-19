@@ -230,7 +230,7 @@ function ApplyContent() {
         // Use SECURITY DEFINER RPC to avoid RLS mismatch on first insert.
         const { data: newId, error: rpcError } = await supabase.rpc('create_application_draft', {
           p_visa_type_id: applicationData.visaTypeId,
-          p_travel_date: draftPayload.travel_date,
+          p_travel_date: draftPayload.travel_date ?? undefined,
           p_draft_data: {} as any,
         });
         if (rpcError) throw rpcError;
@@ -270,6 +270,7 @@ function ApplyContent() {
       }, 1200);
       return () => clearTimeout(timer);
     }
+    return undefined;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentStep, profile?.id, applicationData.visaTypeId]);
 
@@ -299,6 +300,7 @@ function ApplyContent() {
       }, 400);
       return () => clearTimeout(timer);
     }
+    return undefined;
   }, [user, showAuthGate, setShowAuthGate, setCurrentStep, clearGuestDraft, toast, language]);
 
   // Update application data when country/visa is loaded

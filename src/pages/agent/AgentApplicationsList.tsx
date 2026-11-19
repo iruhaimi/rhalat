@@ -81,8 +81,8 @@ interface Application {
     };
   };
   profile: {
-    full_name: string;
-    phone: string;
+    full_name: string | null;
+    phone: string | null;
   };
 }
 

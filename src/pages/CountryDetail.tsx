@@ -25,6 +25,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { VisaCard } from '@/components/visa/VisaCard';
 import SchengenDetail from './SchengenDetail';
+import { countryPreviewText } from '@/lib/routeHead';
 import SEO from '@/components/seo/SEO';
 import { getSharpFlagUrl } from '@/lib/flagUtils';
 import type { Country, VisaType } from '@/types/database';
@@ -132,8 +133,7 @@ export default function CountryDetail() {
 
   const minPrice = visaTypes.length ? Math.min(...visaTypes.map(v => v.price)) : null;
   const minDays = visaTypes.length ? Math.min(...visaTypes.map(v => v.processing_days)) : null;
-  const countryTitle = country.seo_title || `تأشيرة ${country.name} — الشروط والأسعار | عطلات رحلاتكم`;
-  const countryDesc = country.seo_description || `استخرج تأشيرة ${country.name} بسهولة من السعودية: ${visaTypes.length} نوع تأشيرة${minPrice ? `، تبدأ من ${minPrice} ر.س` : ''}${minDays ? `، معالجة خلال ${minDays} أيام` : ''}. متطلبات واضحة ودعم متواصل.`;
+  const { title: countryTitle, description: countryDesc } = countryPreviewText(country, visaTypes);
   const faqsArr: Array<{ question: string; answer: string }> = Array.isArray(country.faqs) ? country.faqs : [];
   const stepsArr: Array<{ title: string; description?: string }> = Array.isArray(country.processing_steps) ? country.processing_steps : [];
   const tipsArr: Array<any> = Array.isArray(country.tips) ? country.tips : [];

@@ -143,6 +143,7 @@ export default function ResetPassword() {
 
         return () => subscription.unsubscribe();
       }
+      return undefined;
     };
 
     checkSession();

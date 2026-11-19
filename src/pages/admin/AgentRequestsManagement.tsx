@@ -54,14 +54,14 @@ interface TransferRequest {
   status: string;
   admin_notes: string | null;
   created_at: string;
-  from_agent: { full_name: string } | null;
-  to_agent: { full_name: string } | null;
+  from_agent: { full_name: string | null } | null;
+  to_agent: { full_name: string | null } | null;
   application: {
     visa_type: {
       name: string;
       country: { name: string };
     };
-    profile: { full_name: string };
+    profile: { full_name: string | null };
   } | null;
 }
 
@@ -75,13 +75,13 @@ interface WorkSubmission {
   status: string;
   admin_notes: string | null;
   created_at: string;
-  agent: { full_name: string } | null;
+  agent: { full_name: string | null } | null;
   application: {
     visa_type: {
       name: string;
       country: { name: string };
     };
-    profile: { full_name: string };
+    profile: { full_name: string | null };
   } | null;
 }
 
@@ -89,7 +89,7 @@ interface WorkSubmission {
 interface GroupedWorkSubmission {
   application_id: string;
   agent_id: string;
-  agent: { full_name: string } | null;
+  agent: { full_name: string | null } | null;
   application: WorkSubmission['application'];
   files: Array<{
     id: string;

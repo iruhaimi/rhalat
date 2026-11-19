@@ -1,7 +1,9 @@
 import { Helmet } from "react-helmet-async";
 
-const SITE_URL = "https://visafaster.com";
-
+/**
+ * Structured data only. Page titles, descriptions, canonical links and share
+ * previews come from each route's head() so the server sends them with the page.
+ */
 interface SEOProps {
   title: string;
   description: string;
@@ -10,20 +12,11 @@ interface SEOProps {
   jsonLd?: Record<string, unknown> | Record<string, unknown>[];
 }
 
-export default function SEO({ title, description, path, type = "website", jsonLd }: SEOProps) {
-  const url = `${SITE_URL}${path}`;
+export default function SEO({ jsonLd }: SEOProps) {
   const ldArray = Array.isArray(jsonLd) ? jsonLd : jsonLd ? [jsonLd] : [];
+  if (ldArray.length === 0) return null;
   return (
     <Helmet>
-      <title>{title}</title>
-      <meta name="description" content={description} />
-      <link rel="canonical" href={url} />
-      <meta property="og:title" content={title} />
-      <meta property="og:description" content={description} />
-      <meta property="og:url" content={url} />
-      <meta property="og:type" content={type} />
-      <meta name="twitter:title" content={title} />
-      <meta name="twitter:description" content={description} />
       {ldArray.map((data, i) => (
         <script key={i} type="application/ld+json">{JSON.stringify(data)}</script>
       ))}
