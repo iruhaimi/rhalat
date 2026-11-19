@@ -5,3 +5,4 @@
 - Keep the campaign landing outside MainLayout and its contacts in a campaign-only config; track explicit WhatsApp clicks, never page visits, to isolate advertising from the public customer journey.
 - Initialize campaign Tag Manager in the document head after consent defaults, only on campaign URLs and outside the iOS wrapper, to preserve consent ordering and native tracking restrictions.
 - Send feature emails from their own authenticated Edge Functions through the managed email helpers; preserve the existing email tables as observational logs only, so delivery and suppression authority stay with Lovable.
+- Exempt only exact preview-tooling development dependency keys in the native build guard; keep scanning dependency values and runtime references to prevent redirect protection from being weakened.

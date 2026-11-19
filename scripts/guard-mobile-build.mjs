@@ -33,6 +33,8 @@ const ignoredDirectories = new Set([
 const ignoredFiles = new Set([
   'guard-mobile-build.mjs',
   'nativeSafety.ts',
+  // Regression fixtures deliberately contain forbidden references; not app code.
+  'nativeBuildGuard.test.ts',
   // Platform-generated preview-only auth storage (never edit; inactive in native builds).
   'previewAuthStorage.ts',
   'package-lock.json',
@@ -84,7 +86,23 @@ function shouldScanForPwaReferences(relativePath) {
 function scanContent(content, relativePath) {
   // `@lovable.dev/mcp-js` is a build-time npm package name (the MCP server SDK),
   // not a runtime URL — it never redirects the native app to lovable.dev.
-  const sanitized = content.replace(/@lovable\.dev\/mcp-js(\/[a-z0-9/._-]*)?/gi, '@mcp-sdk');
+  let sanitized = content.replace(/@lovable\.dev\/mcp-js(\/[a-z0-9/._-]*)?/gi, '@mcp-sdk');
+
+  if (relativePath === 'package.json') {
+    // These exact development dependency keys are preview tooling, not URLs.
+    // Keep scanning their values and every other field for forbidden references.
+    const manifest = JSON.parse(sanitized);
+    for (const name of [
+      '@lovable.dev/vite-plugin-dev-server-bridge',
+      '@lovable.dev/vite-plugin-hmr-gate',
+    ]) {
+      if (Object.hasOwn(manifest.devDependencies ?? {}, name)) {
+        manifest.devDependencies[name.replace('@lovable.dev/', '@preview-tooling/')] = manifest.devDependencies[name];
+        delete manifest.devDependencies[name];
+      }
+    }
+    sanitized = JSON.stringify(manifest);
+  }
 
   for (const { pattern, label } of forbiddenPatterns) {
     if (pattern.test(sanitized)) {
