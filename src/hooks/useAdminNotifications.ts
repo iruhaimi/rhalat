@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
+import { uniqueChannelName } from '@/lib/realtimeChannel';
 
 // Sound notification utility
 const playNotificationSound = () => {
@@ -60,7 +61,7 @@ export function useAdminNotifications(onNewTransfer?: () => void, onNewWork?: ()
 
     // Subscribe to new transfer requests
     const transferChannel = supabase
-      .channel('admin-transfer-notifications')
+      .channel(uniqueChannelName('admin-transfer-notifications'))
       .on(
         'postgres_changes',
         {
@@ -93,7 +94,7 @@ export function useAdminNotifications(onNewTransfer?: () => void, onNewWork?: ()
 
     // Subscribe to new work submissions
     const workChannel = supabase
-      .channel('admin-work-notifications')
+      .channel(uniqueChannelName('admin-work-notifications'))
       .on(
         'postgres_changes',
         {

@@ -4,6 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import type { Notification } from '@/types/database';
 import { isSafeInternalPath } from '@/lib/safeRedirect';
+import { uniqueChannelName } from '@/lib/realtimeChannel';
 
 export function useRealtimeNotifications() {
   const { profile, isAgent } = useAuth();
@@ -39,7 +40,7 @@ export function useRealtimeNotifications() {
     if (!profile?.id) return;
 
     const channel = supabase
-      .channel(`notifications-${profile.id}`)
+      .channel(uniqueChannelName(`notifications-${profile.id}`))
       .on(
         'postgres_changes',
         {

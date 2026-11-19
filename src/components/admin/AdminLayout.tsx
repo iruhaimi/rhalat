@@ -39,6 +39,7 @@ import {
       BookOpen,
       Building2
 } from 'lucide-react';
+import { uniqueChannelName } from '@/lib/realtimeChannel';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
@@ -91,7 +92,7 @@ export default function AdminLayout() {
     };
     load();
     const channel = supabase
-      .channel('admin-tour-operators-pending')
+      .channel(uniqueChannelName('admin-tour-operators-pending'))
       .on('postgres_changes', { event: '*', schema: 'public', table: 'tour_operators' }, load)
       .subscribe();
     return () => {

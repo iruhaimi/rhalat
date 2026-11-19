@@ -4,7 +4,9 @@
 
 - [x] Correct content labels and sitemap; add TravelAgency, AboutPage and CollectionPage metadata without exposing private account pages.
 - [x] Verify phone/desktop public pages and 55 unique sitemap URLs; mark the content and sitemap findings fixed pending rescan.
-- [ ] Page-specific social previews remain blocked by the static hosting architecture; requires an approved rendering upgrade.
+- [x] Upgrade rendering so each public page sends its own title, description and share link from the server (approved upgrade).
+- [ ] Share image: pages still have no own share picture except articles with a cover photo; hosting supplies the default preview image.
+- [ ] Phone app builds: the Android/iOS packaging still expects the old single-page output and must be adjusted before the next store release.
 - [ ] Structured-data finding remains partial: FAQ schema is not added as an SEO-only improvement, and no unverified business image or price range is invented.
 - [ ] Tourism sitemap completeness remains unverified: the existing public data access returns 401; no permissions changed for this SEO task.
 

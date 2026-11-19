@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import type { ApplicationMessage, SendMessageData, SenderType, AttachmentType } from '@/types/messages';
+import { uniqueChannelName } from '@/lib/realtimeChannel';
 
 export function useApplicationMessages(applicationId: string) {
   const { profile, isAgent, isAdmin } = useAuth();
@@ -63,7 +64,7 @@ export function useApplicationMessages(applicationId: string) {
     if (!applicationId) return;
 
     const channel = supabase
-      .channel(`messages-${applicationId}`)
+      .channel(uniqueChannelName(`messages-${applicationId}`))
       .on(
         'postgres_changes',
         {
