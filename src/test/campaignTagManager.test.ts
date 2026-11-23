@@ -45,8 +45,9 @@ describe('campaign Tag Manager initialization', () => {
     expect(initialize('/lp/visa/').loaded.some(url => url.includes('GTM-TVXFHMFW'))).toBe(true);
   });
 
-  it('does not add campaign Tag Manager to the public homepage', () => {
-    expect(initialize('/').loaded.some(url => url.includes('/gtm.js'))).toBe(false);
+  it('loads Tag Manager on every public page, including the homepage', () => {
+    expect(initialize('/').loaded.some(url => url.includes('GTM-TVXFHMFW'))).toBe(true);
+    expect(initialize('/about').loaded.some(url => url.includes('GTM-TVXFHMFW'))).toBe(true);
   });
 
   it('does not load any advertising scripts in the iOS wrapper', () => {
