@@ -18,14 +18,13 @@ const GOOGLE_ADS_ID = 'AW-18502036693';
  * still sent as standard GA4 events (useful for GA4 + Audiences) but they
  * will not register as Google Ads conversions.
  */
-// ⚠️ TODO: استبدل REPLACE_ME بـ Conversion Label من Google Ads
-// Tools → Conversions → افتح كل تحويل → انسخ Conversion ID/Label
-// مثال نهائي: 'AW-18502036693/abCdEfGhIjK'
+// Conversion labels من Google Ads → الأهداف ← التحويلات
+// "WhatsApp Click" (فئة: جهة اتصال) — يُرسل عند نقرة زر واتساب في صفحة /ads-visa
 const CONVERSION_LABELS: Partial<Record<ConversionEvent, string>> = {
+  generate_lead: `${GOOGLE_ADS_ID}/8fXICLLzl74dENXZuvZE`,
   // purchase: `${GOOGLE_ADS_ID}/REPLACE_ME_PURCHASE`,
   // submit_application: `${GOOGLE_ADS_ID}/REPLACE_ME_SUBMIT`,
   // sign_up: `${GOOGLE_ADS_ID}/REPLACE_ME_SIGNUP`,
-  // generate_lead: `${GOOGLE_ADS_ID}/REPLACE_ME_LEAD`,
   // begin_checkout: `${GOOGLE_ADS_ID}/REPLACE_ME_CHECKOUT`,
 };
 
