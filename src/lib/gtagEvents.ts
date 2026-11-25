@@ -20,8 +20,9 @@ const GOOGLE_ADS_ID = 'AW-18502036693';
  */
 // Conversion labels من Google Ads → الأهداف ← التحويلات
 // "WhatsApp Click" (فئة: جهة اتصال) — يُرسل عند نقرة زر واتساب في صفحة /ads-visa
+// The campaign label is passed explicitly via `sendTo` from /ads-visa only,
+// so generic generate_lead calls elsewhere never count as campaign conversions.
 const CONVERSION_LABELS: Partial<Record<ConversionEvent, string>> = {
-  generate_lead: `${GOOGLE_ADS_ID}/8fXICLLzl74dENXZuvZE`,
   // purchase: `${GOOGLE_ADS_ID}/REPLACE_ME_PURCHASE`,
   // submit_application: `${GOOGLE_ADS_ID}/REPLACE_ME_SUBMIT`,
   // sign_up: `${GOOGLE_ADS_ID}/REPLACE_ME_SIGNUP`,
@@ -116,7 +117,8 @@ export function setEnhancedConversionUserData(userData: EnhancedConversionUserDa
  */
 export function trackConversion(
   event: ConversionEvent,
-  payload: ConversionPayload = {}
+  payload: ConversionPayload = {},
+  sendTo?: string
 ): void {
   const gtag = getGtag();
   if (!gtag) return;
@@ -139,7 +141,7 @@ export function trackConversion(
   }
 
   // Google Ads conversion (only if a label is configured)
-  const label = CONVERSION_LABELS[event];
+  const label = sendTo ?? CONVERSION_LABELS[event];
   if (label) {
     try {
       gtag('event', 'conversion', {

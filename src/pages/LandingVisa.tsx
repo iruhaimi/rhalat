@@ -8,7 +8,7 @@ import { useFooterSettings } from '@/hooks/useFooterSettings';
 import { parseWorkingHours, formatWorkingHours } from '@/lib/workingHours';
 import { openExternalUrl } from '@/lib/despia';
 import { trackConversion } from '@/lib/gtagEvents';
-import { campaignWhatsAppUrl } from '@/config/adsCampaign';
+import { ADS_CAMPAIGN, campaignWhatsAppUrl } from '@/config/adsCampaign';
 import { LEGAL } from '@/config/legal';
 import heroImage from '@/assets/ads/campaign-paris.jpg';
 import logo from '@/assets/logo.png.asset.json';
@@ -32,7 +32,7 @@ function WhatsAppCTA({ placement, children, className = '' }: { placement: strin
       <a id={placement === 'hero' ? 'google-ads-whatsapp-btn' : `google-ads-whatsapp-btn-${placement}`} data-campaign="google_ads_visa" href={campaignWhatsAppUrl()} target="_blank" rel="noopener noreferrer"
         onClick={(event) => {
           event.preventDefault();
-          trackConversion('generate_lead', { source: 'google_ads_visa', channel: 'whatsapp', placement });
+          trackConversion('generate_lead', { source: 'google_ads_visa', channel: 'whatsapp', placement }, ADS_CAMPAIGN.conversionDestination);
           openExternalUrl(campaignWhatsAppUrl());
         }}>
         <MessageCircle aria-hidden="true" />{children}<ArrowLeft aria-hidden="true" />
