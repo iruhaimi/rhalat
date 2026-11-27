@@ -16,6 +16,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import DynamicPortalRoute from "@/components/DynamicPortalRoute";
 import GTagMonitor from "@/components/analytics/GTagMonitor";
+import PageViewTracker from "@/components/analytics/PageViewTracker";
 import NotFound from "@/pages/NotFound";
 import { enforceNativeUrlSafety } from "@/lib/nativeSafety";
 import { reportLovableError } from "@/lib/lovable-error-reporting";
@@ -113,6 +114,7 @@ function RootComponent() {
               <Toaster />
               <Sonner />
               <GTagMonitor />
+              <PageViewTracker />
               <Outlet />
             </TooltipProvider>
           </AuthProvider>
