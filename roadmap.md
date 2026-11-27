@@ -38,3 +38,7 @@
 - [x] Add GTM-TVXFHMFW to the campaign head without replacing existing Ads or consent settings.
 - [x] Verify campaign loading, consent choices and iOS exclusion; eight tests and browser acceptance/restoration checks pass.
 - [x] Prepared verified changes for saving and publication; deployment completion must be confirmed separately.
+# Google Analytics page reporting
+
+- [x] Link the supplied Analytics measurement ID and configure consent-first site-wide page reports without duplicate initial views or WhatsApp conversions.
+- [x] Test page navigation, consent ordering and iOS exclusion; browser shows one initial Analytics request, correct queued navigation title/path, and no iOS tracking scripts. Report readback in Google Analytics is not available through the browser-tracking connection.

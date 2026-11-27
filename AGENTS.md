@@ -10,6 +10,7 @@
 - Run the site on TanStack Start with file routes in `src/routes/`; keep page components in `src/pages/` reached through the `@/lib/router-compat` shim, so existing navigation calls keep working without a typed-router rewrite.
 - Give every public page its title, description, canonical link and share tags through its route `head()` using `src/lib/routeHead.ts`; the `SEO` component emits structured data only, so server-rendered previews never carry duplicate tags.
 - Keep inline document-head scripts in `src/lib/headScripts.ts` in consent-first order and cover them with tests, so tracking order stays verifiable without a static HTML file.
+- Configure GA4 through the public connector measurement ID in the shared Google tag with automatic views disabled globally and for both destinations; the root PageViewTracker sends views only to GA4 (Ads fallback when unconfigured), excluding iOS, because the Ads tag already links the Analytics destination and separate events duplicate counts.
 - Keep `strict` on but leave `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes` and `noPropertyAccessFromIndexSignature` off; existing database-shaped code was not written for them and their errors were noise, not bugs.
 - Create live-update channels with `uniqueChannelName()`; reusing a channel name across mounted listeners throws and blanks signed-in pages.
 - Read browser-only values (`window`, storage) inside effects or event handlers, never during render, because pages are now rendered on the server first.

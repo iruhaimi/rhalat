@@ -73,8 +73,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     scripts: [
       { children: CLICKJACKING_SCRIPT },
       { children: CONSENT_DEFAULTS_SCRIPT },
-      { children: CAMPAIGN_TAG_MANAGER_SCRIPT },
       { children: GOOGLE_ADS_SCRIPT },
+      { children: CAMPAIGN_TAG_MANAGER_SCRIPT },
       { type: "application/ld+json", children: ORGANIZATION_JSON_LD },
     ],
   }),

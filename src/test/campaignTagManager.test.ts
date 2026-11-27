@@ -1,7 +1,7 @@
 import { runInNewContext } from 'node:vm';
 import { describe, expect, it } from 'vitest';
 
-import { HEAD_SCRIPTS_IN_ORDER as scripts } from '@/lib/headScripts';
+import { GOOGLE_ANALYTICS_ID, HEAD_SCRIPTS_IN_ORDER as scripts } from '@/lib/headScripts';
 
 function initialize(pathname: string, userAgent = 'Mozilla/5.0') {
   const loaded: string[] = [];
@@ -52,5 +52,30 @@ describe('campaign Tag Manager initialization', () => {
 
   it('does not load any advertising scripts in the iOS wrapper', () => {
     expect(initialize('/ads-visa', 'despia-iphone').loaded).toEqual([]);
+  });
+
+  it('configures the supplied GA4 property after consent without an automatic initial page view', () => {
+    expect(GOOGLE_ANALYTICS_ID).toBe('G-5HJSPDVN3W');
+    for (const path of ['/', '/usa', '/schengen', '/uk', '/canada', '/brazil', '/japan', '/contact', '/future-page']) {
+      const { events, loaded } = initialize(path);
+      expect(events.filter(event => event[0] === 'config' && event[1] === 'G-5HJSPDVN3W')).toEqual([
+        ['config', 'G-5HJSPDVN3W', { send_page_view: false }],
+      ]);
+      expect(events[0]).toEqual(['consent', 'default', expect.objectContaining({ analytics_storage: 'denied' })]);
+      expect(events).toContainEqual(['set', 'developer_id.dZjgwMW', true]);
+      expect(loaded.filter(url => url.includes('/gtag/js'))).toHaveLength(1);
+    }
+  });
+
+  it('never configures GA4 in the iOS wrapper', () => {
+    expect(initialize('/usa', 'despia-iphone').events.some(event => event[0] === 'config')).toBe(false);
+  });
+
+  it('sets explicit view configuration before GTM can initialize the linked Google tag', () => {
+    const { dataLayer } = initialize('/usa');
+    const configIndex = dataLayer.findIndex(event => Array.from(event as ArrayLike<unknown>)[0] === 'config');
+    const gtmIndex = dataLayer.findIndex(event => (event as { event?: string }).event === 'gtm.js');
+    expect(configIndex).toBeGreaterThan(0);
+    expect(configIndex).toBeLessThan(gtmIndex);
   });
 });
