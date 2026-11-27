@@ -137,7 +137,7 @@ export default function LandingVisa() {
         <div className="flex items-stretch gap-2">
           <ApplyNowButton label="قدّم" className="min-h-12 flex-1 px-2 py-2 text-xs" />
           <CallNowButton label="اتصل" className="min-h-12 flex-1 px-2 py-2 text-xs" />
-          <WhatsAppCTA placement="mobile" className="min-h-12 flex-1 px-2 py-2 text-xs">عرض سعر</WhatsAppCTA>
+          <WhatsAppCTA placement="mobile" className="min-h-12 flex-1 px-2 py-2 text-xs">استفسار</WhatsAppCTA>
         </div>
       </div>
       <CookieConsent />
