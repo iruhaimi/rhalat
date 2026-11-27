@@ -81,7 +81,7 @@ export default function LandingVisa() {
               <h1 className="font-cairo text-3xl font-bold leading-[1.65] text-primary md:text-4xl">تجهيز ملفات وحجز مواعيد تأشيرات شنغن وأمريكا</h1>
               <p className="mt-4 max-w-xl text-base leading-8 text-foreground md:text-lg">خدمة متخصصة لاستكمال استمارات التقديم، حجوزات الطيران والفنادق، والتأمين الطبي لتقديم ملف متكامل وفق متطلبات وجهتك.</p>
               <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-                <WhatsAppCTA placement="hero" className="w-full sm:w-auto">ابدأ تجهيز ملفك عبر واتساب</WhatsAppCTA>
+                <WhatsAppCTA placement="hero" className="w-full sm:w-auto">استفسر عن التأشيرة</WhatsAppCTA>
                 <ApplyNowButton className="w-full sm:w-auto" />
                 <CallNowButton className="w-full sm:w-auto" />
               </div>
@@ -117,7 +117,7 @@ export default function LandingVisa() {
             <div><h2 className="text-2xl font-bold md:text-3xl">جاهز نجهّز ملفك؟</h2><p className="mt-3 text-sm leading-7 text-muted-foreground">حدد الدولة المطلوبة وتواصل مع فريقنا لمعرفة المتطلبات ورسوم الخدمة.</p></div>
             <div className="flex w-full flex-col gap-3 md:w-auto md:flex-row">
               <ApplyNowButton className="w-full md:w-auto" />
-              <WhatsAppCTA placement="closing" className="w-full md:w-auto">تواصل مع فريق تجهيز الملفات</WhatsAppCTA>
+              <WhatsAppCTA placement="closing" className="w-full md:w-auto">استفسر عن التأشيرة</WhatsAppCTA>
             </div>
           </div>
         </section>

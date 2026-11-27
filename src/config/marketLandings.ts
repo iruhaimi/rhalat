@@ -12,7 +12,6 @@ export interface MarketLanding {
   intro: string;
   heroNote: string;
   whatsappMessage: string;
-  heroCta: string;
   servicesTitle: string;
   services: { title: string; description: string }[];
   benefitsTitle: string;
@@ -22,8 +21,6 @@ export interface MarketLanding {
   faq: { q: string; a: string }[];
   closingTitle: string;
   closingText: string;
-  closingCta: string;
-  mobileCta: string;
 }
 
 export const MARKET_LANDINGS: Record<MarketKey, MarketLanding> = {
@@ -36,7 +33,6 @@ export const MARKET_LANDINGS: Record<MarketKey, MarketLanding> = {
     intro: 'نموذج DS-160 طويل وتفاصيله دقيقة، وأي خطأ في البيانات قد يربك ملفك يوم المقابلة. فريقنا يراجع معك كل خانة ويرتب أوراقك الداعمة لتذهب إلى موعدك وأنت تعرف ما في ملفك.',
     heroNote: 'رسوم خدمتنا منفصلة عن رسوم التأشيرة التي تدفعها للجهة الرسمية.',
     whatsappMessage: 'مرحباً، أرغب بالمساعدة في تجهيز ملف التأشيرة الأمريكية ونموذج DS-160',
-    heroCta: 'اسأل عن تجهيز ملفك الأمريكي',
     servicesTitle: 'ما الذي نقوم به في ملفك الأمريكي',
     services: [
       { title: 'تعبئة نموذج DS-160', description: 'ندخل بياناتك في النموذج الإلكتروني بعد مراجعتها معك، ونسلمك صفحة التأكيد للاحتفاظ بها.' },
@@ -64,8 +60,6 @@ export const MARKET_LANDINGS: Record<MarketKey, MarketLanding> = {
     ],
     closingTitle: 'لديك رحلة إلى أمريكا؟',
     closingText: 'أرسل لنا موعد سفرك المتوقع ونخبرك بالخطوات ورسوم الخدمة.',
-    closingCta: 'تحدث مع فريق الملف الأمريكي',
-    mobileCta: 'واتساب: ملف التأشيرة الأمريكية',
   },
   schengen: {
     key: 'schengen', path: '/schengen', label: 'منطقة شنغن',
@@ -76,7 +70,6 @@ export const MARKET_LANDINGS: Record<MarketKey, MarketLanding> = {
     intro: 'قبل أن تقدم على تأشيرة شنغن تحتاج أن تعرف أي دولة تقدم عليها، وكيف تثبت إقامتك وتنقلاتك، وما التأمين المناسب. نرتب لك هذه القطع في ملف واحد متناسق.',
     heroNote: 'الحجوزات مبدئية أو مؤكدة بحسب ما تتفق عليه معنا.',
     whatsappMessage: 'مرحباً، أرغب بتجهيز ملف تأشيرة شنغن',
-    heroCta: 'ابدأ ترتيب ملف شنغن',
     servicesTitle: 'خدمات ملف شنغن',
     services: [
       { title: 'تحديد دولة التقديم', description: 'نراجع خط سير رحلتك ونوضح لك الدولة التي يُقدّم عليها الطلب عادة وفق مدة الإقامة في كل دولة.' },
@@ -104,8 +97,6 @@ export const MARKET_LANDINGS: Record<MarketKey, MarketLanding> = {
     ],
     closingTitle: 'تخطط لأوروبا هذا الموسم؟',
     closingText: 'شاركنا المدن والتواريخ، ونقترح عليك ترتيب الملف المناسب.',
-    closingCta: 'أرسل خط سير رحلتك',
-    mobileCta: 'واتساب: ملف شنغن',
   },
   uk: {
     key: 'uk', path: '/uk', label: 'المملكة المتحدة',
@@ -116,7 +107,6 @@ export const MARKET_LANDINGS: Record<MarketKey, MarketLanding> = {
     intro: 'طلب الزيارة البريطاني يسألك عن عملك ودخلك ومصاريفك وسفرياتك السابقة بالتفصيل. نجلس معك على هذه الأسئلة ونرتب الأدلة المالية التي تدعم إجاباتك.',
     heroNote: 'التقديم يتم عبر الموقع الحكومي البريطاني، وخدمتنا مساعدة اختيارية.',
     whatsappMessage: 'مرحباً، أرغب بالمساعدة في طلب تأشيرة زيارة بريطانيا',
-    heroCta: 'اسأل عن طلب بريطانيا',
     servicesTitle: 'كيف نساعد في طلب بريطانيا',
     services: [
       { title: 'تعبئة الطلب الإلكتروني', description: 'نعبئ أقسام الطلب معك: البيانات الشخصية، العمل، الدخل، تاريخ السفر، وتفاصيل الزيارة.' },
@@ -144,8 +134,6 @@ export const MARKET_LANDINGS: Record<MarketKey, MarketLanding> = {
     ],
     closingTitle: 'زيارة لندن أو مدن بريطانيا الأخرى؟',
     closingText: 'تواصل معنا لنراجع وضعك ونخبرك بما يحتاجه طلبك.',
-    closingCta: 'تحدث مع فريق طلبات بريطانيا',
-    mobileCta: 'واتساب: طلب بريطانيا',
   },
   canada: {
     key: 'canada', path: '/canada', label: 'كندا',
@@ -156,7 +144,6 @@ export const MARKET_LANDINGS: Record<MarketKey, MarketLanding> = {
     intro: 'طلب كندا يتم إلكترونياً بالكامل تقريباً، ويحتاج رفع ملفات بصيغ وأحجام محددة. إن كانت هذه التفاصيل التقنية تؤخرك، نتولى الترتيب معك خطوة بخطوة.',
     heroNote: 'رسوم الطلب والبصمة الرسمية تُدفع للجهة الكندية مباشرة.',
     whatsappMessage: 'مرحباً، أرغب بالمساعدة في طلب تأشيرة زيارة كندا',
-    heroCta: 'اسأل عن طلب كندا',
     servicesTitle: 'خدماتنا في طلب كندا',
     services: [
       { title: 'إعداد الحساب الإلكتروني', description: 'نساعدك في إنشاء حسابك على البوابة الرسمية وحفظ بيانات الدخول عندك أنت.' },
@@ -184,8 +171,6 @@ export const MARKET_LANDINGS: Record<MarketKey, MarketLanding> = {
     ],
     closingTitle: 'تفكر في زيارة كندا؟',
     closingText: 'راسلنا ونرتب معك قائمة المستندات قبل فتح الطلب.',
-    closingCta: 'ابدأ قائمة مستندات كندا',
-    mobileCta: 'واتساب: طلب كندا',
   },
   brazil: {
     key: 'brazil', path: '/brazil', label: 'البرازيل',
@@ -196,7 +181,6 @@ export const MARKET_LANDINGS: Record<MarketKey, MarketLanding> = {
     intro: 'متطلبات دخول البرازيل تختلف من جنسية إلى أخرى وقد تتغير. نتحقق معك من المصدر الرسمي أولاً، ثم نساعدك في تجهيز الطلب إن كانت جنسيتك تحتاج تأشيرة مسبقة.',
     heroNote: 'نعتمد على ما تنشره الجهات البرازيلية الرسمية وقت تقديمك.',
     whatsappMessage: 'مرحباً، أرغب بمعرفة متطلبات تأشيرة البرازيل والمساعدة في الطلب',
-    heroCta: 'تحقق من متطلبات البرازيل',
     servicesTitle: 'ما نقدمه لرحلة البرازيل',
     services: [
       { title: 'مراجعة متطلبات جنسيتك', description: 'نراجع المتطلبات المنشورة رسمياً لجنسيتك ونوع رحلتك قبل أن تدفع أي رسوم.' },
@@ -224,8 +208,6 @@ export const MARKET_LANDINGS: Record<MarketKey, MarketLanding> = {
     ],
     closingTitle: 'ريو أو ساو باولو في خطتك؟',
     closingText: 'أرسل جنسيتك وتاريخ سفرك ونرد عليك بالمتطلبات الحالية.',
-    closingCta: 'اسأل عن متطلبات جنسيتك',
-    mobileCta: 'واتساب: رحلة البرازيل',
   },
   japan: {
     key: 'japan', path: '/japan', label: 'اليابان',
@@ -236,7 +218,6 @@ export const MARKET_LANDINGS: Record<MarketKey, MarketLanding> = {
     intro: 'طلبات اليابان تهتم عادة ببرنامج الرحلة اليومي ومكان إقامتك في كل مدينة. نساعدك في كتابة برنامج واقعي يطابق حجوزاتك، ونتحقق معك من الطريقة الرسمية المتاحة لجنسيتك.',
     heroNote: 'طريقة التقديم ومتطلباته تحددها الجهات اليابانية الرسمية.',
     whatsappMessage: 'مرحباً، أرغب بالمساعدة في تجهيز طلب تأشيرة اليابان',
-    heroCta: 'اسأل عن رحلة اليابان',
     servicesTitle: 'خدماتنا لطلب اليابان',
     services: [
       { title: 'برنامج الرحلة اليومي', description: 'نكتب معك جدولاً يومياً بالمدن وأماكن الإقامة بصيغة مرتبة باللغة الإنجليزية.' },
@@ -264,8 +245,6 @@ export const MARKET_LANDINGS: Record<MarketKey, MarketLanding> = {
     ],
     closingTitle: 'طوكيو وكيوتو وأوساكا تنتظرك؟',
     closingText: 'أرسل لنا مدنك وعدد الأيام ونبدأ ببرنامج الرحلة.',
-    closingCta: 'ابدأ برنامج رحلة اليابان',
-    mobileCta: 'واتساب: رحلة اليابان',
   },
 };
 

@@ -78,7 +78,7 @@ export default function MarketLandingPage({ market: key }: { market: MarketKey }
               <h1 className="font-cairo text-3xl font-bold leading-[1.6] text-primary md:text-4xl">{m.title}</h1>
               <p className="mt-4 max-w-xl text-base leading-8 text-foreground md:text-lg">{m.intro}</p>
               <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-                <CTA placement="hero" className="w-full sm:w-auto">{m.heroCta}</CTA>
+                <CTA placement="hero" className="w-full sm:w-auto">استفسر عن التأشيرة</CTA>
                 <ApplyNowButton className="w-full sm:w-auto" />
                 <CallNowButton className="w-full sm:w-auto" />
               </div>
@@ -158,7 +158,7 @@ export default function MarketLandingPage({ market: key }: { market: MarketKey }
             <div><h2 className="text-2xl font-bold md:text-3xl">{m.closingTitle}</h2><p className="mt-3 text-sm leading-7 text-muted-foreground">{m.closingText}</p></div>
             <div className="flex w-full flex-col gap-3 md:w-auto md:flex-row">
               <ApplyNowButton className="w-full md:w-auto" />
-              <CTA placement="closing" className="w-full md:w-auto">{m.closingCta}</CTA>
+              <CTA placement="closing" className="w-full md:w-auto">استفسر عن التأشيرة</CTA>
             </div>
           </div>
         </section>
