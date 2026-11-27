@@ -13,6 +13,7 @@ import { openExternalUrl } from '@/lib/despia';
 import { filterArabicChars, filterNonNumeric } from '@/lib/inputFilters';
 import { getFullNameError, FULL_NAME_MAX } from '@/lib/nameValidation';
 import { buildE164Phone, isValidNationalPhone } from '@/lib/phone';
+import { SITE_CONTACT } from '@/config/contact';
 import { 
   MapPin, 
   Phone, 
@@ -60,9 +61,9 @@ export default function Contact() {
       icon: Phone,
       titleAr: 'الهاتف',
       titleEn: 'Phone',
-      valueAr: '562525665',
-      valueEn: '562525665',
-      link: 'tel:562525665'
+      valueAr: SITE_CONTACT.phoneDisplay,
+      valueEn: SITE_CONTACT.phoneDisplay,
+      link: SITE_CONTACT.phoneHref
     },
     {
       icon: Mail,
@@ -310,9 +311,9 @@ export default function Contact() {
                       {isRTL ? 'متاحون من ١٠ ص - ١٠ م' : 'Available 10 AM - 10 PM'}
                     </p>
                     <Button variant="outline" className="rounded-xl w-full" asChild>
-                      <a href="tel:562525665">
+                      <a href={SITE_CONTACT.phoneHref}>
                         <Phone className="w-4 h-4 ml-2" />
-                        562525665
+                        {SITE_CONTACT.phoneDisplay}
                       </a>
                     </Button>
                   </div>

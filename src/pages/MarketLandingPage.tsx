@@ -2,6 +2,8 @@ import { Link } from '@/lib/router-compat';
 import { motion, useReducedMotion } from 'framer-motion';
 import { CheckCircle2, MessageCircle, ArrowLeft, Mail, MapPin, Clock, Info, ShieldAlert } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import ApplyNowButton from '@/components/layout/ApplyNowButton';
+import CallNowButton from '@/components/layout/CallNowButton';
 import SEO from '@/components/seo/SEO';
 import CookieConsent from '@/components/layout/CookieConsent';
 import { useFooterSettings } from '@/hooks/useFooterSettings';
@@ -75,7 +77,11 @@ export default function MarketLandingPage({ market: key }: { market: MarketKey }
               <p className="mb-4 text-sm font-semibold text-primary">{m.eyebrow}</p>
               <h1 className="font-cairo text-3xl font-bold leading-[1.6] text-primary md:text-4xl">{m.title}</h1>
               <p className="mt-4 max-w-xl text-base leading-8 text-foreground md:text-lg">{m.intro}</p>
-              <CTA placement="hero" className="mt-6 w-full sm:w-auto">{m.heroCta}</CTA>
+              <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                <CTA placement="hero" className="w-full sm:w-auto">{m.heroCta}</CTA>
+                <ApplyNowButton className="w-full sm:w-auto" />
+                <CallNowButton className="w-full sm:w-auto" />
+              </div>
               <p className="mt-4 text-sm leading-7 text-foreground">{m.heroNote}</p>
             </motion.div>
           </div>
@@ -150,7 +156,10 @@ export default function MarketLandingPage({ market: key }: { market: MarketKey }
           </div>
           <div className="mt-10 flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
             <div><h2 className="text-2xl font-bold md:text-3xl">{m.closingTitle}</h2><p className="mt-3 text-sm leading-7 text-muted-foreground">{m.closingText}</p></div>
-            <CTA placement="closing" className="w-full md:w-auto">{m.closingCta}</CTA>
+            <div className="flex w-full flex-col gap-3 md:w-auto md:flex-row">
+              <ApplyNowButton className="w-full md:w-auto" />
+              <CTA placement="closing" className="w-full md:w-auto">{m.closingCta}</CTA>
+            </div>
           </div>
         </section>
       </main>
@@ -165,7 +174,13 @@ export default function MarketLandingPage({ market: key }: { market: MarketKey }
           <p className="mt-3 text-xs text-muted-foreground">© {new Date().getFullYear()} عطلات رحلاتكم. جميع الحقوق محفوظة.</p>
         </div>
       </footer>
-      <div className="ads-mobile-cta fixed inset-x-0 bottom-0 z-40 border-t border-border bg-card px-3 pt-3 md:hidden"><CTA placement="mobile" className="w-full text-sm">{m.mobileCta}</CTA></div>
+      <div className="ads-mobile-cta fixed inset-x-0 bottom-0 z-40 border-t border-border bg-card px-3 pt-3 md:hidden">
+        <div className="flex items-stretch gap-2">
+          <ApplyNowButton label="قدّم" className="min-h-12 flex-1 px-2 py-2 text-xs" />
+          <CallNowButton label="اتصل" className="min-h-12 flex-1 px-2 py-2 text-xs" />
+          <CTA placement="mobile" className="min-h-12 flex-1 px-2 py-2 text-xs">واتساب</CTA>
+        </div>
+      </div>
       <CookieConsent />
     </div>
   );

@@ -3,7 +3,7 @@ export type MarketKey = 'usa' | 'schengen' | 'uk' | 'canada' | 'brazil' | 'japan
 
 export interface MarketLanding {
   key: MarketKey;
-  path: `/lp/${MarketKey}`;
+  path: `/${MarketKey}`;
   label: string;
   seoTitle: string;
   seoDescription: string;
@@ -28,7 +28,7 @@ export interface MarketLanding {
 
 export const MARKET_LANDINGS: Record<MarketKey, MarketLanding> = {
   usa: {
-    key: 'usa', path: '/lp/usa', label: 'الولايات المتحدة الأمريكية',
+    key: 'usa', path: '/usa', label: 'الولايات المتحدة الأمريكية',
     seoTitle: 'مساعدة في تعبئة DS-160 وتجهيز ملف التأشيرة الأمريكية | عطلات رحلاتكم',
     seoDescription: 'مكتب خدمات خاص يساعدك في تعبئة نموذج DS-160 وترتيب مستندات مقابلة التأشيرة الأمريكية. لسنا جهة حكومية ولا نضمن القبول.',
     eyebrow: 'ملف التأشيرة الأمريكية',
@@ -68,7 +68,7 @@ export const MARKET_LANDINGS: Record<MarketKey, MarketLanding> = {
     mobileCta: 'واتساب: ملف التأشيرة الأمريكية',
   },
   schengen: {
-    key: 'schengen', path: '/lp/schengen', label: 'منطقة شنغن',
+    key: 'schengen', path: '/schengen', label: 'منطقة شنغن',
     seoTitle: 'تجهيز ملف تأشيرة شنغن: حجوزات وتأمين ومواعيد | عطلات رحلاتكم',
     seoDescription: 'مكتب خاص يرتب ملف شنغن: خطة الرحلة والحجوزات والتأمين الطبي وحجز الموعد المتاح. لسنا سفارة ولا مركز تأشيرات.',
     eyebrow: 'ملف شنغن',
@@ -108,7 +108,7 @@ export const MARKET_LANDINGS: Record<MarketKey, MarketLanding> = {
     mobileCta: 'واتساب: ملف شنغن',
   },
   uk: {
-    key: 'uk', path: '/lp/uk', label: 'المملكة المتحدة',
+    key: 'uk', path: '/uk', label: 'المملكة المتحدة',
     seoTitle: 'المساعدة في طلب تأشيرة زيارة بريطانيا وتجهيز المستندات | عطلات رحلاتكم',
     seoDescription: 'نساعدك في تعبئة طلب زيارة المملكة المتحدة الإلكتروني وتجهيز كشوف الحساب والمستندات. مكتب خاص، لسنا جهة حكومية.',
     eyebrow: 'طلب زيارة بريطانيا',
@@ -148,7 +148,7 @@ export const MARKET_LANDINGS: Record<MarketKey, MarketLanding> = {
     mobileCta: 'واتساب: طلب بريطانيا',
   },
   canada: {
-    key: 'canada', path: '/lp/canada', label: 'كندا',
+    key: 'canada', path: '/canada', label: 'كندا',
     seoTitle: 'المساعدة في طلب تأشيرة زيارة كندا الإلكتروني | عطلات رحلاتكم',
     seoDescription: 'مكتب خاص يساعدك في تجهيز طلب زيارة كندا الإلكتروني ورفع المستندات وحجز موعد البصمة. لسنا جهة حكومية.',
     eyebrow: 'طلب زيارة كندا',
@@ -188,7 +188,7 @@ export const MARKET_LANDINGS: Record<MarketKey, MarketLanding> = {
     mobileCta: 'واتساب: طلب كندا',
   },
   brazil: {
-    key: 'brazil', path: '/lp/brazil', label: 'البرازيل',
+    key: 'brazil', path: '/brazil', label: 'البرازيل',
     seoTitle: 'المساعدة في تجهيز طلب تأشيرة البرازيل | عطلات رحلاتكم',
     seoDescription: 'نراجع متطلبات دخول البرازيل حسب جنسيتك ونساعدك في الاستمارة والمستندات والحجوزات. مكتب خاص مستقل.',
     eyebrow: 'السفر إلى البرازيل',
@@ -228,7 +228,7 @@ export const MARKET_LANDINGS: Record<MarketKey, MarketLanding> = {
     mobileCta: 'واتساب: رحلة البرازيل',
   },
   japan: {
-    key: 'japan', path: '/lp/japan', label: 'اليابان',
+    key: 'japan', path: '/japan', label: 'اليابان',
     seoTitle: 'المساعدة في تجهيز طلب تأشيرة اليابان وبرنامج الرحلة | عطلات رحلاتكم',
     seoDescription: 'نساعدك في معرفة متطلبات دخول اليابان حسب جنسيتك وتجهيز برنامج الرحلة والمستندات. مكتب خاص، لسنا جهة حكومية.',
     eyebrow: 'السفر إلى اليابان',

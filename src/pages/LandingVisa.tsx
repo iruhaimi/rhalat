@@ -2,6 +2,8 @@ import { Link } from '@/lib/router-compat';
 import { motion, useReducedMotion } from 'framer-motion';
 import { CalendarCheck, FileText, Plane, ShieldCheck, MessageCircle, ArrowLeft, Mail, MapPin, Clock, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import ApplyNowButton from '@/components/layout/ApplyNowButton';
+import CallNowButton from '@/components/layout/CallNowButton';
 import SEO from '@/components/seo/SEO';
 import CookieConsent from '@/components/layout/CookieConsent';
 import { useFooterSettings } from '@/hooks/useFooterSettings';
@@ -78,7 +80,11 @@ export default function LandingVisa() {
               <p className="mb-4 text-sm font-semibold text-primary">شنغن · الولايات المتحدة الأمريكية</p>
               <h1 className="font-cairo text-3xl font-bold leading-[1.65] text-primary md:text-4xl">تجهيز ملفات وحجز مواعيد تأشيرات شنغن وأمريكا</h1>
               <p className="mt-4 max-w-xl text-base leading-8 text-foreground md:text-lg">خدمة متخصصة لاستكمال استمارات التقديم، حجوزات الطيران والفنادق، والتأمين الطبي لتقديم ملف متكامل وفق متطلبات وجهتك.</p>
-              <WhatsAppCTA placement="hero" className="mt-6 w-full sm:w-auto">ابدأ تجهيز ملفك عبر واتساب</WhatsAppCTA>
+              <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                <WhatsAppCTA placement="hero" className="w-full sm:w-auto">ابدأ تجهيز ملفك عبر واتساب</WhatsAppCTA>
+                <ApplyNowButton className="w-full sm:w-auto" />
+                <CallNowButton className="w-full sm:w-auto" />
+              </div>
               <p className="mt-4 text-sm leading-7 text-foreground">حجوزات مبدئية أو مؤكدة بحسب الخدمة المتفق عليها ومتطلبات الجهة المختصة.</p>
             </motion.div>
           </div>
@@ -109,7 +115,10 @@ export default function LandingVisa() {
         <section className="container-section py-10 md:py-14">
           <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
             <div><h2 className="text-2xl font-bold md:text-3xl">جاهز نجهّز ملفك؟</h2><p className="mt-3 text-sm leading-7 text-muted-foreground">حدد الدولة المطلوبة وتواصل مع فريقنا لمعرفة المتطلبات ورسوم الخدمة.</p></div>
-            <WhatsAppCTA placement="closing" className="w-full md:w-auto">تواصل مع فريق تجهيز الملفات</WhatsAppCTA>
+            <div className="flex w-full flex-col gap-3 md:w-auto md:flex-row">
+              <ApplyNowButton className="w-full md:w-auto" />
+              <WhatsAppCTA placement="closing" className="w-full md:w-auto">تواصل مع فريق تجهيز الملفات</WhatsAppCTA>
+            </div>
           </div>
         </section>
       </main>
@@ -124,7 +133,13 @@ export default function LandingVisa() {
           <p className="mt-3 text-xs text-muted-foreground">© {new Date().getFullYear()} عطلات رحلاتكم. جميع الحقوق محفوظة.</p>
         </div>
       </footer>
-      <div className="ads-mobile-cta fixed inset-x-0 bottom-0 z-40 border-t border-border bg-card px-3 pt-3 md:hidden"><WhatsAppCTA placement="mobile" className="w-full text-sm">تواصل عبر واتساب لتجهيز ملفك</WhatsAppCTA></div>
+      <div className="ads-mobile-cta fixed inset-x-0 bottom-0 z-40 border-t border-border bg-card px-3 pt-3 md:hidden">
+        <div className="flex items-stretch gap-2">
+          <ApplyNowButton label="قدّم" className="min-h-12 flex-1 px-2 py-2 text-xs" />
+          <CallNowButton label="اتصل" className="min-h-12 flex-1 px-2 py-2 text-xs" />
+          <WhatsAppCTA placement="mobile" className="min-h-12 flex-1 px-2 py-2 text-xs">واتساب</WhatsAppCTA>
+        </div>
+      </div>
       <CookieConsent />
     </div>
   );

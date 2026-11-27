@@ -10,6 +10,9 @@ describe('market landing pages', () => {
   it('has exactly the six requested markets', () => {
     expect(MARKET_KEYS.sort()).toEqual(['brazil', 'canada', 'japan', 'schengen', 'uk', 'usa']);
   });
+  it('uses direct country URLs as the canonical paths', () => {
+    for (const k of MARKET_KEYS) expect(MARKET_LANDINGS[k].path).toBe(`/${k}`);
+  });
   it('never repeats a sentence between markets', () => {
     const seen = new Map<string, string>();
     for (const k of MARKET_KEYS) for (const t of texts(k)) {

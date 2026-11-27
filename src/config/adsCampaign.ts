@@ -1,4 +1,4 @@
-/** Campaign-only contacts. Never reuse this number for the public site. */
+/** Campaign contacts and the dedicated Google Ads conversion destination. */
 export const ADS_CAMPAIGN = {
   whatsappPhone: '966562525665',
   whatsappMessage: 'مرحباً، أنا قادم من الإعلان وأرغب بتجهيز ملف وموعد تأشيرة',

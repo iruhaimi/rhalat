@@ -1,11 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { pageHead } from "@/lib/routeHead";
-import { MARKET_LANDINGS } from "@/config/marketLandings";
-import MarketLandingPage from "@/pages/MarketLandingPage";
-
-const m = MARKET_LANDINGS.schengen;
+import { createFileRoute, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/lp/schengen")({
-  head: () => pageHead({ title: m.seoTitle, description: m.seoDescription, path: m.path }),
-  component: () => <MarketLandingPage market="schengen" />,
+  beforeLoad: () => {
+    throw redirect({ to: "/schengen", replace: true, statusCode: 301 });
+  },
 });

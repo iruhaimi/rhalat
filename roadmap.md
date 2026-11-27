@@ -1,3 +1,9 @@
+# Direct market pages and contact actions
+
+- [x] Move the six campaign pages to /usa, /schengen, /uk, /canada, /brazil and /japan with permanent redirects from /lp/* and updated canonical/sitemap URLs.
+- [x] Add Apply Now beside campaign WhatsApp actions and Call Now across public pages using 0562525665, without counting calls or applications as WhatsApp ad conversions.
+- [x] Verify all six pages, legacy redirects, application navigation and contact links on mobile and desktop.
+
 # Customer experience audit
 
 # SEO corrections

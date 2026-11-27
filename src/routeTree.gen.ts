@@ -15,9 +15,15 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AdsVisaRouteImport } from './routes/ads-visa'
 import { Route as AgentRouteImport } from './routes/agent'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as BrazilRouteImport } from './routes/brazil'
+import { Route as CanadaRouteImport } from './routes/canada'
 import { Route as InstallRouteImport } from './routes/install'
+import { Route as JapanRouteImport } from './routes/japan'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as SchengenRouteImport } from './routes/schengen'
 import { Route as TourismPortalRouteImport } from './routes/tourism-portal'
+import { Route as UkRouteImport } from './routes/uk'
+import { Route as UsaRouteImport } from './routes/usa'
 import { Route as MainIndexRouteImport } from './routes/_main/index'
 import { Route as MainAboutRouteImport } from './routes/_main/about'
 import { Route as MainApplicationRouteImport } from './routes/_main/application'
@@ -121,9 +127,24 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BrazilRoute = BrazilRouteImport.update({
+  id: '/brazil',
+  path: '/brazil',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CanadaRoute = CanadaRouteImport.update({
+  id: '/canada',
+  path: '/canada',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const InstallRoute = InstallRouteImport.update({
   id: '/install',
   path: '/install',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JapanRoute = JapanRouteImport.update({
+  id: '/japan',
+  path: '/japan',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
@@ -131,9 +152,24 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
   path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SchengenRoute = SchengenRouteImport.update({
+  id: '/schengen',
+  path: '/schengen',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TourismPortalRoute = TourismPortalRouteImport.update({
   id: '/tourism-portal',
   path: '/tourism-portal',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UkRoute = UkRouteImport.update({
+  id: '/uk',
+  path: '/uk',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UsaRoute = UsaRouteImport.update({
+  id: '/usa',
+  path: '/usa',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MainIndexRoute = MainIndexRouteImport.update({
@@ -510,9 +546,15 @@ export interface FileRoutesByFullPath {
   '/ads-visa': typeof AdsVisaRoute
   '/agent': typeof AgentRouteWithChildren
   '/auth': typeof AuthRoute
+  '/brazil': typeof BrazilRoute
+  '/canada': typeof CanadaRoute
   '/install': typeof InstallRoute
+  '/japan': typeof JapanRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/schengen': typeof SchengenRoute
   '/tourism-portal': typeof TourismPortalRouteWithChildren
+  '/uk': typeof UkRoute
+  '/usa': typeof UsaRoute
   '/about': typeof MainAboutRoute
   '/application': typeof MainApplicationRoute
   '/connect': typeof MainConnectRoute
@@ -590,8 +632,14 @@ export interface FileRoutesByTo {
   '/__gtag-check': typeof Char91__gtagCheckChar93Route
   '/ads-visa': typeof AdsVisaRoute
   '/auth': typeof AuthRoute
+  '/brazil': typeof BrazilRoute
+  '/canada': typeof CanadaRoute
   '/install': typeof InstallRoute
+  '/japan': typeof JapanRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/schengen': typeof SchengenRoute
+  '/uk': typeof UkRoute
+  '/usa': typeof UsaRoute
   '/about': typeof MainAboutRoute
   '/application': typeof MainApplicationRoute
   '/connect': typeof MainConnectRoute
@@ -674,9 +722,15 @@ export interface FileRoutesById {
   '/ads-visa': typeof AdsVisaRoute
   '/agent': typeof AgentRouteWithChildren
   '/auth': typeof AuthRoute
+  '/brazil': typeof BrazilRoute
+  '/canada': typeof CanadaRoute
   '/install': typeof InstallRoute
+  '/japan': typeof JapanRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/schengen': typeof SchengenRoute
   '/tourism-portal': typeof TourismPortalRouteWithChildren
+  '/uk': typeof UkRoute
+  '/usa': typeof UsaRoute
   '/_main/about': typeof MainAboutRoute
   '/_main/application': typeof MainApplicationRoute
   '/_main/connect': typeof MainConnectRoute
@@ -760,9 +814,15 @@ export interface FileRouteTypes {
     | '/ads-visa'
     | '/agent'
     | '/auth'
+    | '/brazil'
+    | '/canada'
     | '/install'
+    | '/japan'
     | '/reset-password'
+    | '/schengen'
     | '/tourism-portal'
+    | '/uk'
+    | '/usa'
     | '/about'
     | '/application'
     | '/connect'
@@ -840,8 +900,14 @@ export interface FileRouteTypes {
     | '/__gtag-check'
     | '/ads-visa'
     | '/auth'
+    | '/brazil'
+    | '/canada'
     | '/install'
+    | '/japan'
     | '/reset-password'
+    | '/schengen'
+    | '/uk'
+    | '/usa'
     | '/about'
     | '/application'
     | '/connect'
@@ -923,9 +989,15 @@ export interface FileRouteTypes {
     | '/ads-visa'
     | '/agent'
     | '/auth'
+    | '/brazil'
+    | '/canada'
     | '/install'
+    | '/japan'
     | '/reset-password'
+    | '/schengen'
     | '/tourism-portal'
+    | '/uk'
+    | '/usa'
     | '/_main/about'
     | '/_main/application'
     | '/_main/connect'
@@ -1008,9 +1080,15 @@ export interface RootRouteChildren {
   AdsVisaRoute: typeof AdsVisaRoute
   AgentRoute: typeof AgentRouteWithChildren
   AuthRoute: typeof AuthRoute
+  BrazilRoute: typeof BrazilRoute
+  CanadaRoute: typeof CanadaRoute
   InstallRoute: typeof InstallRoute
+  JapanRoute: typeof JapanRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  SchengenRoute: typeof SchengenRoute
   TourismPortalRoute: typeof TourismPortalRouteWithChildren
+  UkRoute: typeof UkRoute
+  UsaRoute: typeof UsaRoute
   LpBrazilRoute: typeof LpBrazilRoute
   LpCanadaRoute: typeof LpCanadaRoute
   LpJapanRoute: typeof LpJapanRoute
@@ -1065,11 +1143,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/brazil': {
+      id: '/brazil'
+      path: '/brazil'
+      fullPath: '/brazil'
+      preLoaderRoute: typeof BrazilRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/canada': {
+      id: '/canada'
+      path: '/canada'
+      fullPath: '/canada'
+      preLoaderRoute: typeof CanadaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/install': {
       id: '/install'
       path: '/install'
       fullPath: '/install'
       preLoaderRoute: typeof InstallRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/japan': {
+      id: '/japan'
+      path: '/japan'
+      fullPath: '/japan'
+      preLoaderRoute: typeof JapanRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/reset-password': {
@@ -1079,11 +1178,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/schengen': {
+      id: '/schengen'
+      path: '/schengen'
+      fullPath: '/schengen'
+      preLoaderRoute: typeof SchengenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tourism-portal': {
       id: '/tourism-portal'
       path: '/tourism-portal'
       fullPath: '/tourism-portal'
       preLoaderRoute: typeof TourismPortalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/uk': {
+      id: '/uk'
+      path: '/uk'
+      fullPath: '/uk'
+      preLoaderRoute: typeof UkRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/usa': {
+      id: '/usa'
+      path: '/usa'
+      fullPath: '/usa'
+      preLoaderRoute: typeof UsaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_main/': {
@@ -1771,9 +1891,15 @@ const rootRouteChildren: RootRouteChildren = {
   AdsVisaRoute: AdsVisaRoute,
   AgentRoute: AgentRouteWithChildren,
   AuthRoute: AuthRoute,
+  BrazilRoute: BrazilRoute,
+  CanadaRoute: CanadaRoute,
   InstallRoute: InstallRoute,
+  JapanRoute: JapanRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  SchengenRoute: SchengenRoute,
   TourismPortalRoute: TourismPortalRouteWithChildren,
+  UkRoute: UkRoute,
+  UsaRoute: UsaRoute,
   LpBrazilRoute: LpBrazilRoute,
   LpCanadaRoute: LpCanadaRoute,
   LpJapanRoute: LpJapanRoute,
