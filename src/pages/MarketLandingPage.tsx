@@ -57,7 +57,7 @@ export default function MarketLandingPage({ market: key }: { market: MarketKey }
       <div className="border-b border-border bg-navy text-navy-foreground">
         <div className="container-section flex items-start gap-2 py-3">
           <Info className="mt-1 h-4 w-4 shrink-0" aria-hidden="true" />
-          <p className="text-xs leading-relaxed md:text-sm"><strong>تنبيه:</strong> عطلات رحلاتكم وكالة سفر خاصة تقدم خدمات مساعدة مدفوعة. لسنا جهة حكومية ولا نمثل أي سفارة أو قنصلية أو مركز تأشيرات، ولا نضمن صدور التأشيرة أو توفر المواعيد.</p>
+          <p className="text-xs leading-relaxed md:text-sm"><strong>تنبيه:</strong> عطلات رحلاتكم وكالة سفر خاصة تقدم خدمات مساعدة مدفوعة. لسنا جهة حكومية ولا نمثل أي سفارة أو قنصلية أو مركز تأشيرات، ولا نضمن صدور التأشيرة أو توفر المواعيد. رسوم خدمتنا منفصلة عن الرسوم الحكومية التي تُدفع للجهة الرسمية مباشرة، ويمكنك التقديم بنفسك عبر <a href={m.officialUrl} target="_blank" rel="noopener noreferrer" className="font-semibold underline underline-offset-2">{m.officialName}</a>.</p>
         </div>
       </div>
       <header className="border-b border-border bg-card">

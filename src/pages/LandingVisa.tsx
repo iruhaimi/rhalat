@@ -59,7 +59,7 @@ export default function LandingVisa() {
       <div className="sticky top-0 z-30 border-b border-border bg-navy text-navy-foreground">
         <div className="container-section flex items-start gap-2 py-3">
           <Info className="mt-1 h-4 w-4 shrink-0" aria-hidden="true" />
-          <p className="text-xs leading-relaxed md:text-sm"><strong>إخلاء مسؤولية قانوني:</strong> منصة عطلات رحلاتكم مكتب خدمات خاصة لمساندة تجهيز ملفات المواعيد والمستندات. لسنا سفارة أو قنصلية أو جهة حكومية تابعة لأي دولة ولا نتبع لمراكز التأشيرات (VFS/TLS/BLS)، وقرار منح التأشيرة سيادي بيد السفارات حصراً.</p>
+          <p className="text-xs leading-relaxed md:text-sm"><strong>إخلاء مسؤولية قانوني:</strong> منصة عطلات رحلاتكم مكتب خدمات خاصة لمساندة تجهيز ملفات المواعيد والمستندات. لسنا سفارة أو قنصلية أو جهة حكومية تابعة لأي دولة ولا نتبع لمراكز التأشيرات (VFS/TLS/BLS)، وقرار منح التأشيرة سيادي بيد السفارات حصراً. رسوم خدمتنا منفصلة عن الرسوم الحكومية التي تُدفع للجهة الرسمية مباشرة، ويمكنك التقديم بنفسك عبر <Link to="/official-embassies" className="font-semibold underline underline-offset-2">روابط السفارات والجهات الرسمية</Link>.</p>
         </div>
       </div>
       <header className="border-b border-border bg-card">

@@ -11,6 +11,9 @@ export interface MarketLanding {
   title: string;
   intro: string;
   heroNote: string;
+  /** Direct official government application site, shown in the top disclosure banner. */
+  officialName: string;
+  officialUrl: `https://${string}`;
   whatsappMessage: string;
   servicesTitle: string;
   services: { title: string; description: string }[];
@@ -26,6 +29,7 @@ export interface MarketLanding {
 export const MARKET_LANDINGS: Record<MarketKey, MarketLanding> = {
   usa: {
     key: 'usa', path: '/usa', label: 'الولايات المتحدة الأمريكية',
+    officialName: 'موقع وزارة الخارجية الأمريكية للتأشيرات', officialUrl: 'https://travel.state.gov/content/travel/en/us-visas.html',
     seoTitle: 'مساعدة في تعبئة DS-160 وتجهيز ملف التأشيرة الأمريكية | عطلات رحلاتكم',
     seoDescription: 'مكتب خدمات خاص يساعدك في تعبئة نموذج DS-160 وترتيب مستندات مقابلة التأشيرة الأمريكية. لسنا جهة حكومية ولا نضمن القبول.',
     eyebrow: 'ملف التأشيرة الأمريكية',
@@ -63,6 +67,7 @@ export const MARKET_LANDINGS: Record<MarketKey, MarketLanding> = {
   },
   schengen: {
     key: 'schengen', path: '/schengen', label: 'منطقة شنغن',
+    officialName: 'موقع المفوضية الأوروبية لتأشيرات شنغن', officialUrl: 'https://home-affairs.ec.europa.eu/policies/schengen-borders-and-visa/visa-policy_en',
     seoTitle: 'تجهيز ملف تأشيرة شنغن: حجوزات وتأمين ومواعيد | عطلات رحلاتكم',
     seoDescription: 'مكتب خاص يرتب ملف شنغن: خطة الرحلة والحجوزات والتأمين الطبي وحجز الموعد المتاح. لسنا سفارة ولا مركز تأشيرات.',
     eyebrow: 'ملف شنغن',
@@ -100,6 +105,7 @@ export const MARKET_LANDINGS: Record<MarketKey, MarketLanding> = {
   },
   uk: {
     key: 'uk', path: '/uk', label: 'المملكة المتحدة',
+    officialName: 'موقع الحكومة البريطانية GOV.UK', officialUrl: 'https://www.gov.uk/standard-visitor',
     seoTitle: 'المساعدة في طلب تأشيرة زيارة بريطانيا وتجهيز المستندات | عطلات رحلاتكم',
     seoDescription: 'نساعدك في تعبئة طلب زيارة المملكة المتحدة الإلكتروني وتجهيز كشوف الحساب والمستندات. مكتب خاص، لسنا جهة حكومية.',
     eyebrow: 'طلب زيارة بريطانيا',
@@ -137,6 +143,7 @@ export const MARKET_LANDINGS: Record<MarketKey, MarketLanding> = {
   },
   canada: {
     key: 'canada', path: '/canada', label: 'كندا',
+    officialName: 'موقع حكومة كندا للهجرة', officialUrl: 'https://www.canada.ca/en/immigration-refugees-citizenship/services/visit-canada.html',
     seoTitle: 'المساعدة في طلب تأشيرة زيارة كندا الإلكتروني | عطلات رحلاتكم',
     seoDescription: 'مكتب خاص يساعدك في تجهيز طلب زيارة كندا الإلكتروني ورفع المستندات وحجز موعد البصمة. لسنا جهة حكومية.',
     eyebrow: 'طلب زيارة كندا',
@@ -174,6 +181,7 @@ export const MARKET_LANDINGS: Record<MarketKey, MarketLanding> = {
   },
   brazil: {
     key: 'brazil', path: '/brazil', label: 'البرازيل',
+    officialName: 'موقع وزارة الخارجية البرازيلية', officialUrl: 'https://www.gov.br/mre/en/subjects/visas',
     seoTitle: 'المساعدة في تجهيز طلب تأشيرة البرازيل | عطلات رحلاتكم',
     seoDescription: 'نراجع متطلبات دخول البرازيل حسب جنسيتك ونساعدك في الاستمارة والمستندات والحجوزات. مكتب خاص مستقل.',
     eyebrow: 'السفر إلى البرازيل',
@@ -211,6 +219,7 @@ export const MARKET_LANDINGS: Record<MarketKey, MarketLanding> = {
   },
   japan: {
     key: 'japan', path: '/japan', label: 'اليابان',
+    officialName: 'موقع وزارة الخارجية اليابانية', officialUrl: 'https://www.mofa.go.jp/j_info/visit/visa/index.html',
     seoTitle: 'المساعدة في تجهيز طلب تأشيرة اليابان وبرنامج الرحلة | عطلات رحلاتكم',
     seoDescription: 'نساعدك في معرفة متطلبات دخول اليابان حسب جنسيتك وتجهيز برنامج الرحلة والمستندات. مكتب خاص، لسنا جهة حكومية.',
     eyebrow: 'السفر إلى اليابان',

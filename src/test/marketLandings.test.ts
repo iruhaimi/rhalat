@@ -26,3 +26,12 @@ describe('market landing pages', () => {
     }
   });
 });
+
+describe('official government links for ad certification', () => {
+  it('every market links to an https government site', () => {
+    for (const m of Object.values(MARKET_LANDINGS)) {
+      expect(m.officialUrl.startsWith('https://')).toBe(true);
+      expect(m.officialName.length).toBeGreaterThan(0);
+    }
+  });
+});
