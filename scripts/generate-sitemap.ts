@@ -37,6 +37,12 @@ const staticEntries: SitemapEntry[] = [
   { path: "/official-embassies", changefreq: "monthly", priority: "0.6" },
   { path: "/connect", changefreq: "monthly", priority: "0.3" },
   { path: "/ads-visa", changefreq: "monthly", priority: "0.5" },
+  { path: "/lp/usa", changefreq: "monthly", priority: "0.5" },
+  { path: "/lp/schengen", changefreq: "monthly", priority: "0.5" },
+  { path: "/lp/uk", changefreq: "monthly", priority: "0.5" },
+  { path: "/lp/canada", changefreq: "monthly", priority: "0.5" },
+  { path: "/lp/brazil", changefreq: "monthly", priority: "0.5" },
+  { path: "/lp/japan", changefreq: "monthly", priority: "0.5" },
 ];
 
 async function fetchTable(table: string, select: string, filter = "is_active=eq.true"): Promise<any[]> {

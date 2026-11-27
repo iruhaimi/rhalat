@@ -62,6 +62,12 @@ import { Route as AdminUnlockRequestsRouteImport } from './routes/admin/unlock-r
 import { Route as AdminUsersRouteImport } from './routes/admin/users'
 import { Route as AdminVisaRequirementsRouteImport } from './routes/admin/visa-requirements'
 import { Route as AgentIndexRouteImport } from './routes/agent/index'
+import { Route as LpBrazilRouteImport } from './routes/lp/brazil'
+import { Route as LpCanadaRouteImport } from './routes/lp/canada'
+import { Route as LpJapanRouteImport } from './routes/lp/japan'
+import { Route as LpSchengenRouteImport } from './routes/lp/schengen'
+import { Route as LpUkRouteImport } from './routes/lp/uk'
+import { Route as LpUsaRouteImport } from './routes/lp/usa'
 import { Route as LpVisaRouteImport } from './routes/lp/visa'
 import { Route as TourismPortalIndexRouteImport } from './routes/tourism-portal/index'
 import { Route as TourismPortalBookingsRouteImport } from './routes/tourism-portal/bookings'
@@ -351,6 +357,36 @@ const AgentIndexRoute = AgentIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AgentRoute,
 } as any)
+const LpBrazilRoute = LpBrazilRouteImport.update({
+  id: '/lp/brazil',
+  path: '/lp/brazil',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LpCanadaRoute = LpCanadaRouteImport.update({
+  id: '/lp/canada',
+  path: '/lp/canada',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LpJapanRoute = LpJapanRouteImport.update({
+  id: '/lp/japan',
+  path: '/lp/japan',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LpSchengenRoute = LpSchengenRouteImport.update({
+  id: '/lp/schengen',
+  path: '/lp/schengen',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LpUkRoute = LpUkRouteImport.update({
+  id: '/lp/uk',
+  path: '/lp/uk',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LpUsaRoute = LpUsaRouteImport.update({
+  id: '/lp/usa',
+  path: '/lp/usa',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LpVisaRoute = LpVisaRouteImport.update({
   id: '/lp/visa',
   path: '/lp/visa',
@@ -518,6 +554,12 @@ export interface FileRoutesByFullPath {
   '/admin/unlock-requests': typeof AdminUnlockRequestsRoute
   '/admin/users': typeof AdminUsersRoute
   '/admin/visa-requirements': typeof AdminVisaRequirementsRoute
+  '/lp/brazil': typeof LpBrazilRoute
+  '/lp/canada': typeof LpCanadaRoute
+  '/lp/japan': typeof LpJapanRoute
+  '/lp/schengen': typeof LpSchengenRoute
+  '/lp/uk': typeof LpUkRoute
+  '/lp/usa': typeof LpUsaRoute
   '/lp/visa': typeof LpVisaRoute
   '/tourism-portal/bookings': typeof TourismPortalBookingsRoute
   '/tourism-portal/company': typeof TourismPortalCompanyRoute
@@ -591,6 +633,12 @@ export interface FileRoutesByTo {
   '/admin/unlock-requests': typeof AdminUnlockRequestsRoute
   '/admin/users': typeof AdminUsersRoute
   '/admin/visa-requirements': typeof AdminVisaRequirementsRoute
+  '/lp/brazil': typeof LpBrazilRoute
+  '/lp/canada': typeof LpCanadaRoute
+  '/lp/japan': typeof LpJapanRoute
+  '/lp/schengen': typeof LpSchengenRoute
+  '/lp/uk': typeof LpUkRoute
+  '/lp/usa': typeof LpUsaRoute
   '/lp/visa': typeof LpVisaRoute
   '/tourism-portal/bookings': typeof TourismPortalBookingsRoute
   '/tourism-portal/company': typeof TourismPortalCompanyRoute
@@ -670,6 +718,12 @@ export interface FileRoutesById {
   '/admin/unlock-requests': typeof AdminUnlockRequestsRoute
   '/admin/users': typeof AdminUsersRoute
   '/admin/visa-requirements': typeof AdminVisaRequirementsRoute
+  '/lp/brazil': typeof LpBrazilRoute
+  '/lp/canada': typeof LpCanadaRoute
+  '/lp/japan': typeof LpJapanRoute
+  '/lp/schengen': typeof LpSchengenRoute
+  '/lp/uk': typeof LpUkRoute
+  '/lp/usa': typeof LpUsaRoute
   '/lp/visa': typeof LpVisaRoute
   '/tourism-portal/bookings': typeof TourismPortalBookingsRoute
   '/tourism-portal/company': typeof TourismPortalCompanyRoute
@@ -750,6 +804,12 @@ export interface FileRouteTypes {
     | '/admin/unlock-requests'
     | '/admin/users'
     | '/admin/visa-requirements'
+    | '/lp/brazil'
+    | '/lp/canada'
+    | '/lp/japan'
+    | '/lp/schengen'
+    | '/lp/uk'
+    | '/lp/usa'
     | '/lp/visa'
     | '/tourism-portal/bookings'
     | '/tourism-portal/company'
@@ -823,6 +883,12 @@ export interface FileRouteTypes {
     | '/admin/unlock-requests'
     | '/admin/users'
     | '/admin/visa-requirements'
+    | '/lp/brazil'
+    | '/lp/canada'
+    | '/lp/japan'
+    | '/lp/schengen'
+    | '/lp/uk'
+    | '/lp/usa'
     | '/lp/visa'
     | '/tourism-portal/bookings'
     | '/tourism-portal/company'
@@ -901,6 +967,12 @@ export interface FileRouteTypes {
     | '/admin/unlock-requests'
     | '/admin/users'
     | '/admin/visa-requirements'
+    | '/lp/brazil'
+    | '/lp/canada'
+    | '/lp/japan'
+    | '/lp/schengen'
+    | '/lp/uk'
+    | '/lp/usa'
     | '/lp/visa'
     | '/tourism-portal/bookings'
     | '/tourism-portal/company'
@@ -939,6 +1011,12 @@ export interface RootRouteChildren {
   InstallRoute: typeof InstallRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   TourismPortalRoute: typeof TourismPortalRouteWithChildren
+  LpBrazilRoute: typeof LpBrazilRoute
+  LpCanadaRoute: typeof LpCanadaRoute
+  LpJapanRoute: typeof LpJapanRoute
+  LpSchengenRoute: typeof LpSchengenRoute
+  LpUkRoute: typeof LpUkRoute
+  LpUsaRoute: typeof LpUsaRoute
   LpVisaRoute: typeof LpVisaRoute
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
 }
@@ -1316,6 +1394,48 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AgentIndexRouteImport
       parentRoute: typeof AgentRoute
     }
+    '/lp/brazil': {
+      id: '/lp/brazil'
+      path: '/lp/brazil'
+      fullPath: '/lp/brazil'
+      preLoaderRoute: typeof LpBrazilRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lp/canada': {
+      id: '/lp/canada'
+      path: '/lp/canada'
+      fullPath: '/lp/canada'
+      preLoaderRoute: typeof LpCanadaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lp/japan': {
+      id: '/lp/japan'
+      path: '/lp/japan'
+      fullPath: '/lp/japan'
+      preLoaderRoute: typeof LpJapanRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lp/schengen': {
+      id: '/lp/schengen'
+      path: '/lp/schengen'
+      fullPath: '/lp/schengen'
+      preLoaderRoute: typeof LpSchengenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lp/uk': {
+      id: '/lp/uk'
+      path: '/lp/uk'
+      fullPath: '/lp/uk'
+      preLoaderRoute: typeof LpUkRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lp/usa': {
+      id: '/lp/usa'
+      path: '/lp/usa'
+      fullPath: '/lp/usa'
+      preLoaderRoute: typeof LpUsaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/lp/visa': {
       id: '/lp/visa'
       path: '/lp/visa'
@@ -1654,6 +1774,12 @@ const rootRouteChildren: RootRouteChildren = {
   InstallRoute: InstallRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   TourismPortalRoute: TourismPortalRouteWithChildren,
+  LpBrazilRoute: LpBrazilRoute,
+  LpCanadaRoute: LpCanadaRoute,
+  LpJapanRoute: LpJapanRoute,
+  LpSchengenRoute: LpSchengenRoute,
+  LpUkRoute: LpUkRoute,
+  LpUsaRoute: LpUsaRoute,
   LpVisaRoute: LpVisaRoute,
   DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
 }

@@ -13,3 +13,4 @@
 - Keep `strict` on but leave `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes` and `noPropertyAccessFromIndexSignature` off; existing database-shaped code was not written for them and their errors were noise, not bugs.
 - Create live-update channels with `uniqueChannelName()`; reusing a channel name across mounted listeners throws and blanks signed-in pages.
 - Read browser-only values (`window`, storage) inside effects or event handlers, never during render, because pages are now rendered on the server first.
+- Keep per-market campaign landing copy in `src/config/marketLandings.ts` rendered by one shared page, with a test that no sentence repeats across markets and no guarantee/government claims appear, so ad pages stay unique and policy-safe.
