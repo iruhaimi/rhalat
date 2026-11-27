@@ -52,10 +52,10 @@ export default function FloatingWhatsApp() {
         rel="noopener noreferrer"
         onClick={handleWhatsAppClick}
         className={`${actionClass} bg-success text-success-foreground hover:bg-success/90`}
-        aria-label={isRTL ? 'تواصل معنا عبر واتساب' : 'Contact us on WhatsApp'}
+        aria-label={isRTL ? 'اطلب عرض سعر عبر واتساب' : 'Get a price quote on WhatsApp'}
       >
         <MessageCircle className="h-5 w-5" aria-hidden="true" />
-        <span className="hidden text-sm font-medium sm:inline-block">{isRTL ? 'واتساب' : 'WhatsApp'}</span>
+        <span className="hidden text-sm font-medium sm:inline-block">{isRTL ? 'اطلب عرض سعر' : 'Get a quote'}</span>
       </a>
     </motion.div>
   );

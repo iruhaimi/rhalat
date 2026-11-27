@@ -285,7 +285,7 @@ export default function Contact() {
                     <Button className="bg-green-500 hover:bg-green-600 rounded-xl w-full" asChild>
                       <a href="https://wa.me/966562525665?text=السلام%20عليكم،%20أريد%20الاستفسار%20عن%20خدمات%20التأشيرات" target="_blank" rel="noopener noreferrer">
                         <MessageCircle className="w-4 h-4 ml-2" />
-                        {isRTL ? 'ابدأ المحادثة' : 'Start Chat'}
+                        {isRTL ? 'اطلب عرض سعر' : 'Get a quote'}
                       </a>
                     </Button>
                   </div>

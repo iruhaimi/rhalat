@@ -178,7 +178,7 @@ export default function MarketLandingPage({ market: key }: { market: MarketKey }
         <div className="flex items-stretch gap-2">
           <ApplyNowButton label="قدّم" className="min-h-12 flex-1 px-2 py-2 text-xs" />
           <CallNowButton label="اتصل" className="min-h-12 flex-1 px-2 py-2 text-xs" />
-          <CTA placement="mobile" className="min-h-12 flex-1 px-2 py-2 text-xs">واتساب</CTA>
+          <CTA placement="mobile" className="min-h-12 flex-1 px-2 py-2 text-xs">عرض سعر</CTA>
         </div>
       </div>
       <CookieConsent />
